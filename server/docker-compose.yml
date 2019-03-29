@@ -1,0 +1,26 @@
+version: '2'
+
+services:
+  mysql:
+    image: mysql:5.7
+    container_name: kick_up.mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 1
+      MYSQL_DATABASE: kick_up
+      MYSQL_USER: kick_up
+      MYSQL_PASSWORD: 1
+    ports:
+    - 3307:3306
+  adminer:
+    image: adminer
+    container_name: kick_up.adminer
+    environment:
+      DB_HOST: mysql
+      DB_USER: root
+      DB_PASS: 1
+    ports:
+    - 8080:8080
+    links:
+    - mysql
+    logging:
+      driver: none
