@@ -1,0 +1,69 @@
+.register {
+    max-width: calc(100% -  16px * 2);
+    box-sizing: border-box;
+    margin: 10vh 16px 0;
+    padding: 1rem;
+    animation-name: scale-in;
+    animation-duration: 0.3s;
+    animation-fill-mode: forwards;
+    border-radius: 3px;
+    background-color: white;
+    opacity: 0;
+}
+
+.register__info-container {
+    display: none;
+}
+
+.register__title {
+    // Grey @todo move to variable;
+    color: #212529;
+    font-weight: 100;
+}
+
+.register__plane-ico {
+    margin-left: 10px;
+}
+
+.register__info-container {
+    align-items: center;
+    opacity: 0.8;
+    pointer-events: none;
+    user-select: none;
+}
+
+.register__info-container span {
+    font-size: 2rem;
+    color: #212529;
+    font-weight: 100;
+    word-break: break-word;
+}
+
+// Tablets;
+@media (min-width: 768px) {
+    .register {
+        background-color: transparent;
+    }
+    
+    .register__form-wrapper {
+        background-color: rgba(255, 255, 255, 0.8);
+        border-radius: 3px;
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+    }
+
+    .register__info-container {
+        display: flex;
+    }   
+}
+
+// Related to animations;
+@keyframes scale-in {
+    from {
+        opacity: 0;
+        transform: scale(0);
+    } to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
