@@ -1,17 +1,17 @@
-@media (min-width: 992px) {
-    #responsive-navbar-nav {
-        height: auto !important;
-    }
-}
-
-.toggle {
-    outline: none !important;
-    border: 0;
-    padding: 0;
-}
-
 .header {
-    background-color: #3b3a36 !important;
+    background-color: #3b3a36;
+
+    @media (min-width: 992px) {
+        #responsive-navbar-nav {
+            height: auto !important;
+        }
+    }
+
+    .toggle {
+        outline: none;
+        border: 0;
+        padding: 0;
+    }
 
     .logoImg {
         height: 50px;
@@ -28,8 +28,8 @@
             display: flex;
         }
 
-        .fa-icon {
-            color: #e9ece5 !important;
+        .fa-icon, .fa-icon:hover, .fa-icon:visited {
+            color: #e9ece5;
             font-size: 29pt;
             cursor:pointer;
         }
