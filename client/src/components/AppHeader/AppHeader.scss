@@ -51,29 +51,18 @@
         }
 
         .search-field {
-            width: 35px;
+            width: 75px;
             transition: width 0.5s;
             border: 0;
             outline: none;
-            border-bottom-right-radius: 50px;
-            border-top-right-radius: 50px;
+            border-radius: 50px;
             box-shadow: none;
+            text-decoration: #e9ece5;
 
             &:focus {
-                width: 250px;
+                width: 300px;
             }
         }
-    }
-
-    #search-button {
-        background-color: #ffffff;
-        border: 0;
-        border-bottom-left-radius: 50px;
-        border-top-left-radius: 50px;
-        outline: none;
-        box-shadow: none;
-        color: #b3c2bf;
-        cursor:pointer;
     }
 
     @media (max-width: 991px) {
