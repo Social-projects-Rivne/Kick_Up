@@ -12,6 +12,11 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+main#content {
+  /* (screen height) - (header height) - (footer height) */
+  min-height: calc(100vh - 89px - 44px);
+}
+
 .app-wrapper {
   box-sizing: border-box;
   height: 100vh; 
