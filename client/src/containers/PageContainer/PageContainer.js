@@ -5,10 +5,10 @@ import AppHeader from './../../components/AppHeader/AppHeader';
 
 const pageContainer = props => {
     return (
-        <>
+        <div className="app-wrapper  spring-warmth-gradient">
             <AppHeader />
             {props.children}
-        </>
+        </div>
     );
 }
 

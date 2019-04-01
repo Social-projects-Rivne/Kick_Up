@@ -1,9 +1,11 @@
-import React from 'react';
+import React from "react";
 
 const AppHeader = props => {
-    return (
-        <h1 style={{textAlign: "center"}}>This is AppHeader</h1>
-    );
-}
+  return (
+    <div className="header">
+      <h1 style={{ textAlign: "center" }}>This is AppHeader</h1>
+    </div>
+  );
+};
 
 export default AppHeader;
