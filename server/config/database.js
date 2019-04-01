@@ -1,4 +1,5 @@
 const knexInstance = require('knex');
+const bookshelfInstance = require('bookshelf');
 require('dotenv').config();
 
 const knexConnectionObject = {
@@ -23,5 +24,6 @@ const knexConnectionObject = {
   }
 };
 const knex = knexInstance(knexConnectionObject);
+const bookshelf = bookshelfInstance(knex);
 
-module.exports = { knex, knexConnectionObject };
+module.exports = { bookshelf, knex, knexConnectionObject };
