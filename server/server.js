@@ -1,9 +1,14 @@
-const express = require('express');
+const express = require("express");
 const app = express();
-require('dotenv').config()
+const mongoose = require("mongoose");
+require("dotenv").config();
 
-const router = express.Router();
+const dbRoute = require("./mongoDB/constants/db");
 
+mongoose.connect(dbRoute, { useNewUrlParser: true }, err => {
+  if (err) throw err;
+  console.log("===> MongoDB successfully connected! <===");
+});
 
 // support parsing of application/json type post data
 app.use(express.json());
@@ -11,9 +16,8 @@ app.use(express.json());
 //support parsing of application/x-www-form-urlencoded post data
 app.use(express.urlencoded({ extended: false }));
 
-require('./routes')(app);
+require("./routes")(app);
 
-
-app.listen(3001, function () {
-  console.log('Example app listening on port 3001!');
+app.listen(3001, function() {
+  console.log("Example app listening on port 3001!");
 });
