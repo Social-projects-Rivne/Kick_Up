@@ -1,69 +1,74 @@
 .register {
-    max-width: calc(100% -  16px * 2);
     box-sizing: border-box;
-    margin: 10vh 16px 0;
-    padding: 1rem;
-    animation-name: scale-in;
-    animation-duration: 0.3s;
-    animation-fill-mode: forwards;
-    border-radius: 3px;
-    background-color: white;
-    opacity: 0;
+    max-height: calc(100vh - 89px);
+    overflow: hidden;
 }
 
-.register__info-container {
+.register + footer {
     display: none;
 }
 
-.register__title {
-    // Grey @todo move to variable;
-    color: #212529;
-    font-weight: 100;
-}
-
-.register__plane-ico {
-    margin-left: 10px;
-}
-
-.register__info-container {
-    align-items: center;
-    opacity: 0.8;
-    pointer-events: none;
-    user-select: none;
-}
-
-.register__info-container span {
-    font-size: 2rem;
-    color: #212529;
-    font-weight: 100;
-    word-break: break-word;
-}
-
-// Tablets;
-@media (min-width: 768px) {
-    .register {
-        background-color: transparent;
+.register__wrapper {
+        background-image: url('../assets/img/bg-1.jpg');
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center center;
+        height: 100vh;
     }
     
-    .register__form-wrapper {
-        background-color: rgba(255, 255, 255, 0.8);
-        border-radius: 3px;
-        padding-top: 1rem;
-        padding-bottom: 1rem;
+    .register__gradient {
+        background: -webkit-linear-gradient(45deg, rgba(0, 0, 0, 0.7), rgba(72, 15, 144, 0.4) 100%);
+        background: -webkit-gradient(linear, 45deg, from(rgba(0, 0, 0, 0.7), rgba(72, 15, 144, 0.4) 100%));
+        background: linear-gradient(to 45deg, rgba(0, 0, 0, 0.7), rgba(72, 15, 144, 0.4) 100%);
     }
-
-    .register__info-container {
-        display: flex;
-    }   
-}
-
-// Related to animations;
-@keyframes scale-in {
-    from {
+    
+    // @todo move to scss variables;
+    .register__card {
         opacity: 0;
-        transform: scale(0);
-    } to {
-        opacity: 1;
-        transform: scale(1);
+        background-color: rgba(126, 123, 215, 0.2);
+        animation-name: scale-in;
+        animation-duration: 0.3s;
+        animation-delay: 0.5s;
+        animation-fill-mode: forwards;
     }
-}
+
+    .register__card-text {
+        display: none;
+    }
+    
+    .register h6 {
+        line-height: 1.7;
+    }
+    
+    // @todo move to scss variables;
+    .register__card label {
+        color: white;
+    }
+
+    // @todo move to scss variables;
+    .register__card .md-form input:focus:not([readonly]):focus + label,
+    .register__card .md-form .prefix.active {
+        color: #e5e5e5;
+    }
+
+    .register__card .md-form input {
+        color: white;
+    }
+
+    // Tablets;
+    @media (min-width: 768px) {
+        .register__card-text {
+            display: block;
+        }   
+    }
+
+    // Related to animatons;
+    @keyframes scale-in {
+        from {
+            opacity: 0;
+            transform: scale(0);
+        } to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }

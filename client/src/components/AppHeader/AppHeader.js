@@ -1,16 +1,21 @@
 import logo from './logo.png';
 import React from 'react';
+
 import './style.scss'
 import { Navbar,  FormControl, Form, Nav, InputGroup, Button } from 'react-bootstrap';
-import { faSignInAlt } from '@fortawesome/free-solid-svg-icons'
-import { faUsers } from '@fortawesome/free-solid-svg-icons'
-import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons'
-import { faSearch } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSignInAlt } from '@fortawesome/free-solid-svg-icons';
+import { faUsers } from '@fortawesome/free-solid-svg-icons';
+import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {ToastContainer} from 'mdbreact';
 
 const AppHeader = props => {
     return (
         <Navbar collapseOnSelect expand="lg" className = 'header'>
+            <ToastContainer
+                autoClose={3000}
+            />
             <Navbar.Brand href="#" className="mobile-logo d-block d-lg-none">
                 <img className = 'logoImg' src={logo} alt="Logo" />
             </Navbar.Brand>

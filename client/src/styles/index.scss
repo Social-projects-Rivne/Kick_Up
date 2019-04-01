@@ -21,3 +21,17 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+// Related to info toast;
+// @todo add styles for other types of toasts;
+#root .css-lj0up9, 
+#root [data-css-lj0up9] {
+  min-height: 32px;
+  background-color: rgba(139, 195, 74, 0.7);
+}
+
+#root .css-1dbhh97, 
+#root [data-css-1dbhh97] {
+  min-height: 32px;
+  background-color: rgba(17, 17, 17, 0.5);
+}
