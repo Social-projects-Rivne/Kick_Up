@@ -1,14 +1,13 @@
 import logo from './logo.png';
 import React from 'react';
-import './AppHeader.scss'
-import { Navbar,  FormControl, Form, Nav, InputGroup } from 'react-bootstrap';
-import { faSignInAlt } from '@fortawesome/free-solid-svg-icons'
-import { faUsers } from '@fortawesome/free-solid-svg-icons'
-import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
-const AppHeader = props => {
-    return (
+import { Link } from "react-router-dom";
+import { Navbar,  FormControl, Form, Nav, InputGroup } from 'react-bootstrap';
+import { faSignInAlt, faUsers, faCalendarAlt } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import './AppHeader.scss';
+
+const AppHeader = props => (
         <Navbar collapseOnSelect expand="lg" className = 'header'>
             <Navbar.Brand href="/" className="mobile-logo d-block d-lg-none">
                 <img className = 'logoImg' src={logo} alt="Logo" />
@@ -27,23 +26,22 @@ const AppHeader = props => {
                         </Form>
                     </div>
                      <div className="align-center">
-                        <Nav.Link href="/events" className="fa-icon">
+                        <Link to="/events" className="fa-icon">
                             <FontAwesomeIcon icon={faCalendarAlt}/>
-                        </Nav.Link>
+                        </Link>
 
-                        <Nav.Link href="/rooms" className="fa-icon">
+                        <Link to="/rooms" className="fa-icon">
                             <FontAwesomeIcon icon={faUsers} />
-                        </Nav.Link>
+                        </Link>
                     </div>
                     <div className="align-right">
-                        <Nav.Link href="/register" className="fa-icon">
+                        <Link to="/register" className="fa-icon">
                             <FontAwesomeIcon icon={faSignInAlt} />
-                        </Nav.Link>
+                        </Link>
                     </div>
                 </Nav>
             </Navbar.Collapse>
         </Navbar>
     );
-};
 
 export default AppHeader;

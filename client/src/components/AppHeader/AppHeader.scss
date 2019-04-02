@@ -57,12 +57,16 @@
             outline: none;
             border-radius: 50px;
             box-shadow: none;
-            text-decoration: #e9ece5;
+            text-decoration-color: #e9ece5;
 
             &:focus {
                 width: 300px;
             }
         }
+    }
+
+    .align-center .fa-icon {
+        padding-left: 20px;
     }
 
     @media (max-width: 991px) {
@@ -81,10 +85,6 @@
 
             .search-row {
                 width: 100%;
-            }
-
-            .align-center .fa-icon {
-                padding-right: 20px;
             }
 
             .search-form {
