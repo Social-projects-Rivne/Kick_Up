@@ -1,8 +1,7 @@
 .register {
     max-width: calc(100% -  16px * 2);
     box-sizing: border-box;
-    margin: 10vh 16px 0;
-    padding: 1rem;
+    padding: 10vh 1rem 0;
     animation-name: scale-in;
     animation-duration: 0.3s;
     animation-fill-mode: forwards;
