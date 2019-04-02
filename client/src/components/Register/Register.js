@@ -18,7 +18,7 @@ import axios from 'axios';
 import '../../styles/Register.scss';
 
 // @todo change;
-const USER_ROUTE = 'http://httpbin.org/post';
+const USER_ROUTE = 'http://localhost:3001';
 
 class Register extends Component {
     constructor(props) {
@@ -41,9 +41,12 @@ class Register extends Component {
             if (typeof callback === 'function') callback(res);
         }
 
-        axios.post(USER_ROUTE, {
+        axios.post(`${USER_ROUTE}/api/signin`, {
             email: this.state.email,
             password: this.state.password
+        })
+        .then((res) => {
+            console.log('-----------------',res.data)
         })
         .then(() => {fireCallback(true)})
         .catch((err) => {fireCallback(false)});
