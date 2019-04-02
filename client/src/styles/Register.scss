@@ -1,74 +1,124 @@
+// .register {
+//     box-sizing: border-box;
+//     max-height: calc(100vh - 89px);
+//     overflow: hidden;
+// }
+
+// .register + footer {
+//     display: none;
+// }
+
+// .register__wrapper {
+//         background-image: url('../assets/img/bg-1.jpg');
+//         background-repeat: no-repeat;
+//         background-size: cover;
+//         background-position: center center;
+//         height: 100vh;
+//     }
+    
+//     .register__gradient {
+//         background: -webkit-linear-gradient(45deg, rgba(0, 0, 0, 0.7), rgba(72, 15, 144, 0.4) 100%);
+//         background: -webkit-gradient(linear, 45deg, from(rgba(0, 0, 0, 0.7), rgba(72, 15, 144, 0.4) 100%));
+//         background: linear-gradient(to 45deg, rgba(0, 0, 0, 0.7), rgba(72, 15, 144, 0.4) 100%);
+//     }
+    
+//     // @todo move to scss variables;
+//     .register__card {
+//         opacity: 0;
+//         background-color: rgba(126, 123, 215, 0.2);
+//         animation-name: scale-in;
+//         animation-duration: 0.3s;
+//         animation-delay: 0.5s;
+//         animation-fill-mode: forwards;
+//     }
+
+//     .register__card-text {
+//         display: none;
+//     }
+    
+//     .register h6 {
+//         line-height: 1.7;
+//     }
+    
+//     // @todo move to scss variables;
+//     .register__card label {
+//         color: white;
+//     }
+
+//     // @todo move to scss variables;
+//     .register__card .md-form input:focus:not([readonly]):focus + label,
+//     .register__card .md-form .prefix.active {
+//         color: #e5e5e5;
+//     }
+
+//     .register__card .md-form input {
+//         color: white;
+//     }
+
+//     // Tablets;
+//     @media (min-width: 768px) {
+//         .register__card-text {
+//             display: block;
+//         }   
+//     }
+
+//     // Related to animatons;
+//     @keyframes scale-in {
+//         from {
+//             opacity: 0;
+//             transform: scale(0);
+//         } to {
+//             opacity: 1;
+//             transform: scale(1);
+//         }
+//     }
+
 .register {
-    box-sizing: border-box;
-    max-height: calc(100vh - 89px);
-    overflow: hidden;
+    flex-grow: 1;
+    border: 1px solid red;
+    background-image: url('../assets/img/bg-1.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
 }
 
 .register + footer {
     display: none;
 }
 
-.register__wrapper {
-        background-image: url('../assets/img/bg-1.jpg');
-        background-repeat: no-repeat;
-        background-size: cover;
-        background-position: center center;
-        height: 100vh;
-    }
-    
-    .register__gradient {
-        background: -webkit-linear-gradient(45deg, rgba(0, 0, 0, 0.7), rgba(72, 15, 144, 0.4) 100%);
-        background: -webkit-gradient(linear, 45deg, from(rgba(0, 0, 0, 0.7), rgba(72, 15, 144, 0.4) 100%));
-        background: linear-gradient(to 45deg, rgba(0, 0, 0, 0.7), rgba(72, 15, 144, 0.4) 100%);
-    }
-    
-    // @todo move to scss variables;
-    .register__card {
+
+// Left part;
+.register .register__info {
+    color: white;
+    box-shadow: none;
+    background-color: transparent;
+}
+
+.register__info h1 {
+    font-weight: 600;
+}
+
+// Right part;
+.register .register__form {
+    padding: 20px;
+    opacity: 0;
+    background-color: rgba(126, 123, 215, 0.2);
+    animation-name: scale-in;
+    animation-duration: 0.3s;
+    animation-delay: 0.5s;
+    animation-fill-mode: forwards;
+    border: 0;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 
+                0 2px 10px 0 rgba(0, 0, 0, 0.12);
+}
+
+// Related to animatons;
+@keyframes scale-in {
+    from {
         opacity: 0;
-        background-color: rgba(126, 123, 215, 0.2);
-        animation-name: scale-in;
-        animation-duration: 0.3s;
-        animation-delay: 0.5s;
-        animation-fill-mode: forwards;
+        transform: scale(0);
+    } to {
+        opacity: 1;
+        transform: scale(1);
     }
-
-    .register__card-text {
-        display: none;
-    }
-    
-    .register h6 {
-        line-height: 1.7;
-    }
-    
-    // @todo move to scss variables;
-    .register__card label {
-        color: white;
-    }
-
-    // @todo move to scss variables;
-    .register__card .md-form input:focus:not([readonly]):focus + label,
-    .register__card .md-form .prefix.active {
-        color: #e5e5e5;
-    }
-
-    .register__card .md-form input {
-        color: white;
-    }
-
-    // Tablets;
-    @media (min-width: 768px) {
-        .register__card-text {
-            display: block;
-        }   
-    }
-
-    // Related to animatons;
-    @keyframes scale-in {
-        from {
-            opacity: 0;
-            transform: scale(0);
-        } to {
-            opacity: 1;
-            transform: scale(1);
-        }
-    }
+}
