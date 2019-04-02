@@ -1,12 +1,11 @@
-import logo from './logo.png';
 import React from 'react';
-import './style.scss'
+
+import '../../styles/index.scss';
 import { Navbar,  FormControl, Form, Nav, InputGroup, Button } from 'react-bootstrap';
-import { faSignInAlt } from '@fortawesome/free-solid-svg-icons'
-import { faUsers } from '@fortawesome/free-solid-svg-icons'
-import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons'
-import { faSearch } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSignInAlt, faUsers, faCalendarAlt, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+import logo from '../../assets/images/logo.png';
 
 const AppHeader = props => {
     return (

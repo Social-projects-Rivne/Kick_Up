@@ -1,7 +1,9 @@
 import React, { Component } from "react";
+
+import '../../styles/index.scss';
+
 import { MDBContainer, MDBRow, MDBCol, MDBInput, MDBBtn, MDBIcon } from 'mdbreact';
 import ReactTypingEffect from 'react-typing-effect';
-import '../../styles/Register.scss';
 
 class Register extends Component {
     constructor(props) {

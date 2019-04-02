@@ -1,6 +1,7 @@
 import React from 'react';
-import './Home.scss'
-import { Card, CardColumns} from 'react-bootstrap';
+
+import '../../styles/index.scss';
+import { Card, CardColumns } from 'react-bootstrap';
 
 const home = props => {
     return (
