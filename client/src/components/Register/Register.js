@@ -1,15 +1,52 @@
 import React, { Component } from "react";
 import { Link } from 'react-router-dom';
 
-import { Grid, TextField, Button, Typography, Icon } from '@material-ui/core';
-import Person from '@material-ui/icons/Person';
-import Send from '@material-ui/icons/Send';
+import { Snackbar, Grid, TextField, Button, Typography } from '@material-ui/core';
+import { Person, Send, Email, Lock } from '@material-ui/icons';
 
 import axios from 'axios';
 import '../../styles/Register.scss';
 
 // @todo change;
 const USER_ROUTE = 'http://httpbin.org/post';
+
+// Move to new file;
+class PositionedSnackbar extends React.Component {
+    state = {
+      open: false,
+      vertical: 'top',
+      horizontal: 'center',
+    };
+  
+    handleClick = state => () => {
+      this.setState({ open: true, ...state });
+    };
+  
+    handleClose = () => {
+      this.setState({ open: false });
+    };
+  
+    render() {
+      const { vertical, horizontal, open } = this.state;
+      return (
+        <div>
+          <Button onClick={this.handleClick({ vertical: 'top', horizontal: 'center' })}>
+            Top-Center
+          </Button>
+          
+          <Snackbar
+            anchorOrigin={{ vertical, horizontal }}
+            open={open}
+            onClose={this.handleClose}
+            ContentProps={{
+              'aria-describedby': 'message-id',
+            }}
+            message={<span id="message-id">I love snacks</span>}
+          />
+        </div>
+      );
+    }
+  }  
 
 class Register extends Component {
     constructor(props) {
@@ -83,34 +120,45 @@ class Register extends Component {
                 </Grid>
                 <Grid item xs={10} sm={6} className="register__form">
                     <Typography align="center" variant="h4">
-                        <Person color="red" />
+                        <Person fontSize="large" />
                         Sign up
                     </Typography>
                     <hr />
-                    <TextField
-                        required
-                        className="register__input"
-                        name ="email"
-                        label="Your email"
-                        type="email"
-                        margin="normal"
-                        autocomplete="off"
-                    />
-                    <TextField
-                        required
-                        className="register__input"
-                        name ="password"
-                        label="Enter password, min. 6 chars"
-                        type="password"
-                        margin="normal"
-                    />
-                    <Button 
-                        variant="contained" 
-                        color="primary" 
-                    >
-                        Send
-                        <Send />
-                    </Button>
+                    <div className="register__field-wrapper">
+                        <Email />
+                        <TextField
+                            required
+                            className="register__input"
+                            name ="email"
+                            label="Your email"
+                            type="email"
+                            margin="normal"
+                            autocomplete="off"
+                        />
+                    </div>
+                    
+                    <div className="register__field-wrapper">
+                        <Lock />
+                        <TextField
+                            required
+                            className="register__input"
+                            name ="password"
+                            label="Enter password, min. 6 chars"
+                            type="password"
+                            margin="normal"
+                        />
+                    </div>
+                    <div className="register__btn-wrapper">
+                        <Button 
+                            className="register__submit-btn"
+                            variant="contained" 
+                            color="primary" 
+                            onClick={this.submitHandler}
+                        >
+                            Send
+                            <Send />
+                        </Button>
+                    </div>
                 </Grid>
             </Grid>
         )
