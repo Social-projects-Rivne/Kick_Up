@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 import { Link } from 'react-router-dom';
 
-import { Grid, Card, Typography, Icon } from '@material-ui/core';
-import { Person } from '@material-ui/icons';
+import { Grid, TextField, Button, Typography, Icon } from '@material-ui/core';
+import Person from '@material-ui/icons/Person';
+import Send from '@material-ui/icons/Send';
+
 import axios from 'axios';
 import '../../styles/Register.scss';
 
@@ -71,15 +73,45 @@ class Register extends Component {
                 justify="center"
                 alignItems="center"
             >
-            <Card className="register__info">
-                <h1>Let's kick up</h1>
-            </Card>
-            <Card className="register__form">
-                <Typography align="center" variant="h3">
-                    <Icon fontSize="36">person</Icon>
-                    Sign up
-                </Typography>
-            </Card>
+                <Grid xs={10} sm={6} className="register__info">
+                    <h1>Let's kick up</h1>
+                    <hr />
+                    <Typography variant="body1" className="register__info-text">
+                        Sign up and get in touch with people of same interests.
+                        Stay tuned it to all interesting event nearby!
+                    </Typography>
+                </Grid>
+                <Grid item xs={10} sm={6} className="register__form">
+                    <Typography align="center" variant="h4">
+                        <Person color="red" />
+                        Sign up
+                    </Typography>
+                    <hr />
+                    <TextField
+                        required
+                        className="register__input"
+                        name ="email"
+                        label="Your email"
+                        type="email"
+                        margin="normal"
+                        autocomplete="off"
+                    />
+                    <TextField
+                        required
+                        className="register__input"
+                        name ="password"
+                        label="Enter password, min. 6 chars"
+                        type="password"
+                        margin="normal"
+                    />
+                    <Button 
+                        variant="contained" 
+                        color="primary" 
+                    >
+                        Send
+                        <Send />
+                    </Button>
+                </Grid>
             </Grid>
         )
     }
