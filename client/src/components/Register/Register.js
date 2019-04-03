@@ -1,52 +1,13 @@
 import React, { Component } from "react";
-import { Link } from 'react-router-dom';
 
 import { Snackbar, Grid, TextField, Button, Typography } from '@material-ui/core';
 import { Person, Send, Email, Lock } from '@material-ui/icons';
-
 import axios from 'axios';
+import CustomizedSnackbars from '../Toast/Toast';
 import '../../styles/Register.scss';
 
 // @todo change;
 const USER_ROUTE = 'http://httpbin.org/post';
-
-// Move to new file;
-class PositionedSnackbar extends React.Component {
-    state = {
-      open: false,
-      vertical: 'top',
-      horizontal: 'center',
-    };
-  
-    handleClick = state => () => {
-      this.setState({ open: true, ...state });
-    };
-  
-    handleClose = () => {
-      this.setState({ open: false });
-    };
-  
-    render() {
-      const { vertical, horizontal, open } = this.state;
-      return (
-        <div>
-          <Button onClick={this.handleClick({ vertical: 'top', horizontal: 'center' })}>
-            Top-Center
-          </Button>
-          
-          <Snackbar
-            anchorOrigin={{ vertical, horizontal }}
-            open={open}
-            onClose={this.handleClose}
-            ContentProps={{
-              'aria-describedby': 'message-id',
-            }}
-            message={<span id="message-id">I love snacks</span>}
-          />
-        </div>
-      );
-    }
-  }  
 
 class Register extends Component {
     constructor(props) {
@@ -54,7 +15,8 @@ class Register extends Component {
         this.state = {
             email: '',
             password: '',
-            sendingRequest: false,
+            message: false,
+            messageType: null,
             // @todo, this will help interact bg with input for tablet+ breakpoints;
             formInFocus: false
         };
@@ -65,7 +27,7 @@ class Register extends Component {
         // @todo add resetUi
     }
     sendFormData(callback) {
-        var fireCallback = (res) => {
+        const fireCallback = (res) => {
             if (typeof callback === 'function') callback(res);
         }
 
@@ -73,24 +35,22 @@ class Register extends Component {
             email: this.state.email,
             password: this.state.password
         })
-        .then(() => {fireCallback(true)})
-        .catch((err) => {fireCallback(false)});
+            .then(() => { fireCallback(true) })
+            .catch((err) => { fireCallback(false) });
     }
     submitHandler(submitEvt) {
         submitEvt.preventDefault();
-        var _this = this;
+        const _this = this;
 
         // Do changes in UI;
-        // toast.info('Working...', {
-        //     hideProgressBar: true,
-        //     closeButton: false
-        // });
-        this.setState({sendingRequest: true});
-        submitEvt.target.className += " was-validated";
+        this.setState({
+            message: 'Sending',
+            messageType: 'info'
+        });
 
         // Send data;
-        this.sendFormData(function(res) {
-            _this.setState({sendingRequest: false});
+        this.sendFormData(function (res) {
+            _this.setState({ sendingRequest: false });
 
             if (res) {
                 //toast.success('Welcome to roomKa', {autoClose: 5000});
@@ -98,159 +58,83 @@ class Register extends Component {
         });
     }
     changeHandler(event) {
-        this.setState({[event.target.name]: event.target.value });
+        this.setState({ [event.target.name]: event.target.value });
     }
 
     render() {
-        return(
-            <Grid
-                className="register"
-                container
-                direction="row"
-                justify="center"
-                alignItems="center"
-            >
-                <Grid xs={10} sm={6} className="register__info">
-                    <h1>Let's kick up</h1>
-                    <hr />
-                    <Typography variant="body1" className="register__info-text">
-                        Sign up and get in touch with people of same interests.
-                        Stay tuned it to all interesting event nearby!
+        return (
+            <div>
+                <Grid
+                    className="register"
+                    container
+                    direction="row"
+                    justify="center"
+                    alignItems="center"
+                >
+                    <Grid item xs={10} sm={6} className="register__info">
+                        <h1>Let's kick up</h1>
+
+                        {this.state.messageType && 
+                        this.state.messageType && 
+                            <CustomizedSnackbars 
+                                variant={this.state.messageType}
+                                message={this.state.message}
+                            ></CustomizedSnackbars>
+                        }
+
+                         <hr />
+                        <Typography variant="body1" className="register__info-text">
+                            Sign up and get in touch with people of same interests.
+                            Stay tuned it to all interesting event nearby!
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={10} sm={6} className="register__form">
+                        <Typography align="center" variant="h4">
+                            <Person fontSize="large" />
+                            Sign up
                     </Typography>
-                </Grid>
-                <Grid item xs={10} sm={6} className="register__form">
-                    <Typography align="center" variant="h4">
-                        <Person fontSize="large" />
-                        Sign up
-                    </Typography>
-                    <hr />
-                    <div className="register__field-wrapper">
-                        <Email />
-                        <TextField
-                            required
-                            className="register__input"
-                            name ="email"
-                            label="Your email"
-                            type="email"
-                            margin="normal"
-                            autocomplete="off"
-                        />
-                    </div>
-                    
-                    <div className="register__field-wrapper">
-                        <Lock />
-                        <TextField
-                            required
-                            className="register__input"
-                            name ="password"
-                            label="Enter password, min. 6 chars"
-                            type="password"
-                            margin="normal"
-                        />
-                    </div>
-                    <div className="register__btn-wrapper">
-                        <Button 
-                            className="register__submit-btn"
-                            variant="contained" 
-                            color="primary" 
-                            onClick={this.submitHandler}
-                        >
-                            Send
+                        <hr />
+                        <div className="register__field-wrapper">
+                            <Email />
+                            <TextField
+                                required
+                                className="register__input"
+                                name="email"
+                                label="Your email"
+                                type="email"
+                                margin="normal"
+                                autoComplete="off"
+                            />
+                        </div>
+
+                        <div className="register__field-wrapper">
+                            <Lock />
+                            <TextField
+                                required
+                                className="register__input"
+                                name="password"
+                                label="Enter password, min. 6 chars"
+                                type="password"
+                                margin="normal"
+                                autoComplete="off"
+                            />
+                        </div>
+                        <div className="register__btn-wrapper">
+                            <Button
+                                className="register__submit-btn"
+                                variant="contained"
+                                color="primary"
+                                onClick={this.submitHandler}
+                            >
+                                Send
                             <Send />
-                        </Button>
-                    </div>
+                            </Button>
+                        </div>
+                    </Grid>
                 </Grid>
-            </Grid>
+            </div>
         )
     }
 }
 
 export default Register;
-
-
-
-// OLD CODE
-// return (
-//     <div className="register">
-//         <MDBView className="register__wrapper">
-//             <MDBMask className="d-flex justify-content-center align-items-center register__gradient">
-//                 <MDBContainer>
-//                     <MDBRow className="register__row">
-//                         <div className="white-text text-center text-md-left col-md-6 mt-xl-5 mb-5 register__card-text">
-//                             <h1 className="h1-responsive font-weight-bold">
-//                                 Let's kick up
-//                             </h1>
-//                             <hr className="hr-light" />
-//                             <h6 className="mb-4">
-//                                 Sign up and get in touch with people of same interests.
-//                                 Stay tuned it to all interesting event nearby!'
-//                             </h6>
-//                             <MDBBtn outline color="white">
-//                               More about us
-//                             </MDBBtn>
-//                         </div>
-//                         <MDBCol md="6" xl="5" className="mb-4">
-//                             <MDBCard className="register__card">
-//                                 <MDBCardBody className="z-depth-2 white-text">
-//                                     <h3 className="text-center">
-//                                       <MDBIcon icon="user" /> Sign up:
-//                                     </h3>
-//                                     <hr className="hr-light" />
-//                                     <form
-//                                         onSubmit={this.submitHandler}
-//                                         className="needs-validation"
-//                                     >
-//                                     <MDBInput 
-//                                         label="Your email"
-//                                         icon="envelope"
-//                                         pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,63}$"
-//                                         value = {this.state.email}
-//                                         onChange={this.changeHandler}
-//                                         type="email"
-//                                         name="email"
-//                                         data-register-user-email
-//                                         required
-//                                     />
-//                                     <MDBInput 
-//                                         label="Enter password, min. 6 chars"
-//                                         icon="lock"
-//                                         value = {this.state.password}
-//                                         onChange={this.changeHandler}
-//                                         name="password"
-//                                         pattern=".{6,}"
-//                                         type="password"
-//                                         data-register-user-password
-//                                         required
-//                                     />
-//                                     <div className="text-center mt-4 black-text">
-//                                     <MDBBtn 
-//                                         type="submit" 
-//                                         color="indigo"
-//                                         disabled={this.state.sendingRequest}
-//                                     >
-//                                         Register
-//                                         <MDBIcon far icon="paper-plane  register__plane-ico" className="ml-2" />
-//                                     </MDBBtn>
-//                                     <hr className="hr-light" />
-//                                     <div className="text-center d-flex justify-content-center white-label">
-//                                         <Link to="#!" className="p-2 m-2">
-//                                           <MDBIcon fab icon="twitter" className="white-text" />
-//                                         </Link>
-//                                         <Link to="#!" className="p-2 m-2">
-//                                           <MDBIcon fab icon="linkedin-in" className="white-text" />
-//                                         </Link>
-//                                         <Link to="#!" className="p-2 m-2">
-//                                           <MDBIcon fab icon="instagram" className="white-text" />
-//                                         </Link>
-//                                     </div>
-//                                     </div>
-//                                     </form>
-//                                 </MDBCardBody>
-//                             </MDBCard>
-//                         </MDBCol>
-//                     </MDBRow>
-//                 </MDBContainer>
-//             </MDBMask>
-//         </MDBView>
-// </div>
-// )
