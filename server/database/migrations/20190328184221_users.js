@@ -2,11 +2,11 @@
 exports.up = async knex => {
   await knex.schema.createTable('users', t => {
     t.increments('id').unsigned().primary();
-    t.string('nick').notNull();
+    t.string('nick').nullable();
     t.string('first_name').nullable();
     t.string('last_name').nullable();
-    t.string('email').nullable();
-    t.string('password').nullable();
+    t.string('email').notNull();
+    t.string('password').notNull();
     t.string('avatar').nullable();
     t.integer('carma').nullable();
     t.integer('role').defaultTo(2);
