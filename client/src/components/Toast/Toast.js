@@ -131,4 +131,4 @@ class CustomizedSnackbars extends React.Component {
     }
 }
 
-export default CustomizedSnackbars;
+export default CustomizedSnackbars; 

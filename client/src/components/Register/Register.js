@@ -110,7 +110,7 @@ class Register extends Component {
                     <Typography align="center" variant="h4">
                         <Person fontSize="large" />
                         Sign up
-                </Typography>
+                    </Typography>
                     <hr />
                     <div className="register__field-wrapper">
                         <Email />
