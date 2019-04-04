@@ -1,5 +1,5 @@
 const homeRouter = require('./home');
-const roomRouter = require('./room');
+const roomsRouter = require('./rooms');
 const eventRouter = require('./event');
 const { signinRouter, signupRouter } = require('./auth');
 
@@ -13,7 +13,7 @@ module.exports = app => {
   app.use(signupRouter)
 
   //mongoDB routes
-  app.use('/api/rooms',roomRouter);
+  app.use('/api/rooms',roomsRouter);
   app.use('/api/events',eventRouter);
 
 };

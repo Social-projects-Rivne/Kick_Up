@@ -37,7 +37,7 @@ const AppHeader = props => {
                             <FontAwesomeIcon icon={faCalendarAlt}/>
                         </Nav.Link>
 
-                        <Nav.Link href="#" className="fa-icon">
+                        <Nav.Link href="/rooms" className="fa-icon">
                             <FontAwesomeIcon icon={faUsers} />
                         </Nav.Link>
                     </div>
