@@ -74,6 +74,7 @@
     margin-bottom: 0;
 }
 
+// @todo move these styles to index scss, we will need this for other inputs;
 .register__input label {
     color: white;
     font-size: 1.143rem;
@@ -84,13 +85,19 @@
 }
 
 .register__input label + div::before,
-.register__input label + div::after {
+.register__input label + div::after,
+#root .MuiInput-underline-169.MuiInput-error-170::after {
     border-color: white;
 }
 
 #root .register__input:hover label + div::before,
 #root .register__input:hover label + div::after {
     border-color: #e5e5e5;
+}
+
+#root .MuiFormLabel-focused-159 .MuiFormLabel-asterisk-164,
+#root .MuiFormLabel-filled-162 .MuiFormLabel-asterisk-164 {
+    color: #e5e5e5;
 }
 
 .register__field-wrapper {
@@ -134,7 +141,6 @@
         margin-left: 12px;
         margin-right: 0;
     }
-
 }
 
 @media only screen and (min-width: 767px) {

@@ -2,7 +2,6 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import Button from '@material-ui/core/Button';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import ErrorIcon from '@material-ui/icons/Error';
 import InfoIcon from '@material-ui/icons/Info';
@@ -105,25 +104,26 @@ class CustomizedSnackbars extends React.Component {
             return;
         }
 
-        this.setState({ open: false });
+        this.setState({ open: false });      
+        this.props.resetToast();
     };
 
     render() {
         return (
         <div>
             <Snackbar
-            anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-            }}
-            open={this.state.open}
-            autoHideDuration={6000}
-            onClose={this.handleClose}
+              anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'center',
+              }}
+              open={this.state.open}
+              autoHideDuration={4000}
+              onClose={this.handleClose}
             >
             <MySnackbarContentWrapper
                 onClose={this.handleClose}
                 variant={this.props.variant}
-                message="This  is a success message!"
+                message={this.props.message}
             />
             </Snackbar>
         </div>

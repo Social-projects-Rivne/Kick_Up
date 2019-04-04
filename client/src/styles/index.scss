@@ -21,3 +21,11 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
+
+// Related to btn;
+#root button:disabled {
+  opacity: 0.8;
+  color: white;
+}
+
+// Related to inputs;
