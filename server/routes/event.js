@@ -1,5 +1,5 @@
-const express = require("express");
-const router = express.Router();
+const Router = require('koa-router');
+const router = new Router();
 
 const Event = require("./../mongoDB/models/modelEvent");
 
@@ -32,4 +32,4 @@ router.get("/", (req, res) => {
   });
 });
 
-module.exports = router;
+module.exports = router.routes();

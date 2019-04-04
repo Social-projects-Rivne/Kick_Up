@@ -1,6 +1,5 @@
-const express = require("express");
-const router = express.Router();
-
+const Router = require('koa-router');
+const router = new Router();
 const Room = require("./../mongoDB/models/modelRoom");
 
 router.post("/save-room", (req, res) => {
@@ -49,4 +48,4 @@ router.get("/", (req, res) => {
   res.send("hello world");
 });
 
-module.exports = router;
+module.exports = router.routes();
