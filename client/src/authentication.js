@@ -19,7 +19,7 @@ export const loginUser = (user) => {
             localStorage.setItem('jwtToken', token);
             setAuthToken(token);
             const decoded = jwt_decode(token);
-            this.props.router.push({
+            this.props.history.push({
                 pathname: '/',
                 state: {
                   token: decoded

@@ -37,7 +37,7 @@ const AppHeader = props => (
                         </Link>
                     </div>
                     <div className="align-right">
-                        <Link to="/register" className="fa-icon">
+                        <Link to="/sign-in" className="fa-icon">
                             <FontAwesomeIcon icon={faSignInAlt} />
                         </Link>
                     </div>
