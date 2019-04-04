@@ -4,12 +4,30 @@ import '../../styles/index.scss';
 
 import { Link } from "react-router-dom";
 import { Navbar,  FormControl, Form, Nav, InputGroup } from 'react-bootstrap';
-import { faSignInAlt, faUsers, faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
+import { faSignInAlt, faSignOutAlt, faUserPlus, faUsers, faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import logo from '../../assets/images/logo.png';
+import logo from '../../assets/img/logo.png';
 
-const AppHeader = props => (
+const AppHeader = props => {
+    const handleLogout = () => {
+        // TODO: logout
+    }
+    const authForm = props.isAuthenticated
+        ? <div className="align-right">
+            <Link onClick={handleLogout} className="fa-icon">
+                <FontAwesomeIcon icon={faSignOutAlt} />  
+            </Link>
+        </div>
+        : <div className="align-right">
+            <Link to="/sign-up" className="fa-icon">
+                <FontAwesomeIcon icon={faUserPlus} />
+            </Link>
+            <Link to="/sign-in" className="fa-icon">
+                <FontAwesomeIcon icon={faSignInAlt} />
+            </Link>    
+        </div>
+    return (
         <Navbar collapseOnSelect expand="lg" className = 'header'>
             <Navbar.Brand href="/" className="mobile-logo d-block d-lg-none">
                 <img className = 'logoImg' src={logo} alt="Logo" />
@@ -36,14 +54,11 @@ const AppHeader = props => (
                             <FontAwesomeIcon icon={faUsers} />
                         </Link>
                     </div>
-                    <div className="align-right">
-                        <Link to="/sign-in" className="fa-icon">
-                            <FontAwesomeIcon icon={faSignInAlt} />
-                        </Link>
-                    </div>
+                    {authForm}
                 </Nav>
             </Navbar.Collapse>
         </Navbar>
     );
+};
 
 export default AppHeader;

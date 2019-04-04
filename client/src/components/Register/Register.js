@@ -1,9 +1,20 @@
 import React, { Component } from "react";
 
-import '../../styles/index.scss';
+import { Grid, TextField, Button, Typography } from '@material-ui/core';
+import { Person, Send, Email, Lock } from '@material-ui/icons';
+import axios from 'axios';
+import is from 'is_js';
+import CustomizedSnackbars from '../Toast/Toast';
+import './Register.scss';
 
-import { MDBContainer, MDBRow, MDBCol, MDBInput, MDBBtn, MDBIcon } from 'mdbreact';
-import ReactTypingEffect from 'react-typing-effect';
+// @todo change;
+const USER_ROUTE = 'http://httpbin.org/post';
+const PASSWORD_LENGTH = 6;
+const messageType = {
+    SUCCESS: 'success',
+    INFO: 'info',
+    ERR: 'error'
+};
 
 class Register extends Component {
     constructor(props) {
@@ -11,89 +22,189 @@ class Register extends Component {
         this.state = {
             email: '',
             password: '',
-            sendingRequest: false,
+            emailInputValid: true,
+            passwordInputValid: true,
+            message: false,
+            messageType: null,
+            messageOpened: false,
             // @todo, this will help interact bg with input for tablet+ breakpoints;
             formInFocus: false
         };
         this.submitHandler = this.submitHandler.bind(this);
-        this.changeHandler = this.changeHandler.bind(this);
+        this.resetToast = this.resetToast.bind(this);
+        this.updateInputValue = this.updateInputValue.bind(this);
+        this.doValidation = this.doValidation.bind(this);
     }
-    sendFormData() {
+    resetFormUi = () => {
+        this.setState({
+            email: '',
+            password: '',
+            emailInputValid: true,
+            passwordInputValid: true,
+            formInFocus: false
+        });
+    }
+    resetToast() {
+        this.setState({
+            message: false,
+            messageType: null,
+            messageOpened: false,
+            emailInputValid: true,
+            passwordInputValid: true,
+        });
+    }
+    // @todo add server error responses display;
+    sendFormData(callback) {
+        const fireCallback = (res) => {
+            if (typeof callback === 'function') callback(res);
+        }
 
+        axios.post(USER_ROUTE, {
+            email: this.state.email,
+            password: this.state.password
+        })
+            .then(() => { fireCallback(true) })
+            .catch((err) => { fireCallback(false) });
+    }
+    doValidation() {
+        let result = true;
+
+        // Validate email;
+        if (!is.email(this.state.email)) {
+            result = false;
+            this.setState({ emailInputValid: false });
+        }
+
+        // Validate password;
+        if (this.state.password.length < PASSWORD_LENGTH) {
+            result = false;
+            this.setState({ passwordInputValid: false });
+        }
+
+        return result;
+    }
+    updateInputValue(evt) {
+        this.setState({
+          [evt.target.name]: evt.target.value
+        });
     }
     submitHandler(submitEvt) {
+        const _this = this;
+        
         submitEvt.preventDefault();
+        
+        // Validate data;
+        const res = this.doValidation();
 
-        this.setState({sendingRequest: true});
-        submitEvt.target.className += " was-validated";
-    }
-    changeHandler(event) {
-        this.setState({[event.target.name]: event.target.value });
-    }
+        if (!res) {
+            this.setState({
+                message: 'Please correct fields highlighted with red',
+                messageType: messageType.ERR,
+                messageOpened: true
+            });
 
+            return;
+        }
+
+        // Do changes in UI;
+        this.setState({
+            message: 'Working',
+            messageType: messageType.INFO,
+            messageOpened: true
+        });
+
+        // Send data;
+        this.sendFormData(function (res) { 
+            
+            // Show message based on response;
+            _this.setState({
+                message: res ? 'Welcome to RoomKa!' : 'Something went wrong :( Please retry!',
+                messageType: res ? messageType.SUCCESS : messageType.ERR,
+                messageOpened: true
+            });
+
+            _this.resetFormUi();
+        });
+    }
     render() {
         return (
-            <MDBContainer className="register  font-weight-normal">
-                <MDBRow>
-                    <MDBCol className="register__form-wrapper">
-                        <form
-                            onSubmit={this.submitHandler}
-                            className="needs-validation"
+            <Grid
+                className="register"
+                container
+                direction="row"
+                justify="center"
+                alignItems="center"
+            >
+                {this.state.messageType && 
+                    this.state.messageType && 
+                        <CustomizedSnackbars 
+                            variant={this.state.messageType}
+                            message={this.state.message}
+                            open={this.state.messageOpened}
+                            resetToast={this.resetToast}
                         >
-                        <p className="h2 text-center mb-4  register__title">Sign up</p>
-                        <div className="grey-text">
-                        <MDBInput
-                            label="Your email"
-                            icon="envelope"
-                            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,63}$"
-                            group
-                            value = {this.state.email}
-                            onChange={this.changeHandler}
-                            type="email"
+                        </CustomizedSnackbars>
+                }
+                <Grid item xs={10} sm={6} className="register__info">
+                    <h1>Let's kick up</h1>
+                     <hr />
+                    <Typography variant="body1" className="register__info-text">
+                        Sign up and get in touch with people of same interests.
+                        Stay tuned it to all interesting event nearby!
+                    </Typography>
+                </Grid>
+                <Grid item xs={10} sm={6} className="register__form">
+                    <Typography align="center" variant="h4">
+                        <Person fontSize="large" />
+                        Sign up
+                    </Typography>
+                    <hr />
+                    <div className="register__field-wrapper">
+                        <Email />
+                        <TextField
+                            value={this.state.email}
+                            onChange={this.updateInputValue}
+                            required
+                            error={!this.state.emailInputValid}
+                            className="input"
                             name="email"
-                            data-register-user-email
-                            required
+                            label="Your email"
+                            type="email"
+                            margin="normal"
+                            autoComplete="off"
                         />
-                        <MDBInput
-                            label="Enter password, min. 6 chars"
-                            icon="lock"
-                            value = {this.state.password}
-                            onChange={this.changeHandler}
+                    </div>
+                    <div className="register__field-wrapper">
+                        <Lock />
+                        <TextField
+                            value={this.state.password}
+                            onChange={this.updateInputValue}
+                            required
+                            error={!this.state.passwordInputValid}
+                            className="input"
                             name="password"
-                            group
-                            pattern=".{6,}"
+                            label="Enter password, min. 6 chars"
                             type="password"
-                            data-register-user-password
-                            required
+                            margin="normal"
+                            autocomplete="new-password"
                         />
-                        </div>
-                        <div className="text-center">
-                            <MDBBtn 
-                                type="submit" 
-                                color="indigo"
-                                disabled={this.state.sendingRequest}
-                            >
-                                Register
-                                <MDBIcon far icon="paper-plane  register__plane-ico" className="ml-2" />
-                            </MDBBtn>
-                        </div>
-                    </form>
-                    
-                    </MDBCol>
-                    <MDBCol className="register__info-container">
-                        <ReactTypingEffect
-                            staticText='Sign up and'
-                            text={[
-                                'get in touch with people of same interests',
-                                'catch up with all interesting event nearby'
-                            ]}
-                            speed="50"
-                        />
-                    </MDBCol>
-                </MDBRow>
-            </MDBContainer>
+                    </div>
+                    <div className="register__btn-wrapper">
+                        <Button
+                            className="register__submit-btn"
+                            variant="contained"
+                            color="primary"
+                            onClick={this.submitHandler}
+                            disabled={this.state.messageOpened}
+                        >
+                            Send
+                            <Send />
+                        </Button>
+                    </div>
+                </Grid>
+            </Grid>
+           
         )
     }
 }
-
 export default Register;
