@@ -2,40 +2,32 @@ const express = require('express');
 const router = express.Router();
 const { User } = require('./../../models');
 const JWTService = require('./../../services/JWTService')
-const moment = require('moment')
+const Validator = require('./../../services/Validator');
 const handler = {
 
-  async sign_up(req,res) {
-    const {
-      nick,
-      first_name,
-      last_name,
-      email,
-      password,
-      avatar,
-      birth_date } = req.body;
-    const usersCount = await User.where({ email }).count();
-    if (usersCount) {
-      throw new Error('This email is already registered. How about to log in? ', 409);
-    }    
-    let userInfo = null;
-    let user = null;
-    userInfo = {
-      nick,
-      first_name,
-      last_name,
-      email,
-      password,
-      avatar,
-      birth_date,
-      created_at: moment().format('YYYY-MM-DD h:mm:ss')
-      };
-      user = await new User(userInfo).save(null);
-    res.status = 201;
-    res.send({
-      token: `Bearer ${JWTService.signUser(user)}`,
-      id: user.get('id')
+  async sign_up(req,res,next) {
+    const { email, password } = req.body;
+    const validation = await new Validator(req.body, {
+      email: 'required|email',
+      password: 'required|min:6'
     });
+    if (validation.fails()) {
+      return next(validation.errors);
+    }
+
+    try{
+      const userCtn = await User.where({ email:email.toLowerCase() }).count();
+      if(userCtn) throw new Error('Email has already been taken.');
+      const user = await new User({email,password}).save(null);
+      res.status = 201;
+      res.send({
+        token: `Bearer ${JWTService.signUser(user)}`,
+        id: user.get('id')
+      });
+    } catch (e) {
+      return next(e);
+    }
+    
   }
 };
 
