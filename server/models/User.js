@@ -1,6 +1,6 @@
 const { bookshelf } = require('./../config/database');
 const { comparePassword,hashPassword } = require('./../services/Bcript')
-
+const moment = require('moment');
 const User = bookshelf.Model.extend({
     tableName: 'users',
     initialize() {
@@ -17,6 +17,7 @@ const User = bookshelf.Model.extend({
       const email = model.get('email').toLowerCase();
       model.set('email', email);
       model.set('password', hash);
+      model.set('created_at', moment().format('YYYY-MM-DD h:mm:ss'));
     },
   });
 
