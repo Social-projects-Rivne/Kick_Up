@@ -1,7 +1,7 @@
-footer {
+footer.footer-content {
   display: flex;
   flex-direction: row;
-  padding-bottom: 15px;
+  padding: 10px;
 
   a:hover, a:visited {
     color: #3b3a36;
@@ -11,4 +11,5 @@ footer {
   .copyright {
     text-align: right;
   }
+
 }

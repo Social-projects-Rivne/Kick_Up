@@ -1,6 +1,7 @@
 import React from 'react';
-import './style.scss'
-import { Card, CardColumns} from 'react-bootstrap';
+
+import '../../styles/index.scss';
+import { Card, CardColumns } from 'react-bootstrap';
 
 const home = props => {
     return (
@@ -27,7 +28,7 @@ const home = props => {
                     </footer>
                 </blockquote>
             </Card>
-            <Card className="card">
+            <Card className="text-center card">
                 <Card.Body>
                     <Card.Title>Card title</Card.Title>
                     <Card.Text>
@@ -64,7 +65,7 @@ const home = props => {
                     </Card.Text>
                 </Card.Body>
             </Card>
-            <Card className="text-right card">
+            <Card className="text-center p-3 card">
                 <blockquote className="blockquote mb-0 card-body">
                     <p>
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere
@@ -77,7 +78,7 @@ const home = props => {
                     </footer>
                 </blockquote>
             </Card>
-            <Card className="card">
+            <Card className="text-center card">
                 <Card.Body>
                     <Card.Title>Card title</Card.Title>
                     <Card.Text>

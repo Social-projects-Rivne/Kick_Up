@@ -8,7 +8,7 @@ const pageContainer = props => {
     return (
         <>
             <AppHeader />
-            {props.children}
+            <main id="content">{props.children}</main>
             <Footer />
         </>
     );

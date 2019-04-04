@@ -1,3 +1,8 @@
+@import '../components/AppHeader/AppHeader.scss';
+@import '../components/Footer/Footer.scss';
+@import '../components/Home/Home.scss';
+@import '../components/Register/Register.scss';
+
 body {
   font-size: 14px;
 }
@@ -10,6 +15,11 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+main#content {
+  /* (screen height) - (header height) - (footer height) */
+  min-height: calc(100vh - 89px - 44px);
 }
 
 .app-wrapper {
