@@ -6,6 +6,10 @@
 .pnp.js
 package-lock.json
 
+#styles
+src/styles/*.css
+src/components/**/*.css
+
 # testing
 /coverage
 

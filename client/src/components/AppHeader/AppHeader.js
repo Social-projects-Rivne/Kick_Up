@@ -1,11 +1,13 @@
-import logo from './logo.png';
 import React from 'react';
+
+import '../../styles/index.scss';
 
 import { Link } from "react-router-dom";
 import { Navbar,  FormControl, Form, Nav, InputGroup } from 'react-bootstrap';
-import { faSignInAlt, faUsers, faCalendarAlt } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import './AppHeader.scss';
+import { faSignInAlt, faUsers, faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+import logo from '../../assets/images/logo.png';
 
 const AppHeader = props => (
         <Navbar collapseOnSelect expand="lg" className = 'header'>
