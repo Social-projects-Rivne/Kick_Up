@@ -29,3 +29,39 @@ code {
 }
 
 // Related to inputs;
+.input {
+  width: 100%;
+  margin-top: 6px !important;
+}
+
+.input input {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 40px;
+  padding: 8px 0;
+  color: white;
+}
+
+.input label {
+  color: white;
+  font-size: 1.143rem;
+
+  &.MuiInputLabel-shrink-154 {
+      color: #e5e5e5;
+  }
+}
+
+.input label + div::before,
+.input label + div::after {
+  border-color: white;
+}
+
+#root .input:hover label + div::before,
+#root .input:hover label + div::after {
+  border-color: #e5e5e5;
+}
+
+#root .MuiFormLabel-focused-159 .MuiFormLabel-asterisk-164,
+#root .MuiFormLabel-filled-162 .MuiFormLabel-asterisk-164 {
+  color: #e5e5e5;
+}
