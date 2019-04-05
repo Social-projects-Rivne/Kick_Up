@@ -1,7 +1,5 @@
-@import '../components/AppHeader/AppHeader.scss';
-@import '../components/Footer/Footer.scss';
-@import '../components/Home/Home.scss';
-@import '../components/Register/Register.scss';
+@import 'variables.scss';
+@import 'functions.scss';
 
 body {
   font-size: 14px;
@@ -19,7 +17,7 @@ body {
 
 main#content {
   /* (screen height) - (header height) - (footer height) */
-  min-height: calc(100vh - 89px - 44px);
+  min-height: calc(100vh - #{$header-height} - #{$footer-height});
 }
 
 .app-wrapper {
@@ -31,3 +29,8 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+@import '../components/AppHeader/AppHeader.scss';
+@import '../components/Footer/Footer.scss';
+@import '../components/Home/Home.scss';
+@import '../components/Register/Register.scss';

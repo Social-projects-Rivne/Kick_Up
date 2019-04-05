@@ -1,9 +1,15 @@
-.home-card {
-    padding: 15px;
+.main-content {
+    padding: 20px;
+    display: flex;
+    flex-direction: row;
 
     .card {
-        background-color: #e9ece5;
-        text-decoration: #3b3a36;
-        box-shadow: none;
+        padding: 15px;
+        width: 100%;
+        margin-right: 15px;
+
+        .media {
+            object-fit: cover;
+        }
     }
 }
