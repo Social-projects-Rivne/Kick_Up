@@ -34,6 +34,7 @@ class Register extends Component {
         this.resetToast = this.resetToast.bind(this);
         this.updateInputValue = this.updateInputValue.bind(this);
         this.doValidation = this.doValidation.bind(this);
+        this.sendFormData = this.sendFormData.bind(this);
     }
     resetFormUi = () => {
         this.setState({
@@ -90,6 +91,8 @@ class Register extends Component {
     }
     submitHandler(submitEvt) {
         submitEvt.preventDefault();
+
+        const _this = this;
         
         // Validate data;
         const res = this.doValidation();
@@ -115,13 +118,13 @@ class Register extends Component {
         this.sendFormData(function (res) { 
             
             // Show message based on response;
-            this.setState({
+            _this.setState({
                 message: res ? 'Welcome to RoomKa!' : 'Something went wrong :( Please retry!',
                 messageType: res ? messageType.SUCCESS : messageType.ERR,
                 messageOpened: true
             });
 
-            this.resetFormUi();
+            _this.resetFormUi();
         });
     }
     render() {
@@ -184,7 +187,7 @@ class Register extends Component {
                             label="Enter password, min. 6 chars"
                             type="password"
                             margin="normal"
-                            autocomplete="new-password"
+                            autoComplete="new-password"
                         />
                     </div>
                     <div className="register__btn-wrapper">

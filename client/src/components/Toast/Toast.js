@@ -21,6 +21,8 @@ const variantIcon = {
   info: InfoIcon,
 };
 
+// @todo try to move stryles separately;
+// @todo apply color palette;
 const styles = theme => ({
   success: {
     backgroundColor: green[500],
@@ -117,7 +119,7 @@ class CustomizedSnackbars extends React.Component {
                   horizontal: 'center',
               }}
               open={this.state.open}
-              autoHideDuration={3000}
+              autoHideDuration={33000}
               onClose={this.handleClose}
             >
             <MySnackbarContentWrapper
