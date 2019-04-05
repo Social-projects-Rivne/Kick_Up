@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
+var cors = require('cors')
 require("dotenv").config();
 
 const dbRoute = require("./mongoDB/constants/db");
@@ -15,6 +16,7 @@ app.use(express.json());
 
 //support parsing of application/x-www-form-urlencoded post data
 app.use(express.urlencoded({ extended: false }));
+app.use(cors());
 
 require("./routes")(app);
 
