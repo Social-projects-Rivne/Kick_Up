@@ -67,7 +67,7 @@ class Register extends Component {
             .catch((err) => { fireCallback(false) });
     }
     doValidation() {
-        var result = true;
+        let result = true;
 
         // Validate email;
         if (!is.email(this.state.email)) {
@@ -89,8 +89,6 @@ class Register extends Component {
         });
     }
     submitHandler(submitEvt) {
-        const _this = this;
-        
         submitEvt.preventDefault();
         
         // Validate data;
@@ -117,13 +115,13 @@ class Register extends Component {
         this.sendFormData(function (res) { 
             
             // Show message based on response;
-            _this.setState({
+            this.setState({
                 message: res ? 'Welcome to RoomKa!' : 'Something went wrong :( Please retry!',
                 messageType: res ? messageType.SUCCESS : messageType.ERR,
                 messageOpened: true
             });
 
-            _this.resetFormUi();
+            this.resetFormUi();
         });
     }
     render() {
