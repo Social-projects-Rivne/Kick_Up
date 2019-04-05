@@ -1,5 +1,9 @@
 import React, { Component } from "react";
 
+import '../../styles/index.scss';
+
+import ReactTypingEffect from 'react-typing-effect';
+
 import { Grid, TextField, Button, Typography } from '@material-ui/core';
 import { Person, Send, Email, Lock } from '@material-ui/icons';
 import axios from 'axios';
@@ -93,7 +97,7 @@ class Register extends Component {
         submitEvt.preventDefault();
 
         const _this = this;
-        
+
         // Validate data;
         const res = this.doValidation();
 
@@ -115,8 +119,8 @@ class Register extends Component {
         });
 
         // Send data;
-        this.sendFormData(function (res) { 
-            
+        this.sendFormData(function (res) {
+
             // Show message based on response;
             _this.setState({
                 message: res ? 'Welcome to RoomKa!' : 'Something went wrong :( Please retry!',
@@ -136,9 +140,9 @@ class Register extends Component {
                 justify="center"
                 alignItems="center"
             >
-                {this.state.messageType && 
-                    this.state.messageType && 
-                        <CustomizedSnackbars 
+                {this.state.messageType &&
+                    this.state.messageType &&
+                        <CustomizedSnackbars
                             variant={this.state.messageType}
                             message={this.state.message}
                             open={this.state.messageOpened}
@@ -204,7 +208,7 @@ class Register extends Component {
                     </div>
                 </Grid>
             </Grid>
-           
+
         )
     }
 }
