@@ -1,7 +1,10 @@
+@import './variables.scss';
+
 @import '../components/AppHeader/AppHeader.scss';
 @import '../components/Footer/Footer.scss';
 @import '../components/Home/Home.scss';
 @import '../components/Register/Register.scss';
+@import '../components/EventPage/EventPage.scss';
 
 body {
   min-height: 100vh;
