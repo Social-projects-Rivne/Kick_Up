@@ -2,14 +2,11 @@ import React, { Component } from "react";
 
 import '../../styles/index.scss';
 
-import ReactTypingEffect from 'react-typing-effect';
-
 import { Grid, TextField, Button, Typography } from '@material-ui/core';
 import { Person, Send, Email, Lock } from '@material-ui/icons';
 import axios from 'axios';
 import is from 'is_js';
 import CustomizedSnackbars from '../Toast/Toast';
-import '../../styles/Register.scss';
 
 // @todo change;
 const USER_ROUTE = 'http://httpbin.org/post';

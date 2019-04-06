@@ -3,14 +3,31 @@ import React from 'react';
 import '../../styles/index.scss';
 import logo from '../../assets/images/logo.png';
 
-import { AppBar, Toolbar, IconButton, InputBase, Link } from '@material-ui/core';
+import { AppBar, Toolbar, IconButton, InputBase, Link, BottomNavigation, BottomNavigationAction } from '@material-ui/core';
 //You can find icon names here: https://jxnblk.com/rmdi/
 import { EventAvailable, SupervisorAccount, PersonAdd, Person, MoreVert, Search } from '@material-ui/icons';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, withRouter } from 'react-router-dom';
 
 class AppHeader extends React.Component {
     state = {
         mobileMenuOpened: false,
+        activePage: window.location.pathname,
+    };
+
+    componentWillMount() {
+        this.unlisten = this.props.history.listen(location => {
+            const { pathname } = location;
+            this.setState({ activePage: pathname });
+        });
+    }
+
+    componentWillUnmount() {
+        this.unlisten();
+    }
+
+    handleChangeActivePage = (event, activePage) => {
+        this.setState({ activePage });
+        this.props.history.push(activePage);
     };
 
     handleMobileMenuToggle = event => {
@@ -19,29 +36,16 @@ class AppHeader extends React.Component {
     };
 
     render() {
-        const { mobileMenuOpened } = this.state;
+        const { mobileMenuOpened, activePage } = this.state;
+
         const renderMobileMenu = (
             <div className={"mobile-menu" + (mobileMenuOpened ? "" : " hidden")}>
-                <IconButton className="icon-details">
-                    <Link component={RouterLink} to="/events">
-                        <EventAvailable />
-                    </Link>
-                </IconButton>
-                <IconButton className="icon-details">
-                    <Link component={RouterLink} to="/rooms">
-                        <SupervisorAccount />
-                    </Link>
-                </IconButton>
-                <IconButton className="icon-details">
-                    <Link component={RouterLink} to="/sign-in">
-                        <Person />
-                    </Link>
-                </IconButton>
-                <IconButton className="icon-details">
-                    <Link component={RouterLink} to="/register">
-                        <PersonAdd />
-                    </Link>
-                </IconButton>
+                <BottomNavigation value={activePage} onChange={this.handleChangeActivePage} className="navigation-buttons">
+                    <BottomNavigationAction className="icon-details" label="Events" value="/events" icon={<EventAvailable />} />
+                    <BottomNavigationAction className="icon-details" label="Spaces" value="/rooms" icon={<SupervisorAccount />} />
+                    <BottomNavigationAction className="icon-details" label="Sign In" value="/sign-in" icon={<Person />} />
+                    <BottomNavigationAction className="icon-details" label="Sign Up" value="/register" icon={<PersonAdd />} />
+                </BottomNavigation>
             </div>
         );
 
@@ -63,29 +67,17 @@ class AppHeader extends React.Component {
                             </div>
                         </form>
                         <div className="section-desktop">
-                            <IconButton className="icon-details">
-                                <Link component={RouterLink} to="/events">
-                                    <EventAvailable />
-                                </Link>
-                            </IconButton>
-                            <IconButton className="icon-details">
-                                <Link component={RouterLink} to="/rooms">
-                                    <SupervisorAccount />
-                                </Link>
-                            </IconButton>
+                            <BottomNavigation value={activePage} onChange={this.handleChangeActivePage} className="navigation-buttons">
+                                <BottomNavigationAction className="icon-details" label="Events" value="/events" icon={<EventAvailable />} />
+                                <BottomNavigationAction className="icon-details" label="Spaces" value="/rooms" icon={<SupervisorAccount />} />
+                            </BottomNavigation>
                         </div>
                         <div className="grow" />
                         <div className="section-desktop">
-                            <IconButton className="icon-details">
-                                <Link component={RouterLink} to="/sign-in">
-                                    <Person />
-                                </Link>
-                            </IconButton>
-                            <IconButton className="icon-details">
-                                <Link component={RouterLink} to="/register">
-                                    <PersonAdd />
-                                </Link>
-                            </IconButton>
+                            <BottomNavigation value={activePage} onChange={this.handleChangeActivePage} className="navigation-buttons">
+                                <BottomNavigationAction className="icon-details" label="Sign In" value="/sign-in" icon={<Person />} />
+                                <BottomNavigationAction className="icon-details" label="Sign Up" value="/register" icon={<PersonAdd />} />
+                            </BottomNavigation>
                         </div>
                         <div className="section-mobile">
                             <IconButton
@@ -104,4 +96,4 @@ class AppHeader extends React.Component {
     }
 }
 
-export default AppHeader;
+export default withRouter(AppHeader);

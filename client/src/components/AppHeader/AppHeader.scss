@@ -29,8 +29,8 @@ header.root {
             background-color: transparent;
         }
 
-        a:hover, a:visited {
-            color: $icon-color;
+        span[class*=label] {
+            color: $white;
         }
 
         svg {
@@ -55,8 +55,8 @@ header.root {
             position: relative;
             border-radius: 50px;
             background-color: $icon-color;
-            opacity: 0.25;
             width: 100%;
+            color: $white;
 
             @include media-breakpoint-up(lg) {
                 margin-left: 0;
@@ -71,7 +71,6 @@ header.root {
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                color: #ffffff;
                 transition: margin-left 0.5s;
             }
 
@@ -104,6 +103,14 @@ header.root {
         }
     }
 
+    .navigation-buttons {
+        height: auto;
+        background-color: transparent;
+        button[class*=iconOnly] {
+            padding-top: 24px;
+        }
+    }
+
     .section-desktop {
         display: none;
         @include media-breakpoint-up(lg) {
@@ -116,7 +123,7 @@ header.root {
         box-shadow: 0 2px 4px -1px rgba(0,0,0,0.2),
             0 4px 5px 0px rgba(0,0,0,0.14),
             0 1px 10px 0px rgba(0,0,0,0.12);
-        max-height: 100px;
+        max-height: 150px;
         overflow: hidden;
         transition: max-height 0.5s;
 

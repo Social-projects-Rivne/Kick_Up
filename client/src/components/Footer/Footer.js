@@ -14,9 +14,8 @@ const footer = props => {
                 </Link>
             </div>
             <div className="copyright">
-                <Link component={RouterLink} to="/">
-                    &copy; {new Date().getFullYear()}{" "}Copyright: <a href="/">KickUp</a>
-                </Link>
+                &copy; {new Date().getFullYear()}{" "}Copyright:{" "}
+                <Link component={RouterLink} to="/">KickUp</Link>
             </div>
         </footer>
     );
