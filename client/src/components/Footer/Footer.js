@@ -5,7 +5,7 @@ import '../../styles/index.scss';
 import { Link as RouterLink } from 'react-router-dom';
 import { Link } from "@material-ui/core";
 
-const footer = props => {
+const Footer = props => {
     return (
         <footer className="footer-content">
             <div className="privacy-policy">
@@ -21,4 +21,4 @@ const footer = props => {
     );
 };
 
-export default footer;
+export default Footer;

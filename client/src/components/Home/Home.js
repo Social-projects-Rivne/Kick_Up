@@ -5,7 +5,7 @@ import event from '../../assets/images/event.jpg';
 
 import { Card, CardActionArea, CardActions, CardContent, CardMedia, Button, Typography, Grid } from '@material-ui/core';
 
-const home = props => {
+const Home = props => {
     return (
         <div className="main-content" >
         <Grid container spacing={24}>
@@ -173,4 +173,4 @@ const home = props => {
     );
 };
 
-export default home;
+export default Home;
