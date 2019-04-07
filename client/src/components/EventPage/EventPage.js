@@ -12,9 +12,11 @@ import {
     ExpansionPanel,
     ExpansionPanelSummary,
     ExpansionPanelDetails,
-    Avatar
+    Avatar,
+    Fab
 } from '@material-ui/core';
-import { 
+import {
+    Add,
     DateRange, 
     LocationOn,
     ExpandMore
@@ -44,13 +46,14 @@ const galleryParams = {
 
 const tabsParams = {
     modules: [Pagination],
-    slidesPerView: 1,
+    slidesPerView: 'auto',
     loop: false,
     pagination: {
       el: ".event-page__section-pagination",
       type: "bullets",
       clickable: true
     },
+    centeredSlides: true,
     autoHeight: true,
     spaceBetween: 30,
     rebuildOnUpdate: true,
@@ -88,44 +91,52 @@ class EventPage extends Component {
                     </div>
                 )}
                 </Swiper>
-                <Typography variant="h5" className="event-page__title">
-                    Meteor shower in Rivne!
-                </Typography>
+                <div className="event-page__title-wrapper">
+                    <Typography variant="h5" className="event-page__title">
+                        Meteor shower in Rivne!
+                    </Typography>
+                    <Fab className="event-page__fab" variant="extended" color="primary">
+                        <Add />
+                        <span className="event-page__fab-text">Join now</span>
+                    </Fab>
+                </div>
                 <Swiper {...tabsParams} >
                     <Grid className="event-page__section" item xs={12}>
-                        <List>
-                            <ListItem className="event-page__list-item">
-                                <ListItemIcon>
-                                    <DateRange />
-                                </ListItemIcon>
-                                {/* @todo, display via moment.js; */}
-                                <ListItemText className="event-page__list-item-text" primary="April 7th 2019, 4:30 pm" />
-                            </ListItem>
-                            <ListItem className="event-page__list-item">
-                                <ListItemIcon>
-                                    <LocationOn />
-                                </ListItemIcon>
-                                {/* @todo, display from DB; */}
-                                <ListItemText className="event-page__list-item-text" primary="4-6 Slovatsʹkoho str., Rivne, 33017"/>
-                            </ListItem>
-                        </List>
-                        <Paper elevation={1} className="event-page__main-details-wrapper">
-                            <Typography component="p" className="event-page__main-details">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                                Nullam a neque lacus. Donec tristique eros nisi, a feugiat 
-                                nisi congue vitae. Nullam sodales tempor elementum. Nullam 
-                                volutpat euismod mauris id commodo. Praesent vitae lacus purus. 
-                                Proin congue finibus risus, eu lacinia tellus. Donec eget sem 
-                                nec diam suscipit dapibus. Fusce a rhoncus libero, sed tristique 
-                                nisl. Maecenas turpis elit, vulputate eget magna vitae, volutpat pulvinar 
-                                nibh. Praesent pellentesque quis leo at maximus.
-                            </Typography>
-                        </Paper>
+                        <div className="event-page__info-wrapper">
+                            <List>
+                                <ListItem className="event-page__list-item">
+                                    <ListItemIcon>
+                                        <DateRange />
+                                    </ListItemIcon>
+                                    {/* @todo, display via moment.js; */}
+                                    <ListItemText className="event-page__list-item-text" primary="April 7th 2019, 4:30 pm" />
+                                </ListItem>
+                                <ListItem className="event-page__list-item">
+                                    <ListItemIcon>
+                                        <LocationOn />
+                                    </ListItemIcon>
+                                    {/* @todo, display from DB; */}
+                                    <ListItemText className="event-page__list-item-text" primary="4-6 Slovatsʹkoho str., Rivne, 33017"/>
+                                </ListItem>
+                            </List>
+                            <Paper elevation={1} className="event-page__main-details-wrapper">
+                                <Typography component="p" className="event-page__main-details">
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+                                    Nullam a neque lacus. Donec tristique eros nisi, a feugiat 
+                                    nisi congue vitae. Nullam sodales tempor elementum. Nullam 
+                                    volutpat euismod mauris id commodo. Praesent vitae lacus purus. 
+                                    Proin congue finibus risus, eu lacinia tellus. Donec eget sem 
+                                    nec diam suscipit dapibus. Fusce a rhoncus libero, sed tristique 
+                                    nisl. Maecenas turpis elit, vulputate eget magna vitae, volutpat pulvinar 
+                                    nibh. Praesent pellentesque quis leo at maximus.
+                                </Typography>
+                            </Paper>
+                        </div>
                     </Grid>
                     <Grid className="event-page__section" item xs={12}>
                         <ExpansionPanel>
                             <ExpansionPanelSummary className="event-page__faq-title" expandIcon={<ExpandMore />}>
-                            {/* @todo take avatar from db */}
+                                {/* @todo take avatar from db */}
                                 <Avatar alt="" src="https://material-ui.com/static/images/avatar/1.jpg" className="avatar  event-page__avatar" />
                                 <Typography>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum diam nulla, commodo eu sodales eu?</Typography>
                             </ExpansionPanelSummary>
@@ -141,7 +152,7 @@ class EventPage extends Component {
                         </ExpansionPanel>
                         <ExpansionPanel>
                             <ExpansionPanelSummary className="event-page__faq-title" expandIcon={<ExpandMore />}>
-                            {/* @todo take avatar from db */}
+                                {/* @todo take avatar from db */}
                                 <Avatar alt="" src="https://material-ui.com/static/images/avatar/1.jpg" className="avatar  event-page__avatar" />
                                 <Typography>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum diam nulla, commodo eu sodales eu?</Typography>
                             </ExpansionPanelSummary>
@@ -172,7 +183,7 @@ class EventPage extends Component {
                             </ExpansionPanelDetails>
                         </ExpansionPanel>
                     </Grid>
-                    <Grid item xs={12} md={6}>
+                    <Grid className="event-page__section" item xs={12} md={6}>
                         <List className="event-page__users-list">
                             <ListItem className="event-page__users-list-item">
                                 <ListItemAvatar>
