@@ -1,17 +1,68 @@
 import React, { Component } from "react";
 
-import { Typography, Grid, Paper } from '@material-ui/core';
-import SwiperInstance from '../Swiper/Swiper';
+import { 
+    Typography, 
+    Grid, 
+    Paper,
+    List,
+    ListItem,
+    ListItemIcon,
+    ListItemText,
+    ListItemAvatar,
+    ExpansionPanel,
+    ExpansionPanelSummary,
+    ExpansionPanelDetails,
+    Avatar
+} from '@material-ui/core';
+import { 
+    DateRange, 
+    LocationOn,
+    ExpandMore
+} from '@material-ui/icons';
+import Swiper from 'react-id-swiper/lib/ReactIdSwiper.full';
+import { Pagination, Autoplay } from 'swiper/dist/js/swiper.esm';
+import "react-id-swiper/src/styles/scss/swiper.scss";
 
-// Swiper params for event page;
-const swiperParams = {
-    pagination: true,
+// Global constants;
+const tabletWidth = 768;
+
+// Swipers params for event page;
+const galleryParams = {
+    modules: [Pagination, Autoplay],
+    effect: 'slide',
     slidesPerView: 'auto',
-    centeredSlides: true,
+    centeredSlides: false,
+    loop: true,
+    pagination: {
+      el: ".swiper-pagination",
+      type: "bullets",
+      clickable: true
+    },
+    spaceBetween: 16,
+    autoplay: true
+};
+
+const tabsParams = {
+    modules: [Pagination],
+    slidesPerView: 1,
+    loop: false,
+    pagination: {
+      el: ".event-page__section-pagination",
+      type: "bullets",
+      clickable: true
+    },
+    autoHeight: true,
     spaceBetween: 30,
+    rebuildOnUpdate: true,
     shouldSwiperUpdate: true,
-    rebuildOnUpdate: true
-}
+    containerClass: 'swiper-container  event-page__tabs-swiper',
+    // Update height;
+    on: {
+        click: function() {
+            this.updateAutoHeight();
+        }
+    }
+} 
 
 class EventPage extends Component {
     constructor(props) {
@@ -30,25 +81,36 @@ class EventPage extends Component {
     render() {
         return (
             <main className="event-page">
-                <SwiperInstance
-                    params={swiperParams}
-                    slides={this.state.images}
-                 />
-                <Grid container spacing={12}>
-                    <Grid item xs={3}>
-                        Date
-                    </Grid>
-                    <Grid item xs={6}>
-                        <Typography className="event-page__title" variant="h3">
-                            {this.state.eventTitle}
-                        </Typography>
-                    </Grid>
-                    <Grid item xs={3}>
-                        Join
-                    </Grid>
-                    <section className="event-page__main-details">
-                        <Paper elevation={1}>
-                            <Typography component="p" className="event-page__main-details-inner">
+                <Swiper {...galleryParams} >
+                {this.state.images.map((slide, idx) => 
+                    <div key={idx}>
+                        <img src={slide} alt="" />
+                    </div>
+                )}
+                </Swiper>
+                <Typography variant="h5" className="event-page__title">
+                    Meteor shower in Rivne!
+                </Typography>
+                <Swiper {...tabsParams} >
+                    <Grid className="event-page__section" item xs={12}>
+                        <List>
+                            <ListItem className="event-page__list-item">
+                                <ListItemIcon>
+                                    <DateRange />
+                                </ListItemIcon>
+                                {/* @todo, display via moment.js; */}
+                                <ListItemText className="event-page__list-item-text" primary="April 7th 2019, 4:30 pm" />
+                            </ListItem>
+                            <ListItem className="event-page__list-item">
+                                <ListItemIcon>
+                                    <LocationOn />
+                                </ListItemIcon>
+                                {/* @todo, display from DB; */}
+                                <ListItemText className="event-page__list-item-text" primary="4-6 Slovatsʹkoho str., Rivne, 33017"/>
+                            </ListItem>
+                        </List>
+                        <Paper elevation={1} className="event-page__main-details-wrapper">
+                            <Typography component="p" className="event-page__main-details">
                                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
                                 Nullam a neque lacus. Donec tristique eros nisi, a feugiat 
                                 nisi congue vitae. Nullam sodales tempor elementum. Nullam 
@@ -59,20 +121,152 @@ class EventPage extends Component {
                                 nibh. Praesent pellentesque quis leo at maximus.
                             </Typography>
                         </Paper>
-                        <Paper elevation={1}>
-                        <Typography component="p" className="event-page__main-details-inner">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                            Nullam a neque lacus. Donec tristique eros nisi, a feugiat 
-                            nisi congue vitae. Nullam sodales tempor elementum. Nullam 
-                            volutpat euismod mauris id commodo. Praesent vitae lacus purus. 
-                            Proin congue finibus risus, eu lacinia tellus. Donec eget sem 
-                            nec diam suscipit dapibus. Fusce a rhoncus libero, sed tristique 
-                            nisl. Maecenas turpis elit, vulputate eget magna vitae, volutpat pulvinar 
-                            nibh. Praesent pellentesque quis leo at maximus.
-                        </Typography>
-                    </Paper>
-                    </section>
-                </Grid>
+                    </Grid>
+                    <Grid className="event-page__section" item xs={12}>
+                        <ExpansionPanel>
+                            <ExpansionPanelSummary className="event-page__faq-title" expandIcon={<ExpandMore />}>
+                            {/* @todo take avatar from db */}
+                                <Avatar alt="" src="https://material-ui.com/static/images/avatar/1.jpg" className="avatar  event-page__avatar" />
+                                <Typography>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum diam nulla, commodo eu sodales eu?</Typography>
+                            </ExpansionPanelSummary>
+                            <ExpansionPanelDetails className="event-page__faq-answer">
+                                {/* @todo take avatar from db */}
+                                <Avatar alt="" src="https://material-ui.com/static/images/avatar/1.jpg" className="avatar  event-page__avatar" />
+                                <Typography className="event-page__faq-text">
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
+                                    sit amet blandit leo lobortis eget. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
+                                    sit amet blandit leo lobortis eget.
+                                </Typography>
+                            </ExpansionPanelDetails>
+                        </ExpansionPanel>
+                        <ExpansionPanel>
+                            <ExpansionPanelSummary className="event-page__faq-title" expandIcon={<ExpandMore />}>
+                            {/* @todo take avatar from db */}
+                                <Avatar alt="" src="https://material-ui.com/static/images/avatar/1.jpg" className="avatar  event-page__avatar" />
+                                <Typography>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum diam nulla, commodo eu sodales eu?</Typography>
+                            </ExpansionPanelSummary>
+                            <ExpansionPanelDetails className="event-page__faq-answer">
+                                {/* @todo take avatar from db */}
+                                <Avatar alt="" src="https://material-ui.com/static/images/avatar/1.jpg" className="avatar  event-page__avatar" />
+                                <Typography className="event-page__faq-text">
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
+                                    sit amet blandit leo lobortis eget. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
+                                    sit amet blandit leo lobortis eget.
+                                </Typography>
+                            </ExpansionPanelDetails>
+                        </ExpansionPanel>
+                        <ExpansionPanel>
+                            <ExpansionPanelSummary className="event-page__faq-title" expandIcon={<ExpandMore />}>
+                            {/* @todo take avatar from db */}
+                                <Avatar alt="" src="https://material-ui.com/static/images/avatar/1.jpg" className="avatar  event-page__avatar" />
+                                <Typography>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum diam nulla, commodo eu sodales eu?</Typography>
+                            </ExpansionPanelSummary>
+                            <ExpansionPanelDetails className="event-page__faq-answer">
+                                {/* @todo take avatar from db */}
+                                <Avatar alt="" src="https://material-ui.com/static/images/avatar/1.jpg" className="avatar  event-page__avatar" />
+                                <Typography className="event-page__faq-text">
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
+                                    sit amet blandit leo lobortis eget. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
+                                    sit amet blandit leo lobortis eget.
+                                </Typography>
+                            </ExpansionPanelDetails>
+                        </ExpansionPanel>
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <List className="event-page__users-list">
+                            <ListItem className="event-page__users-list-item">
+                                <ListItemAvatar>
+                                <Avatar>
+                                    {/* @todo take avatar from db */}
+                                    <Avatar alt="" src="https://material-ui.com/static/images/avatar/1.jpg" className="avatar  event-page__avatar" />
+                                </Avatar>
+                                </ListItemAvatar>
+                                <ListItemText
+                                    primary="Ramon Good"
+                                    secondary='joined 2 days ago'
+                                />
+                            </ListItem>
+
+                            <ListItem className="event-page__users-list-item">
+                                <ListItemAvatar>
+                                <Avatar>
+                                    {/* @todo take avatar from db */}
+                                    <Avatar alt="" src="https://material-ui.com/static/images/avatar/1.jpg" className="avatar  event-page__avatar" />
+                                </Avatar>
+                                </ListItemAvatar>
+                                <ListItemText
+                                    primary="Heath Meadows"
+                                    secondary='joined 2 days ago'
+                                />
+                            </ListItem>
+
+                            <ListItem className="event-page__users-list-item">
+                                <ListItemAvatar>
+                                <Avatar>
+                                    {/* @todo take avatar from db */}
+                                    <Avatar alt="" src="https://material-ui.com/static/images/avatar/1.jpg" className="avatar  event-page__avatar" />
+                                </Avatar>
+                                </ListItemAvatar>
+                                <ListItemText
+                                    primary="Penelope Ellison"
+                                    secondary='joined 2 days ago'
+                                />
+                            </ListItem>
+
+                            <ListItem className="event-page__users-list-item">
+                                <ListItemAvatar>
+                                <Avatar>
+                                    {/* @todo take avatar from db */}
+                                    <Avatar alt="" src="https://material-ui.com/static/images/avatar/1.jpg" className="avatar  event-page__avatar" />
+                                </Avatar>
+                                </ListItemAvatar>
+                                <ListItemText
+                                    primary="Mauricio Hawkins"
+                                    secondary='joined 2 days ago'
+                                />
+                            </ListItem>
+
+                            <ListItem className="event-page__users-list-item">
+                                <ListItemAvatar>
+                                <Avatar>
+                                    {/* @todo take avatar from db */}
+                                    <Avatar alt="" src="https://material-ui.com/static/images/avatar/1.jpg" className="avatar  event-page__avatar" />
+                                </Avatar>
+                                </ListItemAvatar>
+                                <ListItemText
+                                    primary="Davion Dennis"
+                                    secondary='joined 2 days ago'
+                                />
+                            </ListItem>
+
+                            <ListItem className="event-page__users-list-item">
+                                <ListItemAvatar>
+                                <Avatar>
+                                    {/* @todo take avatar from db */}
+                                    <Avatar alt="" src="https://material-ui.com/static/images/avatar/1.jpg" className="avatar  event-page__avatar" />
+                                </Avatar>
+                                </ListItemAvatar>
+                                <ListItemText
+                                    primary="Remington Dalton"
+                                    secondary='joined 2 days ago'
+                                />
+                            </ListItem>
+
+                            <ListItem className="event-page__users-list-item">
+                                <ListItemAvatar>
+                                <Avatar>
+                                    {/* @todo take avatar from db */}
+                                    <Avatar alt="" src="https://material-ui.com/static/images/avatar/1.jpg" className="avatar  event-page__avatar" />
+                                </Avatar>
+                                </ListItemAvatar>
+                                <ListItemText
+                                    primary="Sage Gates"
+                                    secondary='joined 2 days ago'
+                                />
+                            </ListItem>
+                        </List>
+                    </Grid>
+                </Swiper>
             </main>
         );
     }

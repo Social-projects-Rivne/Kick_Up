@@ -1,14 +1,66 @@
 .event-page {
-    
+    /* fallback for old browsers */
+    background: #ECE9E6;
+    background: linear-gradient(to right, #FFFFFF, #ECE9E6); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+    & * {
+        box-sizing: border-box;
+    }
+}
+
+.event-page__main-details-wrapper {
+    margin-bottom: 8px;
 }
 
 .event-page__main-details {
-    padding-left: 16px;
-    padding-right: 16px;
+    padding: 8px;
 }
 
-.event-page__main-details-inner {
-    padding: 8px;
+.event-page .event-page__title {
+    padding-top: 8px;
+    padding-left: 16px;
+    padding-right: 16px;
+    text-align: center;
+    font-weight: 100;
+}
+
+.event-page .event-page__list-item {
+    padding: 0;
+    margin-bottom: 8px;
+}
+
+.event-page .event-page__list-item svg {
+    fill: $indigoBright;
+}
+
+.event-page .event-page__list-item-text {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+// FAQ chapter;
+.event-page .event-page__faq-title {
+    padding-left: 12px;
+    padding-right: 12px;
+}
+
+.event-page .event-page__faq-title + div 
+.MuiExpansionPanelDetails-root-216 {
+    padding-top: 0; 
+}
+
+.event-page .event-page__faq-text {
+    font-weight: 100;
+}
+
+.event-page .event-page__avatar {
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-right: 12px;
+}
+
+.event-page__faq-answer .event-page__avatar {
+    margin-top: 0;
 }
 
 // Related to swiper;
@@ -16,14 +68,10 @@
     max-height: $maxEventSwiperHeight;
 }
 
-.event-page .event-page__title {
-    font-weight: 100;   
-}
-
-// Related to swiper;
 .event-page .swiper-container img {
     max-height: $maxEventSwiperHeight;
     width: auto;
+    border-radius: 3px;
 }
 
 .event-page .image-gallery-slides {
@@ -34,4 +82,91 @@
     display: inline-block;
     width: auto;
     border-radius: 5px;
+}
+
+.event-page .event-page__tabs-swiper {
+    display: flex;
+    width: 100%;
+    // @todo update after ok header and footer;
+    min-height: calc(100vh - (0.67rem * 2) - #{$footerHeight} - #{$maxEventSwiperHeight} - #{$header-height});
+    max-height: unset;
+    flex-direction: column-reverse;
+    justify-content: flex-end;
+}
+
+.event-page__sections-wrapper {
+    display: flex;
+    flex-direction: column;
+    border: 3px solid red;
+}
+
+.event-page .event-page__section {
+    display: block;
+    width: 100%;
+    padding-left: 16px;
+    padding-right: 16px;
+}
+
+.event-page__section-pagination {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+}
+
+.event-page .swiper-pagination-bullet {
+    background-color: $white;
+    opacity: 0.7;
+}
+
+.event-page .swiper-pagination-bullet-active {
+    background-color: $indigoBright;
+    opacity: 1;
+}
+
+#root .event-page .event-page__section-pagination span {
+    margin: 0;
+    margin-right: 20px;
+    height: auto;
+    background-color: transparent;
+    width: unset;
+
+    &::before {
+        color: $indigoBright;
+        font-weight: 400;
+        font-size: 1rem;
+        line-height: 1.286rem;
+    }
+
+    &.swiper-pagination-bullet-active::before {
+        font-weight: 600;
+    }
+
+    &:nth-child(1)::before {
+        content: 'Info';
+    }
+
+    &:nth-child(2)::before {
+        content: 'FAQ';
+    }
+
+    &:nth-child(3)::before {
+        content: 'Members';
+    }
+}
+
+// Mobile landscape;
+@media only screen and (max-width: 768px) and (orientation: landscape) {
+    .event-page__users-list {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+    }
+
+    .event-page__users-list-item {
+        max-width: 50%;
+    }
+}
+
+@media only screen and (min-width: 768px) {
+
 }
