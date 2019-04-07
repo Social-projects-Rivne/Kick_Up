@@ -1,7 +1,5 @@
-@import '../components/AppHeader/AppHeader.scss';
-@import '../components/Footer/Footer.scss';
-@import '../components/Home/Home.scss';
-@import '../components/Register/Register.scss';
+@import 'variables.scss';
+@import 'functions.scss';
 
 body {
   min-height: 100vh;
@@ -17,7 +15,7 @@ body {
 
 main#content {
   /* (screen height) - (header height) - (footer height) */
-  min-height: calc(100vh - 89px - 44px);
+  min-height: calc(100vh - #{$header-height} - #{$footer-height});
 }
 
 .app-container {
@@ -75,3 +73,8 @@ code {
 #root .MuiFormLabel-filled-162 .MuiFormLabel-asterisk-164 {
   color: #e5e5e5;
 }
+
+@import '../components/AppHeader/AppHeader.scss';
+@import '../components/Footer/Footer.scss';
+@import '../components/Home/Home.scss';
+@import '../components/Register/Register.scss';

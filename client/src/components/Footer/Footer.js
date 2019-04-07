@@ -2,10 +2,23 @@ import React from 'react';
 
 import '../../styles/index.scss';
 
-const footer = props => {
+import { Link as RouterLink } from 'react-router-dom';
+import { Link } from "@material-ui/core";
+
+const Footer = props => {
     return (
-        <div>Footer</div>
+        <footer className="footer-content">
+            <div className="privacy-policy">
+                <Link component={RouterLink} to="/privacypolicy">
+                    Privacy Policy
+                </Link>
+            </div>
+            <div className="copyright">
+                &copy; {new Date().getFullYear()}{" "}Copyright:{" "}
+                <Link component={RouterLink} to="/">KickUp</Link>
+            </div>
+        </footer>
     );
 };
 
-export default footer;
+export default Footer;

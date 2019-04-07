@@ -1,95 +1,143 @@
-.header {
-    background-color: #3b3a36;
+header.root {
+    width: 100%;
 
-    @media (min-width: 992px) {
-        #responsive-navbar-nav {
-            height: auto !important;
-        }
+    .grow {
+        flex-grow: 1;
     }
 
-    .toggle {
-        outline: none;
-        border: 0;
-        padding: 0;
+    .header-bg {
+        background-color: $header-bg;
     }
 
-    .logoImg {
+    .logo-img {
         height: 50px;
     }
 
-    .header-content {
+    .logo-hover {
+      outline: none;
+    }
+
+    .logo-hover:hover {
+        background-color: transparent;
+    }
+
+    .icon-details{
+        color: $icon-color;
+        outline: none;
+
+        &:hover {
+            background-color: transparent;
+        }
+
+        span[class*=label] {
+            color: $white;
+        }
+
+        svg {
+            font-size: 40px;
+        }
+    }
+
+    .section-mobile {
         display: flex;
-        width: 100%;
-        align-items: center;
 
-        > div {
-            width: 33%;
-            flex-grow: 1;
-            display: flex;
+        @include media-breakpoint-up(lg) {
+            display: none;
+        }
+    }
+
+    .search-form {
+        @include media-breakpoint-up(lg) {
+            margin: 0 15px;
         }
 
-        .fa-icon, .fa-icon:hover, .fa-icon:visited {
-            color: #e9ece5;
-            font-size: 29pt;
-            cursor:pointer;
-        }
+        .search {
+            position: relative;
+            border-radius: 50px;
+            background-color: $icon-color;
+            width: 100%;
+            color: $white;
 
-        .align-right {
-            justify-content: right;
+            @include media-breakpoint-up(lg) {
+                margin-left: 0;
+                width: auto;
+            }
 
-            > * {
-                margin-left: auto;
+            .search-icon {
+                margin-left: 22px;
+                height: 100%;
+                position: absolute;
+                pointer-events: none;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: margin-left 0.5s;
+            }
+
+            &:focus-within .search-icon {
+                margin-left: 10px;
+            }
+
+            .search-root {
+                color: inherit;
+                width: 100%;
+
+                input {
+                    padding: 8px 8px 8px 56px;
+                    transition: width 0.5s, padding-left 0.5s;
+                    width: 100%;
+
+                    &:focus {
+                        padding-left: 36px;
+                    }
+
+                    @include media-breakpoint-up(lg) {
+                        width: 0;
+
+                        &:focus {
+                            width: 200px;
+                        }
+                    }
+                }
             }
         }
+    }
 
-        .align-center {
+    .navigation-buttons {
+        height: auto;
+        background-color: transparent;
+        button[class*=iconOnly] {
+            padding-top: 24px;
+        }
+    }
+
+    .section-desktop {
+        display: none;
+        @include media-breakpoint-up(lg) {
+            display: flex;
+        }
+    }
+
+    .mobile-menu {
+        background: lighten($header-bg, 10%);
+        box-shadow: 0 2px 4px -1px rgba(0,0,0,0.2),
+            0 4px 5px 0px rgba(0,0,0,0.14),
+            0 1px 10px 0px rgba(0,0,0,0.12);
+        max-height: 150px;
+        overflow: hidden;
+        transition: max-height 0.5s;
+
+        @include media-breakpoint-down(lg) {
+            display: flex;
             justify-content: center;
         }
 
-        .nav-link {
-            display: inline-block;
+        @include media-breakpoint-up(lg) {
+            display: none;
         }
 
-        .search-field {
-            width: 75px;
-            transition: width 0.5s;
-            border: 0;
-            outline: none;
-            border-radius: 50px;
-            box-shadow: none;
-            text-decoration-color: #e9ece5;
-
-            &:focus {
-                width: 300px;
-            }
-        }
-    }
-
-    .align-center .fa-icon {
-        padding-left: 20px;
-    }
-
-    @media (max-width: 991px) {
-        .header-content{
-            display: flex;
-            flex-wrap: wrap;
-            flex-direction: row;
-
-            > div {
-                width: 50%;
-            }
-
-            .align-center {
-                justify-content: flex-start;
-            }
-
-            .search-row {
-                width: 100%;
-            }
-
-            .search-form {
-                width: 100%;
-            }
+        &.hidden {
+            max-height: 0;
         }
     }
 }
