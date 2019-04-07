@@ -3,14 +3,11 @@ const router = new Router();
 
 const Event = require("./../mongoDB/models/modelEvent");
 
-router.post("/save-event", (req, res) => {
-  const { event_id, moderators_list, tags } = req.body;
+router.post("/save-event", (ctx) => {
+  const { event_id, moderators_list, tags } = ctx.request.body;
   let newEvent = new Event();
   if (!event_id || !moderators_list || !tags) {
-    return res.json({
-      success: false,
-      error: "INVALID INPUTS"
-    });
+    ctx.throwSingle("INVALID INPUTS", 404)
   }
   (newEvent.event_id = event_id),
     (newEvent.comments = []),
@@ -20,15 +17,18 @@ router.post("/save-event", (req, res) => {
     (newEvent.members = []),
     (newEvent.ratings = []);
   newEvent.save(err => {
-    if (err) return res.json({ success: false, error: err });
-    return res.json({ success: true });
+    if (err) return ctx.throwSingle(err, 500)
+    return ctx.body = { success: true };
   });
 });
 
-router.get("/", (req, res) => {
+router.get("/", (ctx) => {
   Event.find((err, data) => {
-    if (err) return res.json({ success: false, error: err });
-    return res.json({ success: true, eventData: data });
+    if (err) return ctx.throwSingle(err, 500)
+    ctx.body = { 
+      success: true,
+      eventData: data
+     };
   });
 });
 
