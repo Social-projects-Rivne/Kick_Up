@@ -1,0 +1,24 @@
+.tab-bar {
+  flex-grow: 1;
+  width: 100%;
+
+  .tab-menu {
+    background-color: #facd3d;
+    display: flex;
+    justify-content: center;
+
+    button[class*=selected] {
+      color: #f7f4e9;
+    }
+
+    span[class*=colorPrimary] {
+      background-color: #f7f4e9;
+    }
+  }
+
+  .avatar {
+    width: 60px;
+    height: 60px;
+    margin: 10px;
+  }
+}
