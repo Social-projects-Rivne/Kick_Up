@@ -1,30 +1,34 @@
-import React from 'react';
+import React from "react";
 
-import Grid from "@material-ui/core/Grid";
+import {Grid} from "@material-ui/core";
+import './RoomCard.scss';
+import StarRating from './../../UI/StarRating/StarRating';
 
 const roomCard = props => {
+  const backgroundImage = {
+    backgroundImage: `url(${props.background})`
+  };
 
-    const backgroundImage = {
-        backgroundImage: `url(${props.background})`
-    };
-
-    return (
-        <Grid xs={12} sm={6} sm={4} className="room-card" style={backgroundImage}>
-            <div className="cardInfo">
-                <div>{props.category}</div>
-                <div>{props.members} / {props.limit}</div>
-            </div>
-            <h2>{props.title}</h2>
-            <div className="cardInfo">
-                <div>
-                    <img src={props.avatar} /> {props.rating}
-                </div>
-                <div>
-                    Date
-                </div>
-            </div>
+  return (
+    <Grid item xs={12} sm={6} sm={4} 
+      className="room-card" 
+      style={backgroundImage}
+      onClick={props.clicked}>
+      <Grid className="room-card-desc">
+        <Grid className="cardInfo">
+          <div>{props.category}</div>
+          <div>
+            {props.members} / {props.limit}
+          </div>
         </Grid>
-    );
-}
+          <h2>{props.title}</h2>
+        <Grid className="cardInfo">
+          <img src={props.avatar} /> 
+          <StarRating rating={props.rating}/>
+        </Grid>
+      </Grid>
+    </Grid>
+  );
+};
 
 export default roomCard;
