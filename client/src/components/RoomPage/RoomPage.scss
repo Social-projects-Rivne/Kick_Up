@@ -39,3 +39,46 @@
   display: flex;
   justify-content: center !important;
 }
+
+.room-carousel {
+  position: relative;
+}
+
+.room-name-carousel {
+  position: absolute;
+  top: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+  font-size: 36pt;
+  color: $white;
+  //background-color: rgba(24, 24, 24, 0.3);
+  padding: 0 25px;
+  border-radius: 40px;
+}
+
+.room-members-carousel {
+  position: absolute;
+  bottom: 18%;
+  right: 5%;
+  transform: translateX(-50%);
+  z-index: 1;
+  font-size: 14pt;
+  color: $white;
+ }
+
+.room-join-carousel {
+  position: absolute;
+  bottom: 18%;
+  right: 1%;
+  transform: translateX(-50%);
+  z-index: 1;
+  font-size: 14pt;
+  color: $white;
+  background-color: $primary;
+  border: none;
+  outline: none;
+  padding: 5px 10px;
+  border-radius: 40px;
+  cursor: pointer;
+}

@@ -67,7 +67,10 @@ class RoomPage extends React.Component {
 
         return (
             <div>
-
+                <div className="room-carousel">
+                    <span className="room-name-carousel">Room Name</span>
+                    <span className="room-members-carousel">2 members</span>
+                    <button className="room-join-carousel">Join</button>
                     <Carousel>
                         <div>
                             <img src="http://lorempixel.com/1000/600/nature/2/" />
@@ -77,10 +80,9 @@ class RoomPage extends React.Component {
                         </div>
                         <div>
                             <img src="http://lorempixel.com/1000/600/nature/3/" />
-
                         </div>
                     </Carousel>
-
+                </div>
 
                 <AppBar position="static" className="tab-bar">
                     <Tabs
