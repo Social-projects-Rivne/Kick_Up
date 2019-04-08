@@ -6,8 +6,9 @@ import '../../styles/index.scss';
 import PropTypes from 'prop-types';
 import { AppBar, Tabs, Tab, Typography, Grid, Avatar } from '@material-ui/core';
 import { Comment, Collections, Face, NewReleases, VerifiedUser } from '@material-ui/icons';
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { Carousel } from 'react-responsive-carousel';
 import Gallery from 'react-photo-gallery';
-import ImageGallery from 'react-image-gallery';
 import event from '../../assets/images/gl-ph-3.jpg';
 
 import { withRouter } from 'react-router-dom';
@@ -62,24 +63,21 @@ class RoomPage extends React.Component {
 
     render() {
         const { value } = this.state;
-        const images = [
-            {
-                original: 'http://lorempixel.com/1000/600/nature/1/',
-                thumbnail: 'http://lorempixel.com/250/150/nature/1/',
-            },
-            {
-                original: 'http://lorempixel.com/1000/600/nature/2/',
-                thumbnail: 'http://lorempixel.com/250/150/nature/2/'
-            },
-            {
-                original: 'http://lorempixel.com/1000/600/nature/3/',
-                thumbnail: 'http://lorempixel.com/250/150/nature/3/'
-            }
-        ]
 
         return (
             <div>
-                <ImageGallery items={images} showPlayButton={false} />
+                <Carousel>
+                    <div>
+                        <img src="http://lorempixel.com/1000/600/nature/1/" />
+                    </div>
+                    <div>
+                        <img src="http://lorempixel.com/1000/600/nature/1/" />
+                    </div>
+                    <div>
+                        <img src="http://lorempixel.com/1000/600/nature/1/" />
+
+                    </div>
+                </Carousel>
 
                 <AppBar position="static" className="tab-bar">
                     <Tabs
