@@ -10,7 +10,7 @@ const roomCard = props => {
   };
 
   return (
-    <Grid item xs={12} sm={6} sm={4} 
+    <Grid item xs={12} sm={6} md={4} 
       className="room-card" 
       style={backgroundImage}
       onClick={props.clicked}>
@@ -23,7 +23,7 @@ const roomCard = props => {
         </Grid>
           <h2>{props.title}</h2>
         <Grid className="cardInfo">
-          <img src={props.avatar} /> 
+          <img src={props.avatar} alt={props.avatar}/> 
           <StarRating rating={props.rating}/>
         </Grid>
       </Grid>

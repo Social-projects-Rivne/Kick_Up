@@ -1,0 +1,177 @@
+.sign-in {
+    flex-grow: 1;
+    background-image: url('./../assets/images/bg-1.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+    user-select: none;
+    /* (screen height) - (header height) - (footer height) */
+    min-height: calc(100vh - 89px);
+}
+
+.sign-in hr {
+    width: 100%;
+    height: 1px;
+    margin: 0 0 16px;
+    border: 0;
+    background-color: white;
+}
+
+.sign-in + footer {
+    display: none;
+}
+
+// Left part;
+.sign-in .sign-in__info {
+    display: none;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-left: 20px;
+    padding-right: 20px;
+    color: white;
+    box-shadow: none;
+    background-color: transparent;
+}
+
+.sign-in__info h1 {
+    font-weight: 600;
+}
+
+.sign-in .sign-in__info-text {
+    color: white;
+    font-size: 1rem;
+    line-height: 2rem;
+}
+
+// Right part;
+.sign-in .sign-in__form {
+    padding: 20px;
+    opacity: 0;
+    background-color: rgba(59, 58, 54, 0.4);
+    animation-name: scale-in;
+    animation-duration: 0.3s;
+    animation-delay: 0.5s;
+    animation-fill-mode: forwards;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 
+                0 2px 10px 0 rgba(0, 0, 0, 0.16);
+}
+
+.sign-in__form h4 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 24px;
+    color: white;
+    font-size: 2rem;
+    line-height: 2.5rem;
+}
+
+.sign-in__form svg {
+    margin-right: 10px;
+}
+
+.sign-in__form hr {
+    margin-bottom: 0;
+}
+
+// @todo move these styles to index scss, we will need this for other inputs;
+.sign-in__input label {
+    color: white;
+    font-size: 1.143rem;
+
+    &.MuiInputLabel-shrink-154 {
+        color: #e5e5e5;
+    }
+}
+
+.sign-in__input label + div::before,
+.sign-in__input label + div::after,
+#root .MuiInput-underline-169.MuiInput-error-170::after {
+    border-color: white;
+}
+
+#root .sign-in__input:hover label + div::before,
+#root .sign-in__input:hover label + div::after {
+    border-color: #e5e5e5;
+}
+
+#root .MuiFormLabel-focused-159 .MuiFormLabel-asterisk-164,
+#root .MuiFormLabel-filled-162 .MuiFormLabel-asterisk-164 {
+    color: #e5e5e5;
+}
+
+.sign-in__field-wrapper {
+    display: flex;
+    align-items: baseline;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.sign-in__input {
+    width: 100%;
+    margin-top: 6px !important;
+}
+
+.sign-in__field-wrapper + .sign-in__field-wrapper 
+.sign-in__input {
+    margin-top: 16px;
+}
+
+.sign-in__input input {
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 40px;
+    padding: 8px 0;
+    color: white;
+}
+
+.sign-in__field-wrapper svg {
+    margin-right: 12px;
+    transform: translate3d(0, 4px, 0);
+}
+
+.sign-in__btn-wrapper {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.sign-in__submit-btn {
+    color: #e5e5e5 !important;
+    border-color: #e5e5e5 !important;
+    & svg {
+        margin-left: 12px;
+        margin-right: 0;
+    }
+}
+
+@media only screen and (min-width: 767px) {
+
+    #root .sign-in {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+    }
+    
+    .sign-in .sign-in__info {
+        display: flex;
+        max-width: 450px;
+    }
+
+    .sign-in .sign-in__form {
+        max-width: 450px;
+        margin-right: 20px;
+        margin-left: 20px;
+    }
+}
+
+// Related to animatons;
+@keyframes scale-in {
+    from {
+        opacity: 0;
+        transform: scale(0);
+    } to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}

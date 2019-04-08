@@ -1,97 +1,176 @@
 import React from 'react';
-import './Home.scss'
-import { Card, CardColumns} from 'react-bootstrap';
 
-const home = props => {
+import '../../styles/index.scss';
+import event from '../../assets/images/event.jpg';
+
+import { Card, CardActionArea, CardActions, CardContent, CardMedia, Button, Typography, Grid } from '@material-ui/core';
+
+const Home = props => {
     return (
-        <CardColumns className="home-card">
-            <Card className="card">
-                <Card.Body>
-                    <Card.Title>Card title that wraps to a new line</Card.Title>
-                    <Card.Text>
-                        This is a longer card with supporting text below as a natural lead-in to
-                        additional content. This content is a little bit longer.
-                    </Card.Text>
-                </Card.Body>
-            </Card>
-            <Card className="p-3 card">
-                <blockquote className="blockquote mb-0 card-body">
-                    <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere
-                        erat a ante.
-                    </p>
-                    <footer className="blockquote-footer">
-                        <small className="text-muted">
-                            Someone famous in <cite title="Source Title">Source Title</cite>
-                        </small>
-                    </footer>
-                </blockquote>
-            </Card>
-            <Card className="text-center card">
-                <Card.Body>
-                    <Card.Title>Card title</Card.Title>
-                    <Card.Text>
-                        This card has supporting text below as a natural lead-in to additional
-                        content.{' '}
-                    </Card.Text>
-                </Card.Body>
-                <Card.Footer>
-                    <small className="text-muted">Last updated 3 mins ago</small>
-                </Card.Footer>
-            </Card>
-            <Card className="text-center p-3 card">
-                <blockquote className="blockquote mb-0 card-body">
-                    <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere
-                        erat a ante.
-                    </p>
-                    <footer className="blockquote-footer">
-                        <small className="text-muted">
-                            Someone famous in <cite title="Source Title">Source Title</cite>
-                        </small>
-                    </footer>
-                </blockquote>
-            </Card>
-            <Card className="text-center card">
-                <Card.Body>
-                    <Card.Title>Card title</Card.Title>
-                    <Card.Text>
-                        This card has supporting text below as a natural lead-in to additional
-                        content.{' '}
-                    </Card.Text>
-                    <Card.Text>
-                        <small className="text-muted">Last updated 3 mins ago</small>
-                    </Card.Text>
-                </Card.Body>
-            </Card>
-            <Card className="text-center p-3 card">
-                <blockquote className="blockquote mb-0 card-body">
-                    <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere
-                        erat a ante.
-                    </p>
-                    <footer className="blockquote-footer">
-                        <small className="text-muted">
-                            Someone famous in <cite title="Source Title">Source Title</cite>
-                        </small>
-                    </footer>
-                </blockquote>
-            </Card>
-            <Card className="text-center card">
-                <Card.Body>
-                    <Card.Title>Card title</Card.Title>
-                    <Card.Text>
-                        This is a wider card with supporting text below as a natural lead-in to
-                        additional content. This card has even longer content than the first to
-                        show that equal height action.
-                    </Card.Text>
-                    <Card.Text>
-                        <small className="text-muted">Last updated 3 mins ago</small>
-                    </Card.Text>
-                </Card.Body>
-            </Card>
-        </CardColumns>
+        <div className="main-content" >
+        <Grid container spacing={24}>
+            <Grid item md={4} xs={12}>
+                <Card className="card">
+                    <CardActionArea>
+                        <CardMedia
+                            component="img"
+                            alt="event"
+                            className="media"
+                            height="140"
+                            image={event}
+                            title="event"
+                        />
+                        <CardContent>
+                            <Typography gutterBottom variant="h5" component="h2">
+                                Lizard
+                            </Typography>
+                            <Typography component="p">
+                                Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
+                                across all continents except Antarctica
+                            </Typography>
+                        </CardContent>
+                    </CardActionArea>
+                    <CardActions>
+                        <Button size="small" color="primary">
+                            Date
+                        </Button>
+                        <Button size="small" color="primary">
+                            Learn More
+                        </Button>
+                    </CardActions>
+                </Card>
+            </Grid>
+
+            <Grid item md={4} xs={12}>
+                <Card className="card">
+                    <CardActionArea>
+                        <CardMedia
+                            component="img"
+                            alt="event"
+                            className="media"
+                            height="140"
+                            image={event}
+                            title="event"
+                        />
+                        <CardContent>
+                            <Typography gutterBottom variant="h5" component="h2">
+                                Lizard
+                            </Typography>
+                            <Typography component="p">
+                                Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
+                                across all continents except Antarctica
+                            </Typography>
+                        </CardContent>
+                    </CardActionArea>
+                    <CardActions>
+                        <Button size="small" color="primary">
+                            Date
+                        </Button>
+                        <Button size="small" color="primary">
+                            Learn More
+                        </Button>
+                    </CardActions>
+                </Card>
+            </Grid>
+
+            <Grid item md={4} xs={12}>
+                <Card className="card">
+                    <CardActionArea>
+                        <CardMedia
+                            component="img"
+                            alt="event"
+                            className="media"
+                            height="140"
+                            image={event}
+                            title="event"
+                        />
+                        <CardContent>
+                            <Typography gutterBottom variant="h5" component="h2">
+                                Lizard
+                            </Typography>
+                            <Typography component="p">
+                                Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
+                                across all continents except Antarctica
+                            </Typography>
+                        </CardContent>
+                    </CardActionArea>
+                    <CardActions>
+                        <Button size="small" color="primary">
+                            Date
+                        </Button>
+                        <Button size="small" color="primary">
+                            Learn More
+                        </Button>
+                    </CardActions>
+                </Card>
+            </Grid>
+
+            <Grid item md={6} xs={12}>
+                <Card className="card">
+                    <CardActionArea>
+                        <CardMedia
+                            component="img"
+                            alt="event"
+                            className="media"
+                            height="140"
+                            image={event}
+                            title="event"
+                        />
+                        <CardContent>
+                            <Typography gutterBottom variant="h5" component="h2">
+                                Lizard
+                            </Typography>
+                            <Typography component="p">
+                                Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
+                                across all continents except Antarctica
+                            </Typography>
+                        </CardContent>
+                    </CardActionArea>
+                    <CardActions>
+                        <Button size="small" color="primary">
+                            Date
+                        </Button>
+                        <Button size="small" color="primary">
+                            Learn More
+                        </Button>
+                    </CardActions>
+                </Card>
+            </Grid>
+
+            <Grid item md={6} xs={12}>
+                <Card className="card">
+                    <CardActionArea>
+                        <CardMedia
+                            component="img"
+                            alt="event"
+                            className="media"
+                            height="140"
+                            image={event}
+                            title="event"
+                        />
+                        <CardContent>
+                            <Typography gutterBottom variant="h5" component="h2">
+                                Lizard
+                            </Typography>
+                            <Typography component="p">
+                                Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
+                                across all continents except Antarctica
+                            </Typography>
+                        </CardContent>
+                    </CardActionArea>
+                    <CardActions>
+                        <Button size="small" color="primary">
+                            Date
+                        </Button>
+                        <Button size="small" color="primary">
+                            Learn More
+                        </Button>
+                    </CardActions>
+                </Card>
+            </Grid>
+        </Grid>
+        </div>
     );
 };
 
-export default home;
+export default Home;

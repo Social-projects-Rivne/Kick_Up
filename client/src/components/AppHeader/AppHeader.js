@@ -1,55 +1,106 @@
-import logo from './logo.png';
 import React from 'react';
-import './style.scss'
-import { Navbar,  FormControl, Form, Nav, InputGroup, Button } from 'react-bootstrap';
-import { faSignInAlt } from '@fortawesome/free-solid-svg-icons'
-import { faUsers } from '@fortawesome/free-solid-svg-icons'
-import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons'
-import { faSearch } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
-const AppHeader = props => {
-    return (
-        <Navbar collapseOnSelect expand="lg" className = 'header'>
-            <Navbar.Brand href="#" className="mobile-logo d-block d-lg-none">
-                <img className = 'logoImg' src={logo} alt="Logo" />
-            </Navbar.Brand>
-            <Navbar.Toggle aria-controls="responsive-navbar-nav" className="toggle" />
-            <Navbar.Collapse id="responsive-navbar-nav">
-                <Nav inline className="header-content">
-                    <div className="search-row">
-                        <Navbar.Brand href="#" className="site-logo d-none d-lg-block">
-                            <img className = 'logoImg' src={logo} alt="Logo" />
-                        </Navbar.Brand>
-                        <Form inline className="search-form">
-                            <InputGroup>
-                                <InputGroup.Append>
-                                    <Button id="search-button" type="submit" variant="outline-secondary">
-                                        <FontAwesomeIcon icon={faSearch} />
-                                    </Button>
-                                </InputGroup.Append>
-                                <FormControl className="search-field" />
-                            </InputGroup>
-                        </Form>
-                    </div>
-                     <div className="align-center">
-                        <Nav.Link href="#" className="fa-icon">
-                            <FontAwesomeIcon icon={faCalendarAlt}/>
-                        </Nav.Link>
+import logo from '../../assets/images/logo.png';
 
-                        <Nav.Link href="/rooms" className="fa-icon">
-                            <FontAwesomeIcon icon={faUsers} />
-                        </Nav.Link>
-                    </div>
-                    <div className="align-right">
-                        <Nav.Link href="#" className="fa-icon">
-                            <FontAwesomeIcon icon={faSignInAlt} />
-                        </Nav.Link>
-                    </div>
-                </Nav>
-            </Navbar.Collapse>
-        </Navbar>
-    );
-};
+import { AppBar, Toolbar, IconButton, InputBase, Link, BottomNavigation, BottomNavigationAction } from '@material-ui/core';
+//You can find icon names here: https://jxnblk.com/rmdi/
+import { EventAvailable, SupervisorAccount, PersonAdd, Person, PowerOff, MoreVert, Search } from '@material-ui/icons';
+import { Link as RouterLink, withRouter } from 'react-router-dom';
 
-export default AppHeader;
+class AppHeader extends React.Component {
+    state = {
+        mobileMenuOpened: false,
+        activePage: window.location.pathname,
+    };
+    handleLogout = () => {
+        // TODO: logout
+    }
+    componentWillMount() {
+        this.unlisten = this.props.history.listen(location => {
+            const { pathname } = location;
+            this.setState({ activePage: pathname });
+        });
+    }
+
+    componentWillUnmount() {
+        this.unlisten();
+    }
+
+    handleChangeActivePage = (event, activePage) => {
+        this.setState({ activePage });
+        this.props.history.push(activePage);
+    };
+
+    handleMobileMenuToggle = event => {
+        this.mobileMenuOpened = !this.mobileMenuOpened;
+        this.setState({ mobileMenuOpened: this.mobileMenuOpened });
+    };
+
+    render() {
+        const { mobileMenuOpened, activePage } = this.state;
+
+        const renderMobileMenu = (
+            <div className={"mobile-menu" + (mobileMenuOpened ? "" : " hidden")}>
+                <BottomNavigation value={activePage} onChange={this.handleChangeActivePage} className="navigation-buttons">
+                    <BottomNavigationAction className="icon-details" label="Events" value="/events" icon={<EventAvailable />} />
+                    <BottomNavigationAction className="icon-details" label="Spaces" value="/rooms" icon={<SupervisorAccount />} />
+                    <BottomNavigationAction className="icon-details" label="Sign In" value="/sign-in" icon={<Person />} />
+                    <BottomNavigationAction className="icon-details" label="Sign Up" value="/register" icon={<PersonAdd />} />
+                </BottomNavigation>
+            </div>
+        );
+
+        const authField = this.props.isAuthenticated
+        ?   <BottomNavigation value={activePage} onChange={this.handleChangeActivePage} className="navigation-buttons">
+                <BottomNavigationAction className="icon-details" label="Sign Out" onClick={this.handleLogout} icon={<PowerOff />} />
+            </BottomNavigation>
+        :   <BottomNavigation value={activePage} onChange={this.handleChangeActivePage} className="navigation-buttons">
+                <BottomNavigationAction className="icon-details" label="Sign In" value="/sign-in" icon={<Person />} />
+                <BottomNavigationAction className="icon-details" label="Sign Up" value="/sign-up" icon={<PersonAdd />} />
+            </BottomNavigation>
+
+        return (
+            <header className="root">
+                <AppBar position="static" className="header-bg">
+                    <Toolbar>
+                        <IconButton className="logo-hover">
+                            <Link component={RouterLink} to="/">
+                                <img className="logo-img" src={logo} alt="Logo" />
+                            </Link>
+                        </IconButton>
+                        <form className="search-form">
+                            <div className="search">
+                                <div className="search-icon">
+                                    <Search />
+                                </div>
+                                <InputBase className="search-root" name="query" />
+                            </div>
+                        </form>
+                        <div className="section-desktop">
+                            <BottomNavigation value={activePage} onChange={this.handleChangeActivePage} className="navigation-buttons">
+                                <BottomNavigationAction className="icon-details" label="Events" value="/events" icon={<EventAvailable />} />
+                                <BottomNavigationAction className="icon-details" label="Spaces" value="/rooms" icon={<SupervisorAccount />} />
+                            </BottomNavigation>
+                        </div>
+                        <div className="grow" />
+                        <div className="section-desktop">
+                            {authField}
+                        </div>
+                        <div className="section-mobile">
+                            <IconButton
+                                aria-haspopup="true"
+                                onClick={this.handleMobileMenuToggle}
+                                className="icon-details"
+                            >
+                                <MoreVert />
+                            </IconButton>
+                        </div>
+                    </Toolbar>
+                </AppBar>
+                {renderMobileMenu}
+            </header>
+        );
+    }
+}
+
+export default withRouter(AppHeader);

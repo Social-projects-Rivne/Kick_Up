@@ -29,15 +29,20 @@ const styles = theme => ({
   },
   formControl: {
     margin: theme.spacing.unit,
-    minWidth: 120
+    minWidth: 120,
   },
   selectEmpty: {
-    marginTop: theme.spacing.unit * 2
+    marginTop: theme.spacing.unit 
+  },
+  container: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    marginTop: theme.spacing.unit,
   },
   textField: {
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
-    width: 156
+    width: 156,
   }
 });
 
@@ -136,7 +141,7 @@ class Rooms extends Component {
   }
   render() {
     const { classes } = this.props;
-    const { roomsDB, FilteredRooms, isLoading } = this.state;
+    const { FilteredRooms, isLoading } = this.state;
 
     const roomList = isLoading ? (
       <Spinner />
@@ -262,19 +267,21 @@ class Rooms extends Component {
               {cities}
             </Select>
           </FormControl>
-          <TextField
-            variant="outlined"
-            id="date"
-            label="date"
-            type="date"
-            name="roomsDate"
-            value={this.state.roomsDate}
-            className={classes.textField}
-            onChange={this.changeDateHandle}
-            InputLabelProps={{
-              shrink: true
-            }}
-          />
+          <form className={classes.container} noValidate>
+            <TextField
+              variant="outlined"
+              id="date"
+              label="date"
+              type="date"
+              name="roomsDate"
+              value={this.state.roomsDate}
+              className={classes.textField}
+              onChange={this.changeDateHandle}
+              InputLabelProps={{
+                shrink: true
+              }}
+            />
+          </form>
         </Grid>
         <Grid container>{roomList}</Grid>
       </>

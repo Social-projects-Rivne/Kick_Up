@@ -7,7 +7,7 @@ import Footer from './../../components/Footer/Footer';
 const pageContainer = props => {
     return (
         <>
-            <AppHeader />
+            <AppHeader isAuthenticated={props.isAuthenticated} />
             <main id="content">{props.children}</main>
             <Footer />
         </>

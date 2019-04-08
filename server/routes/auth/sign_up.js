@@ -1,44 +1,32 @@
-const express = require('express');
-const router = express.Router();
-const { User } = require('./../../models');
-const JWTService = require('./../../services/JWTService')
-const moment = require('moment')
-const handler = {
+const Router = require('koa-router');
+const { validate, JWTService } = require('../../services');
+const { User } = require('../../models');
 
-  async sign_up(req,res) {
-    const {
-      nick,
-      first_name,
-      last_name,
+const router = new Router({ prefix: '/api' });
+
+const heandler = {
+  async sign_up(ctx) {
+    await validate(ctx.request.body, {
+      email: 'required|email',
+      password: 'required|min:6'
+    });
+    const { email, password } = ctx.request.body;
+    const userCount = await User.where({ email:email.toLowerCase() }).count();
+    if (userCount) {
+      ctx.throw(409, 'User with this email already registered');
+    }
+    await new User({
       email,
-      password,
-      avatar,
-      birth_date } = req.body;
-    const usersCount = await User.where({ email }).count();
-    if (usersCount) {
-      throw new Error('This email is already registered. How about to log in? ', 409);
-    }    
-    let userInfo = null;
-    let user = null;
-    userInfo = {
-      nick,
-      first_name,
-      last_name,
-      email,
-      password,
-      avatar,
-      birth_date,
-      created_at: moment().format('YYYY-MM-DD h:mm:ss')
-      };
-      user = await new User(userInfo).save(null);
-    res.status = 201;
-    res.send({
+      password
+    }).save();
+    const user = await User.where({ email:email.toLowerCase() }).fetch();
+
+    ctx.body = {
       token: `Bearer ${JWTService.signUser(user)}`,
       id: user.get('id')
-    });
+    };
   }
 };
 
-router.post('/api/signup', handler.sign_up);
-
-module.exports = router;
+router.post('/signup', heandler.sign_up);
+module.exports = router.routes();
