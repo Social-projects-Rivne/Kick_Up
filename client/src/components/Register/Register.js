@@ -1,10 +1,8 @@
 import React, { Component } from "react";
-
-import '../../styles/index.scss';
+import axios from 'axios';
 
 import { Grid, TextField, Button, Typography } from '@material-ui/core';
 import { Person, Send, Email, Lock } from '@material-ui/icons';
-import axios from 'axios';
 import is from 'is_js';
 import CustomizedSnackbars from '../Toast/Toast';
 
@@ -205,9 +203,7 @@ class Register extends Component {
                     </div>
                 </Grid>
             </Grid>
-
         )
     }
 }
-
 export default Register;
