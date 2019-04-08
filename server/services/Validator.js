@@ -1,6 +1,10 @@
 const Validator = require('validatorjs');
-const { User } = require('./../models');
+const { ValidationError } = require('./errors');
 
-//register custom rules 
-
-module.exports = Validator;
+module.exports = (input, rules, messages = []) => new Promise((res, rej) => {
+  const validator = new Validator(input, rules, messages);
+  validator.passes(res);
+  validator.fails(() => {
+    rej(new ValidationError(validator.errors));
+  });
+});

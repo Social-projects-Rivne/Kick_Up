@@ -32,8 +32,6 @@ const users = [
     carma: 123,
     role: 2,
     is_banned: false,
-    created_at: new Date(),
-    updated_at: new Date()
   },
   {
     id: 2,
@@ -46,8 +44,6 @@ const users = [
     carma: 123,
     role: 2,
     is_banned: false,
-    created_at: new Date(),
-    updated_at: new Date()
   },
   {
     id: 3,
@@ -60,8 +56,6 @@ const users = [
     carma: 123,
     role: 2,
     is_banned: false,
-    created_at: new Date(),
-    updated_at: new Date()
   },
   {
     id: 4,
@@ -74,8 +68,6 @@ const users = [
     carma: 123,
     role: 2,
     is_banned: false,
-    created_at: new Date(),
-    updated_at: new Date()
   }
 ];
 exports.seed = async knex => {

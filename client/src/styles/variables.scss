@@ -1,13 +1,26 @@
 // Related to variables;
 
 // Sizes;
-$header-height: 37px;
 $footerHeight: 19px;
 $maxEventSwiperHeight: 30vh;
 
 // Colors;
-$white: #fff;
 $black: rgba(0, 0, 0, 0.87);
 $indigo: #3f51b5;
 $indigoBright: #1432da;
 
+//colors
+$white: #f7f4e9;
+$black: #181818;
+$primary: #facd3d;
+
+//global
+$link-color: $black;
+
+//header
+$header-bg: $black;
+$icon-color: $primary;
+$header-height: 86px;
+
+//footer
+$footer-height: 51px;

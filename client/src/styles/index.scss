@@ -1,3 +1,4 @@
+
 @import './variables.scss';
 
 @import '../components/AppHeader/AppHeader.scss';
@@ -5,6 +6,8 @@
 @import '../components/Home/Home.scss';
 @import '../components/Register/Register.scss';
 @import '../components/EventPage/EventPage.scss';
+@import 'variables.scss';
+@import 'functions.scss';
 
 body {
   min-height: 100vh;
@@ -20,7 +23,7 @@ body {
 
 main#content {
   /* (screen height) - (header height) - (footer height) */
-  min-height: calc(100vh - 89px - 44px);
+  min-height: calc(100vh - #{$header-height} - #{$footer-height});
 }
 
 .app-container {
