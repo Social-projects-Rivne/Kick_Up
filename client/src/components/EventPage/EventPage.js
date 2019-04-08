@@ -134,6 +134,9 @@ class EventPage extends Component {
                         </div>
                     </Grid>
                     <Grid className="event-page__section" item xs={12}>
+                        <Typography className="event-page__desktop-subtitle" variant="h5">
+                        Questions
+                        </Typography>
                         <ExpansionPanel>
                             <ExpansionPanelSummary className="event-page__faq-title" expandIcon={<ExpandMore />}>
                                 {/* @todo take avatar from db */}
