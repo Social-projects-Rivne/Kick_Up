@@ -1,36 +1,30 @@
-const express = require('express');
-const router = express.Router();
+const Router = require('koa-router');
+const { validate, JWTService } = require('../../services');
 const { User } = require('./../../models');
-const JWTService = require('./../../services/JWTService');
-const Validator = require('./../../services/Validator');
-const handler = {
+const router = new Router({ prefix: '/api' });
 
-  async sign_in(req,res,next) {
-      const { email, password } = req.body;
-      const validation = new Validator(req.body, {
-        email: 'required|email',
-        password: 'required|min:3'
-      });
-      if (validation.fails()) {
-        return next(validation.errors);
-      }
-
-      try {
-        const user = await User.where({ email: email.toLowerCase() }).fetch();
-        if(!user) throw new Error('Wrong email!');
-        if (!await user.comparePassword(password)) throw new Error('Wrong password!');
-
-        res.send({
-          token: `Bearer ${JWTService.signUser(user)}`,
-          userId: user.get('id')
-        });
-      } catch (e) {
-        return next(e);
-      }
-  }
-
+const rule = {
+  email: 'required|email',
+  password: 'required|min:6'
 };
 
-router.post('/api/signin', handler.sign_in);
+const heandler = {
+  async sign_in(ctx) {
+    await validate(ctx.request.body, rule);
+    const { email } = ctx.request.body; 
+    const userCount = await User.where({ email: email.toLowerCase() }).count();
+    if (!userCount) {
+        ctx.throwSingle('Wrong email',400);
+      }
+    const user = await User.where({ email: email.toLowerCase() }).fetch();
 
-module.exports = router;
+    ctx.body = {
+        token: `Bearer ${JWTService.signUser(user)}`,
+        id: user.get('id')
+      };
+  }
+};
+
+router.post('/signin', heandler.sign_in);
+
+module.exports = router.routes();

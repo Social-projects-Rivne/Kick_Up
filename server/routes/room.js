@@ -1,16 +1,15 @@
-const express = require("express");
-const router = express.Router();
-
+const Router = require('koa-router');
+const router = new Router();
 const Room = require("./../mongoDB/models/modelRoom");
 
-router.post("/save-room", (req, res) => {
+router.post("/save-room", (ctx) => {
   const {
     room_id,
     moderators_list,
     gallery,
     tags,
     room_information
-  } = req.body;
+  } = ctx.request.body;
   let newRoom = new Room();
   if (
     !room_id ||
@@ -37,16 +36,16 @@ router.post("/save-room", (req, res) => {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true });
   });
-  const { hello } = req.body;
-  res.send(hello);
+  const { hello } = ctx.request.body;
+  ctx.body = hello;
 });
 
-router.get("/", (req, res) => {
+router.get("/", (ctx) => {
   Room.find((err, data) => {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true, roomData: data });
   });
-  res.send("hello world");
+  ctx.body = "hello world";
 });
 
-module.exports = router;
+module.exports = router.routes();

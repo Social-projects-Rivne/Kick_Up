@@ -11,9 +11,9 @@ exports.up = async knex => {
     t.integer('carma').nullable();
     t.integer('role').defaultTo(2);
     t.boolean('is_banned').defaultTo(false);
-    t.dateTime('birth_date').nullable();
-    t.dateTime('created_at').notNull();
-    t.dateTime('updated_at').nullable();
+    t.date('birth_date').nullable();
+    t.dateTime('created_at').notNullable().defaultTo(knex.raw('now()'));
+    t.dateTime('updated_at').nullable().defaultTo(knex.raw('now()'));
   });
 };
 
