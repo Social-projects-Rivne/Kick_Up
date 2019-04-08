@@ -64,7 +64,12 @@ const tabsParams = {
         click: function() {
             this.updateAutoHeight();
         }
-    }
+    },
+    breakpoints: {
+        768: {
+            spaceBetween: 0
+        }
+    },
 } 
 
 class EventPage extends Component {
@@ -102,36 +107,34 @@ class EventPage extends Component {
                 </div>
                 <Swiper {...tabsParams} >
                     <Grid className="event-page__section" item xs={12}>
-                        <div className="event-page__info-wrapper">
-                            <List>
-                                <ListItem className="event-page__list-item">
-                                    <ListItemIcon>
-                                        <DateRange />
-                                    </ListItemIcon>
-                                    {/* @todo, display via moment.js; */}
-                                    <ListItemText className="event-page__list-item-text" primary="April 7th 2019, 4:30 pm" />
-                                </ListItem>
-                                <ListItem className="event-page__list-item">
-                                    <ListItemIcon>
-                                        <LocationOn />
-                                    </ListItemIcon>
-                                    {/* @todo, display from DB; */}
-                                    <ListItemText className="event-page__list-item-text" primary="4-6 Slovatsʹkoho str., Rivne, 33017"/>
-                                </ListItem>
-                            </List>
-                            <Paper elevation={1} className="event-page__main-details-wrapper">
-                                <Typography component="p" className="event-page__main-details">
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                                    Nullam a neque lacus. Donec tristique eros nisi, a feugiat 
-                                    nisi congue vitae. Nullam sodales tempor elementum. Nullam 
-                                    volutpat euismod mauris id commodo. Praesent vitae lacus purus. 
-                                    Proin congue finibus risus, eu lacinia tellus. Donec eget sem 
-                                    nec diam suscipit dapibus. Fusce a rhoncus libero, sed tristique 
-                                    nisl. Maecenas turpis elit, vulputate eget magna vitae, volutpat pulvinar 
-                                    nibh. Praesent pellentesque quis leo at maximus.
-                                </Typography>
-                            </Paper>
-                        </div>
+                        <List>
+                            <ListItem className="event-page__list-item">
+                                <ListItemIcon>
+                                    <DateRange />
+                                </ListItemIcon>
+                                {/* @todo, display via moment.js; */}
+                                <ListItemText className="event-page__list-item-text" primary="April 7th 2019, 4:30 pm" />
+                            </ListItem>
+                            <ListItem className="event-page__list-item">
+                                <ListItemIcon>
+                                    <LocationOn />
+                                </ListItemIcon>
+                                {/* @todo, display from DB; */}
+                                <ListItemText className="event-page__list-item-text" primary="4-6 Slovatsʹkoho str., Rivne, 33017"/>
+                            </ListItem>
+                        </List>
+                        <Paper elevation={1} className="event-page__main-details-wrapper">
+                            <Typography component="p" className="event-page__main-details">
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+                                Nullam a neque lacus. Donec tristique eros nisi, a feugiat 
+                                nisi congue vitae. Nullam sodales tempor elementum. Nullam 
+                                volutpat euismod mauris id commodo. Praesent vitae lacus purus. 
+                                Proin congue finibus risus, eu lacinia tellus. Donec eget sem 
+                                nec diam suscipit dapibus. Fusce a rhoncus libero, sed tristique 
+                                nisl. Maecenas turpis elit, vulputate eget magna vitae, volutpat pulvinar 
+                                nibh. Praesent pellentesque quis leo at maximus.
+                            </Typography>
+                        </Paper>
                     </Grid>
                     <Grid className="event-page__section" item xs={12}>
                         <Typography className="event-page__desktop-subtitle" variant="h5">
@@ -187,6 +190,9 @@ class EventPage extends Component {
                         </ExpansionPanel>
                     </Grid>
                     <Grid className="event-page__section" item xs={12} md={6}>
+                        <Typography className="event-page__desktop-subtitle" variant="h5">
+                            Members
+                        </Typography>
                         <List className="event-page__users-list">
                             <ListItem className="event-page__users-list-item">
                                 <ListItemAvatar>

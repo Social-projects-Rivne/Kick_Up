@@ -191,7 +191,7 @@
     }
 }
 
-@media only screen and (min-width: 1168px) {
+@media only screen and (min-width: 768px) {
     .event-page__title-wrapper {
         max-width: 1168px;
         margin: 30px auto;
@@ -227,7 +227,7 @@
         border-radius: 5px;
         overflow: visible;
          // @temp, find solution;
-        height: 650px;
+        height: 1000px;
     }
 
     .event-page .event-page__tabs-swiper
@@ -240,23 +240,15 @@
     }
 
     // Need !important to overwrite Swiper styles;
+    .event-page__tabs-swiper .swiper-wrapper {
+        transform: none !important;
+    }
+
     .event-page .event-page__section {
-        width: 100% !important;
         margin: 0;
+        margin-bottom: 16px;
         padding: 0;
-
-        &:nth-of-type(2) {
-            position: absolute;
-            min-width: 60%;
-            max-width: 60%;
-            top: 0;
-            right: 0;
-        }
-
-        &:nth-of-type(3) {
-            min-width: 100%;
-            max-width: 100%;
-        }
+        flex-grow: 1;
     }
 
     .event-page__users-list {
@@ -274,10 +266,6 @@
         font-size: 1rem;
         line-height: 1.5rem;
         font-weight: 100;
-    }
-
-    .event-page__info-wrapper {
-        max-width: 33%;
     }
 
     .event-page .event-page__list-item-text span {
@@ -308,5 +296,32 @@
 
     .event-page .MuiExpansionPanelSummary-expandIcon-215 {
         top: 22px;
+    }
+}
+
+@media only screen and (min-width: 1168px) {
+    .event-page .event-page__tabs-swiper {
+        padding-left: 30px;
+        padding-right: 0;
+    }
+
+    .event-page__section {
+        &:nth-child(1) {
+            max-width: 33%;
+        }
+
+        &:nth-child(2) {
+            max-width: 61%;
+        }
+
+        &:nth-child(3) {
+            min-width: 100%;
+            max-width: 100%;
+        }
+    }
+
+    // @temp needs resolution;
+    .event-page .event-page__tabs-swiper {
+        height: 740px;
     }
 }
