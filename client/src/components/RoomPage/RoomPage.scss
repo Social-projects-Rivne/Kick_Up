@@ -15,10 +15,27 @@
       background-color: #f7f4e9;
     }
   }
+}
 
-  .avatar {
-    width: 60px;
-    height: 60px;
-    margin: 10px;
-  }
+.room-card {
+  display: flex;
+  justify-content: center;
+  padding-bottom: 20px;
+}
+
+.card {
+  max-width: 645px;
+}
+
+.card-media {
+  height: 300px;
+}
+
+.avatar-flex {
+  flex: none !important;
+}
+
+.avatar-center {
+  display: flex;
+  justify-content: center !important;
 }

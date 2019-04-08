@@ -4,12 +4,13 @@ import '../../styles/index.scss';
 
 
 import PropTypes from 'prop-types';
-import { AppBar, Tabs, Tab, Typography, Grid, Avatar } from '@material-ui/core';
+import { AppBar, Tabs, Tab, Typography, Grid, Avatar, Card, CardActions, CardContent, CardMedia,
+    CardActionArea, Button, ListItemText, ListItem, ListItemAvatar } from '@material-ui/core';
 import { Comment, Collections, Face, NewReleases, VerifiedUser } from '@material-ui/icons';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from 'react-responsive-carousel';
 import Gallery from 'react-photo-gallery';
-import event from '../../assets/images/gl-ph-3.jpg';
+import event from '../../assets/images/event.jpg';
 
 import { withRouter } from 'react-router-dom';
 
@@ -20,7 +21,7 @@ const PHOTO_SET = [
         height: 3
     },
     {
-        src: event ,
+        src: event,
         width: 1,
         height: 1
     },
@@ -66,18 +67,20 @@ class RoomPage extends React.Component {
 
         return (
             <div>
-                <Carousel>
-                    <div>
-                        <img src="http://lorempixel.com/1000/600/nature/1/" />
-                    </div>
-                    <div>
-                        <img src="http://lorempixel.com/1000/600/nature/1/" />
-                    </div>
-                    <div>
-                        <img src="http://lorempixel.com/1000/600/nature/1/" />
 
-                    </div>
-                </Carousel>
+                    <Carousel>
+                        <div>
+                            <img src="http://lorempixel.com/1000/600/nature/2/" />
+                        </div>
+                        <div>
+                            <img src="http://lorempixel.com/1000/600/nature/6/" />
+                        </div>
+                        <div>
+                            <img src="http://lorempixel.com/1000/600/nature/3/" />
+
+                        </div>
+                    </Carousel>
+
 
                 <AppBar position="static" className="tab-bar">
                     <Tabs
@@ -97,29 +100,130 @@ class RoomPage extends React.Component {
                     </Tabs>
                 </AppBar>
 
-                {value === 0 && <TabContainer>Item One</TabContainer>}
+                {value === 0 && <TabContainer>
+                    <div className="room-card">
+                    <Card className="card">
+                        <CardActionArea>
+                            <CardMedia
+                                className="card-media"
+                                image="http://lorempixel.com/1000/600/nature/4/"
+                                title="Contemplative Reptile"
+                            />
+                            <CardContent>
+                                <Typography gutterBottom variant="h5" component="h2">
+                                    Lizard
+                                </Typography>
+                                <Typography component="p">
+                                    Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
+                                    across all continents except Antarctica
+                                </Typography>
+                            </CardContent>
+                        </CardActionArea>
+                        <CardActions>
+                            <Button size="small" color="primary">
+                                comment
+                            </Button>
+                        </CardActions>
+                    </Card>
+                </div>
+                    <div className="room-card">
+                        <Card className="card">
+                            <CardActionArea>
+                                <CardMedia
+                                    className="card-media"
+                                    image="http://lorempixel.com/1000/600/nature/8/"
+                                    title="Contemplative Reptile"
+                                />
+                                <CardContent>
+                                    <Typography gutterBottom variant="h5" component="h2">
+                                        Lizard
+                                    </Typography>
+                                    <Typography component="p">
+                                        Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
+                                        across all continents except Antarctica
+                                    </Typography>
+                                </CardContent>
+                            </CardActionArea>
+                            <CardActions>
+                                <Button size="small" color="primary">
+                                    comment
+                                </Button>
+                            </CardActions>
+                        </Card>
+                    </div>
+                </TabContainer>}
+
                 {value === 1 && <TabContainer><Gallery photos={PHOTO_SET} /></TabContainer>}
-                {value === 2 && <TabContainer>Item Three</TabContainer>}
+
+                {value === 2 && <TabContainer>
+                    <div className="room-card">
+                        <Card className="card">
+                            <CardActionArea>
+                                <CardMedia
+                                    className="card-media"
+                                    image="http://lorempixel.com/1000/600/nature/8/"
+                                    title="Contemplative Reptile"
+                                />
+                                <CardContent>
+                                    <Typography gutterBottom variant="h5" component="h2">
+                                        Lizard
+                                    </Typography>
+                                    <Typography component="p">
+                                        Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
+                                        across all continents except Antarctica
+                                    </Typography>
+                                </CardContent>
+                            </CardActionArea>
+                        </Card>
+                    </div>
+                </TabContainer>}
+
                 {value === 3 && <TabContainer>
-                    <Grid>
-                        <Avatar alt="ava" src={event} className="avatar" />
-                        <div>Full Name</div>
+                        <Grid container spacing={24}>
+                            <Grid item lg={3} md={4} sm={6} xs={12}>
+                                <ListItem className="avatar-center">
+                                    <ListItemAvatar>
+                                        <Avatar>
+                                            <Avatar alt="" src="http://lorempixel.com/1000/600/nature/3/" />
+                                        </Avatar>
+                                    </ListItemAvatar>
+                                    <ListItemText primary="Full Name" className="avatar-flex" />
+                                </ListItem>
+                            </Grid>
 
-                        <Avatar alt="ava" src={event} className="avatar" />
-                        <div>Full Name</div>
+                            <Grid item lg={3} md={4} sm={6} xs={12}>
+                                <ListItem className="avatar-center">
+                                    <ListItemAvatar>
+                                        <Avatar>
+                                            <Avatar alt="" src="http://lorempixel.com/1000/600/nature/5/" />
+                                        </Avatar>
+                                    </ListItemAvatar>
+                                    <ListItemText primary="Full Name" className="avatar-flex" />
+                                </ListItem>
+                            </Grid>
 
-                        <Avatar alt="ava" src={event} className="avatar" />
-                        <div>Full Name</div>
+                            <Grid item lg={3} md={4} sm={6} xs={12}>
+                                <ListItem className="avatar-center">
+                                    <ListItemAvatar>
+                                        <Avatar>
+                                            <Avatar alt="" src="http://lorempixel.com/1000/600/nature/6/" />
+                                        </Avatar>
+                                    </ListItemAvatar>
+                                    <ListItemText primary="Full Name" className="avatar-flex" />
+                                </ListItem>
+                            </Grid>
 
-                        <Avatar alt="ava" src={event} className="avatar" />
-                        <div>Full Name</div>
-
-                        <Avatar alt="ava" src={event} className="avatar" />
-                        <div>Full Name</div>
-
-                        <Avatar alt="ava" src={event} className="avatar" />
-                        <div>Full Name</div>
-                    </Grid>
+                            <Grid item lg={3} md={4} sm={6} xs={12}>
+                                <ListItem className="avatar-center">
+                                    <ListItemAvatar>
+                                        <Avatar>
+                                            <Avatar alt="" src="http://lorempixel.com/1000/600/nature/7/" />
+                                        </Avatar>
+                                    </ListItemAvatar>
+                                    <ListItemText primary="Full Name" className="avatar-flex" />
+                                </ListItem>
+                            </Grid>
+                        </Grid>
                 </TabContainer>}
                 {value === 4 && <TabContainer>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
