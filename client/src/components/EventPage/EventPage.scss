@@ -226,8 +226,6 @@
         background-color: $white;
         border-radius: 5px;
         overflow: visible;
-         // @temp, find solution;
-        height: 1000px;
     }
 
     .event-page .event-page__tabs-swiper
@@ -241,10 +239,12 @@
 
     // Need !important to overwrite Swiper styles;
     .event-page__tabs-swiper .swiper-wrapper {
+        height: unset !important;
         transform: none !important;
     }
 
     .event-page .event-page__section {
+        max-width: 100%;
         margin: 0;
         margin-bottom: 16px;
         padding: 0;
@@ -318,10 +318,5 @@
             min-width: 100%;
             max-width: 100%;
         }
-    }
-
-    // @temp needs resolution;
-    .event-page .event-page__tabs-swiper {
-        height: 740px;
     }
 }

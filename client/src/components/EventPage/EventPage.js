@@ -88,7 +88,7 @@ class EventPage extends Component {
     }
     render() {
         return (
-            <main className="event-page">
+            <div className="event-page">
                 <Swiper {...galleryParams} >
                 {this.state.images.map((slide, idx) => 
                     <div key={idx}>
@@ -287,7 +287,7 @@ class EventPage extends Component {
                         </List>
                     </Grid>
                 </Swiper>
-            </main>
+            </div>
         );
     }
 }
