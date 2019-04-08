@@ -1,9 +1,13 @@
-.home-card {
-    padding: 15px;
+.main-content {
+    padding: 20px;
+    display: flex;
+    flex-direction: row;
 
     .card {
-        background-color: #e9ece5;
-        text-decoration: #3b3a36;
-        box-shadow: none;
+        width: 100%;
+
+        .media {
+            object-fit: cover;
+        }
     }
 }

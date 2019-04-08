@@ -6,7 +6,6 @@ import { Grid, TextField, Button, Typography } from "@material-ui/core";
 import { Person, Send, Email, Lock } from "@material-ui/icons";
 import is from "is_js";
 import CustomizedSnackbars from "../Toast/Toast";
-import "./SignIn.scss";
 
 const PASSWORD_LENGTH = 6;
 const messageType = {

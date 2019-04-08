@@ -1,11 +1,10 @@
 import React, { Component } from "react";
+import axios from 'axios';
 
 import { Grid, TextField, Button, Typography } from '@material-ui/core';
 import { Person, Send, Email, Lock } from '@material-ui/icons';
-import axios from 'axios';
 import is from 'is_js';
 import CustomizedSnackbars from '../Toast/Toast';
-import './Register.scss';
 
 // @todo change;
 const USER_ROUTE = 'http://httpbin.org/post';
@@ -34,6 +33,7 @@ class Register extends Component {
         this.resetToast = this.resetToast.bind(this);
         this.updateInputValue = this.updateInputValue.bind(this);
         this.doValidation = this.doValidation.bind(this);
+        this.sendFormData = this.sendFormData.bind(this);
     }
     resetFormUi = () => {
         this.setState({
@@ -89,10 +89,10 @@ class Register extends Component {
         });
     }
     submitHandler(submitEvt) {
-        const _this = this;
-        
         submitEvt.preventDefault();
-        
+
+        const _this = this;
+
         // Validate data;
         const res = this.doValidation();
 
@@ -114,8 +114,8 @@ class Register extends Component {
         });
 
         // Send data;
-        this.sendFormData(function (res) { 
-            
+        this.sendFormData(function (res) {
+
             // Show message based on response;
             _this.setState({
                 message: res ? 'Welcome to RoomKa!' : 'Something went wrong :( Please retry!',
@@ -135,9 +135,9 @@ class Register extends Component {
                 justify="center"
                 alignItems="center"
             >
-                {this.state.messageType && 
-                    this.state.messageType && 
-                        <CustomizedSnackbars 
+                {this.state.messageType &&
+                    this.state.messageType &&
+                        <CustomizedSnackbars
                             variant={this.state.messageType}
                             message={this.state.message}
                             open={this.state.messageOpened}
@@ -186,7 +186,7 @@ class Register extends Component {
                             label="Enter password, min. 6 chars"
                             type="password"
                             margin="normal"
-                            autocomplete="new-password"
+                            autoComplete="new-password"
                         />
                     </div>
                     <div className="register__btn-wrapper">
@@ -203,7 +203,6 @@ class Register extends Component {
                     </div>
                 </Grid>
             </Grid>
-           
         )
     }
 }
