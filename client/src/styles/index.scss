@@ -1,4 +1,6 @@
 
+@import 'variables.scss';
+@import 'functions.scss';
 @import './variables.scss';
 
 @import '../components/AppHeader/AppHeader.scss';
@@ -6,6 +8,7 @@
 @import '../components/Home/Home.scss';
 @import '../components/Register/Register.scss';
 @import '../components/EventPage/EventPage.scss';
+
 @import 'variables.scss';
 @import 'functions.scss';
 
