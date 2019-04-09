@@ -14,7 +14,7 @@ const router = () => {
             <Route path="/register" component={Register} />
             <Route path="/events" component={Events} />
             <Route path="/rooms" component={Rooms} />
-            <Route path="/room-page" component={RoomPage} />
+            <Route path="/room/:id" component={RoomPage} />
             <Route render={() => (<div style={{color: "red", textAlign: "center", fontSize: "2rem"}}>Page not found </div>)} />
         </Switch>
     );
