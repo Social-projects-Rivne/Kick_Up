@@ -13,7 +13,9 @@ class AppHeader extends React.Component {
         activePage: window.location.pathname,
     };
     handleLogout = () => {
-        // TODO: logout
+        console.log(this.props);
+        this.props.userHasAuthenticated(false);
+        localStorage.removeItem("authorization");
     }
     componentWillMount() {
         this.unlisten = this.props.history.listen(location => {
@@ -37,18 +39,8 @@ class AppHeader extends React.Component {
     };
 
     render() {
+        console.log('appheader props', this.props)
         const { mobileMenuOpened, activePage } = this.state;
-
-        const renderMobileMenu = (
-            <div className={"mobile-menu" + (mobileMenuOpened ? "" : " hidden")}>
-                <BottomNavigation value={activePage} onChange={this.handleChangeActivePage} className="navigation-buttons">
-                    <BottomNavigationAction className="icon-details" label="Events" value="/events" icon={<EventAvailable />} />
-                    <BottomNavigationAction className="icon-details" label="Spaces" value="/rooms" icon={<SupervisorAccount />} />
-                    <BottomNavigationAction className="icon-details" label="Sign In" value="/sign-in" icon={<Person />} />
-                    <BottomNavigationAction className="icon-details" label="Sign Up" value="/register" icon={<PersonAdd />} />
-                </BottomNavigation>
-            </div>
-        );
 
         const authField = this.props.isAuthenticated
         ?   <BottomNavigation value={activePage} onChange={this.handleChangeActivePage} className="navigation-buttons">
@@ -57,7 +49,24 @@ class AppHeader extends React.Component {
         :   <BottomNavigation value={activePage} onChange={this.handleChangeActivePage} className="navigation-buttons">
                 <BottomNavigationAction className="icon-details" label="Sign In" value="/sign-in" icon={<Person />} />
                 <BottomNavigationAction className="icon-details" label="Sign Up" value="/sign-up" icon={<PersonAdd />} />
+            </BottomNavigation>;
+        const authFieldForMobile = this.props.isAuthenticated
+        ?   <BottomNavigation value={activePage} onChange={this.handleChangeActivePage} className="navigation-buttons">
+                <BottomNavigationAction className="icon-details" label="Events" value="/events" icon={<EventAvailable />} />
+                <BottomNavigationAction className="icon-details" label="Spaces" value="/rooms" icon={<SupervisorAccount />} />
+                <BottomNavigationAction className="icon-details" label="Sign Out" onClick={this.handleLogout} icon={<PowerOff />} />
             </BottomNavigation>
+        :   <BottomNavigation value={activePage} onChange={this.handleChangeActivePage} className="navigation-buttons">
+                <BottomNavigationAction className="icon-details" label="Events" value="/events" icon={<EventAvailable />} />
+                <BottomNavigationAction className="icon-details" label="Spaces" value="/rooms" icon={<SupervisorAccount />} />
+                <BottomNavigationAction className="icon-details" label="Sign In" value="/sign-in" icon={<Person />} />
+                <BottomNavigationAction className="icon-details" label="Sign Up" value="/sign-up" icon={<PersonAdd />} />
+            </BottomNavigation>
+        const renderMobileMenu = (
+            <div className={"mobile-menu" + (mobileMenuOpened ? "" : " hidden")}>
+                {authFieldForMobile}
+            </div>
+        );
 
         return (
             <header className="root">
