@@ -9,7 +9,6 @@ class App extends React.Component {
     current: 1
   };
   onChange = page => {
-    console.log(page);
     this.setState({
       current: page
     });
