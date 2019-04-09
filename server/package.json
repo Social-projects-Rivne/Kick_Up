@@ -14,9 +14,9 @@
   "author": "v_46",
   "license": "ISC",
   "dependencies": {
+    "@koa/cors": "^2.2.3",
     "bcrypt-nodejs": "0.0.3",
     "bookshelf": "^0.14.2",
-    "cors": "^2.8.5",
     "dotenv": "^7.0.0",
     "faker": "^4.1.0",
     "jsonwebtoken": "^8.5.1",

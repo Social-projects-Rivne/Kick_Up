@@ -7,7 +7,7 @@ import is from 'is_js';
 import CustomizedSnackbars from '../Toast/Toast';
 
 // @todo change;
-const USER_ROUTE = 'http://httpbin.org/post';
+const USER_ROUTE = 'http://localhost:3001/api/signup';
 const PASSWORD_LENGTH = 6;
 const messageType = {
     SUCCESS: 'success',
@@ -63,8 +63,14 @@ class Register extends Component {
             email: this.state.email,
             password: this.state.password
         })
-            .then(() => { fireCallback(true) })
-            .catch((err) => { fireCallback(false) });
+            .then((res) => {
+                console.log('============');
+                fireCallback(true)
+             })
+            .catch((err) => {
+                console.log('============',err.response.data.error.errors);
+                fireCallback(false)
+             });
     }
     doValidation() {
         let result = true;
