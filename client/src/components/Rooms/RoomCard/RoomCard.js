@@ -1,7 +1,6 @@
 import React from "react";
 
 import {Grid} from "@material-ui/core";
-import './RoomCard.scss';
 import StarRating from './../../UI/StarRating/StarRating';
 
 const roomCard = props => {

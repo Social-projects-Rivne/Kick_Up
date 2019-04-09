@@ -5,7 +5,6 @@ import roomsDB from "./../../mocks/rooms";
 import Toolbar from "./../Toollbar/Toolbar";
 
 import { Grid } from "@material-ui/core";
-import { withStyles } from "@material-ui/core/styles";
 import RoomCard from "./RoomCard/RoomCard";
 import Spinner from "./../UI/Spinner/Spinner";
 
@@ -32,9 +31,16 @@ class Rooms extends Component {
     // })    
   }
 
+  showFilteredRooms = (FilteredRooms) => {
+    this.setState({
+      FilteredRooms,
+    });
+  }
+
   selectedRoomHandler = (id) => {
     this.props.history.push({pathname: '/rooms/' + id})
   }
+
   render() {
     const { FilteredRooms, isLoading } = this.state;
 
@@ -60,7 +66,7 @@ class Rooms extends Component {
     );
     return (
       <>
-        <Toolbar />
+        <Toolbar roomsDB={this.state.roomsDB} passFilteredRooms={this.showFilteredRooms}/>
         <Grid container>{roomList}</Grid>
       </>
     );
