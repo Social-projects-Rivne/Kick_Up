@@ -63,10 +63,10 @@ class Login extends Component {
     axios
       .post("/api/signin", user)
       .then(res => {
-        console.log("login response data=>", res.data);
+        console.log("login response data=>", res);
         this.props.userHasAuthenticated(true);
         const { token } = res.data;
-        localStorage.setItem("jwtToken", token);
+        localStorage.setItem("authorization", token);
         this.setAuthToken(token);
         const decoded = jwt_decode(token);
         this.setState({
@@ -86,7 +86,14 @@ class Login extends Component {
           }
         });
       })
-      .catch(err => console.log(err));
+      .catch(err => {
+        console.log(err.response.data.error.errors.message[0]);
+        console.log(err.response);
+        this.setState({
+          message: err.response.data.error.errors.message[0],
+          messageType: messageType.ERR,
+        })
+      });
   };
   setAuthToken = token => {
     if (token) {

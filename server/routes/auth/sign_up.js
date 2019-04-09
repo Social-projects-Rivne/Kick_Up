@@ -8,7 +8,7 @@ const heandler = {
   async sign_up(ctx) {
     await validate(ctx.request.body, {
       email: 'required|email',
-      password: 'required|min:10'
+      password: 'required|min:6'
     });
     const { email, password } = ctx.request.body;
     const userCount = await User.where({ email:email.toLowerCase() }).count();
