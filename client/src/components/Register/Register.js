@@ -66,7 +66,6 @@ class Register extends Component {
                 })
              })
             .catch((err) => {
-                debugger;
                 const data = err.response.data.error.errors;
                 let res = [];
 
