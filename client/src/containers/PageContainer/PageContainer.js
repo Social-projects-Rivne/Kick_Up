@@ -3,13 +3,16 @@ import { withRouter } from 'react-router-dom'
 
 import AppHeader from './../../components/AppHeader/AppHeader';
 import Footer from './../../components/Footer/Footer';
+import { SnackbarProvider } from 'notistack';
 
 const pageContainer = props => {
     return (
         <>
-            <AppHeader isAuthenticated={props.isAuthenticated} />
-            <main id="content">{props.children}</main>
-            <Footer />
+            <SnackbarProvider maxSnack={3}>
+                <AppHeader isAuthenticated={props.isAuthenticated} />
+                <main id="content">{props.children}</main>
+                <Footer />
+            </SnackbarProvider>
         </>
     );
 }

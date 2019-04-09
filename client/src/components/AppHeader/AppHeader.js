@@ -61,7 +61,7 @@ class AppHeader extends React.Component {
 
         return (
             <header className="root">
-                {/* <AppBar position="static" className="header-bg">
+                <AppBar position="static" className="header-bg">
                     <Toolbar>
                         <IconButton className="logo-hover">
                             <Link component={RouterLink} to="/">
@@ -97,7 +97,7 @@ class AppHeader extends React.Component {
                         </div>
                     </Toolbar>
                 </AppBar>
-                {renderMobileMenu} */}
+                {renderMobileMenu}
             </header>
         );
     }

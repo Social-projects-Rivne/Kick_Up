@@ -1,6 +1,6 @@
 .register {
-    height: calc(100vh - #{$footer-height});
-    background-image: url('../assets/img/bg-1.jpg');
+    height: calc(100vh - #{$footer-height} - #{$header-height});
+    background-image: url('../assets/images/bg-1.jpg');
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center center;
@@ -108,8 +108,8 @@
     }
 }
 
-[class*="MuiSnackbarContent-root"] {
-    flex-wrap: nowrap !important;
+#root [class*="MuiFormLabel-focused"] {
+    color: $white;
 }
 
 @media only screen and (min-width: 767px) {
