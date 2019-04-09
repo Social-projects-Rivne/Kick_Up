@@ -8,6 +8,18 @@
     }
 }
 
+// For better UX;
+.event-page > * {
+    opacity: 0;
+    animation-name: fade-in;
+    animation-duration: 0.3s;
+    animation-fill-mode: forwards;
+}
+
+.event-page > .event-page__title-wrapper:first-child {
+    padding-top: 30vh;
+}
+
 .event-page__main-details-wrapper {
     margin-bottom: 8px;
 }
@@ -81,14 +93,27 @@
 }
 
 // Related to swiper;
-.event-page .swiper-container {
+.event-page .event-page__gallery-swiper {
+    min-height: $maxEventSwiperHeight;
     max-height: $maxEventSwiperHeight;
 }
 
-.event-page .swiper-container img {
+.event-page .event-page__gallery-swiper img {
     max-height: $maxEventSwiperHeight;
     width: auto;
     border-radius: 3px;
+    opacity: 0;
+    animation-name: fade-in;
+    animation-duration: 0.5s;
+    animation-fill-mode: forwards;
+}
+
+@for $i from 0 through $maxEventGallerySlidesPerView {
+
+    .event-page .event-page__gallery-swiper
+    .swiper-slide:nth-child(#{$i}) img {
+        animation-delay: 0.5s * $i;
+    }
 }
 
 .event-page .image-gallery-slides {
@@ -318,5 +343,14 @@
             min-width: 100%;
             max-width: 100%;
         }
+    }
+}
+
+// Animation;
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    } to {
+        opacity: 1;
     }
 }

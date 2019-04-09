@@ -26,7 +26,6 @@ import { Pagination, Autoplay } from 'swiper/dist/js/swiper.esm';
 import "react-id-swiper/src/styles/scss/swiper.scss";
 
 // Global constants;
-const tabletWidth = 768;
 
 // Swipers params for event page;
 const galleryParams = {
@@ -35,6 +34,9 @@ const galleryParams = {
     slidesPerView: 'auto',
     centeredSlides: false,
     loop: true,
+    containerClass: 'swiper-container  event-page__gallery-swiper',
+    rebuildOnUpdate: true,
+    shouldSwiperUpdate: true,
     pagination: {
       el: ".swiper-pagination",
       type: "bullets",
@@ -64,42 +66,102 @@ const tabsParams = {
         click: function() {
             this.updateAutoHeight();
         }
-    },
-    breakpoints: {
-        768: {
-            spaceBetween: 0
-        }
-    },
+    }
 } 
 
 class EventPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            eventTitle: 'Meteor shower gathering',
-            // @todo, pass images from server;
-            images: [
+            gallery: [],
+            title: '',
+            description: '',
+            users: []
+        };
+        this.componentDidMount = this.componentDidMount.bind(this);
+    }
+    componentDidMount = () => {
+        // Get data, @todo get it from server via axios;
+        const data = {
+            title: 'Meteor shower gathering',
+            description: '9 meteor showers in August 2019 among others! \
+            The Lyrids peaking! Keep your eyes to the sky! A meteor shower is \
+            a celestial event in which a number of meteors are observed to radiate, \
+            or originate, from one point in the night sky. Don\'t miss it!',
+            gallery: [
                 'http://dennisradai.com/projects/kick/ms1.jpg',
                 'http://dennisradai.com/projects/kick/ms2.jpg',
                 'http://dennisradai.com/projects/kick/ms3.jpg'
+            ],
+            users: [
+                {
+                    id: 1,
+                    name: 'Ramon Good',
+                    image: 'http://i.pravatar.cc/36',
+                    joined: '7 days ago'
+                },
+                {
+                    id: 2,
+                    name: 'Mauricio Hawkins',
+                    image: 'http://i.pravatar.cc/36',
+                    joined: '2 days ago'
+                },
+                {
+                    id: 3,
+                    name: 'Sage Gates',
+                    image: 'http://i.pravatar.cc/36',
+                    joined: '5 days ago'
+                },
+                {
+                    id: 4,
+                    name: 'Heath Meadows',
+                    image: 'http://i.pravatar.cc/36',
+                    joined: '8 days ago'
+                },
+                {
+                    id: 5,
+                    name: 'Davion Dennis',
+                    image: 'http://i.pravatar.cc/36',
+                    joined: '2 days ago'
+                },
+                {
+                    id: 6,
+                    name: 'Remington Dalton',
+                    image: 'http://i.pravatar.cc/36',
+                    joined: '1 day ago'
+                },
+                {
+                    id: 7,
+                    name: 'Direct Elton',
+                    image: 'http://i.pravatar.cc/36',
+                    joined: '12 days ago'
+                }
             ]
-        };
-        //this.submitHandler = this.submitHandler.bind(this);
+        }
+
+        // @temp, immitate delay;
+        window.setTimeout(() => {
+            this.setState(() => data); 
+        }, 500);
     }
     render() {
         return (
             <div className="event-page">
-                <Swiper {...galleryParams} >
-                {this.state.images.map((slide, idx) => 
-                    <div key={idx}>
-                        <img src={slide} alt="" />
-                    </div>
-                )}
-                </Swiper>
+                {this.state.gallery.length > 0 &&
+                    <Swiper {...galleryParams} >
+                        {this.state.gallery.map((slide, idx) => 
+                            <div key={idx} className="swiper-slide">
+                                <img src={slide} alt="" />
+                            </div>
+                        )}
+                    </Swiper>
+                }
                 <div className="event-page__title-wrapper">
-                    <Typography variant="h5" className="event-page__title">
-                        Meteor shower in Rivne!
-                    </Typography>
+                    {this.state.title &&
+                        <Typography variant="h5" className="event-page__title">
+                            {this.state.title}
+                        </Typography>
+                    }
                     <Fab className="event-page__fab" variant="extended" color="primary">
                         <Add />
                         <span className="event-page__fab-text">Join now</span>
@@ -124,16 +186,12 @@ class EventPage extends Component {
                             </ListItem>
                         </List>
                         <Paper elevation={1} className="event-page__main-details-wrapper">
-                            <Typography component="p" className="event-page__main-details">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                                Nullam a neque lacus. Donec tristique eros nisi, a feugiat 
-                                nisi congue vitae. Nullam sodales tempor elementum. Nullam 
-                                volutpat euismod mauris id commodo. Praesent vitae lacus purus. 
-                                Proin congue finibus risus, eu lacinia tellus. Donec eget sem 
-                                nec diam suscipit dapibus. Fusce a rhoncus libero, sed tristique 
-                                nisl. Maecenas turpis elit, vulputate eget magna vitae, volutpat pulvinar 
-                                nibh. Praesent pellentesque quis leo at maximus.
-                            </Typography>
+                            {
+                                this.state.description &&
+                                <Typography component="p" className="event-page__main-details">
+                                    {this.state.description}
+                                </Typography>
+                            }
                         </Paper>
                     </Grid>
                     <Grid className="event-page__section" item xs={12}>
@@ -142,49 +200,46 @@ class EventPage extends Component {
                         </Typography>
                         <ExpansionPanel>
                             <ExpansionPanelSummary className="event-page__faq-title" expandIcon={<ExpandMore />}>
-                                {/* @todo take avatar from db */}
+                                {/* @todo take data from db */}
                                 <Avatar alt="" src="https://material-ui.com/static/images/avatar/1.jpg" className="avatar  event-page__avatar" />
-                                <Typography>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum diam nulla, commodo eu sodales eu?</Typography>
+                                <Typography>A time to gather stones! Who will join me from Lutsk?</Typography>
                             </ExpansionPanelSummary>
                             <ExpansionPanelDetails className="event-page__faq-answer">
-                                {/* @todo take avatar from db */}
-                                <Avatar alt="" src="https://material-ui.com/static/images/avatar/1.jpg" className="avatar  event-page__avatar" />
+                                {/* @todo take data from db */}
+                                <Avatar alt="" src="https://material-ui.com/static/images/avatar/2.jpg" className="avatar  event-page__avatar" />
                                 <Typography className="event-page__faq-text">
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
-                                    sit amet blandit leo lobortis eget. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
-                                    sit amet blandit leo lobortis eget.
+                                    Hello, glad to see you! I do suppose I will be able to join you. Call me morning and 
+                                    we agree all the details.
                                 </Typography>
                             </ExpansionPanelDetails>
                         </ExpansionPanel>
                         <ExpansionPanel>
                             <ExpansionPanelSummary className="event-page__faq-title" expandIcon={<ExpandMore />}>
-                                {/* @todo take avatar from db */}
-                                <Avatar alt="" src="https://material-ui.com/static/images/avatar/1.jpg" className="avatar  event-page__avatar" />
-                                <Typography>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum diam nulla, commodo eu sodales eu?</Typography>
+                                {/* @todo take data from db */}
+                                <Avatar alt="" src="https://material-ui.com/static/images/avatar/3.jpg" className="avatar  event-page__avatar" />
+                                <Typography>What is best time to see this meteor shower?</Typography>
                             </ExpansionPanelSummary>
                             <ExpansionPanelDetails className="event-page__faq-answer">
-                                {/* @todo take avatar from db */}
-                                <Avatar alt="" src="https://material-ui.com/static/images/avatar/1.jpg" className="avatar  event-page__avatar" />
+                                {/* @todo take data from db */}
+                                <Avatar alt="" src="https://material-ui.com/static/images/avatar/4.jpg" className="avatar  event-page__avatar" />
                                 <Typography className="event-page__faq-text">
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
-                                    sit amet blandit leo lobortis eget. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
-                                    sit amet blandit leo lobortis eget.
+                                This meteor shower is considered to be one of the best displays in the night sky, and this year will peak during 
+                                the early hours of Friday. Long, glowing arcs of white, yellow, blue, red and green will streak across the Rivne sky. 
+                                You should be able to catch as many as 120 shooting stars an hour over the next night or so.
                                 </Typography>
                             </ExpansionPanelDetails>
                         </ExpansionPanel>
                         <ExpansionPanel>
                             <ExpansionPanelSummary className="event-page__faq-title" expandIcon={<ExpandMore />}>
-                            {/* @todo take avatar from db */}
-                                <Avatar alt="" src="https://material-ui.com/static/images/avatar/1.jpg" className="avatar  event-page__avatar" />
-                                <Typography>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum diam nulla, commodo eu sodales eu?</Typography>
+                            {/* @todo take data from db */}
+                                <Avatar alt="" src="https://material-ui.com/static/images/avatar/5.jpg" className="avatar  event-page__avatar" />
+                                <Typography>Lorem ipsum dolor sit amet, will there be a comet?</Typography>
                             </ExpansionPanelSummary>
                             <ExpansionPanelDetails className="event-page__faq-answer">
-                                {/* @todo take avatar from db */}
-                                <Avatar alt="" src="https://material-ui.com/static/images/avatar/1.jpg" className="avatar  event-page__avatar" />
+                                {/* @todo take data from db */}
+                                <Avatar alt="" src="https://material-ui.com/static/images/avatar/6.jpg" className="avatar  event-page__avatar" />
                                 <Typography className="event-page__faq-text">
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
-                                    sit amet blandit leo lobortis eget. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
-                                    sit amet blandit leo lobortis eget.
+                                    Lorem ipsum bro, you mean to view C/Schmidt (1862 N1) too?
                                 </Typography>
                             </ExpansionPanelDetails>
                         </ExpansionPanel>
@@ -193,97 +248,24 @@ class EventPage extends Component {
                         <Typography className="event-page__desktop-subtitle" variant="h5">
                             Members
                         </Typography>
-                        <List className="event-page__users-list">
-                            <ListItem className="event-page__users-list-item">
-                                <ListItemAvatar>
-                                <Avatar>
-                                    {/* @todo take avatar from db */}
-                                    <Avatar alt="" src="https://material-ui.com/static/images/avatar/1.jpg" className="avatar  event-page__avatar" />
-                                </Avatar>
-                                </ListItemAvatar>
-                                <ListItemText
-                                    primary="Ramon Good"
-                                    secondary='joined 2 days ago'
-                                />
-                            </ListItem>
-
-                            <ListItem className="event-page__users-list-item">
-                                <ListItemAvatar>
-                                <Avatar>
-                                    {/* @todo take avatar from db */}
-                                    <Avatar alt="" src="https://material-ui.com/static/images/avatar/1.jpg" className="avatar  event-page__avatar" />
-                                </Avatar>
-                                </ListItemAvatar>
-                                <ListItemText
-                                    primary="Heath Meadows"
-                                    secondary='joined 2 days ago'
-                                />
-                            </ListItem>
-
-                            <ListItem className="event-page__users-list-item">
-                                <ListItemAvatar>
-                                <Avatar>
-                                    {/* @todo take avatar from db */}
-                                    <Avatar alt="" src="https://material-ui.com/static/images/avatar/1.jpg" className="avatar  event-page__avatar" />
-                                </Avatar>
-                                </ListItemAvatar>
-                                <ListItemText
-                                    primary="Penelope Ellison"
-                                    secondary='joined 2 days ago'
-                                />
-                            </ListItem>
-
-                            <ListItem className="event-page__users-list-item">
-                                <ListItemAvatar>
-                                <Avatar>
-                                    {/* @todo take avatar from db */}
-                                    <Avatar alt="" src="https://material-ui.com/static/images/avatar/1.jpg" className="avatar  event-page__avatar" />
-                                </Avatar>
-                                </ListItemAvatar>
-                                <ListItemText
-                                    primary="Mauricio Hawkins"
-                                    secondary='joined 2 days ago'
-                                />
-                            </ListItem>
-
-                            <ListItem className="event-page__users-list-item">
-                                <ListItemAvatar>
-                                <Avatar>
-                                    {/* @todo take avatar from db */}
-                                    <Avatar alt="" src="https://material-ui.com/static/images/avatar/1.jpg" className="avatar  event-page__avatar" />
-                                </Avatar>
-                                </ListItemAvatar>
-                                <ListItemText
-                                    primary="Davion Dennis"
-                                    secondary='joined 2 days ago'
-                                />
-                            </ListItem>
-
-                            <ListItem className="event-page__users-list-item">
-                                <ListItemAvatar>
-                                <Avatar>
-                                    {/* @todo take avatar from db */}
-                                    <Avatar alt="" src="https://material-ui.com/static/images/avatar/1.jpg" className="avatar  event-page__avatar" />
-                                </Avatar>
-                                </ListItemAvatar>
-                                <ListItemText
-                                    primary="Remington Dalton"
-                                    secondary='joined 2 days ago'
-                                />
-                            </ListItem>
-
-                            <ListItem className="event-page__users-list-item">
-                                <ListItemAvatar>
-                                <Avatar>
-                                    {/* @todo take avatar from db */}
-                                    <Avatar alt="" src="https://material-ui.com/static/images/avatar/1.jpg" className="avatar  event-page__avatar" />
-                                </Avatar>
-                                </ListItemAvatar>
-                                <ListItemText
-                                    primary="Sage Gates"
-                                    secondary='joined 2 days ago'
-                                />
-                            </ListItem>
+                        <List className="event-page__users-list">   
+                            {
+                                this.state.users.length > 0 &&
+                                this.state.users.map((user, idx) => {
+                                    return (<ListItem key={idx} className="event-page__users-list-item">
+                                        <ListItemAvatar>
+                                        <Avatar>
+                                            {/* @todo take data from db */}
+                                            <Avatar alt="" src={user.image} />
+                                        </Avatar>
+                                        </ListItemAvatar>
+                                        <ListItemText
+                                            primary={user.name}
+                                            secondary={user.joined}
+                                        />
+                                    </ListItem>)
+                                })
+                            }   
                         </List>
                     </Grid>
                 </Swiper>
