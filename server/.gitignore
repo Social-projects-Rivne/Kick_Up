@@ -7,6 +7,14 @@ yarn-error.log*
 /test/unit/coverage/
 /test/e2e/reports/
 selenium-debug.log
+/static/uploads/avatars/*.jpeg
+/static/uploads/avatars/*.png
+/static/uploads/avatars/*.jpg
+/static/uploads/avatars/*.gif
+/static/uploads/galleries/*.jpeg
+/static/uploads/galleries/*.png
+/static/uploads/galleries/*.jpg
+/static/uploads/galleries/*.gif
 
 # Editor directories and files
 .idea
