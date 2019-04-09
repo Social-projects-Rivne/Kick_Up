@@ -98,7 +98,13 @@ class Toolbar extends Component {
     console.log("roomListByDate", roomListByDate);
   };
   resetFiltersHandle = () => {
-    this.setState({ FilteredRooms: this.state.roomsDB });
+    console.log('this.state.roomsDB',this.state.roomsDB)
+    this.setState({ 
+      FilteredRooms: this.state.roomsDB,
+      city: "",
+      category: "",
+    });
+    this.props.passFilteredRooms(this.state.FilteredRooms);
   };
 
   render() {
@@ -169,6 +175,7 @@ class Toolbar extends Component {
             </InputLabel>
             <Select
               className="toolbar-filter-select"
+              labelWidth={this.state.labelWidth}
               value={this.state.category}
               onChange={this.changeHandle}
               input={
@@ -179,9 +186,9 @@ class Toolbar extends Component {
                 />
               }
             >
-              <MenuItem value="">
+              {/* <MenuItem value="">
                 <em>None</em>
-              </MenuItem>
+              </MenuItem> */}
               {categories}
             </Select>
           </FormControl>
@@ -200,6 +207,7 @@ class Toolbar extends Component {
             </InputLabel>
             <Select
               className="toolbar-filter-select"
+              labelWidth={this.state.labelWidth}
               value={this.state.city}
               onChange={this.changeHandle}
               input={
@@ -209,9 +217,9 @@ class Toolbar extends Component {
                 />
               }
             >
-              <MenuItem value="">
+              {/* <MenuItem value="">
                 <em>None</em>
-              </MenuItem>
+              </MenuItem> */}
               {cities}
             </Select>
           </FormControl>

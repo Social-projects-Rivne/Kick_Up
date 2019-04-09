@@ -13,7 +13,7 @@ const heandler = {
     const { email, password } = ctx.request.body;
     const userCount = await User.where({ email:email.toLowerCase() }).count();
     if (userCount) {
-      ctx.throw(409, 'User with this email already registered');
+      ctx.throwSingle('User with this email already registered',409);
     }
     await new User({
       email,
