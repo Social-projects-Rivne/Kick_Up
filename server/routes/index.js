@@ -1,22 +1,29 @@
 const homeRouter = require('./home');
-const roomRouter = require('./room');
-const eventRouter = require('./event');
-const { signinRouter, signupRouter } = require('./auth');
-const errorHandler = require('./../services/errorHandler');
-
+const { signinRouter,signupRouter } = require('./auth');
+const { exceptionHandler } = require('./../services/errors');
+const errorHandler = require('./../services/errors/ErrorHandler');
+// const roomRouter = require('./room');
+// const eventRouter = require('./event');
+const profileRouter = require('./profile');
+// const exceptionHandler = require('../services/error/ExceptionHandler.js.js');
 module.exports = app => {
   // global middlewares
-
+  app.use(exceptionHandler);
+  app.use(errorHandler);
+  
   // Api routes
   app.use(homeRouter);
   //auth
   app.use(signinRouter)
   app.use(signupRouter)
 
-  //mongoDB routes
-  app.use('/api/rooms',roomRouter);
-  app.use('/api/events',eventRouter);
 
-  //error handler
-  app.use(errorHandler);
+  app.use(profileRouter)
+
+
+
+  //mongoDB routes
+  // app.use('/api/rooms',roomRouter);
+  // app.use('/api/events',eventRouter);
+
 };

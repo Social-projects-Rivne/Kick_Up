@@ -1,12 +1,12 @@
-const express = require('express');
-const router = express.Router();
+const Router = require('koa-router');
+const router = new Router({ prefix: '/api' });
 const handler = {
 
-  async home(req,res) {
-    res.send('home');
+  async home(ctx) {
+    ctx.body = 'home';
   }
   
 };
 router.get('/', handler.home);
 
-module.exports = router;
+module.exports = router.routes();

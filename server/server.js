@@ -1,8 +1,9 @@
-const express = require("express");
-const app = express();
-const mongoose = require("mongoose");
-var cors = require('cors')
 require("dotenv").config();
+const Koa = require('koa');
+const koaJson = require('koa-json');
+const koaParser = require('koa-bodyparser');
+const mongoose = require("mongoose");
+const cors = require('@koa/cors');
 
 const dbRoute = require("./mongoDB/constants/db");
 
@@ -11,15 +12,18 @@ mongoose.connect(dbRoute, { useNewUrlParser: true }, err => {
   console.log("===> MongoDB successfully connected! <===");
 });
 
-// support parsing of application/json type post data
-app.use(express.json());
-
-//support parsing of application/x-www-form-urlencoded post data
-app.use(express.urlencoded({ extended: false }));
+const app = new Koa();
 app.use(cors());
+app.use(koaParser());
+app.use(koaJson({
+  pretty: false
+}));
 
-require("./routes")(app);
 
-app.listen(3001, function() {
-  console.log("Example app listening on port 3001!");
+require('./routes')(app);
+
+app.listen(process.env.PORT, () => {
+  console.log(`App running on port: ${process.env.PORT}`)
 });
+
+module.exports = app;
