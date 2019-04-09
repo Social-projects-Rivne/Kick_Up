@@ -6,6 +6,7 @@ import event from '../../assets/images/event.jpg';
 import { Card, CardActionArea, CardActions, CardContent, CardMedia, Button, Typography, Grid } from '@material-ui/core';
 
 const Home = props => {
+    console.log('home props', props)
     return (
         <div className="main-content" >
         <Grid container spacing={24}>

@@ -69,6 +69,7 @@ class Login extends Component {
         localStorage.setItem("authorization", token);
         this.setAuthToken(token);
         const decoded = jwt_decode(token);
+        console.log('signIn DECODE', decoded)
         this.setState({
           message: res ? "Welcome!" : "Something went wrong :( Please retry!",
           messageType: res ? messageType.SUCCESS : messageType.ERR,
@@ -131,7 +132,6 @@ class Login extends Component {
     return result;
   };
   render() {
-    console.log("this.props", this.props);
     return (
       <div>
         <Grid
