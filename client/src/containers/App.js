@@ -20,7 +20,9 @@ class App extends Component {
     };
     return (
       <BrowserRouter>
-        <PageContainer isAuthenticated={this.state.isAuthenticated}>
+        <PageContainer 
+          isAuthenticated={this.state.isAuthenticated}
+          userHasAuthenticated={this.userHasAuthenticated}>
           <Router childProps={childProps}/>
         </PageContainer>
       </BrowserRouter>
