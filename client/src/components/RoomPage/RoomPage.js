@@ -117,7 +117,7 @@ class RoomPage extends React.Component {
                     animateHeight={true}
                 >
                     <TabContainer>
-                        <div className="room-card">
+                        <div className="room-details-card">
                             <Card className="card">
                                 <CardActionArea>
                                     <CardMedia
@@ -142,7 +142,7 @@ class RoomPage extends React.Component {
                                 </CardActions>
                             </Card>
                         </div>
-                        <div className="room-card">
+                        <div className="room-details-card">
                             <Card className="card">
                                 <CardActionArea>
                                     <CardMedia
@@ -170,7 +170,7 @@ class RoomPage extends React.Component {
                     </TabContainer>
 
                     <TabContainer>
-                        <div className="room-card">
+                        <div className="room-details-card">
                             <Card className="card">
                                 <CardActionArea>
                                     <CardMedia
@@ -195,7 +195,7 @@ class RoomPage extends React.Component {
                                 </CardActions>
                             </Card>
                         </div>
-                        <div className="room-card">
+                        <div className="room-details-card">
                             <Card className="card">
                                 <CardActionArea>
                                     <CardMedia
@@ -225,7 +225,7 @@ class RoomPage extends React.Component {
                     <TabContainer><Gallery photos={photoSet} /></TabContainer>
 
                     <TabContainer>
-                        <div className="room-card">
+                        <div className="room-details-card">
                             <Card className="card">
                                 <CardActionArea>
                                     <CardMedia

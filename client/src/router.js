@@ -6,7 +6,6 @@ import Events from './components/Events/Events';
 import Register from './components/Register/Register';
 import Rooms from './components/Rooms/Rooms';
 import AddRoom from './components/AddRoom/AddRoom';
-import RoomDetails from './components/RoomDetails/RoomDetails';
 import SignIn from './components/SignIn/SignIn';
 import AppliedRoute from './hoc/AppliedRoute/AppliedRoute';
 import RoomPage from './components/RoomPage/RoomPage';
