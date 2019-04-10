@@ -5,6 +5,8 @@ import Home from './components/Home/Home';
 import Events from './components/Events/Events';
 import Register from './components/Register/Register';
 import Rooms from './components/Rooms/Rooms';
+import AddRoom from './components/AddRoom/AddRoom';
+import RoomDetails from './components/RoomDetails/RoomDetails';
 import SignIn from './components/SignIn/SignIn';
 import AppliedRoute from './hoc/AppliedRoute/AppliedRoute';
 import RoomPage from './components/RoomPage/RoomPage';
@@ -16,8 +18,9 @@ const router = ({ childProps }) => {
             <Route path="/sign-up" component={Register} />
             <AppliedRoute path="/sign-in" exact component={SignIn} props={childProps} />
             <Route path="/events" component={Events} />
-            <Route path="/rooms" component={Rooms} />
-            <Route path="/room/:id" component={RoomPage} />
+            <Route path="/rooms" exact component={Rooms} />
+            <Route path="/rooms/:id" component={RoomPage} />
+            <Route path="/add-room" component={AddRoom} />
             <Route render={() => (<div style={{color: "red", textAlign: "center", fontSize: "2rem"}}>Page not found </div>)} />
         </Switch>
     );
