@@ -11,13 +11,15 @@ const rule = {
 const heandler = {
   async sign_in(ctx) {
     await validate(ctx.request.body, rule);
-    const { email } = ctx.request.body; 
+    const { email,password } = ctx.request.body; 
     const userCount = await User.where({ email: email.toLowerCase() }).count();
     if (!userCount) {
-        ctx.throwSingle('Wrong email',400);
+        ctx.throwSingle('Wrong email!',400);
       }
     const user = await User.where({ email: email.toLowerCase() }).fetch();
-
+    if (!(await user.comparePassword(password))) {
+      ctx.throwSingle('Wrong password!',400);
+    }
     ctx.body = {
         token: `Bearer ${JWTService.signUser(user)}`,
         id: user.get('id')

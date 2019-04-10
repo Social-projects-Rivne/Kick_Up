@@ -1,8 +1,9 @@
+require("dotenv").config();
 const Koa = require('koa');
 const koaJson = require('koa-json');
 const koaParser = require('koa-bodyparser');
 const mongoose = require("mongoose");
-require("dotenv").config();
+const cors = require('@koa/cors');
 
 const dbRoute = require("./mongoDB/constants/db");
 
@@ -12,8 +13,8 @@ mongoose.connect(dbRoute, { useNewUrlParser: true }, err => {
 });
 
 const app = new Koa();
-
-app.use(koaParser());
+app.use(cors());
+app.use(koaParser({ enableTypes: ['json', 'form'] }));
 app.use(koaJson({
   pretty: false
 }));

@@ -1,0 +1,356 @@
+.event-page {
+    /* fallback for old browsers */
+    background: #ECE9E6;
+    background: linear-gradient(to right, #FFFFFF, #ECE9E6); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+    & * {
+        box-sizing: border-box;
+    }
+}
+
+// For better UX;
+.event-page > * {
+    opacity: 0;
+    animation-name: fade-in;
+    animation-duration: 0.3s;
+    animation-fill-mode: forwards;
+}
+
+.event-page > .event-page__title-wrapper:first-child {
+    padding-top: 30vh;
+}
+
+.event-page__main-details-wrapper {
+    margin-bottom: 8px;
+}
+
+.event-page__main-details {
+    padding: 8px;
+}
+
+.event-page .event-page__title {
+    padding-top: 8px;
+    padding-left: 16px;
+    padding-right: 16px;
+    text-align: center;
+    font-weight: 100;
+}
+
+.event-page .event-page__list-item {
+    padding: 0;
+    margin-bottom: 8px;
+}
+
+.event-page .event-page__list-item svg {
+    fill: $indigoBright;
+}
+
+.event-page .event-page__list-item-text {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.event-page .event-page__fab {
+    display: flex;
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 5px; 
+}
+
+.event-page .event-page__fab .event-page__fab-text {
+    padding-left: 10px;
+    padding-right: 5px;
+}
+
+// FAQ chapter;
+.event-page .event-page__faq-title {
+    padding-left: 12px;
+    padding-right: 12px;
+}
+
+.event-page .event-page__faq-title p {
+    color: $indigo;
+}
+
+.event-page .event-page__faq-title + div 
+.MuiExpansionPanelDetails-root-216 {
+    padding-top: 0; 
+}
+
+.event-page .event-page__faq-text {
+    font-weight: 100;
+}
+
+.event-page .event-page__avatar {
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-right: 12px;
+}
+
+.event-page__faq-answer .event-page__avatar {
+    margin-top: 0;
+}
+
+// Related to swiper;
+.event-page .event-page__gallery-swiper {
+    min-height: $maxEventSwiperHeight;
+    max-height: $maxEventSwiperHeight;
+}
+
+.event-page .event-page__gallery-swiper img {
+    max-height: $maxEventSwiperHeight;
+    width: auto;
+    border-radius: 3px;
+    opacity: 0;
+    animation-name: fade-in;
+    animation-duration: 0.5s;
+    animation-fill-mode: forwards;
+}
+
+@for $i from 0 through $maxEventGallerySlidesPerView {
+
+    .event-page .event-page__gallery-swiper
+    .swiper-slide:nth-child(#{$i}) img {
+        animation-delay: 0.5s * $i;
+    }
+}
+
+.event-page .image-gallery-slides {
+    flex-grow: 1;
+}
+
+.event-page .swiper-slide {
+    display: inline-block;
+    width: auto;
+    border-radius: 5px;
+}
+
+.event-page .event-page__tabs-swiper {
+    display: flex;
+    width: 100%;
+    // @todo update after ok header and footer;
+    min-height: calc(100vh - (0.67rem * 2) - #{$footerHeight} - #{$maxEventSwiperHeight} - #{$header-height});
+    max-height: unset;
+    flex-direction: column-reverse;
+    justify-content: flex-end;
+}
+
+.event-page__sections-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.event-page .event-page__section {
+    display: block;
+    width: 100%;
+    padding-left: 16px;
+    padding-right: 16px;
+}
+
+.event-page__section-pagination {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+}
+
+.event-page .swiper-pagination-bullet {
+    background-color: $white;
+    opacity: 0.7;
+}
+
+.event-page .swiper-pagination-bullet-active {
+    background-color: $indigoBright;
+    opacity: 1;
+}
+
+#root .event-page .event-page__section-pagination span {
+    margin: 0;
+    margin-right: 20px;
+    height: auto;
+    background-color: transparent;
+    width: unset;
+
+    &::before {
+        color: $indigoBright;
+        font-weight: 400;
+        font-size: 1rem;
+        line-height: 1.286rem;
+    }
+
+    &.swiper-pagination-bullet-active::before {
+        font-weight: 600;
+    }
+
+    &:nth-child(1)::before {
+        content: 'Info';
+    }
+
+    &:nth-child(2)::before {
+        content: 'FAQ';
+    }
+
+    &:nth-child(3)::before {
+        content: 'Members';
+    }
+}
+
+.event-page .event-page__desktop-subtitle {
+    display: none;
+    padding-left: 12px;
+    padding-right: 12px;
+    padding-bottom: 6px;
+    font-weight: 100;
+}
+
+// Mobile landscape;
+@media only screen and (max-width: 768px) and (orientation: landscape) {
+    .event-page__users-list {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+    }
+
+    .event-page__users-list-item {
+        max-width: 50%;
+    }
+}
+
+@media only screen and (min-width: 768px) {
+    .event-page__title-wrapper {
+        max-width: 1168px;
+        margin: 30px auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .event-page .event-page__fab {
+        margin-left: 10px;
+        margin-right: 0;
+    }
+
+    .event-page .event-page__title {
+        font-size: 3.75rem;
+        line-height: 4.25rem;
+    }
+
+    .event-page .event-page__desktop-subtitle {
+        display: block;
+        font-weight: 100;
+    }
+
+    .event-page .event-page__fab {
+        min-width: 150px;
+    }
+
+    .event-page .event-page__tabs-swiper {
+        max-width: 1168px;
+        margin: 0 auto;
+        padding: 24px;
+        background-color: $white;
+        border-radius: 5px;
+        overflow: visible;
+    }
+
+    .event-page .event-page__tabs-swiper
+    .swiper-wrapper {
+        flex-wrap: wrap;
+    }
+
+    .event-page .event-page__section-pagination {
+        display: none;
+    }
+
+    // Need !important to overwrite Swiper styles;
+    .event-page__tabs-swiper .swiper-wrapper {
+        height: unset !important;
+        transform: none !important;
+    }
+
+    .event-page .event-page__section {
+        max-width: 100%;
+        margin: 0;
+        margin-bottom: 16px;
+        padding: 0;
+        flex-grow: 1;
+    }
+
+    .event-page__users-list {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+    }
+
+    .event-page__users-list-item {
+        max-width: 33%;
+    }
+
+    .event-page .event-page__main-details {
+        padding: 16px;
+        font-size: 1rem;
+        line-height: 1.5rem;
+        font-weight: 100;
+    }
+
+    .event-page .event-page__list-item-text span {
+         font-size: 1.5rem;
+         line-height: 2rem;
+         font-weight: 100;
+    }
+
+    .event-page .MuiExpansionPanel-root-206 {
+        margin-bottom: 6px;
+        box-shadow: none;
+        border: 0;
+
+        &::before {
+            display: none;
+        }
+    }
+
+    .event-page .event-page__faq-text,
+    .event-page .event-page__faq-title p {
+        font-size: 1rem;
+        line-height: 1.5rem;
+    }
+
+    .event-page .event-page__faq-answer {
+        padding-left: 32px;
+    }
+
+    .event-page .MuiExpansionPanelSummary-expandIcon-215 {
+        top: 22px;
+    }
+}
+
+@media only screen and (min-width: 1168px) {
+    .event-page .event-page__tabs-swiper {
+        padding-left: 30px;
+        padding-right: 0;
+    }
+
+    .event-page__section {
+        &:nth-child(1) {
+            max-width: 33%;
+        }
+
+        &:nth-child(2) {
+            max-width: 61%;
+        }
+
+        &:nth-child(3) {
+            min-width: 100%;
+            max-width: 100%;
+        }
+    }
+}
+
+// Animation;
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    } to {
+        opacity: 1;
+    }
+}

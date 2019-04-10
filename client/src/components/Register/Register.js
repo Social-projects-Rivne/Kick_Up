@@ -1,13 +1,13 @@
 import React, { Component } from "react";
+
 import axios from 'axios';
+import is from 'is_js';
+import { withSnackbar } from 'notistack';
 
 import { Grid, TextField, Button, Typography } from '@material-ui/core';
 import { Person, Send, Email, Lock } from '@material-ui/icons';
-import is from 'is_js';
-import CustomizedSnackbars from '../Toast/Toast';
 
-// @todo change;
-const USER_ROUTE = 'http://httpbin.org/post';
+const USER_ROUTE = 'http://localhost:3001/api/signup';
 const PASSWORD_LENGTH = 6;
 const messageType = {
     SUCCESS: 'success',
@@ -30,10 +30,15 @@ class Register extends Component {
             formInFocus: false
         };
         this.submitHandler = this.submitHandler.bind(this);
-        this.resetToast = this.resetToast.bind(this);
         this.updateInputValue = this.updateInputValue.bind(this);
         this.doValidation = this.doValidation.bind(this);
         this.sendFormData = this.sendFormData.bind(this);
+        this.showToast = this.showToast.bind(this);
+    }
+    showToast = (message, variant) => {
+        this.props.enqueueSnackbar(message, {
+            variant: variant ? variant : 'default',
+        });
     }
     resetFormUi = () => {
         this.setState({
@@ -44,17 +49,8 @@ class Register extends Component {
             formInFocus: false
         });
     }
-    resetToast() {
-        this.setState({
-            message: false,
-            messageType: null,
-            messageOpened: false,
-            emailInputValid: true,
-            passwordInputValid: true,
-        });
-    }
-    // @todo add server error responses display;
     sendFormData(callback) {
+        
         const fireCallback = (res) => {
             if (typeof callback === 'function') callback(res);
         }
@@ -63,8 +59,29 @@ class Register extends Component {
             email: this.state.email,
             password: this.state.password
         })
-            .then(() => { fireCallback(true) })
-            .catch((err) => { fireCallback(false) });
+            .then((res) => {
+                fireCallback({
+                    status: true,
+                    details: []
+                })
+             })
+            .catch((err) => {
+                const data = err.response.data.error.errors;
+                let res = [];
+
+                //@temp for test;
+                data.test = [];
+                data.test.push('Manually added error for test');
+                
+                Object.values(data).forEach((el) => {
+                    res.push(el[0]);
+                });                
+                
+                fireCallback({
+                    status: false,
+                    details: res
+                })
+             });
     }
     doValidation() {
         let result = true;
@@ -85,7 +102,8 @@ class Register extends Component {
     }
     updateInputValue(evt) {
         this.setState({
-          [evt.target.name]: evt.target.value
+          [evt.target.name]: evt.target.value,
+          [evt.target.name + 'InputValid']: true
         });
     }
     submitHandler(submitEvt) {
@@ -97,32 +115,27 @@ class Register extends Component {
         const res = this.doValidation();
 
         if (!res) {
-            this.setState({
-                message: 'Please correct fields highlighted with red',
-                messageType: messageType.ERR,
-                messageOpened: true
-            });
-
+            this.showToast('Please correct fields highlighted with red', messageType.ERR);
             return;
         }
 
         // Do changes in UI;
-        this.setState({
-            message: 'Working',
-            messageType: messageType.INFO,
-            messageOpened: true
-        });
+        this.showToast('Working', messageType.INFO);
 
         // Send data;
         this.sendFormData(function (res) {
-
             // Show message based on response;
-            _this.setState({
-                message: res ? 'Welcome to RoomKa!' : 'Something went wrong :( Please retry!',
-                messageType: res ? messageType.SUCCESS : messageType.ERR,
-                messageOpened: true
-            });
-
+            if (res && res.status) {
+                _this.showToast('Welcome to RoomKa', messageType.SUCCESS);
+            } else {
+                try {
+                    res.details.forEach(msg => {
+                        _this.showToast(msg, messageType.ERR);
+                    });
+                } catch(err) {
+                    _this.showToast('Something went wrong :( Try reload your page', messageType.ERR);
+                }
+            }
             _this.resetFormUi();
         });
     }
@@ -135,19 +148,9 @@ class Register extends Component {
                 justify="center"
                 alignItems="center"
             >
-                {this.state.messageType &&
-                    this.state.messageType &&
-                        <CustomizedSnackbars
-                            variant={this.state.messageType}
-                            message={this.state.message}
-                            open={this.state.messageOpened}
-                            resetToast={this.resetToast}
-                        >
-                        </CustomizedSnackbars>
-                }
                 <Grid item xs={10} sm={6} className="register__info">
                     <h1>Let's kick up</h1>
-                     <hr />
+                    <hr />
                     <Typography variant="body1" className="register__info-text">
                         Sign up and get in touch with people of same interests.
                         Stay tuned it to all interesting event nearby!
@@ -206,4 +209,5 @@ class Register extends Component {
         )
     }
 }
-export default Register;
+
+export default withSnackbar(Register);

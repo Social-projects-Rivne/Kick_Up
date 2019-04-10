@@ -1,5 +1,5 @@
 const { bookshelf } = require('./../config/database');
-const { comparePassword,hashPassword } = require('./../services/Bcript')
+const { comparePassword, hashPassword } = require('./../services/Bcript')
 const moment = require('moment');
 const User = bookshelf.Model.extend({
     tableName: 'users',

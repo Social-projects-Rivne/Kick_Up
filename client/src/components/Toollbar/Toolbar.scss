@@ -1,0 +1,41 @@
+.toolbar {
+  button {
+    margin: 15px 10px;
+    padding: 5px;
+    background-color: $primary;
+  }
+  &-filter {
+    display: flex;
+    align-items: center;
+
+    &-formControl {
+      margin: 15px 10px !important;
+      label {
+        transform: translate(14px, 12px) scale(1);
+      }
+    }
+    &-inputLabel {
+      padding: 15px;
+    }
+    &-outlinedinput {
+      margin: 10px 10px;
+    }
+    &-select {
+      background-color: $primary;
+      width: 100px;
+    }
+    &-date {
+      display: inline-block;
+      margin: 10px 10px;
+    }
+  }
+  #select-category,
+  #select-city {
+    padding: 9px 15px;
+  }
+  input {
+    padding: 8px;
+    background-color: $primary;
+    width: 137px;
+  }
+}
