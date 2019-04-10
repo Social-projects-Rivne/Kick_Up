@@ -2,6 +2,7 @@ const homeRouter = require('./home');
 const { signinRouter,signupRouter } = require('./auth');
 const { exceptionHandler } = require('./../services/errors');
 const errorHandler = require('./../services/errors/ErrorHandler');
+const uploadRouter = require('./upload');
 // const roomRouter = require('./room');
 // const eventRouter = require('./event');
 const profileRouter = require('./profile');
@@ -13,6 +14,7 @@ module.exports = app => {
   
   // Api routes
   app.use(homeRouter);
+  app.use(uploadRouter);
   //auth
   app.use(signinRouter)
   app.use(signupRouter)
