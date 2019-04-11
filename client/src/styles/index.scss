@@ -1,4 +1,5 @@
 @import 'variables.scss';
+@import 'mixins.scss';
 @import 'functions.scss';
 
 body {
@@ -90,3 +91,4 @@ code {
 @import '../components/Rooms/RoomCard/RoomCard.scss';
 @import '../components/Toollbar/Toolbar.scss';
 @import '../components/RoomPage/RoomPage.scss';
+@import '../components/EditProfile/EditProfile.scss';
