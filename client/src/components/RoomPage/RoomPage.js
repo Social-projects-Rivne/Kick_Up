@@ -4,9 +4,10 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 import { withRouter } from 'react-router-dom';
 import { AppBar, Tabs, Tab, Typography, Grid, Avatar, Card, CardActions, CardContent, CardMedia,
-    CardActionArea, Button, ListItemText, ListItem, ListItemAvatar } from '@material-ui/core';
-import { Comment, Collections, Face, NewReleases, VerifiedUser, EventAvailable } from '@material-ui/icons';
-import { Carousel } from 'react-responsive-carousel';
+    CardActionArea, Button, ListItemText, ListItem, ListItemAvatar, Paper, Badge, Fab,
+    ExpansionPanelSummary, ExpansionPanel, ExpansionPanelDetails } from '@material-ui/core';
+import { Comment, Collections, Face, NewReleases, ExpandMore, EventAvailable, Add } from '@material-ui/icons';
+//import { Carousel } from 'react-responsive-carousel';
 import Gallery from 'react-photo-gallery';
 import SwipeableViews from 'react-swipeable-views';
 
@@ -67,32 +68,30 @@ class RoomPage extends React.Component {
         const { value } = this.state;
 
         return (
-            <div>
-                <div className="room-carousel">
-                    <span className="room-name-carousel">Room Name</span>
-                    <div className="room-join-carousel">
-                        2 members&nbsp;&nbsp;
-                        <button>Join</button>
-                    </div>
-                    <Carousel emulateTouch="true">
-                        <div className="scale-image">
-                            <div className="blur" style={{ backgroundImage: 'url(http://lorempixel.com/1000/600/nature/4/)'}}></div>
-                            <img src="http://lorempixel.com/1000/600/nature/4/" />
-                        </div>
-                        <div className="scale-image">
-                            <div className="blur" style={{ backgroundImage: 'url(http://lorempixel.com/1000/600/nature/6/)'}}></div>
-                            <img src="http://lorempixel.com/1000/600/nature/6/" />
-                        </div>
-                        <div className="scale-image">
-                            <div className="blur" style={{ backgroundImage: 'url(http://lorempixel.com/1000/600/nature/5/)'}}></div>
-                            <img src="http://lorempixel.com/1000/600/nature/5/" />
-                        </div>
-                        <div className="scale-image">
-                            <div className="blur" style={{ backgroundImage: 'url(http://lorempixel.com/1000/600/nature/3/)'}}></div>
-                            <img src="http://lorempixel.com/1000/600/nature/3/" />
-                        </div>
-                    </Carousel>
+            <div className="room-page-details">
+                <div>
+                    <Typography variant="h5">
+                        Room name
+                    </Typography>
+                    <Fab variant="extended">
+                        <Add />
+                        <span>Join</span>
+                    </Fab>
                 </div>
+
+                <ExpansionPanel>
+                    <ExpansionPanelSummary expandIcon={<ExpandMore />}>
+                        <Typography className="heading">About room</Typography>
+                    </ExpansionPanelSummary>
+                    <ExpansionPanelDetails>
+                        <Typography>
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                        </Typography>
+                    </ExpansionPanelDetails>
+                </ExpansionPanel>
 
                 <AppBar position="static" className="tab-bar">
                     <Tabs
@@ -106,8 +105,12 @@ class RoomPage extends React.Component {
                         <Tab label="Events" icon={<EventAvailable />} />
                         <Tab label="Gallery" icon={<Collections />} />
                         <Tab label="Posts" icon={<NewReleases />} />
-                        <Tab label="Members" icon={<Face />} />
-                        <Tab label="About" icon={<VerifiedUser />} />
+                        <Tab className="badge-tab-members" label={
+                            <Badge className="badge-room-margin" badgeContent={4} color="primary">
+                                <Face /> <p className="badge-members">Members</p>
+                            </Badge>
+                        }
+                        />
                     </Tabs>
                 </AppBar>
 
@@ -315,15 +318,6 @@ class RoomPage extends React.Component {
                                 </ListItem>
                             </Grid>
                         </Grid>
-                    </TabContainer>
-
-                    <TabContainer>
-                        <div className="room-text-about">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                        </div>
                     </TabContainer>
                 </SwipeableViews>
             </div>

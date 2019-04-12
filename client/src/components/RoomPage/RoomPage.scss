@@ -1,130 +1,81 @@
-.room-carousel {
-  position: relative;
+.room-page-details {
 
-  .room-name-carousel {
-    position: absolute;
-    top: 2%;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1;
-    font-size: 36pt;
-    color: $white;
-    background-color: rgba(24, 24, 24, 0.3);
-    padding: 0 25px;
-    border-radius: 40px;
-
-    @include media-breakpoint-down(md) {
-      font-size: 16pt;
-    }
+  .MuiTab-labelContainer-141 {
+    padding: 9px 0 0 0;
   }
 
-  .room-join-carousel {
-    position: absolute;
-    bottom: 25%;
-    right: 3%;
-    z-index: 1;
-    font-size: 14pt;
-    color: $white;
-
-    button {
-      background-color: $primary;
-      border: none;
-      outline: none;
-      padding: 5px 10px;
-      border-radius: 40px;
-      cursor: pointer;
-      font-size: 14pt;
-      color: $white;
-    }
+  .MuiTab-labelContainer-141 span{
+    padding: 9px 0 0 0;
   }
-  .scale-image {
-    position: relative;
-    height: 60vh;
+
+  .badge-members {
+    margin: 0;
+  }
+
+  .MuiSvgIcon-root-91 svg {
+    display: flex;
+    justify-content: center;
+  }
+
+  .tab-bar {
+    flex-grow: 1;
     width: 100%;
-    overflow: hidden;
 
+    .badge-room-margin {
+      //margin-right: 24px;
+      //margin-top: 5px;
+      display: flex;
+      flex-direction: column;
+    }
+
+      div[class*=flexContainer] {
+        @include media-breakpoint-up(md) {
+          justify-content: center;
+        }
+        @include media-breakpoint-down(md) {
+          justify-content: space-between;
+        }
+      }
+
+    .tab-menu {
+      background-color: $primary;
+
+      button[class*=selected] {
+        color: $black;
+      }
+
+      span[class*=colorSecondary] {
+        background-color: $black;
+      }
+    }
+  }
+
+  .room-details-card {
+    display: flex;
+    justify-content: center;
+    padding-bottom: 20px;
+
+    .card {
+      max-width: 645px;
+    }
+
+    .card-media {
+      height: 300px;
+    }
+  }
+
+  #root .avatar-center {
     display: flex;
     justify-content: center;
 
-    .blur {
-      position: absolute;
-      top: -50px;
-      left: -50px;
-      right: -50px;
-      bottom: -50px;
-
-      background-size: cover;
-      background-repeat: no-repeat;
-      background-position: center;
-      filter: blur(8px);
-    }
-
-    img {
-      position: relative;
-      max-width: 100%;
-      height: auto;
-      object-fit: contain;
+    .avatar-flex {
+      flex: none;
     }
   }
-}
 
-.room-carousel ul {
-  padding: 0;
-  text-align: center;
-  border-color: $black;
-}
-
-.tab-bar {
-  flex-grow: 1;
-  width: 100%;
-
-    div[class*=flexContainer] {
-      @include media-breakpoint-up(md) {
-        justify-content: center;
-      }
-      @include media-breakpoint-down(md) {
-        justify-content: space-between;
-      }
-    }
-
-  .tab-menu {
-    background-color: $primary;
-
-    button[class*=selected] {
-      color: $black;
-    }
-
-    span[class*=colorSecondary] {
-      background-color: $black;
-    }
+  .room-text-about {
+    font-size: 16px;
+    color: $black;
+    padding: 0 10%;
   }
-}
-
-.room-details-card {
-  display: flex;
-  justify-content: center;
-  padding-bottom: 20px;
-
-  .card {
-    max-width: 645px;
-  }
-
-  .card-media {
-    height: 300px;
-  }
-}
-
-#root .avatar-center {
-  display: flex;
-  justify-content: center;
-
-  .avatar-flex {
-    flex: none;
-  }
-}
-
-.room-text-about {
-  font-size: 16px;
-  color: $black;
-  padding: 0 10%;
 }
