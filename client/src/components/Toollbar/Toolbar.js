@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import { Link } from "react-router-dom";
+import axios from 'axios';
 
 import {
   Grid,
@@ -15,6 +16,15 @@ import {
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 
+const API = {
+  sortRate: '/api/rooms/sort-rating',
+  sortMember: '/api/rooms/sort-members',
+  sortCreated: '/api/rooms/sort-created',
+  filterByCategory: '/api/rooms/filter-by-category',
+  filterByLocation: '/api/rooms/filter-by-location',
+  resetFilters: '/api/rooms/reset-filters',
+}
+
 //TODO create for mobile
 class Toolbar extends Component {
   state = {
@@ -28,7 +38,7 @@ class Toolbar extends Component {
   componentDidMount() {
     this.getDate();
     this.setState({
-      labelWidth: ReactDOM.findDOMNode(this.InputLabelRef).offsetWidth
+      labelWidresetFilters: ReactDOM.findDOMNode(this.InputLabelRef).offsetWidth
     });
   }
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -38,16 +48,10 @@ class Toolbar extends Component {
       this.setState({ roomsDB, FilteredRooms: roomsDB });
     }
     if (prevState.category !== this.state.category) {
-      const filterRoomsByCategory = [...this.state.FilteredRooms].filter(
-        e => e.category === this.state.category
-      );
-      this.setState({ FilteredRooms: filterRoomsByCategory });
+      this.sortHandle(API.filterByCategory)
     }
     if (prevState.city !== this.state.city) {
-      const filterRoomsBycity = [...this.state.FilteredRooms].filter(
-        e => e.city === this.state.city
-      );
-      this.setState({ FilteredRooms: filterRoomsBycity });
+      this.sortHandle(API.filterByLocation)
     }
     if (prevState.FilteredRooms !== this.state.FilteredRooms) {
       this.props.passFilteredRooms(this.state.FilteredRooms);
@@ -70,22 +74,16 @@ class Toolbar extends Component {
     return date;
   };
 
-  sortRateHandle = () => {
-    const roomsAray = [...this.state.FilteredRooms];
-    roomsAray.sort((a, b) => b.rating - a.rating);
-    this.setState({ FilteredRooms: roomsAray });
-  };
-  sortMembersHandle = () => {
-    const roomsAray = [...this.state.FilteredRooms];
-    roomsAray.sort((a, b) => b.members - a.members);
-    this.setState({ FilteredRooms: roomsAray });
-  };
-  sortCreatedHandle = () => {
-    const roomsAray = [...this.state.FilteredRooms];
-    roomsAray.sort((a, b) => a.created_at - b.created_at);
-    this.setState({ FilteredRooms: roomsAray });
-    console.log("roomsAray", roomsAray);
-  };
+  getDataFromDB = (api) => {
+    axios.get(api)
+        .then(console.log('Data filtered by', api))
+        // .then(res => this.setState({FilteredRooms: res.data.roomsData}))
+        .catch(err => console.log(err))
+  }
+
+  sortHandle = api => {
+    this.getDataFromDB(api)
+  }
   changeHandle = event => {
     this.setState({ [event.target.name]: event.target.value });
   };
@@ -98,13 +96,13 @@ class Toolbar extends Component {
     console.log("roomListByDate", roomListByDate);
   };
   resetFiltersHandle = () => {
-    console.log('this.state.roomsDB',this.state.roomsDB)
-    this.setState({ 
-      FilteredRooms: this.state.roomsDB,
-      city: "",
-      category: "",
-    });
-    this.props.passFilteredRooms(this.state.FilteredRooms);
+    axios.get(API.resetFilters)
+      .then(res => this.setState({
+          FilteredRooms: res.data.roomsData,
+          city: "",
+          category: "",
+        }))
+      .catch(err => console.log(err))
   };
 
   render() {
@@ -146,13 +144,13 @@ class Toolbar extends Component {
               <AddIcon />
             </Fab>
           </Link>
-          <Button variant="outlined" onClick={this.sortRateHandle}>
+          <Button variant="outlined" onClick={this.sortHandle(API.sortRate)}>
             Top Rate
           </Button>
-          <Button variant="outlined" onClick={this.sortMembersHandle}>
+          <Button variant="outlined" onClick={this.sortHandle(API.sortMember)}>
             Top Members
           </Button>
-          <Button variant="outlined" onClick={this.sortCreatedHandle}>
+          <Button variant="outlined" onClick={this.sortHandle(API.sortCreated)}>
             Newly Created
           </Button>
         </div>

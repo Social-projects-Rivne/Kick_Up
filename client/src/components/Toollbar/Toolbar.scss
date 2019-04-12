@@ -1,6 +1,6 @@
 .toolbar {
   button {
-    margin: 15px 10px;
+    margin: 15px auto;
     padding: 5px;
     background-color: $primary;
   }
@@ -18,7 +18,7 @@
       padding: 15px;
     }
     &-outlinedinput {
-      margin: 10px 10px;
+      margin: 10px auto;
     }
     &-select {
       background-color: $primary;
