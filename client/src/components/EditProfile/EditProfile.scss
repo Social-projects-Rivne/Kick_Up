@@ -8,3 +8,17 @@
         box-sizing: border-box;
     }
 }
+
+.edit-profile__form-wrapper {
+    border: 3px solid red;
+}
+
+@media only screen and (min-width: 768px) {
+    .edit-profile__form-wrapper {
+        max-width: 1168px;
+        margin: 30px auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
