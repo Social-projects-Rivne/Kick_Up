@@ -16,6 +16,7 @@ class AppHeader extends React.Component {
         console.log(this.props);
         this.props.userHasAuthenticated(false);
         localStorage.removeItem("authorization");
+        this.props.setAuthToken(null);
     }
     componentWillMount() {
         this.unlisten = this.props.history.listen(location => {
