@@ -19,8 +19,13 @@
 }
 
 .edit-profile__form-wrapper .swiper-container {
+    display: flex;
+    align-items: center;
     min-height: calc(100vh - #{$footer-height} - #{$header-height});
-    padding: 16px;
+}
+
+.edit-profile__form-wrapper .swiper-wrapper {
+    display: flex;
 }
 
 .edit-profile .edit-profile__form-pagination {
@@ -33,18 +38,21 @@
     background-color: $lightBlue;
 }
 
-.edit-profile__navigation-wrapper {
-    position: absolute;
-    box-sizing: border-box;
-    bottom: 24px;
-    left: 0;
-    padding-left: 16px;
-    padding-right: 16px;
-    z-index: 999999;
+.edit-profile .edit-profile__form-section {
+    padding: 30px 16px;
+    background-color: $white;
 }
 
-.edit-profile .edit-profile__form-section {
-    border: 2px solid red;
+.edit-profile .edit-profile__form-prev,
+.edit-profile .edit-profile__form-next {
+    position: absolute;
+    bottom: 10px;
+    left: 16px;
+}
+
+.edit-profile .edit-profile__form-next {
+    left: unset;
+    right: 16px;
 }
 
 @media only screen and (min-width: 768px) {
