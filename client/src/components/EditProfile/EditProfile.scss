@@ -1,8 +1,10 @@
 .edit-profile {
+    position: relative;
     box-sizing: border-box;
     min-height: calc(100vh - #{$footer-height} - #{$header-height});
-    border: 2px solid red;
-    @include svg-bg();
+    @include svg-settings-bg('#{$primary}');
+    background-color: white;
+    overflow: hidden;
 
     & * {
         box-sizing: border-box;
@@ -10,7 +12,39 @@
 }
 
 .edit-profile__form-wrapper {
-    border: 3px solid red;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.edit-profile__form-wrapper .swiper-container {
+    min-height: calc(100vh - #{$footer-height} - #{$header-height});
+    padding: 16px;
+}
+
+.edit-profile .edit-profile__form-pagination {
+    min-height: 20px;
+    height: 20px;
+    background-color: rgba(198, 212, 255, 0.2);
+}
+
+.edit-profile .edit-profile__form-pagination span {
+    background-color: $lightBlue;
+}
+
+.edit-profile__navigation-wrapper {
+    position: absolute;
+    box-sizing: border-box;
+    bottom: 24px;
+    left: 0;
+    padding-left: 16px;
+    padding-right: 16px;
+    z-index: 999999;
+}
+
+.edit-profile .edit-profile__form-section {
+    border: 2px solid red;
 }
 
 @media only screen and (min-width: 768px) {

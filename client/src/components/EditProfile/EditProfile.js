@@ -1,72 +1,105 @@
 import React, { Component } from "react";
 
 import Swiper from 'react-id-swiper/lib/ReactIdSwiper.full';
-import { Pagination } from 'swiper/dist/js/swiper.esm';
+import { Pagination, Navigation } from 'swiper/dist/js/swiper.esm';
 import "react-id-swiper/src/styles/scss/swiper.scss";
 
-import { 
+import {
+    Grid,
     Typography,
-    TextField
+    TextField,
+    Button
 } from '@material-ui/core';
+import { Person, Email } from '@material-ui/icons';
 
-// Global constants;
-const tabletWidth = 768;
 const swiperParams = {
-    //direction: 'vertical',
-    modules: [ Pagination ],
+    modules: [ Pagination, Navigation ],
     slidesPerView: '1',
     loop: false,
     pagination: {
-      el: ".edit-profile__form-pagination",
-      type: 'progressbar',
-      clickable: true
+    el: ".edit-profile__form-pagination",
+    type: 'progressbar',
+    clickable: true
+    },
+    navigation: {
+        prevEl: '.edit-profile__form-prev',
+        nextEl: '.edit-profile__form-next',
     },
     centeredSlides: true,
     autoHeight: true,
     spaceBetween: 30,
-    rebuildOnUpdate: true,
-    shouldSwiperUpdate: true,
-    containerClass: '.edit-profile__form',
-    // Event listeners;
-    on: {}
+    rebuildOnUpdate: false,
+    shouldSwiperUpdate: false,
+    renderPrevButton: () => {
+        return (
+            <Button variant="outlined" color="primary" className="edit-profile__form-prev">
+                Previous
+            </Button>
+        );
+    },
+    renderNextButton: () => {
+        return (
+            <Button variant="outlined" color="primary" className="edit-profile__form-next">
+                Next
+            </Button>
+        );
+    }
 };
-
-
 
 class EditProfile extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            activeStep: 0,
+            activeSlide: 0,
         };
-        
-        //this.handleResize = this.handleResize.bind(this);
+
+        this.handleSlider = this.handleSlider.bind(this);
+    }
+    handleSlider(instance) {
+        if (instance) {
+            instance.on('slideChangeTransitionEnd', () => {
+                this.setState({ activeSlide: instance.activeIndex });
+                console.log(this.state);
+            });
+        }
     }
     render() {
         return (
             <div className="edit-profile">
-                <form action="#" className="edit-profile__form-wrapper">
-                    <Swiper {...swiperParams} >
-                        <div key={1} className="swiper-slide">
-
-                        <TextField
-                            select
-                            variant="outlined"
-                            label="With Select"
-                            //value={this.state.weightRange}
-                            //onChange={this.handleChange('weightRange')}
-                            >
-                            </TextField>
-
-                        </div>  
+                <form className="edit-profile__form-wrapper">
+                    <Swiper {...swiperParams} getSwiper={this.handleSlider} >
+                        <div key={1} className="swiper-slide  edit-profile__form-section">
+                            <Grid item xs={10} sm={6} className="register__form">
+                                <Typography align="center" variant="h4">
+                                    <Person fontSize="large" />
+                                        What is your first name?
+                                </Typography>
+                                <hr />
+                                <div className="register__field-wrapper">
+                                    <Email />
+                                    <TextField
+                                        //svalue={this.state.email}
+                                        //onChange={this.updateInputValue}
+                                        required
+                                        //error={!this.state.emailInputValid}
+                                        className="input"
+                                        name="email"
+                                        label="Your email"
+                                        type="email"
+                                        margin="normal"
+                                        autoComplete="off"
+                                    />
+                                </div>
+                            </Grid>
+                        </div>
                         <div key={2} className="swiper-slide">
-                            <h1>222</h1>
-                        </div>                        
+                            222
+                        </div>
                     </Swiper>
                 </form>
             </div>
         )
     }
-}
+};
 
 export default EditProfile;
