@@ -22,11 +22,13 @@
     display: flex;
     align-items: center;
     min-height: calc(100vh - #{$footer-height} - #{$header-height});
+    overflow: visible;
 }
 
 .edit-profile__form-wrapper .swiper-wrapper {
     box-sizing: border-box;
     display: flex;
+    max-width: 100vw;
 }
 
 .edit-profile .edit-profile__form-pagination {
@@ -44,13 +46,12 @@
     max-width: 100%;
     padding: 16px;
     opacity: 0;
-    background-color: rgba(59, 58, 54, 0.4);
+    background-color: $brown;
     animation-name: scale-in;
     animation-duration: 0.3s;
     animation-delay: 0.5s;
     animation-fill-mode: forwards;
-    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 
-                0 2px 10px 0 rgba(0, 0, 0, 0.16);
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16);
     overflow-y: auto;
 }
 
@@ -82,6 +83,19 @@
     color: rgba(255, 255, 255, 0.8);
 }
 
+.edit-profile__field-wrapper input[type=file] {
+    display: none;
+}
+
+.edit-profile__field-wrapper input[type=file] + label {
+    margin-top: 16px;
+}
+
+.edit-profile__field-wrapper input[type=file] + label span {
+    color: $white;
+    border-color: $white;
+}
+
 .edit-profile__field-wrapper label {
     font-size: 1.071rem;
 }
@@ -106,7 +120,63 @@
 
 .edit-profile__animation-wrapper {
     display: none;
-    border: 4px solid chartreuse;
+    align-items: center;
+    justify-content: center;
+    padding-left: 20px;
+    overflow-y: auto;
+}
+
+.edit-profile__animation-wrapper svg {
+    width: 100%;
+    opacity: 0;
+    animation-name: fade-in;
+    animation-duration: 0.3s;
+    animation-delay: 1s;
+    animation-fill-mode: forwards;
+}
+
+.edit-profile .edit-profile__date-picker input {
+    font-size: 1rem;
+}
+
+.edit-profile .edit-profile__date-picker label {
+    transform: translate(0, 1.5px) scale(0.75);
+    transform-origin: top left;
+
+    & span {
+        display: none;
+    }
+}
+
+// Hide inner x icon;
+input[type=date]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    display: none;
+}
+
+.edit-profile .edit-profile__gender {
+    margin-top: 12px;
+    width: 100%;
+}
+
+.edit-profile .edit-profile__gender label {
+    max-height: 36px;
+}
+
+.edit-profile .edit-profile__gender label span {
+    color: $white;
+
+    &:first-of-type {
+        padding-left: 8px;
+    }
+}
+
+.edit-profile .MuiTypography-body1-64 {
+    font-size: 1rem;
+}
+
+#morph #at-pc {
+    fill: $primary;
 }
 
 @media only screen and (max-width: 768px) and (orientation: landscape) {
@@ -119,11 +189,6 @@
    .edit-profile .edit-profile__field-wrapper {
        min-width: 50%;
        margin-left: 16px;
-   }
-
-   .edit-profile__form-wrapper .swiper-wrapper {
-       padding-left: 16px;
-       padding-right: 16px;
    }
 }
 
@@ -144,11 +209,6 @@
     .edit-profile__form-wrapper .swiper-container {
         min-height: unset;
         padding-top: 200px;
-    }
-
-    .edit-profile__form-wrapper .swiper-wrapper {
-        padding-left: 32px;
-        padding-right: 32px;
     }
 
     .edit-profile .edit-profile__form-inner {
@@ -178,15 +238,19 @@
     }
 
     .edit-profile__animation-wrapper {
-        display: block;
+        display: flex;
     }
 }
 
 @media only screen and (min-width: 1168px) {
+    // Dirty, but no other solution at moment;
     .edit-profile {
+        min-width: calc(100% + 16px);
         padding-top: 30px;
         flex-direction: row;
         justify-content: center;
+        overflow-y: auto;
+        max-height: calc(100vh - #{$footer-height} - #{$header-height});
     }
 
     .edit-profile .edit-profile__form-pagination {
@@ -211,14 +275,15 @@
         flex-direction: column;
         height: unset !important;
         padding: 0;
-        background-color: rgba(59, 58, 54, 0.4);
-        box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 
-                    0 2px 10px 0 rgba(0, 0, 0, 0.16);
     }
 
     .edit-profile .edit-profile__form-section {
-        background-color: transparent;
-        box-shadow: none;
+        margin-bottom: 30px;
+        background-color: white;
+    }
+
+    #root .edit-profile .edit-profile__form-section * {
+        color: $brown;
     }
 
     .edit-profile .edit-profile__form-section > div {
@@ -232,6 +297,10 @@
     }
 
     .edit-profile__animation-wrapper {
+        align-self: flex-start;
+        height: 80vh;
+        position: sticky;
+        top: 0;
         flex-grow: 1;
         max-width: calc(1168px - 700px);
     }
@@ -240,4 +309,14 @@
     #root .edit-profile .edit-profile__form-next {
         display: none;
     }
+
+    .edit-profile__field-wrapper input[type=file] + 
+    label span {
+        border-color: $brown;
+    }
+
+    .edit-profile .edit-profile__gender label 
+    span:first-of-type {
+        padding-left: 3px;
+    }    
 }
