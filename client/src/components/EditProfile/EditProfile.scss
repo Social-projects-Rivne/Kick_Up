@@ -25,6 +25,7 @@
 }
 
 .edit-profile__form-wrapper .swiper-wrapper {
+    box-sizing: border-box;
     display: flex;
 }
 
@@ -39,28 +40,204 @@
 }
 
 .edit-profile .edit-profile__form-section {
-    padding: 30px 16px;
-    background-color: $white;
+    min-width: 100%;
+    max-width: 100%;
+    padding: 16px;
+    opacity: 0;
+    background-color: rgba(59, 58, 54, 0.4);
+    animation-name: scale-in;
+    animation-duration: 0.3s;
+    animation-delay: 0.5s;
+    animation-fill-mode: forwards;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 
+                0 2px 10px 0 rgba(0, 0, 0, 0.16);
+    overflow-y: auto;
 }
 
-.edit-profile .edit-profile__form-prev,
-.edit-profile .edit-profile__form-next {
+#root .edit-profile .edit-profile__form-prev,
+#root .edit-profile .edit-profile__form-next {
     position: absolute;
+    max-height: 40px;
     bottom: 10px;
     left: 16px;
+    font-size: 14px;
+    line-height: 16px;
+    color: rgba(24, 24, 24, 0.8);
+    border-color: rgba(24, 24, 24, 0.3);
+    z-index: 2;
 }
 
-.edit-profile .edit-profile__form-next {
+#root .edit-profile .edit-profile__form-next {
     left: unset;
     right: 16px;
 }
 
+.edit-profile .edit-profile__form-inner {
+    max-width: 100%;
+}
+
+.edit-profile__field-wrapper {
+    display: flex;
+    align-items: baseline;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.edit-profile__field-wrapper label {
+    font-size: 1.071rem;
+}
+
+.edit-profile__field-wrapper input[name=firstName],
+.edit-profile__field-wrapper input[name=lastName] {
+    text-transform: capitalize;
+}
+
+.edit-profile__form-section h4 {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    color: $white;
+    text-align: left;
+    font-weight: 100;
+}
+
+.edit-profile__form-section h4 svg {
+    margin-right: 16px;
+}
+
+.edit-profile__animation-wrapper {
+    display: none;
+    border: 4px solid chartreuse;
+}
+
+@media only screen and (max-width: 768px) and (orientation: landscape) {
+    .edit-profile .edit-profile__form-inner {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+   .edit-profile .edit-profile__field-wrapper {
+       min-width: 50%;
+       margin-left: 16px;
+   }
+
+   .edit-profile__form-wrapper .swiper-wrapper {
+       padding-left: 16px;
+       padding-right: 16px;
+   }
+}
+
 @media only screen and (min-width: 768px) {
+    .edit-profile {
+        display: flex;
+        flex-direction: column;
+    }
+    
     .edit-profile__form-wrapper {
-        max-width: 1168px;
-        margin: 30px auto;
+        margin-left: auto;
+        margin-right: auto;
         display: flex;
         justify-content: center;
         align-items: center;
+    }
+
+    .edit-profile__form-wrapper .swiper-container {
+        min-height: unset;
+        padding-top: 200px;
+    }
+
+    .edit-profile__form-wrapper .swiper-wrapper {
+        padding-left: 32px;
+        padding-right: 32px;
+    }
+
+    .edit-profile .edit-profile__form-inner {
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .edit-profile__field-wrapper {
+        min-width: 40%;
+        margin-left: 16px;
+    }
+
+    .edit-profile__field-wrapper label {
+        font-size: 1.143rem;
+    }
+
+    #root .edit-profile .edit-profile__form-prev,
+    #root .edit-profile .edit-profile__form-next {
+        position: fixed;
+        bottom: calc(#{$header-height} + 16px);
+        font-size: 18px;
+        min-height: 50px;
+        max-height: 50px;
+        border: 0;
+    }
+
+    .edit-profile__animation-wrapper {
+        display: block;
+    }
+}
+
+@media only screen and (min-width: 1168px) {
+    .edit-profile {
+        padding-top: 30px;
+        flex-direction: row;
+        justify-content: center;
+    }
+
+    .edit-profile .edit-profile__form-pagination {
+        display: none;
+    }
+
+    .edit-profile__form-wrapper {
+        margin: 0;
+        max-width: 700px;
+        align-items: flex-start;
+    }
+
+    .edit-profile__form-wrapper .swiper-container {
+        align-items: flex-start;
+        width: 100%;
+        min-height: calc(100vh - #{$footer-height} - #{$header-height} - 30px);
+        padding: 0;
+    }
+
+    // Need !important to overwrite Swiper js;
+    .edit-profile__form-wrapper .swiper-wrapper {
+        flex-direction: column;
+        height: unset !important;
+        padding: 0;
+        background-color: rgba(59, 58, 54, 0.4);
+        box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 
+                    0 2px 10px 0 rgba(0, 0, 0, 0.16);
+    }
+
+    .edit-profile .edit-profile__form-section {
+        background-color: transparent;
+        box-shadow: none;
+    }
+
+    .edit-profile .edit-profile__form-section > div {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .edit-profile .edit-profile__field-wrapper {
+        width: calc(100% - 8px);
+        margin-left: 8px;
+    }
+
+    .edit-profile__animation-wrapper {
+        flex-grow: 1;
+        max-width: calc(1168px - 700px);
+    }
+
+    #root .edit-profile .edit-profile__form-prev,
+    #root .edit-profile .edit-profile__form-next {
+        display: none;
     }
 }

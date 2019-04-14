@@ -10,11 +10,11 @@ import {
     TextField,
     Button
 } from '@material-ui/core';
-import { Person, Email } from '@material-ui/icons';
+import { Person } from '@material-ui/icons';
 
 const swiperParams = {
     modules: [ Pagination, Navigation ],
-    slidesPerView: '1',
+    slidesPerView: 1,
     loop: false,
     pagination: {
     el: ".edit-profile__form-pagination",
@@ -27,7 +27,7 @@ const swiperParams = {
     },
     centeredSlides: true,
     autoHeight: true,
-    spaceBetween: 30,
+    spaceBetween: 0,
     rebuildOnUpdate: false,
     shouldSwiperUpdate: false,
     renderPrevButton: () => {
@@ -43,6 +43,16 @@ const swiperParams = {
                 Next
             </Button>
         );
+    },
+    breakpointsInverse: true,
+    breakpoints: {
+        768: {
+            spaceBetween: 32
+        },
+        1168: {
+            autoHeight: false,
+            noSwipingClass: 'swiper-container'
+        }
     }
 };
 
@@ -51,9 +61,12 @@ class EditProfile extends Component {
         super(props);
         this.state = {
             activeSlide: 0,
+            firstName: '',
+            lastName: '',
         };
 
         this.handleSlider = this.handleSlider.bind(this);
+        this.updateInputValue = this.updateInputValue.bind(this);
     }
     handleSlider(instance) {
         if (instance) {
@@ -63,40 +76,63 @@ class EditProfile extends Component {
             });
         }
     }
+    updateInputValue(evt) {
+        this.setState({
+          [evt.target.name]: evt.target.value
+        });
+    }
     render() {
         return (
             <div className="edit-profile">
                 <form className="edit-profile__form-wrapper">
                     <Swiper {...swiperParams} getSwiper={this.handleSlider} >
                         <div key={1} className="swiper-slide  edit-profile__form-section">
-                            <Grid item xs={10} sm={6} className="register__form">
+                            <Grid item xs={10} sm={6} className="edit-profile__form-inner">
                                 <Typography align="center" variant="h4">
                                     <Person fontSize="large" />
                                         What is your first name?
                                 </Typography>
-                                <hr />
-                                <div className="register__field-wrapper">
-                                    <Email />
+                                <div className="edit-profile__field-wrapper">
                                     <TextField
-                                        //svalue={this.state.email}
-                                        //onChange={this.updateInputValue}
-                                        required
-                                        //error={!this.state.emailInputValid}
+                                        value={this.state.firstName}
+                                        onChange={this.updateInputValue}
                                         className="input"
-                                        name="email"
-                                        label="Your email"
-                                        type="email"
+                                        name="firstName"
+                                        label="Enter first name, min. 3 letters"
+                                        type="text"
                                         margin="normal"
-                                        autoComplete="off"
+                                        minLength="3"
+                                        autoComplete="on"
                                     />
                                 </div>
                             </Grid>
                         </div>
-                        <div key={2} className="swiper-slide">
-                            222
+                        <div key={2} className="swiper-slide  edit-profile__form-section">
+                            <Grid item xs={10} sm={6} className="edit-profile__form-inner">
+                                <Typography align="center" variant="h4">
+                                    <Person fontSize="large" />
+                                        What is your last name?
+                                </Typography>
+                                <div className="edit-profile__field-wrapper">
+                                    <TextField
+                                        value={this.state.lastName}
+                                        onChange={this.updateInputValue}
+                                        className="input"
+                                        name="lastName"
+                                        label="Enter last name, min. 3 letters"
+                                        type="text"
+                                        margin="normal"
+                                        minLength="3"
+                                        autoComplete="on"
+                                    />
+                                </div>
+                            </Grid>
                         </div>
                     </Swiper>
                 </form>
+                <aside className="edit-profile__animation-wrapper">
+                    Here will go animations
+                </aside>
             </div>
         )
     }
