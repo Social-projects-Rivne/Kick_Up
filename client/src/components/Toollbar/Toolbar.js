@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import { Link } from "react-router-dom";
-import axios from 'axios';
 
 import {
   Grid,
@@ -16,52 +15,25 @@ import {
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 
-const API = {
-  sortRate: '/api/rooms/sort-rating',
-  sortMember: '/api/rooms/sort-members',
-  sortCreated: '/api/rooms/sort-created',
-  filterByCategory: '/api/rooms/filter-by-category',
-  filterByLocation: '/api/rooms/filter-by-location',
-  resetFilters: '/api/rooms/reset-filters',
-}
-
 //TODO create for mobile
 class Toolbar extends Component {
   state = {
-    roomsDB: null,
-    FilteredRooms: null,
-    city: "",
-    category: "",
+    datafromBase: null,
     labelWidth: 0,
-    roomsDate: null
+    date: null
   };
   componentDidMount() {
     this.getDate();
     this.setState({
-      labelWidresetFilters: ReactDOM.findDOMNode(this.InputLabelRef).offsetWidth
+      labelWidth: ReactDOM.findDOMNode(this.InputLabelRef).offsetWidth,
+      datafromBase:this.props.datafromBase,
     });
-  }
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    if (prevProps.roomsDB !== this.props.roomsDB) {
-      const { roomsDB } = this.props;
-      console.log("roomsDB", this.props.roomsDB);
-      this.setState({ roomsDB, FilteredRooms: roomsDB });
-    }
-    if (prevState.category !== this.state.category) {
-      this.sortHandle(API.filterByCategory)
-    }
-    if (prevState.city !== this.state.city) {
-      this.sortHandle(API.filterByLocation)
-    }
-    if (prevState.FilteredRooms !== this.state.FilteredRooms) {
-      this.props.passFilteredRooms(this.state.FilteredRooms);
-    }
   }
 
   getDate = () => {
     const currentDate = new Date();
-    const roomsDate = this.formatDate(currentDate);
-    this.setState({ roomsDate });
+    const date = this.formatDate(currentDate);
+    this.setState({ date });
   };
 
   formatDate = d => {
@@ -74,44 +46,22 @@ class Toolbar extends Component {
     return date;
   };
 
-  getDataFromDB = (api) => {
-    axios.get(api)
-        .then(console.log('Data filtered by', api))
-        // .then(res => this.setState({FilteredRooms: res.data.roomsData}))
-        .catch(err => console.log(err))
-  }
-
-  sortHandle = api => {
-    this.getDataFromDB(api)
-  }
-  changeHandle = event => {
-    this.setState({ [event.target.name]: event.target.value });
-  };
   changeDateHandle = event => {
     this.setState({ [event.target.name]: event.target.value });
-    const roomListByDate = [...this.state.roomsDB].filter(e => {
+    const dataListByDate = [...this.state.datafromBase].filter(e => {
       return this.formatDate(new Date(e.created_at)) === event.target.value;
     });
-    this.setState({ FilteredRooms: roomListByDate });
-    console.log("roomListByDate", roomListByDate);
-  };
-  resetFiltersHandle = () => {
-    axios.get(API.resetFilters)
-      .then(res => this.setState({
-          FilteredRooms: res.data.roomsData,
-          city: "",
-          category: "",
-        }))
-      .catch(err => console.log(err))
+    this.setState({ datafromBase: dataListByDate });
+    console.log("roomListByDate", dataListByDate);
   };
 
   render() {
-    const { roomsDB, FilteredRooms } = this.state;
+    const { datafromBase } = this.state;
 
     let categories = null;
     let cities = null;
-    if (roomsDB) {
-      categories = FilteredRooms.map(e => {
+    if (datafromBase) {
+      categories = datafromBase.map(e => {
         return e.category;
       })
         .filter((v, i, a) => a.indexOf(v) === i)
@@ -123,7 +73,7 @@ class Toolbar extends Component {
           );
         });
       console.log("categories", categories);
-      cities = FilteredRooms.map(e => {
+      cities = datafromBase.map(e => {
         return e.city;
       })
         .filter((v, i, a) => a.indexOf(v) === i)
@@ -144,19 +94,19 @@ class Toolbar extends Component {
               <AddIcon />
             </Fab>
           </Link>
-          <Button variant="outlined" onClick={this.sortHandle(API.sortRate)}>
-            Top Rate
+          <Button variant="outlined" onClick={this.props.sortRateHandle}>
+            {this.props.buttons[0]}
           </Button>
-          <Button variant="outlined" onClick={this.sortHandle(API.sortMember)}>
-            Top Members
+          <Button variant="outlined" onClick={this.props.sortMembersHandle}>
+            {this.props.buttons[1]}
           </Button>
-          <Button variant="outlined" onClick={this.sortHandle(API.sortCreated)}>
-            Newly Created
+          <Button variant="outlined" onClick={this.props.sortCreatedHandle}>
+            {this.props.buttons[2]}
           </Button>
         </div>
         <div className="toolbar-filter">
-          <Button variant="outlined" onClick={this.resetFiltersHandle}>
-            Reset filters
+          <Button variant="outlined" onClick={this.props.resetFiltersHandle}>
+            {this.props.buttons[3]}
           </Button>
           <FormControl
             variant="outlined"
@@ -174,8 +124,8 @@ class Toolbar extends Component {
             <Select
               className="toolbar-filter-select"
               labelWidth={this.state.labelWidth}
-              value={this.state.category}
-              onChange={this.changeHandle}
+              value={this.props.category}
+              onChange={this.props.changeHandle}
               input={
                 <OutlinedInput
                   className="toolbar-filter-outlinedinput"
@@ -184,9 +134,9 @@ class Toolbar extends Component {
                 />
               }
             >
-              {/* <MenuItem value="">
+              <MenuItem value="">
                 <em>None</em>
-              </MenuItem> */}
+              </MenuItem>
               {categories}
             </Select>
           </FormControl>
@@ -206,8 +156,8 @@ class Toolbar extends Component {
             <Select
               className="toolbar-filter-select"
               labelWidth={this.state.labelWidth}
-              value={this.state.city}
-              onChange={this.changeHandle}
+              value={this.props.city}
+              onChange={this.props.changeHandle}
               input={
                 <OutlinedInput
                   name="city"
@@ -215,9 +165,9 @@ class Toolbar extends Component {
                 />
               }
             >
-              {/* <MenuItem value="">
+              <MenuItem value="">
                 <em>None</em>
-              </MenuItem> */}
+              </MenuItem>
               {cities}
             </Select>
           </FormControl>
@@ -227,8 +177,8 @@ class Toolbar extends Component {
               id="date"
               label="date"
               type="date"
-              name="roomsDate"
-              value={this.state.roomsDate}
+              name="date"
+              value={this.state.date}
               onChange={this.changeDateHandle}
               InputLabelProps={{
                 shrink: true

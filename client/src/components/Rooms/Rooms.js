@@ -8,11 +8,29 @@ import { Grid } from "@material-ui/core";
 import RoomCard from "./RoomCard/RoomCard";
 import Spinner from "./../UI/Spinner/Spinner";
 
+const API = {
+  getRooms: '/api/room',
+  sortRate: '/api/room/sort-rating',
+  sortMember: '/api/room/sort-members',
+  sortCreated: '/api/room/sort-created',
+  filterByCategory: '/api/room/filter-by-category',
+  filterByLocation: '/api/room/filter-by-location',
+  resetFilters: '/api/room/reset-filters',
+}
+
 class Rooms extends Component {
   state = {
     roomsDB: null,
     FilteredRooms: null,
     isLoading: true,
+    toolbarButtons: [
+      'Top Rate',
+      'Top Members',
+      'Newly Created',
+      'Reset filters',
+    ],
+    city: "",
+    category: "",
   };
   componentDidMount() {
     setTimeout(() => {
@@ -21,55 +39,113 @@ class Rooms extends Component {
         FilteredRooms: roomsDB,
         isLoading: false
       });
-    }, 1500);
-    // axios.get('/api/rooms')
-    //     .then(res=> console.log(res))
-    //     .then(res => this.setState({roomsData: res.data.roomsData, roomsMySQL: res.data.roomsMySQL}))
-    //     .catch(err=> {
-    // console.log(err);
+    }, 1000);
+
+    // this.getDataFromDB(API.getRooms);
     // this.setState({isLoading:false});
-    // })    
   }
 
-  showFilteredRooms = (FilteredRooms) => {
-    this.setState({
-      FilteredRooms,
-    });
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    const { category, city } = this.state;
+    if (prevState.category !== this.state.category) {
+      this.sortHandle(API.filterByCategory, category)
+    }
+    if (prevState.city !== this.state.city) {
+      this.sortHandle(API.filterByLocation, city)
+    }
   }
+
+  getDataFromDB = (api) => {
+    axios.get(api)
+        .then(console.log('Data sorted by', api))
+        // .then(res => this.setState({roomsDB: res.data.roomsData}))
+        .catch(err => console.log(err))
+  }
+
+  postDataFromDB = (api, filter) => {
+    axios.post(api, filter)
+        .then(console.log('Data filtered by', api))
+        // .then(res => this.setState({roomsDB: res.data.roomsData}))
+        .catch(err => console.log(err))
+  }
+
+  sortHandle = api => {
+    this.getDataFromDB(api)
+  }
+
+  filterHandle = (api, filter) => {
+    this.postDataFromDB(api, filter)
+  }
+
+  sortRateHandle = () => {
+    const roomsAray = [...this.state.roomsDB];
+    roomsAray.sort((a, b) => b.rating - a.rating);
+    this.setState({ roomsDB: roomsAray });
+  };
+  sortMembersHandle = () => {
+    const roomsAray = [...this.state.roomsDB];
+    roomsAray.sort((a, b) => b.members - a.members);
+    this.setState({ roomsDB: roomsAray });
+  };
+  sortCreatedHandle = () => {
+    const roomsAray = [...this.state.roomsDB];
+    roomsAray.sort((a, b) => a.created_at - b.created_at);
+    this.setState({ roomsDB: roomsAray });
+    console.log("roomsAray", roomsAray);
+  };
+  resetFiltersHandle = () => {
+    this.setState({ 
+      roomsDB,
+      city: "",
+      category: "",
+    });
+  };
+  changeHandle = event => {
+    this.setState({ [event.target.name]: event.target.value });
+  };
 
   selectedRoomHandler = (id) => {
     this.props.history.push({pathname: '/rooms/' + id})
   }
 
   render() {
-    const { FilteredRooms, isLoading } = this.state;
-
-    const roomList = isLoading ? (
-      <Spinner />
-    ) : (
-      FilteredRooms.map(room => {
-        return (
-            <RoomCard
-              key={room.id}
-              title={room.title}
-              category={room.category}
-              avatar={room.creator_avatar}
-              description={room.description}
-              limit={room.members_limit}
-              rating={room.rating}
-              members={room.members}
-              background={room.background}
-              clicked={() => this.selectedRoomHandler(room.id)}
-            />
-        );
-      })
-    );
-    return (
-      <>
-        <Toolbar roomsDB={this.state.roomsDB} passFilteredRooms={this.showFilteredRooms}/>
-        <Grid container>{roomList}</Grid>
-      </>
-    );
+    const { roomsDB, isLoading } = this.state;
+    console.log('roomsDB', roomsDB)
+    const roomPage = isLoading ? 
+        <Spinner /> :
+        <>
+          <Toolbar 
+            datafromBase={this.state.roomsDB}
+            buttons={this.state.toolbarButtons}
+            sortHandle={this.sortHandle}
+            sortRateHandle={this.sortRateHandle}
+            sortMembersHandle={this.sortMembersHandle}
+            sortCreatedHandle={this.sortCreatedHandle}
+            resetFiltersHandle={this.resetFiltersHandle}
+            changeHandle={this.changeHandle}
+            category={this.state.category}
+            city={this.state.city}
+          />
+          <Grid container>
+            {roomsDB.map(room => {
+              return (
+                <RoomCard
+                  key={room.id}
+                  title={room.title}
+                  category={room.category}
+                  avatar={room.creator_avatar}
+                  description={room.description}
+                  limit={room.members_limit}
+                  rating={room.rating}
+                  members={room.members}
+                  background={room.background}
+                  clicked={() => this.selectedRoomHandler(room.id)}
+                />
+              );
+            })}
+          </Grid>
+        </>;
+    return roomPage;
   }
 }
 
