@@ -86,7 +86,7 @@ class EditProfile extends Component {
         const firstTween = kute.fromTo(
             '#at-pc', 
             {path: '#at-pc' }, 
-            { path: '#skiing' },
+            { path: '#hiking' },
             {
                 duration: 800,
                 morphPrecision: 7,
@@ -94,8 +94,8 @@ class EditProfile extends Component {
         );
         const secondTween = kute.fromTo(
             '#at-pc', 
-            {path: '#skiing' }, 
-            { path: '#hiking' },
+            {path: '#hiking' }, 
+            { path: '#skiing' },
             {
                 duration: 800,
                 morphPrecision: 7,
