@@ -1,10 +1,13 @@
 import React, { Component } from "react";
 
+import Modal from '@material-ui/core/Modal';
 import Swiper from 'react-id-swiper/lib/ReactIdSwiper.full';
 import { Pagination, Navigation } from 'swiper/dist/js/swiper.esm';
-import 'react-id-swiper/src/styles/scss/swiper.scss';
+import AvatarCropper from 'react-avatar-edit';
 import kute from 'kute.js';
 import 'kute.js/kute-svg';
+
+import 'react-id-swiper/src/styles/scss/swiper.scss';
 
 import {
     Grid,
@@ -71,6 +74,7 @@ class EditProfile extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            avatarIsSelected: false, 
             activeSlide: 0,
             firstName: '',
             lastName: '',
@@ -81,6 +85,12 @@ class EditProfile extends Component {
         this.handleSlider = this.handleSlider.bind(this);
         this.updateInputValue = this.updateInputValue.bind(this);
         this.handleSvg = this.handleSvg.bind(this);
+        this.handleAvatarUpload = this.handleAvatarUpload.bind(this);
+        this.setState = this.setState.bind(this);
+    }
+    handleAvatarCrop() {
+        console.log(this);
+        debugger;
     }
     handleSvg() {
         const firstTween = kute.fromTo(
@@ -113,7 +123,6 @@ class EditProfile extends Component {
         if (instance) {
             instance.on('slideChangeTransitionEnd', () => {
                 this.setState({ activeSlide: instance.activeIndex });
-                console.log(this.state);
             });
         }
     }
@@ -124,6 +133,9 @@ class EditProfile extends Component {
     }
     componentDidMount() {
         this.handleSvg();
+    }
+    handleAvatarUpload() {
+        this.setState({ avatarIsSelected: true });
     }
     render() {
         return (
@@ -203,9 +215,8 @@ class EditProfile extends Component {
                                         aria-label="gender"
                                         name="gender"
                                         onChange={this.updateInputValue}
-                                        className="input"
                                         value={this.state.gender}
-                                        className="edit-profile__gender"
+                                        className="input edit-profile__gender"
                                     >
                                         <FormControlLabel
                                             control={<Radio />}
@@ -235,6 +246,7 @@ class EditProfile extends Component {
                                         id="outlined-button-file"
                                         multiple
                                         type="file"
+                                        onChange={ this.handleAvatarUpload }
                                     />
                                     <label htmlFor="outlined-button-file">
                                         <Button variant="outlined" component="span">
@@ -244,7 +256,28 @@ class EditProfile extends Component {
                                 </div>
                             </Grid>
                         </div>
-                    </Swiper>
+                    </Swiper>                        
+                    <Modal
+                        open= { this.state.avatarIsSelected }
+                        aria-labelledby="crop-avatar"
+                        aria-describedby="crop-uploaded-avatar"
+                        //onClose={this.handleClose}
+                    >
+                        <div className="edit-profile__avatar-cropper">
+                            <h1>111</h1>
+                            <Typography variant="h6" id="modal-title">
+                                Let's crop our avatar!
+                            </Typography>
+                            <AvatarCropper
+                                width={ 390 }
+                                height={ 295 }
+                                onCrop={ this.handleAvatarCrop }
+                                //onClose={ this.handleAvatarCropperClose }
+                                //onBeforeFileLoad={ this.handleOnBeforeFileLoad }
+                                src={ this.state.src }
+                            />
+                        </div> 
+                    </ Modal>
                 </form>
                 <aside className="edit-profile__animation-wrapper">
                     <svg id="morph" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 440">

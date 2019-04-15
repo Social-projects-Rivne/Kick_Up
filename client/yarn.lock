@@ -6481,6 +6481,11 @@ kleur@^2.0.1:
   resolved "https://registry.yarnpkg.com/kleur/-/kleur-2.0.2.tgz#b704f4944d95e255d038f0cb05fb8a602c55a300"
   integrity sha512-77XF9iTllATmG9lSlIv0qdQ2BQ/h9t0bJllHlbvsQ0zUWfU7Yi0S8L5JXzPZgkefIiajLmBJJ4BsMJmqcf7oxQ==
 
+konva@2.5.1:
+  version "2.5.1"
+  resolved "https://registry.yarnpkg.com/konva/-/konva-2.5.1.tgz#cca611a9522e831e54cf57c508a1aed3f0ceac25"
+  integrity sha512-YdHEWqmbWPieqIZuLx7JFGm9Ui08hSUaSJ2k2Ml8o5giFgJ0WmxAS0DPXIM+Ty2ADRagOHZfXSJ/skwYqqlwgQ==
+
 kute.js@^1.6.6:
   version "1.6.6"
   resolved "https://registry.yarnpkg.com/kute.js/-/kute.js-1.6.6.tgz#7039a8e945d4af6d195b298167426f8293fd3034"
@@ -8804,6 +8809,13 @@ react-app-polyfill@^0.2.2:
     promise "8.0.2"
     raf "3.4.1"
     whatwg-fetch "3.0.0"
+
+react-avatar-edit@^0.8.2:
+  version "0.8.2"
+  resolved "https://registry.yarnpkg.com/react-avatar-edit/-/react-avatar-edit-0.8.2.tgz#b4e4cef5a541479852d9ca31b0f20bad9ddaa039"
+  integrity sha512-OdapI4djPUJDHszGf7WMcNo/K2jRDjbCFSvzA6yQfb4xxbGdQHtCYT0K2pMI+hcno31bzBxGUlO5NZEK7HfbOg==
+  dependencies:
+    konva "2.5.1"
 
 react-dev-utils@^8.0.0:
   version "8.0.0"
