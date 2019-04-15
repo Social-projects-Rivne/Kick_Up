@@ -94,20 +94,13 @@ class Toolbar extends Component {
               <AddIcon />
             </Fab>
           </Link>
-          <Button variant="outlined" onClick={this.props.sortRateHandle}>
-            {this.props.buttons[0]}
-          </Button>
-          <Button variant="outlined" onClick={this.props.sortMembersHandle}>
-            {this.props.buttons[1]}
-          </Button>
-          <Button variant="outlined" onClick={this.props.sortCreatedHandle}>
-            {this.props.buttons[2]}
-          </Button>
+          {this.props.buttons.map(e => {
+            return <Button variant="outlined" onClick={e.method}>
+              {e.name}
+            </Button>
+          })}
         </div>
         <div className="toolbar-filter">
-          <Button variant="outlined" onClick={this.props.resetFiltersHandle}>
-            {this.props.buttons[3]}
-          </Button>
           <FormControl
             variant="outlined"
             className="toolbar-filter-formControl"

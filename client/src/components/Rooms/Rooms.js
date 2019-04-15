@@ -23,26 +23,18 @@ class Rooms extends Component {
     roomsDB: null,
     FilteredRooms: null,
     isLoading: true,
-    toolbarButtons: [
-      'Top Rate',
-      'Top Members',
-      'Newly Created',
-      'Reset filters',
-    ],
     city: "",
     category: "",
   };
   componentDidMount() {
-    setTimeout(() => {
-      this.setState({
-        roomsDB,
-        FilteredRooms: roomsDB,
-        isLoading: false
-      });
-    }, 1000);
-
-    // this.getDataFromDB(API.getRooms);
-    // this.setState({isLoading:false});
+    // setTimeout(() => {
+    //   this.setState({
+    //     roomsDB,
+    //     FilteredRooms: roomsDB,
+    //     isLoading: false
+    //   });
+    // }, 1000);
+    this.getDataFromDB(API.getRooms);
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -58,7 +50,7 @@ class Rooms extends Component {
   getDataFromDB = (api) => {
     axios.get(api)
         .then(console.log('Data sorted by', api))
-        // .then(res => this.setState({roomsDB: res.data.roomsData}))
+        .then(res => this.setState({roomsDB: res.data.roomsData, isLoading: false}))
         .catch(err => console.log(err))
   }
 
@@ -111,17 +103,19 @@ class Rooms extends Component {
   render() {
     const { roomsDB, isLoading } = this.state;
     console.log('roomsDB', roomsDB)
+    const toolbarButtons = [
+      {name:'Top Rate', method: this.sortRateHandle}, //this.sortHandle()
+      {name:'Top Members', method: this.sortMembersHandle},
+      {name:'Newly Create', method: this.sortCreatedHandle},
+      {name:'Reset filter', method: this.resetFiltersHandle},
+    ];
     const roomPage = isLoading ? 
         <Spinner /> :
         <>
           <Toolbar 
             datafromBase={this.state.roomsDB}
-            buttons={this.state.toolbarButtons}
+            buttons={toolbarButtons}
             sortHandle={this.sortHandle}
-            sortRateHandle={this.sortRateHandle}
-            sortMembersHandle={this.sortMembersHandle}
-            sortCreatedHandle={this.sortCreatedHandle}
-            resetFiltersHandle={this.resetFiltersHandle}
             changeHandle={this.changeHandle}
             category={this.state.category}
             city={this.state.city}
