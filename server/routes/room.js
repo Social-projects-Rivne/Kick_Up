@@ -1,6 +1,7 @@
 const Router = require('koa-router');
 const router = new Router();
 const Room = require("./../mongoDB/models/modelRoom");
+const rooms = require('./../mocks/rooms.json');
 
 router.post("/save-room", (ctx) => {
   const {
@@ -40,11 +41,20 @@ router.post("/save-room", (ctx) => {
   ctx.body = hello;
 });
 
+// router.get("/", (ctx) => {
+//   Room.find((err, data) => {
+//     if (err) return res.json({ success: false, error: err });
+//     return res.json({ success: true, roomData: data });
+//   });
+//   ctx.body = "hello world";
+// });
+
 router.get("/", (ctx) => {
-  Room.find((err, data) => {
-    if (err) return res.json({ success: false, error: err });
-    return res.json({ success: true, roomData: data });
-  });
+  console.log('rooms json', rooms)
+  // Room.find((err, data) => {
+  //   if (err) return res.json({ success: false, error: err });
+  //   return res.json({ success: true, roomData: data });
+  // });
   ctx.body = "hello world";
 });
 

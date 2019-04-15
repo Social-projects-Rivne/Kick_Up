@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
 
-import roomsDB from "./../../mocks/rooms";
+// import roomsDB from "./../../mocks/rooms";
 import Toolbar from "./../Toollbar/Toolbar";
 
 import { Grid } from "@material-ui/core";
@@ -87,7 +87,7 @@ class Rooms extends Component {
   };
   resetFiltersHandle = () => {
     this.setState({ 
-      roomsDB,
+      // roomsDB,
       city: "",
       category: "",
     });
