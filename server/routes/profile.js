@@ -6,9 +6,14 @@ const Validator = require('./../services');
 const router = new Router({prefix:'/api/profile'});
 
 const handler = {
-    async getSelfUser(ctx){
+    async getSelfProfile(ctx){
         const { user_id } = ctx.state; 
         const user = await User.where({id:user_id}).fetch();
+        ctx.body = user;        
+    },
+    async getUserProfileById(ctx){
+        const { id } = ctx.params;
+        const user = await User.where({id}).fetch({require: true});
         ctx.body = user;        
     },
     async updateUser(ctx){
@@ -19,7 +24,8 @@ const handler = {
     }
 }
 router.use(authenticated)
-router.get('/', handler.getSelfUser);
+router.get('/', handler.getSelfProfile);
+router.get('/:id', handler.getUserProfileById);
 router.put('/update', handler.updateUser);
 
 module.exports = router.routes();
