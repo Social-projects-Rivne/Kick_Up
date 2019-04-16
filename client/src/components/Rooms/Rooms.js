@@ -14,7 +14,7 @@ const API = {
   sortMember: '/api/room/sort-members',
   sortCreated: '/api/room/sort-created',
   filterByCategory: '/api/room/filter-by-category',
-  filterByLocation: '/api/room/filter-by-location',
+  filterByDate: '/api/room/filter-by-date',
   resetFilters: '/api/room/reset-filters',
 }
 
@@ -23,42 +23,41 @@ class Rooms extends Component {
     roomsDB: null,
     FilteredRooms: null,
     isLoading: true,
-    city: "",
     category: "",
+    date: null
   };
   componentDidMount() {
-    // setTimeout(() => {
-    //   this.setState({
-    //     roomsDB,
-    //     FilteredRooms: roomsDB,
-    //     isLoading: false
-    //   });
-    // }, 1000);
     this.getDataFromDB(API.getRooms);
+    this.getDate();
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    const { category, city } = this.state;
+    const { category } = this.state;
     if (prevState.category !== this.state.category) {
-      this.sortHandle(API.filterByCategory, category)
-    }
-    if (prevState.city !== this.state.city) {
-      this.sortHandle(API.filterByLocation, city)
+      this.filterHandle(API.filterByCategory, category)
     }
   }
 
   getDataFromDB = (api) => {
+    this.setState({isLoading: true});
     axios.get(api)
         .then(console.log('Data sorted by', api))
-        .then(res => this.setState({roomsDB: res.data.roomsData, isLoading: false}))
-        .catch(err => console.log(err))
+        .then(res => {
+          console.log('res===>', res)
+          this.setState({roomsDB: res.data, isLoading: false})
+        })
+        .catch(err => console.log(err));
   }
 
   postDataFromDB = (api, filter) => {
-    axios.post(api, filter)
+    this.setState({isLoading: true});
+    axios.post(api, {filter: filter})
         .then(console.log('Data filtered by', api))
-        // .then(res => this.setState({roomsDB: res.data.roomsData}))
-        .catch(err => console.log(err))
+        .then(res => {
+          console.log('res===>', res)
+          this.setState({roomsDB: res.data, isLoading: false})
+        })
+        .catch(err => console.log(err));
   }
 
   sortHandle = api => {
@@ -66,34 +65,54 @@ class Rooms extends Component {
   }
 
   filterHandle = (api, filter) => {
-    this.postDataFromDB(api, filter)
+    filter ? this.postDataFromDB(api, filter) : this.getDataFromDB(API.getRooms);
   }
 
   sortRateHandle = () => {
-    const roomsAray = [...this.state.roomsDB];
-    roomsAray.sort((a, b) => b.rating - a.rating);
-    this.setState({ roomsDB: roomsAray });
+    this.sortHandle(API.sortRate)
   };
   sortMembersHandle = () => {
-    const roomsAray = [...this.state.roomsDB];
-    roomsAray.sort((a, b) => b.members - a.members);
-    this.setState({ roomsDB: roomsAray });
+    this.sortHandle(API.sortMember)
   };
   sortCreatedHandle = () => {
-    const roomsAray = [...this.state.roomsDB];
-    roomsAray.sort((a, b) => a.created_at - b.created_at);
-    this.setState({ roomsDB: roomsAray });
-    console.log("roomsAray", roomsAray);
+    this.sortHandle(API.sortCreated)
   };
   resetFiltersHandle = () => {
-    this.setState({ 
-      // roomsDB,
-      city: "",
+    this.getDataFromDB(API.getRooms);
+    this.setState({
       category: "",
     });
   };
+
   changeHandle = event => {
     this.setState({ [event.target.name]: event.target.value });
+  };
+
+  getDate = () => {
+    const currentDate = new Date();
+    const date = this.formatDate(currentDate);
+    this.setState({ date });
+  };
+
+  formatDate = d => {
+    let curr_date = d.getDate();
+    let curr_month = d.getMonth() + 1;
+    const curr_year = d.getFullYear();
+    if (curr_month < 10) curr_month = "0" + curr_month;
+    if (curr_date < 10) curr_date = "0" + curr_date;
+    const date = curr_year + "-" + curr_month + "-" + curr_date;
+    return date;
+  };
+
+  changeDateHandle = event => {
+    console.log('event', event.target.value, this.state.date)
+    this.changeHandle(event);
+    const { date } = this.state;
+    this.filterHandle(API.filterByDate, date)
+
+    // const dataListByDate = [...this.state.datafromBase].filter(e => {
+    //   return this.formatDate(new Date(e.created_at)) === event.target.value;
+    // });
   };
 
   selectedRoomHandler = (id) => {
@@ -104,10 +123,21 @@ class Rooms extends Component {
     const { roomsDB, isLoading } = this.state;
     console.log('roomsDB', roomsDB)
     const toolbarButtons = [
-      {name:'Top Rate', method: this.sortRateHandle}, //this.sortHandle()
+      {name:'Top Rate', method: this.sortRateHandle},
       {name:'Top Members', method: this.sortMembersHandle},
       {name:'Newly Create', method: this.sortCreatedHandle},
       {name:'Reset filter', method: this.resetFiltersHandle},
+    ];
+    let categories = null;
+    if (roomsDB) {
+      categories = roomsDB.map(e => {
+        return e.category.title;
+      })
+        .filter((v, i, a) => a.indexOf(v) === i)
+      console.log("categories", categories);
+    }
+    const toolbarFilters = [
+      {type: 'Category', itemsArray: categories, value: this.state.category, labelWidth: 75},
     ];
     const roomPage = isLoading ? 
         <Spinner /> :
@@ -115,10 +145,12 @@ class Rooms extends Component {
           <Toolbar 
             datafromBase={this.state.roomsDB}
             buttons={toolbarButtons}
+            filters={toolbarFilters}
             sortHandle={this.sortHandle}
             changeHandle={this.changeHandle}
             category={this.state.category}
-            city={this.state.city}
+            showDate={this.state.date}
+            changeDateHandle={this.changeDateHandle}
           />
           <Grid container>
             {roomsDB.map(room => {
@@ -126,13 +158,13 @@ class Rooms extends Component {
                 <RoomCard
                   key={room.id}
                   title={room.title}
-                  category={room.category}
-                  avatar={room.creator_avatar}
+                  category={room.category.title}
+                  avatar={room.creator.avatar}
                   description={room.description}
                   limit={room.members_limit}
                   rating={room.rating}
                   members={room.members}
-                  background={room.background}
+                  background={room.cover}
                   clicked={() => this.selectedRoomHandler(room.id)}
                 />
               );

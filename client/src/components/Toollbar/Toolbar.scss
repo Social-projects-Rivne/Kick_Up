@@ -1,8 +1,12 @@
 .toolbar {
-  button {
-    margin: 15px auto;
-    padding: 5px;
-    background-color: $primary;
+  &-sort {
+    display: flex;
+    align-content: space-around;
+    button {
+      margin: 15px auto;
+      padding: 5px;
+      background-color: $primary;
+    }
   }
   &-filter {
     display: flex;
