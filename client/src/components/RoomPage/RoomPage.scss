@@ -1,31 +1,182 @@
 .room-page-details {
-
-  .MuiTab-labelContainer-141 {
-    padding: 9px 0 0 0;
-  }
-
-  .MuiTab-labelContainer-141 span{
-    padding: 9px 0 0 0;
-  }
-
-  .badge-members {
-    margin: 0;
-  }
-
-  .MuiSvgIcon-root-91 svg {
+  .room-details-page-photo-fab {
+    border: none;
+    box-shadow: none;
+    background-color: #e9ece5;
+    margin: 10px 0;
     display: flex;
+    justify-content: end;
+  }
+
+  .read-more-state {
+    display: none;
+  }
+
+  .read-more-wrap{
+    font-size: 1rem;
+    line-height: 1.5rem;
+    font-weight: 100;
+    padding-bottom: 5px;
+
+    max-height: 3rem;
+    overflow-y: hidden;
+    transition: 0.5s ease-out;
+  }
+  .read-more-state:checked ~ .read-more-wrap {
+    max-height: 30rem;
+  }
+
+  .read-more-state ~ .read-more-trigger:before{
+    content: "Read more";
+    font-size: 1rem;
+    line-height: 1.5rem;
+    font-weight: 100;
+  }
+
+  .read-more-state:checked ~ .read-more-trigger:before {
+    content: 'Show less';
+    font-size: 1rem;
+    line-height: 1.5rem;
+    font-weight: 100;
+  }
+
+  .read-more-trigger {
+    cursor: pointer;
+    display: inline-block;
+    padding: 0 .5em;
+    color: #666;
+    font-size: .9em;
+    line-height: 2;
+    border-bottom: 1px solid #ddd;
+    border-left: 1px solid #ddd;
+    border-radius: .25em;
+  }
+
+  @include media-breakpoint-down(lg) {
+    [data-swipeable] {
+      padding-bottom: 72 - $footer-height;
+    }
+  }
+
+  .room-details-page-wrapper{
+    display: flex;
+    flex-direction: row;
     justify-content: center;
+    padding-bottom: 15px;
+    align-items: center;
+
+    @include media-breakpoint-down(lg) {
+      display: flex;
+      flex-direction: column-reverse;
+    }
+
+    .room-details-page-wrapper:first-child {
+      padding-top: 30vh;
+    }
+
+    .room-details-page-title {
+      padding-top: 8px;
+      padding-left: 16px;
+      padding-right: 16px;
+      text-align: center;
+      font-weight: 100;
+      font-size: 3.75rem;
+      line-height: 4.25rem;
+      color: $black;
+
+      @include media-breakpoint-down(md) {
+        font-size: 18pt;
+        padding: 0;
+      }
+
+      @include media-breakpoint-down(lg) {
+        font-size: 24pt;
+        padding: 0;
+      }
+    }
+
+    .room-details-page-fab {
+      margin-top: 18px;
+      box-shadow: none;
+      background-color: $white;
+      margin-bottom: 10px;
+
+      @include media-breakpoint-down(lg) {
+        font-size: 11pt;
+        margin-top: 0;
+      }
+
+      .room-details-page-join {
+        padding-left: 10px;
+        padding-right: 5px;
+        color: $black;
+      }
+    }
+  }
+
+  .room-details-page-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    .room-details-page-paper {
+      margin: 10px;
+      box-shadow: none;
+    }
+
+    .room-details-page-cover-grid {
+      display: flex;
+      justify-content: flex-end;
+
+      .room-details-page-cover {
+        height: 300px;
+        width: auto;
+        max-width: 100%;
+
+        @include media-breakpoint-down(md) {
+          height: 100%;
+          width: 100%;
+        }
+      }
+    }
+
+    @include media-breakpoint-down(lg) {
+      display: flex;
+      flex-direction: column;
+    }
   }
 
   .tab-bar {
     flex-grow: 1;
     width: 100%;
 
+    [class*=MuiBadge-badge] {
+      margin-right: 45px;
+      color: $black;
+      background-color: $white;
+
+      @include media-breakpoint-down(lg) {
+        margin-right: 16px;
+      }
+    }
+
     .badge-room-margin {
-      //margin-right: 24px;
-      //margin-top: 5px;
       display: flex;
       flex-direction: column;
+
+      .MuiSvgIcon-root-91 {
+        padding-left: 42px;
+        padding-bottom: 5px;
+
+        @include media-breakpoint-down(lg) {
+          padding-left: 25px;
+        }
+      }
+
+      .badge-members {
+        margin: 0;
+      }
     }
 
       div[class*=flexContainer] {
@@ -40,6 +191,17 @@
     .tab-menu {
       background-color: $primary;
 
+      [class*=MuiButtonBase-root] {
+        color: $secondaryBlack;
+      }
+
+      @include media-breakpoint-down(lg) {
+        position: fixed;
+        bottom: 0;
+        z-index: 1;
+        width: 100%;
+      }
+
       button[class*=selected] {
         color: $black;
       }
@@ -53,10 +215,21 @@
   .room-details-card {
     display: flex;
     justify-content: center;
-    padding-bottom: 20px;
 
-    .card {
-      max-width: 645px;
+
+    @include media-breakpoint-down(md) {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .room-details-card-grid {
+      display: flex;
+      justify-content: center;
+
+      @include media-breakpoint-down(lg) {
+        display: flex;
+        flex-direction: column;
+      }
     }
 
     .card-media {
@@ -64,7 +237,7 @@
     }
   }
 
-  #root .avatar-center {
+  .avatar-center {
     display: flex;
     justify-content: center;
 
@@ -77,5 +250,13 @@
     font-size: 16px;
     color: $black;
     padding: 0 10%;
+  }
+
+  @include media-breakpoint-down(lg) {
+    .ReactGridGallery::after {
+      display: block;
+      content: "";
+      clear: both;
+    }
   }
 }
