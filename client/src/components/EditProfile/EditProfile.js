@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 
-import EditProfileAvatarCropper from '../EditProfileAvatarCropper/EditProfileAvatarCropper';
 import Swiper from 'react-id-swiper/lib/ReactIdSwiper.full';
 import { Pagination, Navigation } from 'swiper/dist/js/swiper.esm';
 import kute from 'kute.js';
 import 'kute.js/kute-svg';
+import AvatarCropper from 'react-avatar-edit';
 
 import 'react-id-swiper/src/styles/scss/swiper.scss';
 
@@ -25,6 +25,8 @@ import {
     Image
 } from '@material-ui/icons';
 
+const _maxFileSize = 10000000;
+const _desktopWidth = 1168;
 const swiperParams = {
     modules: [ Pagination, Navigation ],
     slidesPerView: 1,
@@ -41,8 +43,8 @@ const swiperParams = {
     },
     centeredSlides: true,
     autoHeight: true,
-    rebuildOnUpdate: false,
-    shouldSwiperUpdate: false,
+    rebuildOnUpdate: true,
+    shouldSwiperUpdate: true,
     renderPrevButton: () => {
         return (
             <Button variant="outlined" color="primary" className="edit-profile__form-prev">
@@ -68,62 +70,91 @@ const swiperParams = {
         }
     }
 };
+const slideName = {
+    firstName: 0,
+    lastName: 1,
+    birthDate: 2,
+    gender: 3,
+    avatar: 4
+};
+let prevTimer;
 
 class EditProfile extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            avatarOriginal: null,
-            avatarCropped: null, 
+            avatar: '', 
             activeSlide: 0,
             firstName: '',
             lastName: '',
             birthDate: '',
-            gender: ''
+            gender: '',
+            swiper: null
         };
 
         this.handleSlider = this.handleSlider.bind(this);
         this.updateInputValue = this.updateInputValue.bind(this);
         this.handleSvg = this.handleSvg.bind(this);
         this.handleAvatarSelection = this.handleAvatarSelection.bind(this);
-        //this.setState = this.setState.bind(this);
+    }
+    setResizeSwiperHandler = () => {
+        window.addEventListener('resize', this.handleWindowResize);
+    }
+    updateSwiperHeight = () => {
+        const _swiperUpdateTime = 1000;
+        const _this = this;
+
+        // Without timeout swiper not updating;
+        window.setTimeout(() => {
+            _this.state.swiper.updateAutoHeight(_swiperUpdateTime);
+        }, 0);
     }
     handleAvatarCrop() {
         console.log(this);
         debugger;
     }
     handleSvg() {
-        const firstTween = kute.fromTo(
-            '#at-pc', 
-            {path: '#at-pc' }, 
-            { path: '#hiking' },
-            {
-                duration: 800,
-                morphPrecision: 7,
-            }
-        );
-        const secondTween = kute.fromTo(
-            '#at-pc', 
-            {path: '#hiking' }, 
-            { path: '#skiing' },
-            {
-                duration: 800,
-                morphPrecision: 7,
-            }
-        );
-        window.setTimeout(() => {
-            firstTween.start();
-        }, 4000);
-
-        window.setTimeout(() => {
-            secondTween.start();
-        }, 8000);
+        // We need this only for desktops;
+        if (window.innerWidth >= _desktopWidth) {
+            const firstTween = kute.fromTo(
+                '#at-pc', 
+                {path: '#at-pc' }, 
+                { path: '#hiking' },
+                {
+                    duration: 800,
+                    morphPrecision: 7,
+                }
+            );
+            const secondTween = kute.fromTo(
+                '#at-pc', 
+                {path: '#hiking' }, 
+                { path: '#skiing' },
+                {
+                    duration: 800,
+                    morphPrecision: 7,
+                }
+            );
+            window.setTimeout(() => {
+                firstTween.start();
+            }, 4000);
+    
+            window.setTimeout(() => {
+                secondTween.start();
+            }, 8000);
+        }
     }
     handleSlider(instance) {
+        // Add event listeners;
         if (instance) {
             instance.on('slideChangeTransitionEnd', () => {
                 this.setState({ activeSlide: instance.activeIndex });
             });
+
+            // Save instance;
+            this.setState({ swiper: instance });
+
+            // Listen for resize;
+            this.setResizeSwiperHandler();
         }
     }
     updateInputValue(evt) {
@@ -131,13 +162,52 @@ class EditProfile extends Component {
           [evt.target.name]: evt.target.value
         });
     }
+    handleAvatarSelection(uploadEvt) {
+        this.setState({ avatarOriginal: true });
+    }
+    handleAvatarDimensions = () => {
+        if (window.innerWidth < _desktopWidth) {
+            if (window.innerWidth > window.innerHeight) {
+                return 110;
+            } else {
+                return 150;
+            }
+        } else { return 180; }
+    }
+    handleAvatarBorder = () => {
+        if (window.innerWidth >= _desktopWidth) {
+            return {
+                border: '2px dashed #62553a',
+                borderRadius: 5,
+                textAlign: 'center',
+            }
+        } else {
+            return {
+                border: '2px dashed #f7f4e9',
+                borderRadius: 5,
+                textAlign: 'center',
+            }
+        }
+    }
+    handleWindowResize = () => {
+        const _awaitTime = 1000;
+        const _this = this;
+
+        // Need debouncing;
+        window.clearTimeout(prevTimer);
+    
+        prevTimer = window.setTimeout(() => {
+            _this.setState({ activeSlide: this.state.swiper.activeIndex });
+
+            // For desktop we need set 1 slide as initial;
+            if (window.innerWidth >= _desktopWidth) _this.state.swiper.slideTo(0);
+            _this.state.swiper.update(1000);
+        }, _awaitTime);
+    }
     componentDidMount() {
         this.handleSvg();
     }
-    handleAvatarSelection(uploadEvt) {
-        //console.log(uploadEvt.target.);
-        this.setState({ avatarOriginal: true });
-    }
+
     render() {
         return (
             <div className="edit-profile">
@@ -243,7 +313,24 @@ class EditProfile extends Component {
                                 </Typography>
                                 <div className="edit-profile__field-wrapper  edit-profile__field-wrapper_avatar">
                                     <div className="edit-profile__cropper-wrapper  swiper-no-swiping">
-                                        <EditProfileAvatarCropper />
+                                        {   
+                                            (this.state.activeSlide === slideName.avatar || 
+                                            window.innerWidth >= _desktopWidth) &&
+                                            <AvatarCropper
+                                                width={this.handleAvatarDimensions()}
+                                                height={this.handleAvatarDimensions()}
+                                                imageHeight={this.handleAvatarDimensions()}
+                                                closeIconColor={window.innerWidth >= _desktopWidth ? '#f7f4e9' : '#62553a'} 
+                                                onCrop={this.onCrop}
+                                                onComponentDidMount={window.innerWidth <= _desktopWidth && this.updateSwiperHeight()}
+                                                onClose={this.onClose}
+                                                backgroundColor='#fff'
+                                                borderStyle={this.handleAvatarBorder()}
+                                                label="Choose"
+                                                onBeforeFileLoad={this.onBeforeFileLoad}
+                                                src={this.state.avatar}
+                                            />
+                                        }
                                     </div>
                                 </div>
                             </Grid>

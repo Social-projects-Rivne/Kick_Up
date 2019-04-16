@@ -7,7 +7,7 @@
     position: relative;
     box-sizing: border-box;
     min-height: calc(100vh - #{$footer-height} - #{$header-height});
-    @include svg-settings-bg('#{$primary}');
+    @include svg-settings-bg('#{$secondaryBlack}');
     background-color: white;
     overflow: hidden;
 
@@ -43,7 +43,7 @@
 }
 
 .edit-profile .edit-profile__form-pagination span {
-    background-color: $lightBlue;
+    background-color: $primary;
 }
 
 .edit-profile .edit-profile__form-section {
@@ -51,7 +51,7 @@
     max-width: 100%;
     padding: 16px;
     opacity: 0;
-    background-color: $brown;
+    background-color: $secondaryBlack;
     animation-name: scale-in;
     animation-duration: 0.3s;
     animation-delay: 0.5s;
@@ -61,6 +61,7 @@
 
     &.edit-profile__form-section_avatar {
         overflow: hidden;
+        //min-height: 241px;
     }
 }
 
@@ -206,11 +207,24 @@ input[type=date]::-webkit-inner-spin-button {
     fill: $primary;
 }
 
+.swiper-slide-active.edit-profile__form-section h4 {
+    opacity: 0;
+    animation-name: scale-in;
+    animation-duration: 0.2s;
+    animation-delay: 0.3s;
+    animation-fill-mode: forwards;
+}
+
 @media only screen and (max-width: 768px) and (orientation: landscape) {
     .edit-profile .edit-profile__form-inner {
         display: flex;
         justify-content: space-between;
         align-items: center;
+    }
+
+    .edit-profile .edit-profile__form-section.edit-profile__form-section_avatar {
+        //min-height: 142px;
+        bottom: 5px;
     }
 
    .edit-profile .edit-profile__field-wrapper {
@@ -268,8 +282,8 @@ input[type=date]::-webkit-inner-spin-button {
         border: 0;
     }
 
-    .edit-profile__animation-wrapper {
-        display: flex;
+    .edit-profile__field-wrapper.edit-profile__field-wrapper_avatar {
+        margin-top: 0;
     }
 }
 
@@ -282,6 +296,10 @@ input[type=date]::-webkit-inner-spin-button {
         justify-content: center;
         overflow-y: auto;
         max-height: calc(100vh - #{$footer-height} - #{$header-height});
+    }
+
+    .edit-profile__animation-wrapper {
+        display: flex;
     }
 
     .edit-profile .edit-profile__form-pagination {
@@ -314,7 +332,7 @@ input[type=date]::-webkit-inner-spin-button {
     }
 
     #root .edit-profile .edit-profile__form-section * {
-        color: $brown;
+        color: $secondaryBlack;
     }
 
     .edit-profile .edit-profile__form-section > div {
@@ -343,7 +361,7 @@ input[type=date]::-webkit-inner-spin-button {
 
     .edit-profile__field-wrapper input[type=file] + 
     label span {
-        border-color: $brown;
+        border-color: $secondaryBlack;
     }
 
     .edit-profile .edit-profile__gender label 
@@ -353,6 +371,10 @@ input[type=date]::-webkit-inner-spin-button {
     
     // Need !important to overwrite JS of avatar cropper;
     .edit-profile__cropper-wrapper label {
-        color: $brown !important;
+        color: $secondaryBlack !important;
+    }
+
+    .edit-profile__field-wrapper.edit-profile__field-wrapper_avatar {
+        margin-top: 20px;
     }
 }
