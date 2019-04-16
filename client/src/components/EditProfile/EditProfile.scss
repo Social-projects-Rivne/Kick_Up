@@ -1,3 +1,8 @@
+/** Available modificators;
+* edit-profile__form-section_avatar;
+* edit-profile__field-wrapper_avatar;
+*/
+
 .edit-profile {
     position: relative;
     box-sizing: border-box;
@@ -53,6 +58,10 @@
     animation-fill-mode: forwards;
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16);
     overflow-y: auto;
+
+    &.edit-profile__form-section_avatar {
+        overflow: hidden;
+    }
 }
 
 #root .edit-profile .edit-profile__form-prev,
@@ -81,13 +90,19 @@
     display: flex;
     align-items: baseline;
     color: rgba(255, 255, 255, 0.8);
+
+    &.edit-profile__field-wrapper_avatar {
+        justify-content: center;
+        margin-top: 20px;
+    }
 }
 
 .edit-profile__field-wrapper input[type=file] {
     display: none;
 }
 
-.edit-profile__field-wrapper input[type=file] + label {
+.edit-profile__field-wrapper:not(.edit-profile__field-wrapper_avatar)
+input[type=file] + label {
     margin-top: 16px;
 }
 
@@ -171,6 +186,18 @@ input[type=date]::-webkit-inner-spin-button {
     }
 }
 
+.edit-profile__cropper-wrapper {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+// Need !important to overwrite JS of avatar cropper;
+.edit-profile__cropper-wrapper label {
+    color: $white !important;
+    font-weight: 100 !important;
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif !important;
+}
+
 .edit-profile .MuiTypography-body1-64 {
     font-size: 1rem;
 }
@@ -189,6 +216,10 @@ input[type=date]::-webkit-inner-spin-button {
    .edit-profile .edit-profile__field-wrapper {
        min-width: 50%;
        margin-left: 16px;
+
+       &.edit-profile__field-wrapper_avatar {
+           margin-top: 0;
+       }
    }
 }
 
@@ -318,5 +349,10 @@ input[type=date]::-webkit-inner-spin-button {
     .edit-profile .edit-profile__gender label 
     span:first-of-type {
         padding-left: 3px;
-    }    
+    }
+    
+    // Need !important to overwrite JS of avatar cropper;
+    .edit-profile__cropper-wrapper label {
+        color: $brown !important;
+    }
 }

@@ -1,9 +1,8 @@
 import React, { Component } from "react";
 
-import Modal from '@material-ui/core/Modal';
+import EditProfileAvatarCropper from '../EditProfileAvatarCropper/EditProfileAvatarCropper';
 import Swiper from 'react-id-swiper/lib/ReactIdSwiper.full';
 import { Pagination, Navigation } from 'swiper/dist/js/swiper.esm';
-import AvatarCropper from 'react-avatar-edit';
 import kute from 'kute.js';
 import 'kute.js/kute-svg';
 
@@ -74,7 +73,8 @@ class EditProfile extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            avatarIsSelected: false, 
+            avatarOriginal: null,
+            avatarCropped: null, 
             activeSlide: 0,
             firstName: '',
             lastName: '',
@@ -85,8 +85,8 @@ class EditProfile extends Component {
         this.handleSlider = this.handleSlider.bind(this);
         this.updateInputValue = this.updateInputValue.bind(this);
         this.handleSvg = this.handleSvg.bind(this);
-        this.handleAvatarUpload = this.handleAvatarUpload.bind(this);
-        this.setState = this.setState.bind(this);
+        this.handleAvatarSelection = this.handleAvatarSelection.bind(this);
+        //this.setState = this.setState.bind(this);
     }
     handleAvatarCrop() {
         console.log(this);
@@ -134,8 +134,9 @@ class EditProfile extends Component {
     componentDidMount() {
         this.handleSvg();
     }
-    handleAvatarUpload() {
-        this.setState({ avatarIsSelected: true });
+    handleAvatarSelection(uploadEvt) {
+        //console.log(uploadEvt.target.);
+        this.setState({ avatarOriginal: true });
     }
     render() {
         return (
@@ -234,50 +235,20 @@ class EditProfile extends Component {
                                 </div>
                             </Grid>
                         </div>
-                        <div key={5} className="swiper-slide  edit-profile__form-section">
+                        <div key={5} className="swiper-slide  edit-profile__form-section  edit-profile__form-section_avatar">
                             <Grid item xs={10} sm={6} className="edit-profile__form-inner">
                                 <Typography align="center" variant="h4">
                                     <Image fontSize="large" />
                                     Upload your avatar:
                                 </Typography>
-                                <div className="edit-profile__field-wrapper">
-                                    <input
-                                        accept="image/*"
-                                        id="outlined-button-file"
-                                        multiple
-                                        type="file"
-                                        onChange={ this.handleAvatarUpload }
-                                    />
-                                    <label htmlFor="outlined-button-file">
-                                        <Button variant="outlined" component="span">
-                                            Click to choose file
-                                        </Button>
-                                    </label>
+                                <div className="edit-profile__field-wrapper  edit-profile__field-wrapper_avatar">
+                                    <div className="edit-profile__cropper-wrapper  swiper-no-swiping">
+                                        <EditProfileAvatarCropper />
+                                    </div>
                                 </div>
                             </Grid>
                         </div>
-                    </Swiper>                        
-                    <Modal
-                        open= { this.state.avatarIsSelected }
-                        aria-labelledby="crop-avatar"
-                        aria-describedby="crop-uploaded-avatar"
-                        //onClose={this.handleClose}
-                    >
-                        <div className="edit-profile__avatar-cropper">
-                            <h1>111</h1>
-                            <Typography variant="h6" id="modal-title">
-                                Let's crop our avatar!
-                            </Typography>
-                            <AvatarCropper
-                                width={ 390 }
-                                height={ 295 }
-                                onCrop={ this.handleAvatarCrop }
-                                //onClose={ this.handleAvatarCropperClose }
-                                //onBeforeFileLoad={ this.handleOnBeforeFileLoad }
-                                src={ this.state.src }
-                            />
-                        </div> 
-                    </ Modal>
+                    </Swiper>
                 </form>
                 <aside className="edit-profile__animation-wrapper">
                     <svg id="morph" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 440">
