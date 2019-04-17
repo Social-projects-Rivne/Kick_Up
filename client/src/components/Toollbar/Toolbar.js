@@ -32,70 +32,72 @@ class Toolbar extends Component {
     this.props.changeDate(date);
   };
 
-  componentDidMount() {
-    document.addEventListener("mousedown", this.handleClickOutside);
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener("mousedown", this.handleClickOutside);
-  }
-
-  setWrapperRef = node => {
-    this.wrapperRef = node;
-  };
-
-  handleClickOutside = event => {
-    if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
-      this.setState({isToggleOn: false});
-    }
-  };
-
   render() {
-    const { filters } = this.props;
-    let filter = null;
-    if (filters) {
-      filter = this.props.filters.map(e => {
+    const { filters, buttons } = this.props;
+
+    let ToolbarButtons = null;
+    if (buttons) {
+      ToolbarButtons = this.props.buttons.map(e => {
         return (
-          <FormControl
-            key={e.type}
-            variant="outlined"
-            className="toolbar-filter-formControl"
-          >
-            <InputLabel className="toolbar-filter-inputLabel" htmlFor={e.type}>
-              {e.type}
-            </InputLabel>
-            <Select
-              className="toolbar-filter-select"
-              labelWidth={e.labelWidth}
-              value={e.value}
-              onChange={this.props.changeHandle}
-              input={
-                <OutlinedInput
-                  className="toolbar-filter-outlinedinput"
-                  name="category"
-                  id={e.type}
-                />
-              }
+          <Grid item key={e.name}>
+            <Button variant="outlined" onClick={e.method}>
+              {e.name}
+            </Button>
+          </Grid>
+        );
+      })
+    }
+
+    let ToolbarFilters = null;
+    if (filters) {
+      ToolbarFilters = this.props.filters.map(e => {
+        return (
+          <Grid item key={e.type}>
+            <FormControl
+              variant="outlined"
+              className="toolbar-filter-formControl"
             >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              {e.itemsArray.map(e => {
-                return (
-                  <MenuItem key={e} value={e}>
-                    {e}
-                  </MenuItem>
-                );
-              })}
-            </Select>
-          </FormControl>
+              <InputLabel className="toolbar-filter-inputLabel" htmlFor={e.type}>
+                {e.type}
+              </InputLabel>
+              <Select
+                className="toolbar-filter-select"
+                labelWidth={e.labelWidth}
+                value={e.value}
+                onChange={this.props.changeHandle}
+                input={
+                  <OutlinedInput
+                    className="toolbar-filter-outlinedinput"
+                    name="category"
+                    id={e.type}
+                  />
+                }
+              >
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+                {e.itemsArray.map(e => {
+                  return (
+                    <MenuItem key={e} value={e}>
+                      {e}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </FormControl>
+          </Grid>  
         );
       });
     }
 
     const date =
       this.props.showDate && !this.state.isToggleOn ? (
-        <CalendarToday cursor="pointer" onClick={this.calendarToggleHandle} />
+        <CalendarToday 
+          cursor="pointer" 
+          onClick={this.calendarToggleHandle} 
+          className="toolbar-filter-date"
+          fontSize="large"
+        />
       ) : null;
 
     const calendar = this.state.isToggleOn ? (
@@ -115,31 +117,23 @@ class Toolbar extends Component {
     ) : null;
 
     return (
-      <div ref={this.setWrapperRef}>
-        <Grid container justify="space-evenly" className="toolbar">
-          <Grid item xs={12} sm={9} md={6} className="toolbar-sort">
-            <Link to="/add-room">
-              <Fab size="small" aria-label="Add">
-                <AddIcon />
-              </Fab>
-            </Link>
-            {this.props.buttons.map(e => {
-              return (
-                <Button key={e.name} variant="outlined" onClick={e.method}>
-                  {e.name}
-                </Button>
-              );
-            })}
+      <Grid container justify="center">
+          <Grid container justify="center" alignItems="center" spacing={8} className="toolbar">
+              <Grid item>
+                <Link to="/add-room">
+                  <Fab size="small" aria-label="Add">
+                    <AddIcon />
+                  </Fab>
+                </Link>
+              </Grid>
+              {ToolbarButtons}
+              {ToolbarFilters}
+              <Grid item>
+                {date}
+                {calendar}
+              </Grid>
           </Grid>
-          <Grid item xs={12} sm={3} md={6} className="toolbar-filter">
-            {filter}
-            <div className="toolbar-filter-date">
-              {date}
-            </div>
-            {calendar}
-          </Grid>
-        </Grid>
-      </div>
+      </Grid>
     );
   }
 }

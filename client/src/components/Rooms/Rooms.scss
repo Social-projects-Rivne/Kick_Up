@@ -1,0 +1,9 @@
+.rooms-page {
+    background-color: $black;
+
+    &-cards {
+        width: 90%;
+        margin: 0 auto;
+        max-width: 80rem;
+    }
+}

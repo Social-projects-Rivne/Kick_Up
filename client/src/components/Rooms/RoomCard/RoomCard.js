@@ -1,7 +1,7 @@
 import React from "react";
 
-import {Grid} from "@material-ui/core";
-import StarRating from './../../UI/StarRating/StarRating';
+import { Grid } from "@material-ui/core";
+import StarRating from "./../../UI/StarRating/StarRating";
 
 const roomCard = props => {
   const backgroundImage = {
@@ -9,23 +9,28 @@ const roomCard = props => {
   };
 
   return (
-    <Grid item xs={12} sm={6} md={4} 
-      className="room-card" 
-      style={backgroundImage}
-      onClick={props.clicked}>
-      <Grid className="room-card-desc">
-        <Grid className="cardInfo">
-          <div>{props.category}</div>
-          <div>
-            {props.members} / {props.limit}
+    <Grid item xs={12} sm={6} md={4} className="col" ontouchstart="this.classList.toggle('hover');">
+      <div className="room-card" onClick={props.clicked}>
+        <div
+          className="front"
+          style={backgroundImage}
+        >
+          <img src={props.avatar} alt={props.avatar}/>
+          <div className="inner">
+            <p>{props.title}</p>
+            <span>{props.category}</span>
           </div>
-        </Grid>
-          <h2>{props.title}</h2>
         <Grid className="cardInfo">
-          <img src={props.avatar} alt={props.avatar}/> 
           <StarRating rating={props.rating}/>
         </Grid>
-      </Grid>
+        </div>
+        <div className="back">
+          <div className="inner">
+            <p>{props.description}</p>
+          <span>Members: {props.members} / {props.limit}</span>
+          </div>
+        </div>
+      </div>
     </Grid>
   );
 };

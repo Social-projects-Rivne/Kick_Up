@@ -1,18 +1,12 @@
 .toolbar {
-  &-sort {
-    // display: flex;
-    // align-content: center;
-    button {
-      margin: 15px auto;
-      max-height: 40px;
-      padding: 5px;
-      background-color: $primary;
-    }
+  background-color: $black;
+  .swiper-slide {
+    width: 140px !important;
+  }
+  button {
+    background-color: $primary;
   }
   &-filter {
-    display: flex;
-    align-items: center;
-
     &-formControl {
       margin: 15px 10px !important;
       label {
@@ -30,9 +24,8 @@
       width: 100px;
     }
     &-date {
-      display: inline-block;
-      width: 24px;
       margin: 10px 10px;
+      color: $primary;
     }
     &-calendar {
       position: absolute;
@@ -53,5 +46,17 @@
     padding: 8px;
     background-color: $primary;
     width: 137px;
+  }
+
+}
+
+@media (max-width: 768px) {
+  .toolbar {
+    z-index: 100;
+    position: fixed;
+    bottom: 0;
+    &-filter-calendar {
+      top: -300px;
+    }
   }
 }
