@@ -67,7 +67,7 @@ class Login extends Component {
         this.props.userHasAuthenticated(true);
         const { token } = res.data;
         localStorage.setItem("authorization", token);
-        this.setAuthToken(token);
+        this.props.setAuthToken(token);
         const decoded = jwt_decode(token);
         console.log('signIn DECODE', decoded)
         this.setState({
@@ -96,13 +96,7 @@ class Login extends Component {
         })
       });
   };
-  setAuthToken = token => {
-    if (token) {
-      axios.defaults.headers.common["Authorization"] = token;
-    } else {
-      delete axios.defaults.headers.common["Authorization"];
-    }
-  };
+  
   resetToast = () => {
     this.setState({
       message: false,
