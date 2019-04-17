@@ -1,7 +1,7 @@
 const Router = require('koa-router');
 const { authenticated } = require('./../middlewares');
 const { User } = require('./../models');
-const Validator = require('./../services');
+const validate = require('./../services/Validator');
 
 const router = new Router({prefix:'/api/profile'});
 
