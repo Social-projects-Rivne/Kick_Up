@@ -840,37 +840,57 @@ const handler = {
     ctx.body = testRooms;
   },
 
-  async sortByRating(ctx) {
+  async sort(ctx) {
+    let result = ctx.request.query.sort;
+    console.log('result', result)
+    let roomsAray = [...testRooms];
 
-    const roomsAray = [...testRooms];
-    roomsAray.sort((a, b) => b.rating - a.rating);
-
-    ctx.body = roomsAray;
-  },
-
-  async sortByMembers(ctx) {
-
-    const roomsAray = [...testRooms];
-    roomsAray.sort((a, b) => b.members - a.members);
-
-    ctx.body = roomsAray;
-  },
-
-  async sortByCreated(ctx) {
-
-    const roomsAray = [...testRooms];
-    roomsAray.sort((a, b) => a.created_at - b.created_at);
+    switch(result) {
+      case 'rate':
+        roomsAray.sort((a, b) => b.rating - a.rating);
+        break;
+      case 'members':
+        roomsAray.sort((a, b) => b.members - a.members);
+        break;
+      case 'create':
+        roomsAray.sort((a, b) => a.created_at - b.created_at);
+        break;
+    }
 
     ctx.body = roomsAray;
   },
 
-  async filterByCategory(ctx) {
-    const {filter} = ctx.request.body;
-    const filterRoomsByCategory = [...testRooms].filter(
-      e => e.category.title === filter
-    );
-
-    ctx.body = filterRoomsByCategory;
+  async filter(ctx) {
+    const filter = ctx.request.body;
+    console.log('filter', filter);
+    formatDate = d => {
+      let curr_date = d.getDate();
+      let curr_month = d.getMonth() + 1;
+      const curr_year = d.getFullYear();
+      if (curr_month < 10) curr_month = "0" + curr_month;
+      if (curr_date < 10) curr_date = "0" + curr_date;
+      const date = curr_year + "-" + curr_month + "-" + curr_date;
+      return date;
+    };
+    let rooms = [...testRooms]
+    if (filter.date && filter.category) {
+      console.log('1')
+      filterRooms = rooms.filter(e => {
+        
+        return this.formatDate(new Date(e.created_at)) === this.formatDate(new Date(filter.date)) && e.category.title === filter.category;
+      });
+    } else if (!filter.date && filter.category) {
+      console.log('2')
+      filterRooms = rooms.filter(e => {
+        return e.category.title === filter.category;
+      });
+    } else {
+      console.log('3')
+      filterRooms = rooms.filter(e => {
+        return this.formatDate(new Date(e.created_at)) === this.formatDate(new Date(filter.date));
+      });
+    }
+    ctx.body = filterRooms;
   },
 
   async filterByDate(ctx) {
@@ -940,10 +960,12 @@ const handler = {
 
 
 router.get('/', handler.roomList);
-router.get('/sort-rating', handler.sortByRating);
-router.get('/sort-members', handler.sortByMembers);
-router.get('/sort-created', handler.sortByCreated);
-router.post('/filter-by-category', handler.filterByCategory);
-router.post('/filter-by-date', handler.filterByDate);
+router.get('/sort', handler.sort);
+// router.get('/sort-rating', handler.sortByRating);
+// router.get('/sort-members', handler.sortByMembers);
+// router.get('/sort-created', handler.sortByCreated);
+router.post('/filter', handler.filter);
+// router.post('/filter-by-category', handler.filterByCategory);
+// router.post('/filter-by-date', handler.filterByDate);
 
 module.exports = router.routes();

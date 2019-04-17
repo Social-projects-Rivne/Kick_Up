@@ -1,9 +1,10 @@
 .toolbar {
   &-sort {
-    display: flex;
-    align-content: space-around;
+    // display: flex;
+    // align-content: center;
     button {
       margin: 15px auto;
+      max-height: 40px;
       padding: 5px;
       background-color: $primary;
     }
@@ -30,7 +31,18 @@
     }
     &-date {
       display: inline-block;
+      width: 24px;
       margin: 10px 10px;
+    }
+    &-calendar {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      z-index: 500;
+      transition: all 0.3s;
+      &-close {
+        background-color: #fff;
+      }
     }
   }
   #select-category,

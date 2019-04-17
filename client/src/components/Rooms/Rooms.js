@@ -10,10 +10,8 @@ import Spinner from "./../UI/Spinner/Spinner";
 
 const API = {
   getRooms: '/api/room',
-  sortRate: '/api/room/sort-rating',
-  sortMember: '/api/room/sort-members',
-  sortCreated: '/api/room/sort-created',
-  filterByCategory: '/api/room/filter-by-category',
+  sort: '/api/room/sort',
+  filter: '/api/room/filter',
   filterByDate: '/api/room/filter-by-date',
   resetFilters: '/api/room/reset-filters',
 }
@@ -23,25 +21,30 @@ class Rooms extends Component {
     roomsDB: null,
     FilteredRooms: null,
     isLoading: true,
+    filters: {
+      category: "",
+      date: null,
+    },
     category: "",
-    date: null
+    date: null,
+    showDate: true,
   };
   componentDidMount() {
     this.getDataFromDB(API.getRooms);
-    this.getDate();
+    // this.getDate();
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    const { category } = this.state;
-    if (prevState.category !== this.state.category) {
-      this.filterHandle(API.filterByCategory, category)
+    const { category, date } = this.state;
+    if (prevState.category !== category || prevState.date !== date) {
+      this.filterHandle()
     }
   }
 
-  getDataFromDB = (api) => {
+  getDataFromDB = (api, type) => {
     this.setState({isLoading: true});
-    axios.get(api)
-        .then(console.log('Data sorted by', api))
+    axios.get(api, type)
+        .then(console.log('Data sorted by', api, type))
         .then(res => {
           console.log('res===>', res)
           this.setState({roomsDB: res.data, isLoading: false})
@@ -51,7 +54,7 @@ class Rooms extends Component {
 
   postDataFromDB = (api, filter) => {
     this.setState({isLoading: true});
-    axios.post(api, {filter: filter})
+    axios.post(api, filter)
         .then(console.log('Data filtered by', api))
         .then(res => {
           console.log('res===>', res)
@@ -60,23 +63,39 @@ class Rooms extends Component {
         .catch(err => console.log(err));
   }
 
-  sortHandle = api => {
-    this.getDataFromDB(api)
-  }
-
-  filterHandle = (api, filter) => {
-    filter ? this.postDataFromDB(api, filter) : this.getDataFromDB(API.getRooms);
+  filterHandle = () => {
+    const filters = {
+      category: this.state.category,
+      date: this.state.date,
+    }
+    filters ? this.postDataFromDB(API.filter, filters) : this.getDataFromDB(API.getRooms);
   }
 
   sortRateHandle = () => {
-    this.sortHandle(API.sortRate)
+    const type = {
+      params: {
+        sort: 'rate'
+      }
+    }
+    this.getDataFromDB(API.sort, type)
   };
   sortMembersHandle = () => {
-    this.sortHandle(API.sortMember)
+    const type = {
+      params: {
+        sort: 'members'
+      }
+    }
+    this.getDataFromDB(API.sort, type)
   };
   sortCreatedHandle = () => {
-    this.sortHandle(API.sortCreated)
+    const type = {
+      params: {
+        sort: 'create'
+      }
+    }
+    this.getDataFromDB(API.sort, type)
   };
+
   resetFiltersHandle = () => {
     this.getDataFromDB(API.getRooms);
     this.setState({
@@ -86,34 +105,34 @@ class Rooms extends Component {
 
   changeHandle = event => {
     this.setState({ [event.target.name]: event.target.value });
+    // this.filterHandle();
   };
 
-  getDate = () => {
-    const currentDate = new Date();
-    const date = this.formatDate(currentDate);
+  changeDate = date => {
     this.setState({ date });
-  };
+    // this.filterHandle();
+  }
 
-  formatDate = d => {
-    let curr_date = d.getDate();
-    let curr_month = d.getMonth() + 1;
-    const curr_year = d.getFullYear();
-    if (curr_month < 10) curr_month = "0" + curr_month;
-    if (curr_date < 10) curr_date = "0" + curr_date;
-    const date = curr_year + "-" + curr_month + "-" + curr_date;
-    return date;
-  };
+  // getDate = () => {
+  //   const currentDate = new Date();
+  //   // const date = this.formatDate(currentDate);
+  //   this.setState({ date: currentDate });
+  // };
 
-  changeDateHandle = event => {
-    console.log('event', event.target.value, this.state.date)
-    this.changeHandle(event);
-    const { date } = this.state;
-    this.filterHandle(API.filterByDate, date)
+  // formatDate = d => {
+  //   let curr_date = d.getDate();
+  //   let curr_month = d.getMonth() + 1;
+  //   const curr_year = d.getFullYear();
+  //   if (curr_month < 10) curr_month = "0" + curr_month;
+  //   if (curr_date < 10) curr_date = "0" + curr_date;
+  //   const date = curr_year + "-" + curr_month + "-" + curr_date;
+  //   return date;
+  // };
 
-    // const dataListByDate = [...this.state.datafromBase].filter(e => {
-    //   return this.formatDate(new Date(e.created_at)) === event.target.value;
-    // });
-  };
+  // changeDate = date => {
+  //   this.setState({date})
+  //   this.filterHandle(API.filterByDate, date)
+  // }
 
   selectedRoomHandler = (id) => {
     this.props.history.push({pathname: '/rooms/' + id})
@@ -149,8 +168,8 @@ class Rooms extends Component {
             sortHandle={this.sortHandle}
             changeHandle={this.changeHandle}
             category={this.state.category}
-            showDate={this.state.date}
-            changeDateHandle={this.changeDateHandle}
+            showDate={true}
+            changeDate={this.changeDate}
           />
           <Grid container>
             {roomsDB.map(room => {
