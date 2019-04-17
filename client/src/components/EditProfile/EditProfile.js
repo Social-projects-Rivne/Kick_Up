@@ -15,15 +15,19 @@ import {
     Button,
     FormControlLabel,
     RadioGroup,
-    Radio
+    Radio,
+    Avatar,
+    IconButton
 } from '@material-ui/core';
 import { 
     Person, 
     DateRange,
     SentimentSatisfied,
+    DeleteOutline,
     People,
     Image
 } from '@material-ui/icons';
+
 
 const _maxFileSize = 10000000;
 const _desktopWidth = 1168;
@@ -65,7 +69,6 @@ const swiperParams = {
             spaceBetween: 32
         },
         1168: {
-            autoHeight: false,
             noSwipingClass: 'swiper-container'
         }
     }
@@ -83,8 +86,7 @@ class EditProfile extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            avatar: '', 
-            activeSlide: 0,
+            avatar: 'https://is2-ssl.mzstatic.com/image/thumb/Purple128/v4/6c/aa/71/6caa713b-a274-439e-5880-abe7bb784f44/AppIcon-1x_U007emarketing-0-85-220-5.png/246x0w.jpg', 
             firstName: '',
             lastName: '',
             birthDate: '',
@@ -101,13 +103,13 @@ class EditProfile extends Component {
         window.addEventListener('resize', this.handleWindowResize);
     }
     updateSwiperHeight = () => {
-        const _swiperUpdateTime = 1000;
+        const _swiperUpdateTime = 500;
         const _this = this;
 
         // Without timeout swiper not updating;
         window.setTimeout(() => {
-            _this.state.swiper.updateAutoHeight(_swiperUpdateTime);
-        }, 0);
+            _this.state.swiper.update();
+        }, _swiperUpdateTime);
     }
     handleAvatarCrop() {
         console.log(this);
@@ -144,12 +146,7 @@ class EditProfile extends Component {
         }
     }
     handleSlider(instance) {
-        // Add event listeners;
         if (instance) {
-            instance.on('slideChangeTransitionEnd', () => {
-                this.setState({ activeSlide: instance.activeIndex });
-            });
-
             // Save instance;
             this.setState({ swiper: instance });
 
@@ -197,15 +194,18 @@ class EditProfile extends Component {
         window.clearTimeout(prevTimer);
     
         prevTimer = window.setTimeout(() => {
-            _this.setState({ activeSlide: this.state.swiper.activeIndex });
+            //_this.setState({ activeSlide: this.state.swiper.activeIndex });
 
             // For desktop we need set 1 slide as initial;
             if (window.innerWidth >= _desktopWidth) _this.state.swiper.slideTo(0);
-            _this.state.swiper.update(1000);
+            _this.state.swiper.update();
         }, _awaitTime);
     }
     componentDidMount() {
         this.handleSvg();
+    }
+    resetAvatar = () => {
+        this.setState({avatar: ''});
     }
 
     render() {
@@ -314,22 +314,35 @@ class EditProfile extends Component {
                                 <div className="edit-profile__field-wrapper  edit-profile__field-wrapper_avatar">
                                     <div className="edit-profile__cropper-wrapper  swiper-no-swiping">
                                         {   
-                                            (this.state.activeSlide === slideName.avatar || 
-                                            window.innerWidth >= _desktopWidth) &&
-                                            <AvatarCropper
+                                            !this.state.avatar &&
+                                            (this.state.swiper.activeIndex === slideName.avatar || 
+                                                window.innerWidth >= _desktopWidth) &&
+                                                <AvatarCropper
                                                 width={this.handleAvatarDimensions()}
                                                 height={this.handleAvatarDimensions()}
                                                 imageHeight={this.handleAvatarDimensions()}
                                                 closeIconColor={window.innerWidth >= _desktopWidth ? '#f7f4e9' : '#62553a'} 
-                                                onCrop={this.onCrop}
+                                                //onCrop={this.onCrop}
                                                 onComponentDidMount={window.innerWidth <= _desktopWidth && this.updateSwiperHeight()}
-                                                onClose={this.onClose}
+                                                //onClose={this.onClose}
                                                 backgroundColor='#fff'
                                                 borderStyle={this.handleAvatarBorder()}
                                                 label="Choose"
-                                                onBeforeFileLoad={this.onBeforeFileLoad}
+                                                //onBeforeFileLoad={this.onBeforeFileLoad}
                                                 src={this.state.avatar}
                                             />
+                                        }
+                                        {
+                                            this.state.avatar &&
+                                            <div className="edit-profile__avatar-wrapper">
+                                                <Avatar alt="" src={this.state.avatar} className="edit-profile__user-avatar" />
+                                                <IconButton 
+                                                    aria-label="Delete"
+                                                    onClick={this.resetAvatar}
+                                                >
+                                                    <DeleteOutline fontSize="default" />
+                                                </IconButton>
+                                            </div>
                                         }
                                     </div>
                                 </div>

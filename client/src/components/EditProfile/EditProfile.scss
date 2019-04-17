@@ -215,6 +215,25 @@ input[type=date]::-webkit-inner-spin-button {
     animation-fill-mode: forwards;
 }
 
+.edit-profile .edit-profile__user-avatar {
+    width: 150px;
+    height: 150px;   
+}
+
+.edit-profile .edit-profile__avatar-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.edit-profile .edit-profile__avatar-wrapper svg {
+    color: $white;
+    opacity: 0.6;
+}
+
+.edit-profile .edit-profile__user-avatar {
+    margin-right: 16px;
+}
+
 @media only screen and (max-width: 768px) and (orientation: landscape) {
     .edit-profile .edit-profile__form-inner {
         display: flex;
@@ -235,6 +254,11 @@ input[type=date]::-webkit-inner-spin-button {
            margin-top: 0;
        }
    }
+
+   .edit-profile .edit-profile__user-avatar {
+        width: 110px;
+        height: 110px;   
+    }
 }
 
 @media only screen and (min-width: 768px) {
@@ -375,6 +399,7 @@ input[type=date]::-webkit-inner-spin-button {
     }
 
     .edit-profile__field-wrapper.edit-profile__field-wrapper_avatar {
+        justify-content: flex-start;
         margin-top: 20px;
     }
 }
