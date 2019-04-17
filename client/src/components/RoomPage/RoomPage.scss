@@ -1,8 +1,12 @@
 .room-page-details {
+  .feed-card, .post-card {
+    max-width: 700px;
+  }
+
   .room-details-page-photo-fab {
     border: none;
     box-shadow: none;
-    background-color: #e9ece5;
+    background-color: $primary;
     margin: 10px 0;
     display: flex;
     justify-content: end;
@@ -12,7 +16,7 @@
     display: none;
   }
 
-  .read-more-wrap{
+  .read-more-wrap {
     font-size: 1rem;
     line-height: 1.5rem;
     font-weight: 100;
@@ -22,11 +26,12 @@
     overflow-y: hidden;
     transition: 0.5s ease-out;
   }
+
   .read-more-state:checked ~ .read-more-wrap {
     max-height: 30rem;
   }
 
-  .read-more-state ~ .read-more-trigger:before{
+  .read-more-state ~ .read-more-trigger:before {
     content: "Read more";
     font-size: 1rem;
     line-height: 1.5rem;
@@ -58,7 +63,7 @@
     }
   }
 
-  .room-details-page-wrapper{
+  .room-details-page-wrapper {
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -98,7 +103,7 @@
     .room-details-page-fab {
       margin-top: 18px;
       box-shadow: none;
-      background-color: $white;
+      background-color: $primary;
       margin-bottom: 10px;
 
       @include media-breakpoint-down(lg) {
@@ -244,12 +249,6 @@
     .avatar-flex {
       flex: none;
     }
-  }
-
-  .room-text-about {
-    font-size: 16px;
-    color: $black;
-    padding: 0 10%;
   }
 
   @include media-breakpoint-down(lg) {
