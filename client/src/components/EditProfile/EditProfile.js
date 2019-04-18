@@ -5,6 +5,7 @@ import { Pagination, Navigation } from 'swiper/dist/js/swiper.esm';
 import kute from 'kute.js';
 import 'kute.js/kute-svg';
 import AvatarCropper from 'react-avatar-edit';
+import { withSnackbar } from 'notistack';
 
 import 'react-id-swiper/src/styles/scss/swiper.scss';
 
@@ -25,7 +26,8 @@ import {
     SentimentSatisfied,
     DeleteOutline,
     People,
-    Image
+    Image,
+    CheckCircleOutlineOutlined
 } from '@material-ui/icons';
 
 
@@ -33,9 +35,10 @@ const _maxFileSize = 10000000;
 const _desktopWidth = 1168;
 const swiperParams = {
     modules: [ Pagination, Navigation ],
-    slidesPerView: 1,
-    loop: false,
+    slidesPerView: 'auto',
     spaceBetween: 16,
+    watchOverflow: true,
+    simulateTouch: false,
     pagination: {
         el: ".edit-profile__form-pagination",
         type: 'progressbar',
@@ -45,10 +48,7 @@ const swiperParams = {
         prevEl: '.edit-profile__form-prev',
         nextEl: '.edit-profile__form-next',
     },
-    centeredSlides: true,
     autoHeight: true,
-    rebuildOnUpdate: true,
-    shouldSwiperUpdate: true,
     renderPrevButton: () => {
         return (
             <Button variant="outlined" color="primary" className="edit-profile__form-prev">
@@ -65,20 +65,42 @@ const swiperParams = {
     },
     breakpointsInverse: true,
     breakpoints: {
-        768: {
-            spaceBetween: 32
-        },
         1168: {
             noSwipingClass: 'swiper-container'
         }
+    },
+    on: {
+        resize: function() {
+            if (window.innerWidth >= _desktopWidth) this.slideTo(0);
+        }
     }
 };
-const slideName = {
-    firstName: 0,
-    lastName: 1,
-    birthDate: 2,
-    gender: 3,
-    avatar: 4
+const messageType = {
+    SUCCESS: 'success',
+    INFO: 'info',
+    ERR: 'error'
+};
+const isMobileDevice = () => {
+    const isMobile = {
+        Android: function() {
+            return navigator.userAgent.match(/Android/i);
+        },
+        BlackBerry: function() {
+            return navigator.userAgent.match(/BlackBerry/i);
+        },
+        iOS: function() {
+            return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+        },
+        Opera: function() {
+            return navigator.userAgent.match(/Opera Mini/i);
+        },
+        Windows: function() {
+            return navigator.userAgent.match(/IEMobile/i);
+        },
+        any: function() {
+            return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
+        }
+    };
 };
 let prevTimer;
 
@@ -86,34 +108,20 @@ class EditProfile extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            croppedImage: '',
             avatar: 'https://is2-ssl.mzstatic.com/image/thumb/Purple128/v4/6c/aa/71/6caa713b-a274-439e-5880-abe7bb784f44/AppIcon-1x_U007emarketing-0-85-220-5.png/246x0w.jpg', 
             firstName: '',
             lastName: '',
             birthDate: '',
             gender: '',
-            swiper: null
+            windowWidth: 0
         };
 
-        this.handleSlider = this.handleSlider.bind(this);
-        this.updateInputValue = this.updateInputValue.bind(this);
         this.handleSvg = this.handleSvg.bind(this);
         this.handleAvatarSelection = this.handleAvatarSelection.bind(this);
     }
-    setResizeSwiperHandler = () => {
-        window.addEventListener('resize', this.handleWindowResize);
-    }
-    updateSwiperHeight = () => {
-        const _swiperUpdateTime = 500;
-        const _this = this;
-
-        // Without timeout swiper not updating;
-        window.setTimeout(() => {
-            _this.state.swiper.update();
-        }, _swiperUpdateTime);
-    }
-    handleAvatarCrop() {
-        console.log(this);
-        debugger;
+    handleCropAvatar = (image) => {
+        this.setState({ croppedImage: image });
     }
     handleSvg() {
         // We need this only for desktops;
@@ -145,16 +153,7 @@ class EditProfile extends Component {
             }, 8000);
         }
     }
-    handleSlider(instance) {
-        if (instance) {
-            // Save instance;
-            this.setState({ swiper: instance });
-
-            // Listen for resize;
-            this.setResizeSwiperHandler();
-        }
-    }
-    updateInputValue(evt) {
+    updateInputValue = (evt) => {
         this.setState({
           [evt.target.name]: evt.target.value
         });
@@ -194,25 +193,45 @@ class EditProfile extends Component {
         window.clearTimeout(prevTimer);
     
         prevTimer = window.setTimeout(() => {
-            //_this.setState({ activeSlide: this.state.swiper.activeIndex });
-
-            // For desktop we need set 1 slide as initial;
-            if (window.innerWidth >= _desktopWidth) _this.state.swiper.slideTo(0);
-            _this.state.swiper.update();
+            _this.setState({ windowWidth: window.innerWidth });
         }, _awaitTime);
     }
     componentDidMount() {
+        const messageAwaitTime = 3000;
+
+        // Show info message
+        window.setTimeout(() => {
+            this.showToast('Just fill in fields you\'d like to, all changes will be saved automatically', messageType.INFO);
+        }, messageAwaitTime);
+
+        // Handle animations for desktop;
         this.handleSvg();
+
+        // Handle swiper changes;
+        window.addEventListener('resize', this.handleWindowResize);
     }
     resetAvatar = () => {
         this.setState({avatar: ''});
+    }
+    showToast = (message, variant) => {
+        this.props.enqueueSnackbar(message, {
+            transitionDuration: { exit: 2000, enter: 400 },
+            variant: variant ? variant : 'default',
+            autoHideDuration: 10000,
+            anchorOrigin: {
+                vertical: 'top',
+                horizontal: 'center',
+            }
+        });
     }
 
     render() {
         return (
             <div className="edit-profile">
                 <form className="edit-profile__form-wrapper">
-                    <Swiper {...swiperParams} getSwiper={this.handleSlider} >
+                    {
+                        this.state.windowWidth  >= 0 &&
+                        <Swiper {...swiperParams} getSwiper={ this.setSwiper } >
                         <div key={1} className="swiper-slide  edit-profile__form-section">
                             <Grid item xs={10} sm={6} className="edit-profile__form-inner">
                                 <Typography align="center" variant="h4">
@@ -313,17 +332,13 @@ class EditProfile extends Component {
                                 </Typography>
                                 <div className="edit-profile__field-wrapper  edit-profile__field-wrapper_avatar">
                                     <div className="edit-profile__cropper-wrapper  swiper-no-swiping">
-                                        {   
-                                            !this.state.avatar &&
-                                            (this.state.swiper.activeIndex === slideName.avatar || 
-                                                window.innerWidth >= _desktopWidth) &&
-                                                <AvatarCropper
+                                        {!this.state.avatar &&
+                                            <AvatarCropper
                                                 width={this.handleAvatarDimensions()}
                                                 height={this.handleAvatarDimensions()}
                                                 imageHeight={this.handleAvatarDimensions()}
                                                 closeIconColor={window.innerWidth >= _desktopWidth ? '#f7f4e9' : '#62553a'} 
-                                                //onCrop={this.onCrop}
-                                                onComponentDidMount={window.innerWidth <= _desktopWidth && this.updateSwiperHeight()}
+                                                onCrop={ (image) => {this.setState({croppedImage: image})}}
                                                 //onClose={this.onClose}
                                                 backgroundColor='#fff'
                                                 borderStyle={this.handleAvatarBorder()}
@@ -333,15 +348,27 @@ class EditProfile extends Component {
                                             />
                                         }
                                         {
-                                            this.state.avatar &&
                                             <div className="edit-profile__avatar-wrapper">
-                                                <Avatar alt="" src={this.state.avatar} className="edit-profile__user-avatar" />
-                                                <IconButton 
-                                                    aria-label="Delete"
-                                                    onClick={this.resetAvatar}
-                                                >
+                                                {this.state.avatar &&
+                                                    <Avatar alt="" src={this.state.avatar} className="edit-profile__user-avatar" />
+                                                }
+                                                {this.state.avatar &&
+                                                    <IconButton 
+                                                        aria-label="Delete"
+                                                        onClick={this.resetAvatar}
+                                                    >
                                                     <DeleteOutline fontSize="default" />
-                                                </IconButton>
+                                                    </IconButton>
+                                                }
+                                                {
+                                                    this.state.croppedImage &&
+                                                    <IconButton
+                                                        aria-label="Save"
+                                                        onClick={ () => {this.setState({avatar: this.state.croppedImage});  console.log('so state is', this.state);  debugger;} }
+                                                    >
+                                                    <CheckCircleOutlineOutlined fontSize="default" />
+                                                    </IconButton>
+                                                }
                                             </div>
                                         }
                                     </div>
@@ -349,6 +376,7 @@ class EditProfile extends Component {
                             </Grid>
                         </div>
                     </Swiper>
+                    }
                 </form>
                 <aside className="edit-profile__animation-wrapper">
                     <svg id="morph" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 440">
@@ -362,4 +390,4 @@ class EditProfile extends Component {
     }
 };
 
-export default EditProfile;
+export default withSnackbar(EditProfile);

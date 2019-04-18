@@ -49,6 +49,8 @@
 .edit-profile .edit-profile__form-section {
     min-width: 100%;
     max-width: 100%;
+    margin-top: auto;
+    margin-bottom: auto;
     padding: 16px;
     opacity: 0;
     background-color: $secondaryBlack;
@@ -69,7 +71,7 @@
 #root .edit-profile .edit-profile__form-next {
     position: absolute;
     max-height: 40px;
-    bottom: 10px;
+    bottom: 30px;
     left: 16px;
     font-size: 14px;
     line-height: 16px;
@@ -207,14 +209,6 @@ input[type=date]::-webkit-inner-spin-button {
     fill: $primary;
 }
 
-.swiper-slide-active.edit-profile__form-section h4 {
-    opacity: 0;
-    animation-name: scale-in;
-    animation-duration: 0.2s;
-    animation-delay: 0.3s;
-    animation-fill-mode: forwards;
-}
-
 .edit-profile .edit-profile__user-avatar {
     width: 150px;
     height: 150px;   
@@ -232,6 +226,10 @@ input[type=date]::-webkit-inner-spin-button {
 
 .edit-profile .edit-profile__user-avatar {
     margin-right: 16px;
+}
+
+.edit-profile .swiper-button-disabled {
+    display: none;
 }
 
 @media only screen and (max-width: 768px) and (orientation: landscape) {
@@ -258,6 +256,11 @@ input[type=date]::-webkit-inner-spin-button {
    .edit-profile .edit-profile__user-avatar {
         width: 110px;
         height: 110px;   
+    }
+
+    #root .edit-profile .edit-profile__form-prev,
+    #root .edit-profile .edit-profile__form-next {
+        bottom: 10px;
     }
 }
 

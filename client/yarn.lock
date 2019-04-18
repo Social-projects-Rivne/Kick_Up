@@ -8880,9 +8880,9 @@ react-event-listener@^0.6.0, react-event-listener@^0.6.2:
     warning "^4.0.1"
 
 react-id-swiper@^2.1.1:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/react-id-swiper/-/react-id-swiper-2.1.1.tgz#e314295440e0e7d792e55a8ee0a83765728e3444"
-  integrity sha512-jmMkjSo32ajP6VfHQFQTAo8D+kW5jCwNBV7ZP1RCN5+01jMNvvfj8g8NGD0XuHrjUeHk9tp2TBMLPB1NBM62Vw==
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/react-id-swiper/-/react-id-swiper-2.1.2.tgz#57dfb0e8b8703dfe544ea5af94b74663822a2b63"
+  integrity sha512-7VLfDUNsY3Mb3lYtltiuyWHb/BMF8YH8+JotpHNuoORFqaj2FER82xHPQdb90HyJ+I3+wL1443suyE2KdAC6aw==
   dependencies:
     object-assign "^4.1.1"
 
