@@ -11,7 +11,7 @@ import roomPageDB from './../../mocks/roomPage';
 
 function TabContainer(props) {
     return (
-        <Typography component="div" style={{ padding: 8 * 3 }}>
+        <Typography component="div" className="room-details-page-typography-padding">
             {props.children}
         </Typography>
     );
