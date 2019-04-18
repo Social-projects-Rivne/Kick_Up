@@ -17,7 +17,7 @@ const router = ({ childProps }) => {
             <Route path="/" exact component={Home} />
             <Route path="/sign-up" component={Register} />
             <AppliedRoute path="/sign-in" exact component={SignIn} props={childProps} />
-            <Route path="/events" component={Events} />
+            <Route path="/events" exact component={Events} />
             <Route path="/event/:id" component={EventPage} />
             <Route path="/rooms" exact component={Rooms} />
             <Route path="/rooms/:id" component={RoomPage} />

@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
 
-// import roomsDB from "./../../mocks/rooms";
 import Toolbar from "./../Toollbar/Toolbar";
 
 import { Grid } from "@material-ui/core";
@@ -12,7 +11,6 @@ const API = {
   getRooms: "/api/room",
   sort: "/api/room/sort",
   filter: "/api/room/filter",
-  filterByDate: "/api/room/filter-by-date",
   resetFilters: "/api/room/reset-filters"
 };
 
@@ -44,9 +42,7 @@ class Rooms extends Component {
     this.setState({ isLoading: true });
     axios
       .get(api, type)
-      .then(console.log("Data sorted by", api, type))
       .then(res => {
-        console.log("res===>", res);
         this.setState({ roomsDB: res.data, isLoading: false });
       })
       .catch(err => console.log(err));
@@ -58,7 +54,6 @@ class Rooms extends Component {
       .post(api, filter)
       .then(console.log("Data filtered by", api))
       .then(res => {
-        console.log("res===>", res);
         this.setState({ roomsDB: res.data, isLoading: false });
       })
       .catch(err => console.log(err));
@@ -120,7 +115,6 @@ class Rooms extends Component {
 
   render() {
     const { roomsDB, isLoading } = this.state;
-    console.log("roomsDB", roomsDB);
     const toolbarButtons = [
       { name: "Top Rate", method: this.sortRateHandle },
       { name: "Top Members", method: this.sortMembersHandle },
@@ -134,7 +128,6 @@ class Rooms extends Component {
           return e.category.title;
         })
         .filter((v, i, a) => a.indexOf(v) === i);
-      console.log("categories", categories);
     }
     const toolbarFilters = [
       {
