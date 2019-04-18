@@ -1,50 +1,17 @@
 import React from 'react';
 
-import "react-responsive-carousel/lib/styles/carousel.min.css";
+import 'react-responsive-carousel/lib/styles/carousel.min.css';
 
-import { withRouter } from 'react-router-dom';
 import { AppBar, Tabs, Tab, Typography, Grid, Avatar, Card, CardActions, CardContent, CardMedia,
-    CardActionArea, Button, ListItemText, ListItem, ListItemAvatar } from '@material-ui/core';
-import { Comment, Collections, Face, NewReleases, VerifiedUser, EventAvailable } from '@material-ui/icons';
-import { Carousel } from 'react-responsive-carousel';
-import Gallery from 'react-photo-gallery';
+    CardActionArea, Button, ListItemText, ListItem, ListItemAvatar, Badge, Fab, Paper } from '@material-ui/core';
+import { Comment, Collections, Face, NewReleases, EventAvailable, Add, Info } from '@material-ui/icons';
+import Gallery from 'react-grid-gallery';
 import SwipeableViews from 'react-swipeable-views';
+import roomPageDB from './../../mocks/roomPage';
 
-const photoSet = [
-    {
-        src: "http://lorempixel.com/1600/1100/nature/6/",
-        width: 1600,
-        height: 1100
-    },
-    {
-        src: "http://lorempixel.com/600/600/nature/5/",
-        width: 600,
-        height: 600
-    },
-    {
-        src: "http://lorempixel.com/800/700/nature/4/",
-        width: 800,
-        height: 700
-    },
-    {
-        src: "http://lorempixel.com/700/800/nature/8/",
-        width: 700,
-        height: 800
-    },
-    {
-        src: "http://lorempixel.com/1000/600/nature/3/",
-        width: 4,
-        height: 3
-    },
-    {
-        src: "http://lorempixel.com/700/800/nature/8/",
-        width: 700,
-        height: 800
-    },
-];
 function TabContainer(props) {
     return (
-        <Typography component="div" style={{ padding: 8 * 3 }}>
+        <Typography component="div" className="room-details-page-typography-padding">
             {props.children}
         </Typography>
     );
@@ -52,6 +19,7 @@ function TabContainer(props) {
 
 class RoomPage extends React.Component {
     state = {
+        roomPageDB: roomPageDB,
         value: 0,
     };
 
@@ -65,35 +33,8 @@ class RoomPage extends React.Component {
 
     render() {
         const { value } = this.state;
-
         return (
-            <div>
-                <div className="room-carousel">
-                    <span className="room-name-carousel">Room Name</span>
-                    <div className="room-join-carousel">
-                        2 members&nbsp;&nbsp;
-                        <button>Join</button>
-                    </div>
-                    <Carousel emulateTouch="true">
-                        <div className="scale-image">
-                            <div className="blur" style={{ backgroundImage: 'url(http://lorempixel.com/1000/600/nature/4/)'}}></div>
-                            <img src="http://lorempixel.com/1000/600/nature/4/" />
-                        </div>
-                        <div className="scale-image">
-                            <div className="blur" style={{ backgroundImage: 'url(http://lorempixel.com/1000/600/nature/6/)'}}></div>
-                            <img src="http://lorempixel.com/1000/600/nature/6/" />
-                        </div>
-                        <div className="scale-image">
-                            <div className="blur" style={{ backgroundImage: 'url(http://lorempixel.com/1000/600/nature/5/)'}}></div>
-                            <img src="http://lorempixel.com/1000/600/nature/5/" />
-                        </div>
-                        <div className="scale-image">
-                            <div className="blur" style={{ backgroundImage: 'url(http://lorempixel.com/1000/600/nature/3/)'}}></div>
-                            <img src="http://lorempixel.com/1000/600/nature/3/" />
-                        </div>
-                    </Carousel>
-                </div>
-
+            <div className="room-page-details">
                 <AppBar position="static" className="tab-bar">
                     <Tabs
                         value={value}
@@ -102,233 +43,171 @@ class RoomPage extends React.Component {
                         variant="scrollable"
                         scrollButtons="off"
                     >
+                        <Tab label="Info" icon={<Info />} />
                         <Tab label="Feed" icon={<Comment />} />
                         <Tab label="Events" icon={<EventAvailable />} />
                         <Tab label="Gallery" icon={<Collections />} />
                         <Tab label="Posts" icon={<NewReleases />} />
-                        <Tab label="Members" icon={<Face />} />
-                        <Tab label="About" icon={<VerifiedUser />} />
+                        <Tab label={
+                            <Badge className="badge-room-margin" badgeContent={this.state.roomPageDB.members.length}>
+                                <Face /> <p className="badge-members">Members</p>
+                            </Badge>
+                        }
+                        />
                     </Tabs>
                 </AppBar>
 
                 <SwipeableViews
                     index={value}
                     onChangeIndex={this.handleChangeIndex}
-                    animateHeight={true}
                 >
-                    <TabContainer>
-                        <div className="room-details-card">
-                            <Card className="card">
-                                <CardActionArea>
-                                    <CardMedia
-                                        className="card-media"
-                                        image="http://lorempixel.com/1000/600/nature/4/"
-                                        title="Contemplative Reptile"
-                                    />
-                                    <CardContent>
-                                        <Typography gutterBottom variant="h5" component="h2">
-                                            Lizard
-                                        </Typography>
-                                        <Typography component="p">
-                                            Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
-                                            across all continents except Antarctica
-                                        </Typography>
-                                    </CardContent>
-                                </CardActionArea>
-                                <CardActions>
-                                    <Button size="small" color="primary">
-                                        comment
-                                    </Button>
-                                </CardActions>
-                            </Card>
-                        </div>
-                        <div className="room-details-card">
-                            <Card className="card">
-                                <CardActionArea>
-                                    <CardMedia
-                                        className="card-media"
-                                        image="http://lorempixel.com/1000/600/nature/8/"
-                                        title="Contemplative Reptile"
-                                    />
-                                    <CardContent>
-                                        <Typography gutterBottom variant="h5" component="h2">
-                                            Lizard
-                                        </Typography>
-                                        <Typography component="p">
-                                            Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
-                                            across all continents except Antarctica
-                                        </Typography>
-                                    </CardContent>
-                                </CardActionArea>
-                                <CardActions>
-                                    <Button size="small" color="primary">
-                                        comment
-                                    </Button>
-                                </CardActions>
-                            </Card>
-                        </div>
-                    </TabContainer>
-
-                    <TabContainer>
-                        <div className="room-details-card">
-                            <Card className="card">
-                                <CardActionArea>
-                                    <CardMedia
-                                        className="card-media"
-                                        image="http://lorempixel.com/1000/600/nature/3/"
-                                        title="Contemplative Reptile"
-                                    />
-                                    <CardContent>
-                                        <Typography gutterBottom variant="h5" component="h2">
-                                            Lizard
-                                        </Typography>
-                                        <Typography component="p">
-                                            Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
-                                            across all continents except Antarctica
-                                        </Typography>
-                                    </CardContent>
-                                </CardActionArea>
-                                <CardActions>
-                                    <Button size="small" color="primary">
-                                        Date
-                                    </Button>
-                                </CardActions>
-                            </Card>
-                        </div>
-                        <div className="room-details-card">
-                            <Card className="card">
-                                <CardActionArea>
-                                    <CardMedia
-                                        className="card-media"
-                                        image="http://lorempixel.com/1000/600/nature/6/"
-                                        title="Contemplative Reptile"
-                                    />
-                                    <CardContent>
-                                        <Typography gutterBottom variant="h5" component="h2">
-                                            Lizard
-                                        </Typography>
-                                        <Typography component="p">
-                                            Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
-                                            across all continents except Antarctica
-                                        </Typography>
-                                    </CardContent>
-                                </CardActionArea>
-                                <CardActions>
-                                    <Button size="small" color="primary">
-                                        Date
-                                    </Button>
-                                </CardActions>
-                            </Card>
-                        </div>
-                    </TabContainer>
-
-                    <TabContainer><Gallery photos={photoSet} /></TabContainer>
-
-                    <TabContainer>
-                        <div className="room-details-card">
-                            <Card className="card">
-                                <CardActionArea>
-                                    <CardMedia
-                                        className="card-media"
-                                        image="http://lorempixel.com/1000/600/nature/8/"
-                                        title="Contemplative Reptile"
-                                    />
-                                    <CardContent>
-                                        <Typography gutterBottom variant="h5" component="h2">
-                                            Lizard
-                                        </Typography>
-                                        <Typography component="p">
-                                            Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
-                                            across all continents except Antarctica
-                                        </Typography>
-                                    </CardContent>
-                                </CardActionArea>
-                            </Card>
-                        </div>
-                    </TabContainer>
-
-                    <TabContainer>
-                        <Grid container spacing={24}>
-                            <Grid item lg={3} md={4} sm={6} xs={12}>
-                                <ListItem className="avatar-center">
-                                    <ListItemAvatar>
-                                        <Avatar>
-                                            <Avatar alt="" src="http://lorempixel.com/1000/600/nature/3/" />
-                                        </Avatar>
-                                    </ListItemAvatar>
-                                    <ListItemText primary="Full Name" className="avatar-flex" />
-                                </ListItem>
+                    {value === 0 && <TabContainer>
+                        <Grid container spacing={24} className="room-details-page-content">
+                            <Grid item md={6} xs={12}>
+                                <div className="room-details-page-wrapper">
+                                    <Fab variant="extended" className="room-details-page-fab">
+                                        <Add />
+                                        <span className="room-details-page-join">Join</span>
+                                    </Fab>
+                                    <Typography className="room-details-page-title">
+                                        {this.state.roomPageDB.title}
+                                    </Typography>
+                                </div>
+                                <Paper className="room-details-page-paper" elevation={1}>
+                                    <input type="checkbox" className="read-more-state" id="post-1"/>
+                                    <Typography className="read-more-wrap">
+                                        {this.state.roomPageDB.description}
+                                    </Typography>
+                                    <label htmlFor="post-1" className="read-more-trigger"></label>
+                                </Paper>
                             </Grid>
-
-                            <Grid item lg={3} md={4} sm={6} xs={12}>
-                                <ListItem className="avatar-center">
-                                    <ListItemAvatar>
-                                        <Avatar>
-                                            <Avatar alt="" src="http://lorempixel.com/1000/600/nature/5/" />
-                                        </Avatar>
-                                    </ListItemAvatar>
-                                    <ListItemText primary="Full Name" className="avatar-flex" />
-                                </ListItem>
-                            </Grid>
-
-                            <Grid item lg={3} md={4} sm={6} xs={12}>
-                                <ListItem className="avatar-center">
-                                    <ListItemAvatar>
-                                        <Avatar>
-                                            <Avatar alt="" src="http://lorempixel.com/1000/600/nature/5/" />
-                                        </Avatar>
-                                    </ListItemAvatar>
-                                    <ListItemText primary="Full Name" className="avatar-flex" />
-                                </ListItem>
-                            </Grid>
-
-                            <Grid item lg={3} md={4} sm={6} xs={12}>
-                                <ListItem className="avatar-center">
-                                    <ListItemAvatar>
-                                        <Avatar>
-                                            <Avatar alt="" src="http://lorempixel.com/1000/600/nature/5/" />
-                                        </Avatar>
-                                    </ListItemAvatar>
-                                    <ListItemText primary="Full Name" className="avatar-flex" />
-                                </ListItem>
-                            </Grid>
-
-                            <Grid item lg={3} md={4} sm={6} xs={12}>
-                                <ListItem className="avatar-center">
-                                    <ListItemAvatar>
-                                        <Avatar>
-                                            <Avatar alt="" src="http://lorempixel.com/1000/600/nature/6/" />
-                                        </Avatar>
-                                    </ListItemAvatar>
-                                    <ListItemText primary="Full Name" className="avatar-flex" />
-                                </ListItem>
-                            </Grid>
-
-                            <Grid item lg={3} md={4} sm={6} xs={12}>
-                                <ListItem className="avatar-center">
-                                    <ListItemAvatar>
-                                        <Avatar>
-                                            <Avatar alt="" src="http://lorempixel.com/1000/600/nature/7/" />
-                                        </Avatar>
-                                    </ListItemAvatar>
-                                    <ListItemText primary="Full Name" className="avatar-flex" />
-                                </ListItem>
+                            <Grid item md={6} xs={12} className="room-details-page-cover-grid">
+                                <img src={this.state.roomPageDB.cover} className="room-details-page-cover"/>
                             </Grid>
                         </Grid>
-                    </TabContainer>
+                    </TabContainer> }
 
-                    <TabContainer>
-                        <div className="room-text-about">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                        </div>
-                    </TabContainer>
+                    {value === 1 && <TabContainer>
+                        <Grid container spacing={24} className="room-details-card">
+                            {this.state.roomPageDB.feeds.map((feed) =>
+                                <Grid item xs={12} className="room-details-card-grid">
+                                    <Card className="feed-card">
+                                        <CardActionArea>
+                                            <CardMedia
+                                                className="card-media"
+                                                image={feed.cover}
+                                                title={feed.title}
+                                            />
+                                            <CardContent>
+                                                <Typography gutterBottom variant="h5" component="h2">
+                                                    {feed.title}
+                                                </Typography>
+                                                <Typography component="p">
+                                                    {feed.description}
+                                                </Typography>
+                                            </CardContent>
+                                        </CardActionArea>
+                                        <CardActions>
+                                            <Button>
+                                                comment
+                                            </Button>
+                                        </CardActions>
+                                    </Card>
+                                </Grid>
+                            )}
+                        </Grid>
+                    </TabContainer> }
+
+                    {value === 2 && <TabContainer>
+                        <Grid container spacing={24} className="room-details-card">
+                            {this.state.roomPageDB.events.map((event) =>
+                                <Grid item md={6} xs={12} className="room-details-card-grid">
+                                    <Card>
+                                        <CardActionArea>
+                                            <CardMedia
+                                                className="card-media"
+                                                image={event.cover}
+                                                title={event.title}
+                                            />
+                                            <CardContent>
+                                                <Typography gutterBottom variant="h5" component="h2">
+                                                    {event.title}
+                                                </Typography>
+                                                <Typography component="p">
+                                                    {event.description}
+                                                </Typography>
+                                            </CardContent>
+                                        </CardActionArea>
+                                        <CardActions>
+                                            <Button>
+                                                {event.date + "/" + event.location}
+                                            </Button>
+                                        </CardActions>
+                                    </Card>
+                                </Grid>
+                            )}
+                        </Grid>
+                    </TabContainer> }
+
+                    {value === 3 && <TabContainer>
+                        <Fab variant="extended" className="room-details-page-photo-fab">
+                            <Add />
+                            <span>upload photo</span>
+                        </Fab>
+                        <Gallery images={this.state.roomPageDB.gallery} backdropClosesModal={true} />
+                    </TabContainer> }
+
+                    {value === 4 && <TabContainer>
+                        <Grid container spacing={24} className="room-details-card">
+                            {this.state.roomPageDB.posts.map((post) =>
+                                <Grid item xs={12} className="room-details-card-grid">
+                                    <Card className="post-card">
+                                        <CardActionArea>
+                                            <CardMedia
+                                                className="card-media"
+                                                image={post.cover}
+                                                title={post.title}
+                                            />
+                                            <CardContent>
+                                                <Typography gutterBottom variant="h5" component="h2">
+                                                    {post.title}
+                                                </Typography>
+                                                <Typography component="p">
+                                                    {post.description}
+                                                </Typography>
+                                            </CardContent>
+                                        </CardActionArea>
+                                        <CardActions>
+                                            <Button>
+                                                comment
+                                            </Button>
+                                        </CardActions>
+                                    </Card>
+                                </Grid>
+                            )}
+                        </Grid>
+                    </TabContainer> }
+
+                    {value === 5 && <TabContainer>
+                        <Grid container spacing={24}>
+                            {this.state.roomPageDB.members.map((member) =>
+                                <Grid item lg={3} md={4} sm={6} xs={12}>
+                                    <ListItem className="avatar-center">
+                                        <ListItemAvatar>
+                                            <Avatar>
+                                                <Avatar alt="" src={member.avatar} />
+                                            </Avatar>
+                                        </ListItemAvatar>
+                                        <ListItemText primary={member.first_name + " " + member.last_name} className="avatar-flex" />
+                                    </ListItem>
+                                </Grid>
+                            )}
+                        </Grid>
+                    </TabContainer> }
                 </SwipeableViews>
             </div>
         );
     }
 }
 
-export default withRouter(RoomPage);
+export default RoomPage;

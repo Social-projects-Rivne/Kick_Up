@@ -884,11 +884,13 @@ const handler = {
       filterRooms = rooms.filter(e => {
         return e.category.title === filter.category;
       });
-    } else {
+    } else if (filter.date && !filter.category){
       console.log('3')
       filterRooms = rooms.filter(e => {
         return this.formatDate(new Date(e.created_at)) === this.formatDate(new Date(filter.date));
       });
+    } else {
+      filterRooms = rooms;
     }
     ctx.body = filterRooms;
   },
