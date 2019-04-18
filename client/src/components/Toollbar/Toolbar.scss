@@ -52,11 +52,18 @@
 
 @media (max-width: 768px) {
   .toolbar {
-    z-index: 100;
-    position: fixed;
-    bottom: 0;
-    &-filter-calendar {
-      top: -300px;
-    }
+    display: none;
+    // z-index: 100;
+    // position: fixed;
+    // bottom: 0;
+    // &-filter-calendar {
+    //   top: -300px;
+    // }
+  }
+  .mobile-button {
+    z-index: 101;
+    position: absolute;
+    bottom: 550px;
+    right: -20px;
   }
 }

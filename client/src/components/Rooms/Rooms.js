@@ -158,7 +158,7 @@ class Rooms extends Component {
           showDate={true}
           changeDate={this.changeDate}
         />
-        <Grid container spacing={8} className="rooms-page-cards">
+        <Grid container spacing={8} justify="center" className="rooms-page-cards">
           {roomsDB.map(room => {
             return (
               <RoomCard
@@ -171,7 +171,6 @@ class Rooms extends Component {
                 rating={room.rating}
                 members={room.members}
                 background={room.cover}
-                description={room.description}
                 clicked={() => this.selectedRoomHandler(room.id)}
               />
             );

@@ -14,12 +14,14 @@ import {
 import AddIcon from "@material-ui/icons/Add";
 import {CalendarToday, Close} from "@material-ui/icons";
 import Calendar from "react-calendar";
+import Drawer from '@material-ui/core/Drawer';
 
 //TODO create for mobile
 class Toolbar extends Component {
   state = {
     isToggleOn: false,
-    date: new Date()
+    date: new Date(),
+    mobileToolbarIsOpen: false
   };
 
   calendarToggleHandle = () => {
@@ -31,6 +33,14 @@ class Toolbar extends Component {
     this.setState({ date, isToggleOn: false });
     this.props.changeDate(date);
   };
+
+  toggleFiltersHandler = () => {
+    this.setState({mobileToolbarIsOpen: !this.state.mobileToolbarIsOpen})
+  }
+
+  toggleDrawer = () => {
+    this.setState({mobileToolbarIsOpen: false})
+  }
 
   render() {
     const { filters, buttons } = this.props;
@@ -118,21 +128,50 @@ class Toolbar extends Component {
 
     return (
       <Grid container justify="center">
+        <Grid container justify="center" alignItems="center" spacing={8} className="toolbar">
+            <Grid item>
+              <Link to="/add-room">
+                <Fab size="small" aria-label="Add">
+                  <AddIcon />
+                </Fab>
+              </Link>
+            </Grid>
+            {ToolbarButtons}
+            {ToolbarFilters}
+            <Grid item>
+              {date}
+              {calendar}
+            </Grid>
+        </Grid>
+        <Button onClick={this.ToggleFiltersHandler} className="mobile-button">filters</Button>
+        <Drawer
+          anchor="bottom"
+          open={this.state.mobileToolbarIsOpen}
+          onClose={this.toggleDrawer}
+        >
+          <div
+            tabIndex={0}
+            role="button"
+            onClick={this.toggleDrawer}
+            onKeyDown={this.toggleDrawer}
+          >
           <Grid container justify="center" alignItems="center" spacing={8} className="toolbar">
-              <Grid item>
-                <Link to="/add-room">
-                  <Fab size="small" aria-label="Add">
-                    <AddIcon />
-                  </Fab>
-                </Link>
-              </Grid>
-              {ToolbarButtons}
-              {ToolbarFilters}
-              <Grid item>
-                {date}
-                {calendar}
-              </Grid>
+            <Grid item>
+              <Link to="/add-room">
+                <Fab size="small" aria-label="Add">
+                  <AddIcon />
+                </Fab>
+              </Link>
+            </Grid>
+            {ToolbarButtons}
+            {ToolbarFilters}
+            <Grid item>
+              {date}
+              {calendar}
+            </Grid>
           </Grid>
+          </div>
+        </Drawer>
       </Grid>
     );
   }

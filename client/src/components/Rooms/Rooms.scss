@@ -1,9 +1,10 @@
 .rooms-page {
-    background-color: $black;
+    background-color: $white;
+    text-align: center;
 
     &-cards {
-        width: 90%;
-        margin: 0 auto;
+        width: 90% !important;
+        margin: 0 auto !important;
         max-width: 80rem;
     }
 }
