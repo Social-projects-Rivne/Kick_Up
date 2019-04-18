@@ -138,7 +138,7 @@ class Rooms extends Component {
     }
     const toolbarFilters = [
       {
-        type: "Category",
+        type: "category",
         itemsArray: categories,
         value: this.state.category,
         labelWidth: 75

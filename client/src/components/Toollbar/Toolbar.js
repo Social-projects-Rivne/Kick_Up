@@ -9,10 +9,11 @@ import {
   InputLabel,
   Select,
   OutlinedInput,
-  MenuItem
+  MenuItem,
+  IconButton
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
-import {CalendarToday, Close} from "@material-ui/icons";
+import {CalendarToday, Close, KeyboardArrowDownRounded} from "@material-ui/icons";
 import Calendar from "react-calendar";
 import Drawer from '@material-ui/core/Drawer';
 
@@ -50,7 +51,7 @@ class Toolbar extends Component {
       ToolbarButtons = this.props.buttons.map(e => {
         return (
           <Grid item key={e.name}>
-            <Button variant="outlined" onClick={e.method}>
+            <Button variant="outlined" onClick={e.method} className="toolbar-sort">
               {e.name}
             </Button>
           </Grid>
@@ -78,7 +79,7 @@ class Toolbar extends Component {
                 input={
                   <OutlinedInput
                     className="toolbar-filter-outlinedinput"
-                    name="category"
+                    name={e.type}
                     id={e.type}
                   />
                 }
@@ -128,10 +129,10 @@ class Toolbar extends Component {
 
     return (
       <Grid container justify="center">
-        <Grid container justify="center" alignItems="center" spacing={8} className="toolbar">
+        <Grid container justify="center" alignItems="center" spacing={8} className="toolbar toolbar-desktop">
             <Grid item>
               <Link to="/add-room">
-                <Fab size="small" aria-label="Add">
+                <Fab size="small" aria-label="Add" className="toolbar-add">
                   <AddIcon />
                 </Fab>
               </Link>
@@ -143,19 +144,22 @@ class Toolbar extends Component {
               {calendar}
             </Grid>
         </Grid>
-        <Button onClick={this.ToggleFiltersHandler} className="mobile-button">filters</Button>
+        <Button onClick={this.toggleFiltersHandler} className="mobile-button">filters</Button>
         <Drawer
           anchor="bottom"
           open={this.state.mobileToolbarIsOpen}
           onClose={this.toggleDrawer}
         >
+          <IconButton onClick={this.toggleDrawer} class="mobile-button-close-filters">
+            <KeyboardArrowDownRounded/>
+          </IconButton>
           <div
             tabIndex={0}
             role="button"
-            onClick={this.toggleDrawer}
+            // onClick={this.toggleDrawer}
             onKeyDown={this.toggleDrawer}
           >
-          <Grid container justify="center" alignItems="center" spacing={8} className="toolbar">
+          <Grid container justify="center" alignItems="center" spacing={8} className="toolbar toolbar-mobile">
             <Grid item>
               <Link to="/add-room">
                 <Fab size="small" aria-label="Add">

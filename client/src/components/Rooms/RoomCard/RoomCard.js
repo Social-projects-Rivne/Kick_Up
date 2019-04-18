@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Grid } from "@material-ui/core";
+import { Grid, Button } from "@material-ui/core";
 import StarRating from "./../../UI/StarRating/StarRating";
 
 const roomCard = props => {
@@ -15,19 +15,23 @@ const roomCard = props => {
           className="front"
           style={backgroundImage}
         >
-          <img src={props.avatar} alt={props.avatar}/>
           <div className="inner">
+          <img src={props.avatar} alt={props.avatar}/>
             <p>{props.title}</p>
             <span>{props.category}</span>
-          </div>
+
         <Grid className="cardInfo">
           <StarRating rating={props.rating}/>
         </Grid>
+          </div>
         </div>
         <div className="back">
           <div className="inner">
             <p>{props.description}</p>
-          <span>Members: {props.members} / {props.limit}</span>
+            <Grid container justify="space-evenly">
+              <span>Members: {props.members} / {props.limit}</span>
+              <Button>view more</Button>
+            </Grid>
           </div>
         </div>
       </div>
