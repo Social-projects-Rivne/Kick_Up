@@ -553,7 +553,7 @@ class EditProfile extends Component {
                                                 {this.state.avatar.data &&
                                                     <IconButton 
                                                         aria-label="Delete"
-                                                        onClick={this.resetAvatar()}
+                                                        onClick={this.resetAvatar}
                                                     >
                                                     <DeleteOutline fontSize="default" />
                                                     </IconButton>
@@ -562,15 +562,15 @@ class EditProfile extends Component {
                                                     this.state.croppedImage &&
                                                     <IconButton
                                                         aria-label="Save"
-                                                        onClick={ () => { 
-                                                            this.setState({
+                                                        onClick={ () => {this.setState({
                                                                 avatar: {
                                                                     data: this.state.croppedImage,
                                                                     wasChanged: true
                                                                 },
                                                                 croppedImage: ''
-                                                        });
-                                                    }}
+                                                            })
+                                                        }
+                                                    }
                                                     >
                                                     <CheckCircleOutlineOutlined className="edit-profile__save-btn" fontSize="default" />
                                                     </IconButton>

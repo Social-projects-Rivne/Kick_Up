@@ -114,8 +114,11 @@ input[type=file] + label {
     border-color: $white;
 }
 
-.edit-profile__field-wrapper label {
+.edit-profile__field-wrapper label:not([class*=MuiFormControlLabel]) {
     font-size: 1.071rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .edit-profile__field-wrapper input[name=firstName],
@@ -338,6 +341,11 @@ input[type=date]::-webkit-inner-spin-button {
 
     .edit-profile__field-wrapper.edit-profile__field-wrapper_avatar {
         margin-top: 0;
+    }
+
+    .edit-profile__cropper-wrapper > div:first-child {
+        display: flex;
+        align-items: center;
     }
 }
 
