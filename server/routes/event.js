@@ -41,8 +41,8 @@ const handler = {
   async updateEventById(ctx) {
     const { id } = ctx.params;
     const event =  await Event.where({id}).fetch({require:true});
-    const { title,description,cover,permission,members_limit,category_id } = ctx.request.body;
-    const obj = {title,description,cover,permission,members_limit,category_id};
+    const { title,description,cover,permission,members_limit,category_id, start_date } = ctx.request.body;
+    const obj = {title,description,cover,permission,members_limit,category_id, start_date};
     await event.save( obj, { patch:true });
     ctx.body = '';
   }
