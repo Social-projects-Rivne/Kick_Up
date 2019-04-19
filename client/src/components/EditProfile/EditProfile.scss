@@ -138,10 +138,6 @@ input[type=file] + label {
 
 .edit-profile__animation-wrapper {
     display: none;
-    align-items: center;
-    justify-content: center;
-    padding-left: 20px;
-    overflow-y: auto;
 }
 
 .edit-profile__animation-wrapper svg {
@@ -193,13 +189,21 @@ input[type=date]::-webkit-inner-spin-button {
     display: flex;
     vertical-align: middle;
     min-height: 150px;
+    user-select: none;
+    cursor: pointer;
 }
 
 .edit-profile__cropper-wrapper label {
-    width: 100%;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    cursor: pointer;
 }
 
 .edit-profile__cropper-wrapper > div:first-child {
+    position: relative;
     margin-right: 10px;
 }
 
@@ -218,6 +222,7 @@ input[type=date]::-webkit-inner-spin-button {
 
 #morph #at-pc {
     fill: $primary;
+    opacity: 0.6;
 }
 
 .edit-profile .edit-profile__user-avatar {
@@ -346,6 +351,21 @@ input[type=date]::-webkit-inner-spin-button {
 
     .edit-profile__animation-wrapper {
         display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-around;
+    }
+
+    .edit-profile .edit-profile__animation-title {
+        padding: 8px;
+        font-size: 1.5rem;
+        font-weight: 100;
+        opacity: 0.7;
+        user-select: none;
+    }
+
+    svg + .edit-profile__animation-title {
+        font-size: 1.5rem;
     }
 
     .edit-profile .edit-profile__form-pagination {
@@ -396,8 +416,9 @@ input[type=date]::-webkit-inner-spin-button {
         height: 80vh;
         position: sticky;
         top: 0;
+        margin-left: 10px;
         flex-grow: 1;
-        max-width: calc(1168px - 700px);
+        max-width: calc(1168px - 690px);
     }
 
     #root .edit-profile .edit-profile__form-prev,
