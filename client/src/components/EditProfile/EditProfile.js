@@ -6,6 +6,8 @@ import kute from 'kute.js';
 import 'kute.js/kute-svg';
 import AvatarCropper from 'react-avatar-edit';
 import { withSnackbar } from 'notistack';
+import axios from 'axios';
+import is from 'is_js';
 
 import 'react-id-swiper/src/styles/scss/swiper.scss';
 
@@ -30,8 +32,9 @@ import {
     CheckCircleOutlineOutlined
 } from '@material-ui/icons';
 
-
-const _maxFileSize = 10000;
+const _userDataRoute = 'http://localhost:3001/api/profile';
+const _userDataUpdateRoute = 'http://localhost:3001/api/profile/update';
+const _maxFileSize = 10000000;
 const _desktopWidth = 1168;
 const swiperParams = {
     modules: [ Pagination, Navigation ],
@@ -82,7 +85,7 @@ const messageType = {
 };
 const inputType = {
     name: 1,
-    lastName: 2,
+    last_name: 2,
     birthDay: 3,
     gender: 4,
     avatar: 5
@@ -94,11 +97,31 @@ class EditProfile extends Component {
         super(props);
         this.state = {
             croppedImage: '',
-            avatar: 'https://is2-ssl.mzstatic.com/image/thumb/Purple128/v4/6c/aa/71/6caa713b-a274-439e-5880-abe7bb784f44/AppIcon-1x_U007emarketing-0-85-220-5.png/246x0w.jpg', 
-            firstName: '',
-            lastName: '',
-            birthDate: '',
-            gender: '',
+            avatar: {
+                data: '',
+                wasChanged: false
+            }, 
+            first_name: {
+                data: '',
+                wasChanged: false
+            },
+            last_name: {
+                data: '',
+                wasChanged: false
+            },
+            email: {
+                data: '',
+                wasChanged: false
+            },
+            emailReceived: '',
+            birth_date: {
+                data: '',
+                wasChanged: false  
+            },
+            gender: {
+                data: '',
+                wasChanged: false    
+            },
             windowWidth: 0
         };
     }
@@ -121,7 +144,7 @@ class EditProfile extends Component {
                         })
                         .start();
                     break;
-                case inputType.lastName:
+                case inputType.last_name:
                     alert(2);
                     break;
                 default: return;
@@ -145,7 +168,10 @@ class EditProfile extends Component {
     }
     updateInputValue = (evt) => {
         this.setState({
-          [evt.target.name]: evt.target.value
+          [evt.target.name]: {
+              data: evt.target.value,
+              wasChanged: true
+          }
         });
     }
     handleAvatarDimensions = () => {
@@ -174,7 +200,7 @@ class EditProfile extends Component {
     }
     validateImage = (image) => {
         if (image.size > _maxFileSize) {
-            this.showToast('Your image is too long, please upload image up to 10mb.', messageType.ERR, 3000);
+            this.showToast('Your image is too long, please upload image up to 10mb.', messageType.ERR, 5000);
         }
     }
     handleWindowResize = () => {
@@ -188,8 +214,77 @@ class EditProfile extends Component {
             _this.setState({ windowWidth: window.innerWidth });
         }, _awaitTime);
     }
-    componentDidMount() {
-        const messageAwaitTime = 3000;
+    getUserData = (callback) => {
+        const fireCallback = (res) => {
+            if (typeof callback === 'function') callback(res);
+        };
+
+        axios.get(_userDataRoute, {
+            // @todo we need ok flow for token;
+            headers: {
+                authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjoxOH0sImV4cCI6MTU2MDg2MjMyNiwiaWF0IjoxNTU1Njc5OTIwfQ.5HOFclQmtX2YcnLF0F5CEgenZ03fE-0qpMj8fRA3thQ'
+            }
+        })
+            .then((res) => {
+                res = res.data;
+                fireCallback(res);
+             })
+            .catch((err) => {
+                fireCallback(false);
+            })
+    }
+    sendUserData = (data, callback) => {
+        const fireCallback = (res) => {
+            if (typeof callback === 'function') callback(res);
+        };
+
+        // @todo handle authotization;
+        axios.put(_userDataUpdateRoute, data, {
+            headers: {
+                authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjoxOH0sImV4cCI6MTU2MDg2MjMyNiwiaWF0IjoxNTU1Njc5OTIwfQ.5HOFclQmtX2YcnLF0F5CEgenZ03fE-0qpMj8fRA3thQ'
+            }
+        })
+        .then((res) => {
+            fireCallback(true)
+        })
+        .catch((err) => { fireCallback(false) });
+    }
+    componentDidMount = () => {
+        const messageAwaitTime = 5000;
+        const _this = this;
+
+        // Get user data;
+        this.getUserData((res) => {
+            if (res) {
+                _this.setState({
+                    avatar: {
+                        data: res.avatar ? res.avatar : '',
+                        wasChanged: false
+                    },
+                    first_name: {
+                        data: res.first_name ? res.first_name : '',
+                        wasChanged: false
+                    },
+                    last_name: {
+                        data: res.last_name ? res.last_name : '',
+                        wasChanged: false
+                    },
+                    email: {
+                        data: res.email,
+                        wasChanged: false
+                    },
+                    emailReceived: res.email,
+                    birth_date: {
+                        data: res.birth_date ? res.birth_date.split('T')[0] : '',
+                        wasChanged: false
+                    },
+                    gender: {
+                        data: res.birth_date ? res.birth_date : '',
+                        wasChanged: false
+                    },                    
+                });
+            }
+        });
 
         // Show info message
         window.setTimeout(() => {
@@ -202,12 +297,44 @@ class EditProfile extends Component {
         // Handle swiper changes;
         window.addEventListener('resize', this.handleWindowResize);
     }
+    componentWillUnmount = () => {
+        const _this = this;
+        const data = {};
+
+        // Update user info, send ONLY CHANGED items;
+        Object.keys(this.state).filter(function(key) {
+            if (_this.state[key].wasChanged) {
+                data[key] = _this.state[key].data;
+            }
+        });
+
+        // Validate email before update;
+        if (data.email && !is.email(data.email)) {
+            delete data.email;
+            this.showToast(
+                `Your new email address is not valid, so we didn't save it`,
+                messageType.ERR,
+                5000
+            );
+        }
+
+        if (Object.keys(data).length)
+
+        // Send data;
+        this.sendUserData(data, (res) => {
+            this.showToast(
+                res ? `All your changed were saved` : `We are sorry, we couldn't save your profile changes :(`,
+                res ? messageType.SUCCESS : messageType.ERR,
+                5000
+            );
+        });
+    }
     resetAvatar = () => {
         this.setState({avatar: ''});
     }
     showToast = (message, variant, duration) => {
         this.props.enqueueSnackbar(message, {
-            transitionDuration: { exit: 600, enter: 600 },
+            transitionDuration: { exit: 300, enter: 300 },
             variant: variant ? variant : 'default',
             autoHideDuration: duration ? duration : 10000,
             anchorOrigin: {
@@ -232,11 +359,11 @@ class EditProfile extends Component {
                                 </Typography>
                                 <div className="edit-profile__field-wrapper">
                                     <TextField
-                                        value={this.state.firstName}
+                                        value={this.state.first_name.data}
                                         onChange={this.updateInputValue}
                                         onFocus={() => { this.handleSvg(inputType.name) }}
                                         className="input"
-                                        name="firstName"
+                                        name="first_name"
                                         label="Enter first name, min. 3 letters"
                                         type="text"
                                         margin="normal"
@@ -254,10 +381,10 @@ class EditProfile extends Component {
                                 </Typography>
                                 <div className="edit-profile__field-wrapper">
                                     <TextField
-                                        value={this.state.lastName}
+                                        value={this.state.last_name.data}
                                         onChange={this.updateInputValue}
                                         className="input"
-                                        name="lastName"
+                                        name="last_name"
                                         label="Enter last name, min. 3 letters"
                                         type="text"
                                         margin="normal"
@@ -267,7 +394,28 @@ class EditProfile extends Component {
                                 </div>
                             </Grid>
                         </div>
+
                         <div key={3} className="swiper-slide  edit-profile__form-section">
+                            <Grid item xs={10} sm={6} className="edit-profile__form-inner">
+                                <Typography align="center" variant="h4">
+                                    <SentimentSatisfied fontSize="large" />
+                                    Your email:
+                                </Typography>
+                                <div className="edit-profile__field-wrapper">
+                                    <TextField
+                                        value={this.state.email.data}
+                                        onChange={this.updateInputValue}
+                                        className="input"
+                                        name="email"
+                                        label="Enter a valid email address"
+                                        type="email"
+                                        margin="normal"
+                                        autoComplete="on"
+                                    />
+                                </div>
+                            </Grid>
+                        </div>
+                        <div key={4} className="swiper-slide  edit-profile__form-section">
                             <Grid item xs={10} sm={6} className="edit-profile__form-inner">
                                 <Typography align="center" variant="h4">
                                     <DateRange fontSize="large" />
@@ -275,10 +423,10 @@ class EditProfile extends Component {
                                 </Typography>
                                 <div className="edit-profile__field-wrapper">
                                     <TextField
-                                        value={this.state.birthDate}
+                                        value={this.state.birth_date.data}
                                         onChange={this.updateInputValue}
                                         className="input  edit-profile__date-picker"
-                                        name="birthDate"
+                                        name="birth_date"
                                         label=" "
                                         type="date"
                                         margin="normal"
@@ -287,7 +435,7 @@ class EditProfile extends Component {
                                 </div>
                             </Grid>
                         </div>
-                        <div key={4} className="swiper-slide  edit-profile__form-section">
+                        <div key={5} className="swiper-slide  edit-profile__form-section">
                             <Grid item xs={10} sm={6} className="edit-profile__form-inner">
                                 <Typography align="center" variant="h4">
                                     <People fontSize="large" />
@@ -298,7 +446,7 @@ class EditProfile extends Component {
                                         aria-label="gender"
                                         name="gender"
                                         onChange={this.updateInputValue}
-                                        value={this.state.gender}
+                                        value={this.state.gender.data}
                                         className="input edit-profile__gender"
                                     >
                                         <FormControlLabel
@@ -317,7 +465,7 @@ class EditProfile extends Component {
                                 </div>
                             </Grid>
                         </div>
-                        <div key={5} className="swiper-slide  edit-profile__form-section  edit-profile__form-section_avatar">
+                        <div key={6} className="swiper-slide  edit-profile__form-section  edit-profile__form-section_avatar">
                             <Grid item xs={10} sm={6} className="edit-profile__form-inner">
                                 <Typography align="center" variant="h4">
                                     <Image fontSize="large" />
@@ -325,7 +473,7 @@ class EditProfile extends Component {
                                 </Typography>
                                 <div className="edit-profile__field-wrapper  edit-profile__field-wrapper_avatar">
                                     <div className="edit-profile__cropper-wrapper  swiper-no-swiping">
-                                        {!this.state.avatar &&
+                                        {!this.state.avatar.data &&
                                             <AvatarCropper
                                                 height={this.handleAvatarDimensions()}
                                                 imageHeight={this.handleAvatarDimensions()}
@@ -340,15 +488,15 @@ class EditProfile extends Component {
                                                     fontFamily: '"Roboto", "Helvetica", "Arial, sans-serif"',
                                                     color: window.innerWidth < _desktopWidth ? '#f7f4e9' : 'rgba(0, 0, 0, 0.8)'
                                                 }}
-                                                src={this.state.avatar}
+                                                src={this.state.avatar.data}
                                             />
                                         }
                                         {
                                             <div className="edit-profile__avatar-wrapper">
-                                                {this.state.avatar &&
-                                                    <Avatar alt="" src={this.state.avatar} className="edit-profile__user-avatar" />
+                                                {this.state.avatar.data &&
+                                                    <Avatar alt="" src={this.state.avatar.data} className="edit-profile__user-avatar" />
                                                 }
-                                                {this.state.avatar &&
+                                                {this.state.avatar.data &&
                                                     <IconButton 
                                                         aria-label="Delete"
                                                         onClick={this.resetAvatar}
@@ -361,9 +509,12 @@ class EditProfile extends Component {
                                                     <IconButton
                                                         aria-label="Save"
                                                         onClick={ () => { this.setState({
-                                                            avatar: this.state.croppedImage,
+                                                            avatar: {
+                                                                data: this.state.croppedImage,
+                                                                wasChanged: true
+                                                            },
                                                             croppedImage: ''
-                                                        }) 
+                                                        })
                                                     }}
                                                     >
                                                     <CheckCircleOutlineOutlined className="edit-profile__save-btn" fontSize="default" />
