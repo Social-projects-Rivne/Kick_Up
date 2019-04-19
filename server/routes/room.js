@@ -3,12 +3,18 @@ const Router = require('koa-router');
 const { Room } =require('./../models')
 const validate = require('./../services/Validator');
 const router = new Router({ prefix: '/api/room'});
+const faker = require('faker');
 
 
 const handler = {
   async roomList(ctx) {
-    const list = await Room.fetchAll({withRelated: ['creator','category']})
-    ctx.body = list;
+    const lists = await Room.fetchAll({withRelated: ['creator','category']})
+    
+    const members = faker.random.number(30);
+    const rating = faker.random.number(5);
+
+    const newLists  = lists.map(i => i.set({members,rating}));
+    ctx.body = newLists;
   },
   async createRoom(ctx){
       await validate(ctx.request.body, {
