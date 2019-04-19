@@ -23,7 +23,11 @@ const knexConnectionObject = {
     max: 1
   }
 };
+
 const knex = knexInstance(knexConnectionObject);
 const bookshelf = bookshelfInstance(knex);
+
+bookshelf.plugin('registry');
+bookshelf.plugin('visibility');
 
 module.exports = { bookshelf, knex, knexConnectionObject };

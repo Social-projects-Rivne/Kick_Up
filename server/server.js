@@ -7,10 +7,10 @@ const cors = require('@koa/cors');
 
 const dbRoute = require("./mongoDB/constants/db");
 
-mongoose.connect(dbRoute, { useNewUrlParser: true }, err => {
-  if (err) throw err;
-  console.log("===> MongoDB successfully connected! <===");
-});
+// mongoose.connect(dbRoute, { useNewUrlParser: true }, err => {
+//   if (err) throw err;
+//   console.log("===> MongoDB successfully connected! <===");
+// });
 
 const app = new Koa();
 app.use(cors());

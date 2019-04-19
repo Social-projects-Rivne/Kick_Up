@@ -3,8 +3,8 @@ const { signinRouter,signupRouter } = require('./auth');
 const { exceptionHandler } = require('./../services/errors');
 const errorHandler = require('./../services/errors/ErrorHandler');
 const uploadRouter = require('./upload');
-// const roomRouter = require('./room');
-// const eventRouter = require('./event');
+const roomRouter = require('./room');
+const eventRouter = require('./event');
 const profileRouter = require('./profile');
 // const exceptionHandler = require('../services/error/ExceptionHandler.js.js');
 module.exports = app => {
@@ -21,11 +21,7 @@ module.exports = app => {
 
 
   app.use(profileRouter)
-
-
-
-  //mongoDB routes
-  // app.use('/api/rooms',roomRouter);
-  // app.use('/api/events',eventRouter);
+  app.use(eventRouter);
+  app.use(roomRouter);
 
 };

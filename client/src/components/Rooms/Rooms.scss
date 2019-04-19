@@ -1,0 +1,14 @@
+#root {
+    .rooms-page-cards {
+        width: 90%;
+        margin: 0 auto;
+    }
+}
+.rooms-page {
+    background-color: $white;
+    text-align: center;
+
+    &-cards {
+        max-width: 80rem;
+    }
+}

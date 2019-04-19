@@ -9,7 +9,11 @@ const pageContainer = props => {
     return (
         <>
             <SnackbarProvider maxSnack={3}>
-                <AppHeader isAuthenticated={props.isAuthenticated} />
+                <AppHeader 
+                    isAuthenticated={props.isAuthenticated} 
+                    userHasAuthenticated={props.userHasAuthenticated}
+                    setAuthToken={props.setAuthToken} 
+                />
                 <main id="content">{props.children}</main>
                 <Footer />
             </SnackbarProvider>
