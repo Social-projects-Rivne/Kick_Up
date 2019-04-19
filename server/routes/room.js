@@ -35,7 +35,56 @@ const handler = {
   },
   async getRoomById(ctx) {
     const { id } = ctx.params;
+    const feeds = [
+      {
+        id: 1,
+        title: "Why I Love Photography",
+        description: " One hundred pictures of the same place can all look different. One picture can be interpreted in multiple ways.",
+        cover: "https://farm2.staticflickr.com/1671/26239897012_d38847e42d_b.jpg"
+      }
+    ];
+    const events = [
+      {
+        id: 1,
+        title: "Photo Booth Expo",
+        description: "This event is the largest trade show for photo booth professionals, manufacturers, and suppliers. " +
+            "At the event, new products and concepts are revealed and professionals come together for seminars, " +
+            "networking, parties, and entertainment. ",
+        cover: "https://cherrycross.com/wp-content/uploads/2016/06/Event-Photography.jpg",
+        date: "24/05/2019",
+        location: "Las Vegas, Nevada"
+      }
+    ];
+    const gallery = [
+      {
+        src: "https://png.pngtree.com/thumb_back/fw800/back_pic/03/72/07/1757b88555c5555.jpg",
+        thumbnail: "https://png.pngtree.com/thumb_back/fw800/back_pic/03/72/07/1757b88555c5555.jpg",
+        thumbnailWidth: 520,
+        thumbnailHeight: 274,
+        caption: "286H (gratisography.com)"
+      }
+    ];
+    const posts = [
+      {
+        id: 1,
+        title: "Photography Tips and Tricks",
+        description: "Apps to the rescue– There mobile apps like Camera Awesome and Camera+ available in your " +
+            "App store or Play store which enable you to enhance the pictures taken on your smartphone. " +
+            "However, these apps do not offer all professional capabilities of a DSLR camera, these apps can be " +
+            "used for a new level of picture taking, by just using your smartphone.",
+        cover: "https://dx.lnwfile.com/_/dx/_raw/dh/ls/q5.jpg"
+      }
+    ];
+    const members = [
+      {
+        id: 1,
+        avatar: "http://www.casoviengleskogonline.com/images/klijenti/avatar-homme.png",
+        first_name: "Weree",
+        last_name: "Avram"
+      }
+    ];
     const room = await Room.where({ id }).fetch({withRelated:['creator','category'],require:true})
+    room.set({feeds,events,gallery,posts,members});
     ctx.body = room;
   },
   async updateRoomById(ctx) {
