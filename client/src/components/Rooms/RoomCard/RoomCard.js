@@ -1,7 +1,7 @@
 import React from "react";
 
-import {Grid} from "@material-ui/core";
-import StarRating from './../../UI/StarRating/StarRating';
+import { Grid, Button } from "@material-ui/core";
+import StarRating from "./../../UI/StarRating/StarRating";
 
 const roomCard = props => {
   const backgroundImage = {
@@ -9,23 +9,34 @@ const roomCard = props => {
   };
 
   return (
-    <Grid item xs={12} sm={6} md={4} 
-      className="room-card" 
-      style={backgroundImage}
-      onClick={props.clicked}>
-      <Grid className="room-card-desc">
+    <Grid item xs={12} sm={6} md={4} className="col" ontouchstart="this.classList.toggle('hover');">
+      <div className="room-card" onClick={props.clicked}>
+        <div
+          className="front"
+          style={backgroundImage}
+        >
+          <div className="inner">
+          <img src={props.avatar} 
+          alt={props.avatar}
+          />
+            <p>{props.title}</p>
+            <span>{props.category}</span>
+
         <Grid className="cardInfo">
-          <div>{props.category}</div>
-          <div>
-            {props.members} / {props.limit}
-          </div>
-        </Grid>
-          <h2>{props.title}</h2>
-        <Grid className="cardInfo">
-          <img src={props.avatar} alt={props.avatar}/> 
           <StarRating rating={props.rating}/>
         </Grid>
-      </Grid>
+          </div>
+        </div>
+        <div className="back">
+          <div className="inner">
+            <p>{props.description}</p>
+            <Grid container justify="space-evenly">
+              <span>Members: {props.members} / {props.limit}</span>
+              <Button>view more</Button>
+            </Grid>
+          </div>
+        </div>
+      </div>
     </Grid>
   );
 };

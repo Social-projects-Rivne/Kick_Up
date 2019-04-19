@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import ReactDOM from "react-dom";
 import { Link } from "react-router-dom";
 
 import {
@@ -11,233 +10,172 @@ import {
   Select,
   OutlinedInput,
   MenuItem,
-  TextField
+  IconButton
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
+import {CalendarToday, Close, KeyboardArrowDownRounded} from "@material-ui/icons";
+import Calendar from "react-calendar";
+import Drawer from '@material-ui/core/Drawer';
 
 //TODO create for mobile
 class Toolbar extends Component {
   state = {
-    roomsDB: null,
-    FilteredRooms: null,
-    city: "",
-    category: "",
-    labelWidth: 0,
-    roomsDate: null
+    isToggleOn: false,
+    date: new Date(),
+    mobileToolbarIsOpen: false
   };
-  componentDidMount() {
-    this.getDate();
-    this.setState({
-      labelWidth: ReactDOM.findDOMNode(this.InputLabelRef).offsetWidth
-    });
-  }
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    if (prevProps.roomsDB !== this.props.roomsDB) {
-      const { roomsDB } = this.props;
-      console.log("roomsDB", this.props.roomsDB);
-      this.setState({ roomsDB, FilteredRooms: roomsDB });
-    }
-    if (prevState.category !== this.state.category) {
-      const filterRoomsByCategory = [...this.state.FilteredRooms].filter(
-        e => e.category === this.state.category
-      );
-      this.setState({ FilteredRooms: filterRoomsByCategory });
-    }
-    if (prevState.city !== this.state.city) {
-      const filterRoomsBycity = [...this.state.FilteredRooms].filter(
-        e => e.city === this.state.city
-      );
-      this.setState({ FilteredRooms: filterRoomsBycity });
-    }
-    if (prevState.FilteredRooms !== this.state.FilteredRooms) {
-      this.props.passFilteredRooms(this.state.FilteredRooms);
-    }
+
+  calendarToggleHandle = () => {
+    this.setState({ isToggleOn: !this.state.isToggleOn });
+  };
+
+  onChange = date => {
+    console.log("date", date);
+    this.setState({ date, isToggleOn: false });
+    this.props.changeDate(date);
+  };
+
+  toggleFiltersHandler = () => {
+    this.setState({mobileToolbarIsOpen: !this.state.mobileToolbarIsOpen})
   }
 
-  getDate = () => {
-    const currentDate = new Date();
-    const roomsDate = this.formatDate(currentDate);
-    this.setState({ roomsDate });
-  };
-
-  formatDate = d => {
-    let curr_date = d.getDate();
-    let curr_month = d.getMonth() + 1;
-    const curr_year = d.getFullYear();
-    if (curr_month < 10) curr_month = "0" + curr_month;
-    if (curr_date < 10) curr_date = "0" + curr_date;
-    const date = curr_year + "-" + curr_month + "-" + curr_date;
-    return date;
-  };
-
-  sortRateHandle = () => {
-    const roomsAray = [...this.state.FilteredRooms];
-    roomsAray.sort((a, b) => b.rating - a.rating);
-    this.setState({ FilteredRooms: roomsAray });
-  };
-  sortMembersHandle = () => {
-    const roomsAray = [...this.state.FilteredRooms];
-    roomsAray.sort((a, b) => b.members - a.members);
-    this.setState({ FilteredRooms: roomsAray });
-  };
-  sortCreatedHandle = () => {
-    const roomsAray = [...this.state.FilteredRooms];
-    roomsAray.sort((a, b) => a.created_at - b.created_at);
-    this.setState({ FilteredRooms: roomsAray });
-    console.log("roomsAray", roomsAray);
-  };
-  changeHandle = event => {
-    this.setState({ [event.target.name]: event.target.value });
-  };
-  changeDateHandle = event => {
-    this.setState({ [event.target.name]: event.target.value });
-    const roomListByDate = [...this.state.roomsDB].filter(e => {
-      return this.formatDate(new Date(e.created_at)) === event.target.value;
-    });
-    this.setState({ FilteredRooms: roomListByDate });
-    console.log("roomListByDate", roomListByDate);
-  };
-  resetFiltersHandle = () => {
-    console.log('this.state.roomsDB',this.state.roomsDB)
-    this.setState({ 
-      FilteredRooms: this.state.roomsDB,
-      city: "",
-      category: "",
-    });
-    this.props.passFilteredRooms(this.state.FilteredRooms);
-  };
+  toggleDrawer = () => {
+    this.setState({mobileToolbarIsOpen: false})
+  }
 
   render() {
-    const { roomsDB, FilteredRooms } = this.state;
+    const { filters, buttons } = this.props;
 
-    let categories = null;
-    let cities = null;
-    if (roomsDB) {
-      categories = FilteredRooms.map(e => {
-        return e.category;
+    let ToolbarButtons = null;
+    if (buttons) {
+      ToolbarButtons = this.props.buttons.map(e => {
+        return (
+          <Grid item key={e.name}>
+            <Button variant="outlined" onClick={e.method} className="toolbar-sort">
+              {e.name}
+            </Button>
+          </Grid>
+        );
       })
-        .filter((v, i, a) => a.indexOf(v) === i)
-        .map(e => {
-          return (
-            <MenuItem key={e} value={e}>
-              {e}
-            </MenuItem>
-          );
-        });
-      console.log("categories", categories);
-      cities = FilteredRooms.map(e => {
-        return e.city;
-      })
-        .filter((v, i, a) => a.indexOf(v) === i)
-        .map(e => {
-          return (
-            <MenuItem key={e} value={e}>
-              {e}
-            </MenuItem>
-          );
-        });
-      console.log("cities", cities);
     }
-    return (
-      <Grid container justify="space-evenly" className="toolbar">
-        <div className="toolbar-sort">
-          <Link to="/add-room">
-            <Fab size="small" aria-label="Add">
-              <AddIcon />
-            </Fab>
-          </Link>
-          <Button variant="outlined" onClick={this.sortRateHandle}>
-            Top Rate
-          </Button>
-          <Button variant="outlined" onClick={this.sortMembersHandle}>
-            Top Members
-          </Button>
-          <Button variant="outlined" onClick={this.sortCreatedHandle}>
-            Newly Created
-          </Button>
-        </div>
-        <div className="toolbar-filter">
-          <Button variant="outlined" onClick={this.resetFiltersHandle}>
-            Reset filters
-          </Button>
-          <FormControl
-            variant="outlined"
-            className="toolbar-filter-formControl"
-          >
-            <InputLabel
-              className="toolbar-filter-inputLabel"
-              ref={ref => {
-                this.InputLabelRef = ref;
-              }}
-              htmlFor="outlined-category-simple"
-            >
-              Category
-            </InputLabel>
-            <Select
-              className="toolbar-filter-select"
-              labelWidth={this.state.labelWidth}
-              value={this.state.category}
-              onChange={this.changeHandle}
-              input={
-                <OutlinedInput
-                  className="toolbar-filter-outlinedinput"
-                  name="category"
-                  id="outlined-category-simple"
-                />
-              }
-            >
-              {/* <MenuItem value="">
-                <em>None</em>
-              </MenuItem> */}
-              {categories}
-            </Select>
-          </FormControl>
-          <FormControl
-            variant="outlined"
-            className="toolbar-filter-formControl"
-          >
-            <InputLabel
-              className="toolbar-filter-inputLabel"
-              // ref={ref => {
-              //   this.InputLabelRef = ref;
-              // }}
-              htmlFor="outlined-city-simple"
-            >
-              City
-            </InputLabel>
-            <Select
-              className="toolbar-filter-select"
-              labelWidth={this.state.labelWidth}
-              value={this.state.city}
-              onChange={this.changeHandle}
-              input={
-                <OutlinedInput
-                  name="city"
-                  id="outlined-city-simple"
-                />
-              }
-            >
-              {/* <MenuItem value="">
-                <em>None</em>
-              </MenuItem> */}
-              {cities}
-            </Select>
-          </FormControl>
-          <div className="toolbar-filter-date">
-            <TextField
+
+    let ToolbarFilters = null;
+    if (filters) {
+      ToolbarFilters = this.props.filters.map(e => {
+        return (
+          <Grid item key={e.type}>
+            <FormControl
               variant="outlined"
-              id="date"
-              label="date"
-              type="date"
-              name="roomsDate"
-              value={this.state.roomsDate}
-              onChange={this.changeDateHandle}
-              InputLabelProps={{
-                shrink: true
-              }}
-            />
+              className="toolbar-filter-formControl"
+            >
+              <InputLabel className="toolbar-filter-inputLabel" htmlFor={e.type}>
+                {e.type}
+              </InputLabel>
+              <Select
+                className="toolbar-filter-select"
+                labelWidth={e.labelWidth}
+                value={e.value}
+                onChange={this.props.changeHandle}
+                input={
+                  <OutlinedInput
+                    className="toolbar-filter-outlinedinput"
+                    name={e.type}
+                    id={e.type}
+                  />
+                }
+              >
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+                {e.itemsArray.map(e => {
+                  return (
+                    <MenuItem key={e} value={e}>
+                      {e}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </FormControl>
+          </Grid>  
+        );
+      });
+    }
+
+    const date =
+      this.props.showDate && !this.state.isToggleOn ? (
+        <CalendarToday 
+          cursor="pointer" 
+          onClick={this.calendarToggleHandle} 
+          className="toolbar-filter-date"
+          fontSize="large"
+        />
+      ) : null;
+
+    const calendar = this.state.isToggleOn ? (
+      <Grid className="toolbar-filter-calendar">
+        <Close
+          cursor="pointer"
+          className="toolbar-filter-calendar-close"
+          onClick={this.calendarToggleHandle}  
+        />
+        <Calendar
+          name="date"
+          onChange={this.onChange}
+          value={this.props.date}
+        />
+      </Grid>
+      
+    ) : null;
+
+    return (
+      <Grid container justify="center">
+        <Grid container justify="center" alignItems="center" spacing={8} className="toolbar toolbar-desktop">
+            <Grid item>
+              <Link to="/add-room">
+                <Fab size="small" aria-label="Add" className="toolbar-add">
+                  <AddIcon />
+                </Fab>
+              </Link>
+            </Grid>
+            {ToolbarButtons}
+            {ToolbarFilters}
+            <Grid item>
+              {date}
+              {calendar}
+            </Grid>
+        </Grid>
+        <Button onClick={this.toggleFiltersHandler} className="mobile-button">filters</Button>
+        <Drawer
+          anchor="bottom"
+          open={this.state.mobileToolbarIsOpen}
+          onClose={this.toggleDrawer}
+        >
+          <IconButton onClick={this.toggleDrawer} class="mobile-button-close-filters">
+            <KeyboardArrowDownRounded/>
+          </IconButton>
+          <div
+            tabIndex={0}
+            role="button"
+            // onClick={this.toggleDrawer}
+            onKeyDown={this.toggleDrawer}
+          >
+          <Grid container justify="center" alignItems="center" spacing={8} className="toolbar toolbar-mobile">
+            <Grid item>
+              <Link to="/add-room">
+                <Fab size="small" aria-label="Add">
+                  <AddIcon />
+                </Fab>
+              </Link>
+            </Grid>
+            {ToolbarButtons}
+            {ToolbarFilters}
+            <Grid item>
+              {date}
+              {calendar}
+            </Grid>
+          </Grid>
           </div>
-        </div>
+        </Drawer>
       </Grid>
     );
   }

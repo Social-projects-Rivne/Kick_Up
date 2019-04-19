@@ -5,38 +5,870 @@ const validate = require('./../services/Validator');
 const router = new Router({ prefix: '/api/room'});
 const faker = require('faker');
 
+const testRooms = [
+  {
+    "id": faker.random.number(),
+    "title": faker.company.catchPhraseDescriptor(),
+    "creator_id": faker.random.number(),
+    "category_id": faker.random.number(),
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "cover": faker.image.animals(),
+    "permission": 1,
+    "members_limit": faker.random.number({min:30, max:100}),
+    "members": faker.random.number(30),
+    "rating": faker.random.number(5),
+    "is_banned": 0,
+    "created_at": "2019-04-12T07:26:31.000Z",
+    "updated_at": null,
+    "creator": {
+        "id": faker.random.number(),
+        "nick": faker.name.findName(),
+        "first_name": faker.name.findName(),
+        "last_name": faker.name.lastName(),
+        "email": faker.internet.email(),
+        "avatar": faker.image.avatar(),
+        "carma": null,
+        "role": 2,
+        "is_banned": 0,
+        "birth_date": "2019-03-09T22:00:00.000Z",
+        "created_at": "2019-04-04T23:22:09.000Z",
+        "updated_at": "2019-04-05T08:22:09.000Z"
+    },
+    "category": {
+        "id": faker.random.number(),
+        "title": "sport"
+    }
+  },
+  {
+    "id": faker.random.number(),
+    "title": faker.company.catchPhraseDescriptor(),
+    "creator_id": faker.random.number(),
+    "category_id": faker.random.number(),
+    "description": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    "cover": faker.image.animals(),
+    "permission": 1,
+    "members_limit": faker.random.number({min:30, max:100}),
+    "members": faker.random.number(30),
+    "rating": faker.random.number(5),
+    "is_banned": 0,
+    "created_at": "2019-04-12T07:26:31.000Z",
+    "updated_at": null,
+    "creator": {
+        "id": faker.random.number(),
+        "nick": faker.name.findName(),
+        "first_name": faker.name.findName(),
+        "last_name": faker.name.lastName(),
+        "email": faker.internet.email(),
+        "avatar": faker.image.avatar(),
+        "carma": null,
+        "role": 2,
+        "is_banned": 0,
+        "birth_date": "2019-03-09T22:00:00.000Z",
+        "created_at": "2019-04-04T23:22:09.000Z",
+        "updated_at": "2019-04-05T08:22:09.000Z"
+    },
+    "category": {
+        "id": faker.random.number(),
+        "title": "sport"
+    }
+  },
+  {
+    "id": faker.random.number(),
+    "title": faker.company.catchPhraseDescriptor(),
+    "creator_id": faker.random.number(),
+    "category_id": faker.random.number(),
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "cover": faker.image.animals(),
+    "permission": 1,
+    "members_limit": faker.random.number({min:30, max:100}),
+    "members": faker.random.number(30),
+    "rating": faker.random.number(5),
+    "is_banned": 0,
+    "created_at": "2019-04-12T07:26:31.000Z",
+    "updated_at": null,
+    "creator": {
+        "id": faker.random.number(),
+        "nick": faker.name.findName(),
+        "first_name": faker.name.findName(),
+        "last_name": faker.name.lastName(),
+        "email": faker.internet.email(),
+        "avatar": faker.image.avatar(),
+        "carma": null,
+        "role": 2,
+        "is_banned": 0,
+        "birth_date": "2019-03-09T22:00:00.000Z",
+        "created_at": "2019-04-04T23:22:09.000Z",
+        "updated_at": "2019-04-05T08:22:09.000Z"
+    },
+    "category": {
+        "id": faker.random.number(),
+        "title": "education"
+    }
+  },
+  {
+    "id": faker.random.number(),
+    "title": faker.company.catchPhraseDescriptor(),
+    "creator_id": faker.random.number(),
+    "category_id": faker.random.number(),
+    "description": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    "cover": faker.image.animals(),
+    "permission": 1,
+    "members_limit": faker.random.number({min:30, max:100}),
+    "members": faker.random.number(30),
+    "rating": faker.random.number(5),
+    "is_banned": 0,
+    "created_at": "2019-04-12T07:26:31.000Z",
+    "updated_at": null,
+    "creator": {
+        "id": faker.random.number(),
+        "nick": faker.name.findName(),
+        "first_name": faker.name.findName(),
+        "last_name": faker.name.lastName(),
+        "email": faker.internet.email(),
+        "avatar": faker.image.avatar(),
+        "carma": null,
+        "role": 2,
+        "is_banned": 0,
+        "birth_date": "2019-03-09T22:00:00.000Z",
+        "created_at": "2019-04-04T23:22:09.000Z",
+        "updated_at": "2019-04-05T08:22:09.000Z"
+    },
+    "category": {
+        "id": faker.random.number(),
+        "title": "films"
+    }
+  },
+  {
+    "id": faker.random.number(),
+    "title": faker.company.catchPhraseDescriptor(),
+    "creator_id": faker.random.number(),
+    "category_id": faker.random.number(),
+    "description": "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+    "cover": faker.image.animals(),
+    "permission": 1,
+    "members_limit": faker.random.number({min:30, max:100}),
+    "members": faker.random.number(30),
+    "rating": faker.random.number(5),
+    "is_banned": 0,
+    "created_at": "2019-04-12T07:26:31.000Z",
+    "updated_at": null,
+    "creator": {
+        "id": faker.random.number(),
+        "nick": faker.name.findName(),
+        "first_name": faker.name.findName(),
+        "last_name": faker.name.lastName(),
+        "email": faker.internet.email(),
+        "avatar": faker.image.avatar(),
+        "carma": null,
+        "role": 2,
+        "is_banned": 0,
+        "birth_date": "2019-03-09T22:00:00.000Z",
+        "created_at": "2019-04-04T23:22:09.000Z",
+        "updated_at": "2019-04-05T08:22:09.000Z"
+    },
+    "category": {
+        "id": faker.random.number(),
+        "title": "music"
+    }
+  },
+  {
+    "id": faker.random.number(),
+    "title": faker.company.catchPhraseDescriptor(),
+    "creator_id": faker.random.number(),
+    "category_id": faker.random.number(),
+    "description": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    "cover": faker.image.animals(),
+    "permission": 1,
+    "members_limit": faker.random.number({min:30, max:100}),
+    "members": faker.random.number(30),
+    "rating": faker.random.number(5),
+    "is_banned": 0,
+    "created_at": "2019-04-12T07:26:31.000Z",
+    "updated_at": null,
+    "creator": {
+        "id": faker.random.number(),
+        "nick": faker.name.findName(),
+        "first_name": faker.name.findName(),
+        "last_name": faker.name.lastName(),
+        "email": faker.internet.email(),
+        "avatar": faker.image.avatar(),
+        "carma": null,
+        "role": 2,
+        "is_banned": 0,
+        "birth_date": "2019-03-09T22:00:00.000Z",
+        "created_at": "2019-04-04T23:22:09.000Z",
+        "updated_at": "2019-04-05T08:22:09.000Z"
+    },
+    "category": {
+        "id": faker.random.number(),
+        "title": "sport"
+    }
+  },
+  {
+    "id": faker.random.number(),
+    "title": faker.company.catchPhraseDescriptor(),
+    "creator_id": faker.random.number(),
+    "category_id": faker.random.number(),
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "cover": faker.image.animals(),
+    "permission": 1,
+    "members_limit": faker.random.number({min:30, max:100}),
+    "members": faker.random.number(30),
+    "rating": faker.random.number(5),
+    "is_banned": 0,
+    "created_at": "2019-04-12T07:26:31.000Z",
+    "updated_at": null,
+    "creator": {
+        "id": faker.random.number(),
+        "nick": faker.name.findName(),
+        "first_name": faker.name.findName(),
+        "last_name": faker.name.lastName(),
+        "email": faker.internet.email(),
+        "avatar": faker.image.avatar(),
+        "carma": null,
+        "role": 2,
+        "is_banned": 0,
+        "birth_date": "2019-03-09T22:00:00.000Z",
+        "created_at": "2019-04-04T23:22:09.000Z",
+        "updated_at": "2019-04-05T08:22:09.000Z"
+    },
+    "category": {
+        "id": faker.random.number(),
+        "title": "education"
+    }
+  },
+  {
+    "id": faker.random.number(),
+    "title": faker.company.catchPhraseDescriptor(),
+    "creator_id": faker.random.number(),
+    "category_id": faker.random.number(),
+    "description": "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+    "cover": faker.image.animals(),
+    "permission": 1,
+    "members_limit": faker.random.number({min:30, max:100}),
+    "members": faker.random.number(30),
+    "rating": faker.random.number(5),
+    "is_banned": 0,
+    "created_at": "2019-04-12T07:26:31.000Z",
+    "updated_at": null,
+    "creator": {
+        "id": faker.random.number(),
+        "nick": faker.name.findName(),
+        "first_name": faker.name.findName(),
+        "last_name": faker.name.lastName(),
+        "email": faker.internet.email(),
+        "avatar": faker.image.avatar(),
+        "carma": null,
+        "role": 2,
+        "is_banned": 0,
+        "birth_date": "2019-03-09T22:00:00.000Z",
+        "created_at": "2019-04-04T23:22:09.000Z",
+        "updated_at": "2019-04-05T08:22:09.000Z"
+    },
+    "category": {
+        "id": faker.random.number(),
+        "title": "music"
+    }
+  },
+  {
+    "id": faker.random.number(),
+    "title": faker.company.catchPhraseDescriptor(),
+    "creator_id": faker.random.number(),
+    "category_id": faker.random.number(),
+    "description": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    "cover": faker.image.animals(),
+    "permission": 1,
+    "members_limit": faker.random.number({min:30, max:100}),
+    "members": faker.random.number(30),
+    "rating": faker.random.number(5),
+    "is_banned": 0,
+    "created_at": "2019-04-12T07:26:31.000Z",
+    "updated_at": null,
+    "creator": {
+        "id": faker.random.number(),
+        "nick": faker.name.findName(),
+        "first_name": faker.name.findName(),
+        "last_name": faker.name.lastName(),
+        "email": faker.internet.email(),
+        "avatar": faker.image.avatar(),
+        "carma": null,
+        "role": 2,
+        "is_banned": 0,
+        "birth_date": "2019-03-09T22:00:00.000Z",
+        "created_at": "2019-04-04T23:22:09.000Z",
+        "updated_at": "2019-04-05T08:22:09.000Z"
+    },
+    "category": {
+        "id": faker.random.number(),
+        "title": "sport"
+    }
+  },
+  {
+    "id": faker.random.number(),
+    "title": faker.company.catchPhraseDescriptor(),
+    "creator_id": faker.random.number(),
+    "category_id": faker.random.number(),
+    "description": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    "cover": faker.image.animals(),
+    "permission": 1,
+    "members_limit": faker.random.number({min:30, max:100}),
+    "members": faker.random.number(30),
+    "rating": faker.random.number(5),
+    "is_banned": 0,
+    "created_at": "2019-04-12T07:26:31.000Z",
+    "updated_at": null,
+    "creator": {
+        "id": faker.random.number(),
+        "nick": faker.name.findName(),
+        "first_name": faker.name.findName(),
+        "last_name": faker.name.lastName(),
+        "email": faker.internet.email(),
+        "avatar": faker.image.avatar(),
+        "carma": null,
+        "role": 2,
+        "is_banned": 0,
+        "birth_date": "2019-03-09T22:00:00.000Z",
+        "created_at": "2019-04-04T23:22:09.000Z",
+        "updated_at": "2019-04-05T08:22:09.000Z"
+    },
+    "category": {
+        "id": faker.random.number(),
+        "title": "education"
+    }
+  },
+  {
+    "id": faker.random.number(),
+    "title": faker.company.catchPhraseDescriptor(),
+    "creator_id": faker.random.number(),
+    "category_id": faker.random.number(),
+    "description": "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+    "cover": faker.image.animals(),
+    "permission": 1,
+    "members_limit": faker.random.number({min:30, max:100}),
+    "members": faker.random.number(30),
+    "rating": faker.random.number(5),
+    "is_banned": 0,
+    "created_at": "2019-04-12T07:26:31.000Z",
+    "updated_at": null,
+    "creator": {
+        "id": faker.random.number(),
+        "nick": faker.name.findName(),
+        "first_name": faker.name.findName(),
+        "last_name": faker.name.lastName(),
+        "email": faker.internet.email(),
+        "avatar": faker.image.avatar(),
+        "carma": null,
+        "role": 2,
+        "is_banned": 0,
+        "birth_date": "2019-03-09T22:00:00.000Z",
+        "created_at": "2019-04-04T23:22:09.000Z",
+        "updated_at": "2019-04-05T08:22:09.000Z"
+    },
+    "category": {
+        "id": faker.random.number(),
+        "title": "films"
+    }
+  },
+  {
+    "id": faker.random.number(),
+    "title": faker.company.catchPhraseDescriptor(),
+    "creator_id": faker.random.number(),
+    "category_id": faker.random.number(),
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "cover": faker.image.animals(),
+    "permission": 1,
+    "members_limit": faker.random.number({min:30, max:100}),
+    "members": faker.random.number(30),
+    "rating": faker.random.number(5),
+    "is_banned": 0,
+    "created_at": "2019-04-12T07:26:31.000Z",
+    "updated_at": null,
+    "creator": {
+        "id": faker.random.number(),
+        "nick": faker.name.findName(),
+        "first_name": faker.name.findName(),
+        "last_name": faker.name.lastName(),
+        "email": faker.internet.email(),
+        "avatar": faker.image.avatar(),
+        "carma": null,
+        "role": 2,
+        "is_banned": 0,
+        "birth_date": "2019-03-09T22:00:00.000Z",
+        "created_at": "2019-04-04T23:22:09.000Z",
+        "updated_at": "2019-04-05T08:22:09.000Z"
+    },
+    "category": {
+        "id": faker.random.number(),
+        "title": "films"
+    }
+  },
+  {
+    "id": faker.random.number(),
+    "title": faker.company.catchPhraseDescriptor(),
+    "creator_id": faker.random.number(),
+    "category_id": faker.random.number(),
+    "description": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    "cover": faker.image.animals(),
+    "permission": 1,
+    "members_limit": faker.random.number({min:30, max:100}),
+    "members": faker.random.number(30),
+    "rating": faker.random.number(5),
+    "is_banned": 0,
+    "created_at": "2019-04-12T07:26:31.000Z",
+    "updated_at": null,
+    "creator": {
+        "id": faker.random.number(),
+        "nick": faker.name.findName(),
+        "first_name": faker.name.findName(),
+        "last_name": faker.name.lastName(),
+        "email": faker.internet.email(),
+        "avatar": faker.image.avatar(),
+        "carma": null,
+        "role": 2,
+        "is_banned": 0,
+        "birth_date": "2019-03-09T22:00:00.000Z",
+        "created_at": "2019-04-04T23:22:09.000Z",
+        "updated_at": "2019-04-05T08:22:09.000Z"
+    },
+    "category": {
+        "id": faker.random.number(),
+        "title": "sport"
+    }
+  },
+  {
+    "id": faker.random.number(),
+    "title": faker.company.catchPhraseDescriptor(),
+    "creator_id": faker.random.number(),
+    "category_id": faker.random.number(),
+    "description": "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+    "cover": faker.image.animals(),
+    "permission": 1,
+    "members_limit": faker.random.number({min:30, max:100}),
+    "members": faker.random.number(30),
+    "rating": faker.random.number(5),
+    "is_banned": 0,
+    "created_at": "2019-04-12T07:26:31.000Z",
+    "updated_at": null,
+    "creator": {
+        "id": faker.random.number(),
+        "nick": faker.name.findName(),
+        "first_name": faker.name.findName(),
+        "last_name": faker.name.lastName(),
+        "email": faker.internet.email(),
+        "avatar": faker.image.avatar(),
+        "carma": null,
+        "role": 2,
+        "is_banned": 0,
+        "birth_date": "2019-03-09T22:00:00.000Z",
+        "created_at": "2019-04-04T23:22:09.000Z",
+        "updated_at": "2019-04-05T08:22:09.000Z"
+    },
+    "category": {
+        "id": faker.random.number(),
+        "title": "education"
+    }
+  },
+  {
+    "id": faker.random.number(),
+    "title": faker.company.catchPhraseDescriptor(),
+    "creator_id": faker.random.number(),
+    "category_id": faker.random.number(),
+    "description": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    "cover": faker.image.animals(),
+    "permission": 1,
+    "members_limit": faker.random.number({min:30, max:100}),
+    "members": faker.random.number(30),
+    "rating": faker.random.number(5),
+    "is_banned": 0,
+    "created_at": "2019-04-12T07:26:31.000Z",
+    "updated_at": null,
+    "creator": {
+        "id": faker.random.number(),
+        "nick": faker.name.findName(),
+        "first_name": faker.name.findName(),
+        "last_name": faker.name.lastName(),
+        "email": faker.internet.email(),
+        "avatar": faker.image.avatar(),
+        "carma": null,
+        "role": 2,
+        "is_banned": 0,
+        "birth_date": "2019-03-09T22:00:00.000Z",
+        "created_at": "2019-04-04T23:22:09.000Z",
+        "updated_at": "2019-04-05T08:22:09.000Z"
+    },
+    "category": {
+        "id": faker.random.number(),
+        "title": "music"
+    }
+  },
+  {
+    "id": faker.random.number(),
+    "title": faker.company.catchPhraseDescriptor(),
+    "creator_id": faker.random.number(),
+    "category_id": faker.random.number(),
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "cover": faker.image.animals(),
+    "permission": 1,
+    "members_limit": faker.random.number({min:30, max:100}),
+    "members": faker.random.number(30),
+    "rating": faker.random.number(5),
+    "is_banned": 0,
+    "created_at": "2019-04-12T07:26:31.000Z",
+    "updated_at": null,
+    "creator": {
+        "id": faker.random.number(),
+        "nick": faker.name.findName(),
+        "first_name": faker.name.findName(),
+        "last_name": faker.name.lastName(),
+        "email": faker.internet.email(),
+        "avatar": faker.image.avatar(),
+        "carma": null,
+        "role": 2,
+        "is_banned": 0,
+        "birth_date": "2019-03-09T22:00:00.000Z",
+        "created_at": "2019-04-04T23:22:09.000Z",
+        "updated_at": "2019-04-05T08:22:09.000Z"
+    },
+    "category": {
+        "id": faker.random.number(),
+        "title": "sport"
+    }
+  },
+  {
+    "id": faker.random.number(),
+    "title": faker.company.catchPhraseDescriptor(),
+    "creator_id": faker.random.number(),
+    "category_id": faker.random.number(),
+    "description": "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+    "cover": faker.image.animals(),
+    "permission": 1,
+    "members_limit": faker.random.number({min:30, max:100}),
+    "members": faker.random.number(30),
+    "rating": faker.random.number(5),
+    "is_banned": 0,
+    "created_at": "2019-04-12T07:26:31.000Z",
+    "updated_at": null,
+    "creator": {
+        "id": faker.random.number(),
+        "nick": faker.name.findName(),
+        "first_name": faker.name.findName(),
+        "last_name": faker.name.lastName(),
+        "email": faker.internet.email(),
+        "avatar": faker.image.avatar(),
+        "carma": null,
+        "role": 2,
+        "is_banned": 0,
+        "birth_date": "2019-03-09T22:00:00.000Z",
+        "created_at": "2019-04-04T23:22:09.000Z",
+        "updated_at": "2019-04-05T08:22:09.000Z"
+    },
+    "category": {
+        "id": faker.random.number(),
+        "title": "films"
+    }
+  },
+  {
+    "id": faker.random.number(),
+    "title": faker.company.catchPhraseDescriptor(),
+    "creator_id": faker.random.number(),
+    "category_id": faker.random.number(),
+    "description": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    "cover": faker.image.animals(),
+    "permission": 1,
+    "members_limit": faker.random.number({min:30, max:100}),
+    "members": faker.random.number(30),
+    "rating": faker.random.number(5),
+    "is_banned": 0,
+    "created_at": "2019-04-12T07:26:31.000Z",
+    "updated_at": null,
+    "creator": {
+        "id": faker.random.number(),
+        "nick": faker.name.findName(),
+        "first_name": faker.name.findName(),
+        "last_name": faker.name.lastName(),
+        "email": faker.internet.email(),
+        "avatar": faker.image.avatar(),
+        "carma": null,
+        "role": 2,
+        "is_banned": 0,
+        "birth_date": "2019-03-09T22:00:00.000Z",
+        "created_at": "2019-04-04T23:22:09.000Z",
+        "updated_at": "2019-04-05T08:22:09.000Z"
+    },
+    "category": {
+        "id": faker.random.number(),
+        "title": "films"
+    }
+  },
+  {
+    "id": faker.random.number(),
+    "title": faker.company.catchPhraseDescriptor(),
+    "creator_id": faker.random.number(),
+    "category_id": faker.random.number(),
+    "description": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    "cover": faker.image.animals(),
+    "permission": 1,
+    "members_limit": faker.random.number({min:30, max:100}),
+    "members": faker.random.number(30),
+    "rating": faker.random.number(5),
+    "is_banned": 0,
+    "created_at": "2019-04-12T07:26:31.000Z",
+    "updated_at": null,
+    "creator": {
+        "id": faker.random.number(),
+        "nick": faker.name.findName(),
+        "first_name": faker.name.findName(),
+        "last_name": faker.name.lastName(),
+        "email": faker.internet.email(),
+        "avatar": faker.image.avatar(),
+        "carma": null,
+        "role": 2,
+        "is_banned": 0,
+        "birth_date": "2019-03-09T22:00:00.000Z",
+        "created_at": "2019-04-04T23:22:09.000Z",
+        "updated_at": "2019-04-05T08:22:09.000Z"
+    },
+    "category": {
+        "id": faker.random.number(),
+        "title": "music"
+    }
+  },
+  {
+    "id": faker.random.number(),
+    "title": faker.company.catchPhraseDescriptor(),
+    "creator_id": faker.random.number(),
+    "category_id": faker.random.number(),
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "cover": faker.image.animals(),
+    "permission": 1,
+    "members_limit": faker.random.number({min:30, max:100}),
+    "members": faker.random.number(30),
+    "rating": faker.random.number(5),
+    "is_banned": 0,
+    "created_at": "2019-04-12T07:26:31.000Z",
+    "updated_at": null,
+    "creator": {
+        "id": faker.random.number(),
+        "nick": faker.name.findName(),
+        "first_name": faker.name.findName(),
+        "last_name": faker.name.lastName(),
+        "email": faker.internet.email(),
+        "avatar": faker.image.avatar(),
+        "carma": null,
+        "role": 2,
+        "is_banned": 0,
+        "birth_date": "2019-03-09T22:00:00.000Z",
+        "created_at": "2019-04-04T23:22:09.000Z",
+        "updated_at": "2019-04-05T08:22:09.000Z"
+    },
+    "category": {
+        "id": faker.random.number(),
+        "title": "music"
+    }
+  },
+  {
+    "id": faker.random.number(),
+    "title": faker.company.catchPhraseDescriptor(),
+    "creator_id": faker.random.number(),
+    "category_id": faker.random.number(),
+    "description": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    "cover": faker.image.animals(),
+    "permission": 1,
+    "members_limit": faker.random.number({min:30, max:100}),
+    "members": faker.random.number(30),
+    "rating": faker.random.number(5),
+    "is_banned": 0,
+    "created_at": "2019-04-12T07:26:31.000Z",
+    "updated_at": null,
+    "creator": {
+        "id": faker.random.number(),
+        "nick": faker.name.findName(),
+        "first_name": faker.name.findName(),
+        "last_name": faker.name.lastName(),
+        "email": faker.internet.email(),
+        "avatar": faker.image.avatar(),
+        "carma": null,
+        "role": 2,
+        "is_banned": 0,
+        "birth_date": "2019-03-09T22:00:00.000Z",
+        "created_at": "2019-04-04T23:22:09.000Z",
+        "updated_at": "2019-04-05T08:22:09.000Z"
+    },
+    "category": {
+        "id": faker.random.number(),
+        "title": "education"
+    }
+  },
+  {
+    "id": faker.random.number(),
+    "title": faker.company.catchPhraseDescriptor(),
+    "creator_id": faker.random.number(),
+    "category_id": faker.random.number(),
+    "description": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    "cover": faker.image.animals(),
+    "permission": 1,
+    "members_limit": faker.random.number({min:30, max:100}),
+    "members": faker.random.number(30),
+    "rating": faker.random.number(5),
+    "is_banned": 0,
+    "created_at": "2019-04-12T07:26:31.000Z",
+    "updated_at": null,
+    "creator": {
+        "id": faker.random.number(),
+        "nick": faker.name.findName(),
+        "first_name": faker.name.findName(),
+        "last_name": faker.name.lastName(),
+        "email": faker.internet.email(),
+        "avatar": faker.image.avatar(),
+        "carma": null,
+        "role": 2,
+        "is_banned": 0,
+        "birth_date": "2019-03-09T22:00:00.000Z",
+        "created_at": "2019-04-04T23:22:09.000Z",
+        "updated_at": "2019-04-05T08:22:09.000Z"
+    },
+    "category": {
+        "id": faker.random.number(),
+        "title": "films"
+    }
+  },
+  {
+    "id": faker.random.number(),
+    "title": faker.company.catchPhraseDescriptor(),
+    "creator_id": faker.random.number(),
+    "category_id": faker.random.number(),
+    "description": "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+    "cover": faker.image.animals(),
+    "permission": 1,
+    "members_limit": faker.random.number({min:30, max:100}),
+    "members": faker.random.number(30),
+    "rating": faker.random.number(5),
+    "is_banned": 0,
+    "created_at": "2019-04-12T07:26:31.000Z",
+    "updated_at": null,
+    "creator": {
+        "id": faker.random.number(),
+        "nick": faker.name.findName(),
+        "first_name": faker.name.findName(),
+        "last_name": faker.name.lastName(),
+        "email": faker.internet.email(),
+        "avatar": faker.image.avatar(),
+        "carma": null,
+        "role": 2,
+        "is_banned": 0,
+        "birth_date": "2019-03-09T22:00:00.000Z",
+        "created_at": "2019-04-04T23:22:09.000Z",
+        "updated_at": "2019-04-05T08:22:09.000Z"
+    },
+    "category": {
+        "id": faker.random.number(),
+        "title": "sport"
+    }
+  },
+  {
+    "id": faker.random.number(),
+    "title": faker.company.catchPhraseDescriptor(),
+    "creator_id": faker.random.number(),
+    "category_id": faker.random.number(),
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "cover": faker.image.animals(),
+    "permission": 1,
+    "members_limit": faker.random.number({min:30, max:100}),
+    "members": faker.random.number(30),
+    "rating": faker.random.number(5),
+    "is_banned": 0,
+    "created_at": "2019-04-12T07:26:31.000Z",
+    "updated_at": null,
+    "creator": {
+        "id": faker.random.number(),
+        "nick": faker.name.findName(),
+        "first_name": faker.name.findName(),
+        "last_name": faker.name.lastName(),
+        "email": faker.internet.email(),
+        "avatar": faker.image.avatar(),
+        "carma": null,
+        "role": 2,
+        "is_banned": 0,
+        "birth_date": "2019-03-09T22:00:00.000Z",
+        "created_at": "2019-04-04T23:22:09.000Z",
+        "updated_at": "2019-04-05T08:22:09.000Z"
+    },
+    "category": {
+        "id": faker.random.number(),
+        "title": "education"
+    }
+  },
+  {
+    "id": faker.random.number(),
+    "title": faker.company.catchPhraseDescriptor(),
+    "creator_id": faker.random.number(),
+    "category_id": faker.random.number(),
+    "description": "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+    "cover": faker.image.animals(),
+    "permission": 1,
+    "members_limit": faker.random.number({min:30, max:100}),
+    "members": faker.random.number(30),
+    "rating": faker.random.number(5),
+    "is_banned": 0,
+    "created_at": "2019-04-12T07:26:31.000Z",
+    "updated_at": null,
+    "creator": {
+        "id": faker.random.number(),
+        "nick": faker.name.findName(),
+        "first_name": faker.name.findName(),
+        "last_name": faker.name.lastName(),
+        "email": faker.internet.email(),
+        "avatar": faker.image.avatar(),
+        "carma": null,
+        "role": 2,
+        "is_banned": 0,
+        "birth_date": "2019-03-09T22:00:00.000Z",
+        "created_at": "2019-04-04T23:22:09.000Z",
+        "updated_at": "2019-04-05T08:22:09.000Z"
+    },
+    "category": {
+        "id": faker.random.number(),
+        "title": "music"
+    }
+  }
+];
 
 const handler = {
   async roomList(ctx) {
-    const lists = await Room.fetchAll({withRelated: ['creator','category']})
-    
+
+    // const list = await Room.fetchAll({withRelated: ['creator','category']})
     const members = faker.random.number(30);
     const rating = faker.random.number(5);
 
     const newLists  = lists.map(i => i.set({members,rating}));
-    ctx.body = newLists;
+
+    // data from DB
+    // ctx.body = newLists;
+
+    // data from mock
+    ctx.body = testRooms;
   },
   async createRoom(ctx){
-      await validate(ctx.request.body, {
-          title:'required|string|min:3',
-          creator_id:'required|numeric|min:1',
-          category_id:'required|numeric|min:1',
-          description:'required|string|min:6',
-          cover:'string|min:3',
-          permission:'required|numeric|min:0',
-          members_limit:'numeric|min:1',
-      })
-      const newRoom = {
-          title,
-          creator_id,
-          category_id,
-          description,
-          cover,
-          permission,
-          members_limit
-      } = ctx.request.body;
-      await new Room(newRoom).save();
-      ctx.body = ''
+    await validate(ctx.request.body, {
+        title:'required|string|min:3',
+        creator_id:'required|numeric|min:1',
+        category_id:'required|numeric|min:1',
+        description:'required|string|min:6',
+        cover:'string|min:3',
+        permission:'required|numeric|min:0',
+        members_limit:'numeric|min:1',
+    })
+    const newRoom = {
+        title,
+        creator_id,
+        category_id,
+        description,
+        cover,
+        permission,
+        members_limit
+    } = ctx.request.body;
+    await new Room(newRoom).save();
+    ctx.body = ''
     ctx.body = '';
   },
   async getRoomById(ctx) {
@@ -100,8 +932,82 @@ const handler = {
     const obj = {title,description,cover,permission,members_limit,category_id};
     await room.save( obj, { patch:true });
     ctx.body = '';
-  }
+  },
+
+  async sort(ctx) {
+    let result = ctx.request.query.sort;
+    console.log('result', result)
+    let roomsAray = [...testRooms];
+
+    switch(result) {
+      case 'rate':
+        roomsAray.sort((a, b) => b.rating - a.rating);
+        break;
+      case 'members':
+        roomsAray.sort((a, b) => b.members - a.members);
+        break;
+      case 'create':
+        roomsAray.sort((a, b) => a.created_at - b.created_at);
+        break;
+    }
+
+    ctx.body = roomsAray;
+  },
+
+  async filter(ctx) {
+    const filter = ctx.request.body;
+    console.log('filter', filter);
+    formatDate = d => {
+      let curr_date = d.getDate();
+      let curr_month = d.getMonth() + 1;
+      const curr_year = d.getFullYear();
+      if (curr_month < 10) curr_month = "0" + curr_month;
+      if (curr_date < 10) curr_date = "0" + curr_date;
+      const date = curr_year + "-" + curr_month + "-" + curr_date;
+      return date;
+    };
+    let rooms = [...testRooms]
+    if (filter.date && filter.category) {
+      console.log('1')
+      filterRooms = rooms.filter(e => {
+        
+        return this.formatDate(new Date(e.created_at)) === this.formatDate(new Date(filter.date)) && e.category.title === filter.category;
+      });
+    } else if (!filter.date && filter.category) {
+      console.log('2')
+      filterRooms = rooms.filter(e => {
+        return e.category.title === filter.category;
+      });
+    } else if (filter.date && !filter.category){
+      console.log('3')
+      filterRooms = rooms.filter(e => {
+        return this.formatDate(new Date(e.created_at)) === this.formatDate(new Date(filter.date));
+      });
+    } else {
+      filterRooms = rooms;
+    }
+    ctx.body = filterRooms;
+  },
+
+  async filterByDate(ctx) {
+    const {filter} = ctx.request.body;
+    formatDate = d => {
+      let curr_date = d.getDate();
+      let curr_month = d.getMonth() + 1;
+      const curr_year = d.getFullYear();
+      if (curr_month < 10) curr_month = "0" + curr_month;
+      if (curr_date < 10) curr_date = "0" + curr_date;
+      const date = curr_year + "-" + curr_month + "-" + curr_date;
+      return date;
+    };
+    const filterRoomsByDate = [...testRooms].filter(e => {
+      return this.formatDate(new Date(e.created_at)) === filter;
+    });
+    ctx.body = filterRoomsByDate;
+  },
+
 }
+
 // router.post("/save-room", (ctx) => {
 //   const {
 //     room_id,
@@ -150,7 +1056,10 @@ const handler = {
 
 
 router.get('/', handler.roomList);
+router.get('/sort', handler.sort);
+router.post('/filter', handler.filter);
 router.get('/:id', handler.getRoomById);
 router.post('/', handler.createRoom);
 router.put('/:id', handler.updateRoomById);
+
 module.exports = router.routes();

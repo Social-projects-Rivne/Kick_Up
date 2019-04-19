@@ -1,15 +1,18 @@
 .toolbar {
-  button {
-    margin: 15px 10px;
-    padding: 5px;
-    background-color: $primary;
+  background-color: $black;
+  .swiper-slide {
+    width: 140px !important;
   }
+  button.toolbar-sort, .toolbar-add {
+      background-color: $primary;
+      &:hover {
+        color: $primary;
+        border: 1px solid $primary;
+        background-color: $black;
+      }
+    }
   &-filter {
-    display: flex;
-    align-items: center;
-
     &-formControl {
-      margin: 15px 10px !important;
       label {
         transform: translate(14px, 12px) scale(1);
       }
@@ -18,15 +21,32 @@
       padding: 15px;
     }
     &-outlinedinput {
-      margin: 10px 10px;
+      margin: 10px auto;
     }
     &-select {
-      background-color: $primary;
+      &>div>div{
+        background-color: $primary;
+      }
       width: 100px;
     }
     &-date {
-      display: inline-block;
-      margin: 10px 10px;
+      color: $primary;
+      &:hover {
+        transition: all 0.3s;
+        color: $black;
+        background-color: $primary;
+        border-radius: 5px;
+      }
+    }
+    &-calendar {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      z-index: 500;
+      transition: all 0.3s;
+      &-close {
+        background-color: #fff;
+      }
     }
   }
   #select-category,
@@ -37,5 +57,49 @@
     padding: 8px;
     background-color: $primary;
     width: 137px;
+  }
+
+}
+
+@media (max-width: 768px) {
+  .toolbar-desktop {
+    display: none !important;
+  }
+  .mobile-button {
+    z-index: 101;
+    position: fixed !important;
+    bottom: 10px;
+    right: 10px;
+    background-color: $black !important;
+    color: $primary !important;
+    &-close-filters {
+      background-color: $black;
+      color: $primary;
+      padding: 0;
+      border: 0;
+      svg {
+        margin: 0 auto;
+      }
+    }
+  }
+  .toolbar-filter-calendar {
+    right: 0px;
+    z-index: 1002;
+    transition: all 0.3s;
+    position: relative;
+    
+    top: 0px;
+  }
+  .toolbar-mobile {
+    padding: 7px 0; 
+  }
+}
+
+@media (min-width: 769px) {
+  .mobile-button {
+    display: none !important;
+  }
+  .toolbar-mobile {
+    display: none !important;
   }
 }
