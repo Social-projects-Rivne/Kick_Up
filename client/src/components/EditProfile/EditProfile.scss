@@ -143,6 +143,9 @@ input[type=file] + label {
 .edit-profile__animation-wrapper svg {
     width: 100%;
     opacity: 0;
+    margin-top: 32px;
+    margin-bottom: auto;
+    overflow: visible;
     animation-name: fade-in;
     animation-duration: 0.3s;
     animation-delay: 1s;
