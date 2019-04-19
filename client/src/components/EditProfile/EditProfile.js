@@ -31,8 +31,9 @@ import {
 } from '@material-ui/icons';
 
 
-const _maxFileSize = 10000000;
+const _maxFileSize = 10000;
 const _desktopWidth = 1168;
+const _tabletWidth = 768;
 const swiperParams = {
     modules: [ Pagination, Navigation ],
     slidesPerView: 'auto',
@@ -185,6 +186,11 @@ class EditProfile extends Component {
             }
         }
     }
+    validateImage = (image) => {
+        if (image.size > _maxFileSize) {
+            this.showToast('Your image is too long, please upload image up to 10mb.', messageType.ERR, 3000);
+        }
+    }
     handleWindowResize = () => {
         const _awaitTime = 1000;
         const _this = this;
@@ -213,11 +219,11 @@ class EditProfile extends Component {
     resetAvatar = () => {
         this.setState({avatar: ''});
     }
-    showToast = (message, variant) => {
+    showToast = (message, variant, duration) => {
         this.props.enqueueSnackbar(message, {
-            transitionDuration: { exit: 2000, enter: 400 },
+            transitionDuration: { exit: 600, enter: 600 },
             variant: variant ? variant : 'default',
-            autoHideDuration: 10000,
+            autoHideDuration: duration ? duration : 10000,
             anchorOrigin: {
                 vertical: 'top',
                 horizontal: 'center',
@@ -334,16 +340,19 @@ class EditProfile extends Component {
                                     <div className="edit-profile__cropper-wrapper  swiper-no-swiping">
                                         {!this.state.avatar &&
                                             <AvatarCropper
-                                                width={this.handleAvatarDimensions()}
                                                 height={this.handleAvatarDimensions()}
                                                 imageHeight={this.handleAvatarDimensions()}
                                                 closeIconColor={window.innerWidth >= _desktopWidth ? '#f7f4e9' : '#62553a'} 
                                                 onCrop={ (image) => {this.setState({croppedImage: image})}}
-                                                //onClose={this.onClose}
                                                 backgroundColor='#fff'
                                                 borderStyle={this.handleAvatarBorder()}
                                                 label="Choose"
-                                                //onBeforeFileLoad={this.onBeforeFileLoad}
+                                                onFileLoad={this.validateImage}
+                                                labelStyle = {{
+                                                    fontWeight: 100,
+                                                    fontFamily: '"Roboto", "Helvetica", "Arial, sans-serif"',
+                                                    color: window.innerWidth < _desktopWidth ? '#f7f4e9' : 'rgba(0, 0, 0, 0.8)'
+                                                }}
                                                 src={this.state.avatar}
                                             />
                                         }
@@ -364,9 +373,13 @@ class EditProfile extends Component {
                                                     this.state.croppedImage &&
                                                     <IconButton
                                                         aria-label="Save"
-                                                        onClick={ () => {this.setState({avatar: this.state.croppedImage});  console.log('so state is', this.state);  debugger;} }
+                                                        onClick={ () => { this.setState({
+                                                            avatar: this.state.croppedImage,
+                                                            croppedImage: ''
+                                                        }) 
+                                                    }}
                                                     >
-                                                    <CheckCircleOutlineOutlined fontSize="default" />
+                                                    <CheckCircleOutlineOutlined className="edit-profile__save-btn" fontSize="default" />
                                                     </IconButton>
                                                 }
                                             </div>

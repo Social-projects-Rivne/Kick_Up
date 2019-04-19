@@ -190,15 +190,26 @@ input[type=date]::-webkit-inner-spin-button {
 }
 
 .edit-profile__cropper-wrapper {
-    display: inline-block;
+    display: flex;
     vertical-align: middle;
+    min-height: 150px;
 }
 
-// Need !important to overwrite JS of avatar cropper;
 .edit-profile__cropper-wrapper label {
-    color: $white !important;
-    font-weight: 100 !important;
-    font-family: "Roboto", "Helvetica", "Arial", sans-serif !important;
+    width: 100%;
+}
+
+.edit-profile__cropper-wrapper > div:first-child {
+    margin-right: 10px;
+}
+
+.edit-profile__cropper-wrapper > div > div {
+    // Icon with margin;
+    max-width: calc(100% 48px - 10px);
+}
+
+.edit-profile__cropper-wrapper div div svg {
+    display: none;
 }
 
 .edit-profile .MuiTypography-body1-64 {
@@ -262,6 +273,10 @@ input[type=date]::-webkit-inner-spin-button {
     #root .edit-profile .edit-profile__form-next {
         bottom: 10px;
     }
+
+    .edit-profile__cropper-wrapper {
+        min-height: 110px;
+    }
 }
 
 @media only screen and (min-width: 768px) {
@@ -293,6 +308,10 @@ input[type=date]::-webkit-inner-spin-button {
     .edit-profile__field-wrapper {
         min-width: 40%;
         margin-left: 16px;
+    }
+
+    .edit-profile__cropper-wrapper {
+        min-height: 180px;
     }
 
     .edit-profile__field-wrapper label {
@@ -394,11 +413,6 @@ input[type=date]::-webkit-inner-spin-button {
     .edit-profile .edit-profile__gender label 
     span:first-of-type {
         padding-left: 3px;
-    }
-    
-    // Need !important to overwrite JS of avatar cropper;
-    .edit-profile__cropper-wrapper label {
-        color: $secondaryBlack !important;
     }
 
     .edit-profile__field-wrapper.edit-profile__field-wrapper_avatar {
