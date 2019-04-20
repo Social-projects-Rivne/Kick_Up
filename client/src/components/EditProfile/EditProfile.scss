@@ -137,6 +137,8 @@ input[type=file] + label {
 
 .edit-profile__form-section h4 svg {
     margin-right: 16px;
+    transform-origin: 50% 50%;
+    transform: scale(0.88);
 }
 
 .edit-profile__animation-wrapper {
@@ -396,7 +398,7 @@ input[type=date]::-webkit-inner-spin-button {
         padding: 0;
     }
 
-    // Need !important to overwrite Swiper js;
+    // Need !important to overwrite Swiper js logic;
     .edit-profile__form-wrapper .swiper-wrapper {
         flex-direction: column;
         height: unset !important;

@@ -23,12 +23,12 @@ import {
     IconButton
 } from '@material-ui/core';
 import { 
-    Person, 
+    PersonOutline, 
     DateRange,
     SentimentSatisfied,
     DeleteOutline,
-    People,
-    Image,
+    PeopleOutline,
+    MailOutline,
     CheckCircleOutlineOutlined
 } from '@material-ui/icons';
 
@@ -87,7 +87,7 @@ const inputType = {
     name: 1,
     last_name: 2,
     email: 3,
-    birthDay: 4,
+    birth_day: 4,
     gender: 5,
     avatar: 6
 };
@@ -124,13 +124,16 @@ class EditProfile extends Component {
                 wasChanged: false    
             },
             activeAnimation: null,
-            windowWidth: 0
+            windowWidth: window.innerWidth,
         };
     }
     handleSvg = (activeInput) => {
         const _delayTime = 1000;
 
-        if (activeInput === this.state.activeAnimation) return;
+        if (
+            !activeInput ||
+            activeInput === this.state.activeAnimation
+        ) { return; }
 
         // Save new animation;
         this.setState({activeAnimation: activeInput});
@@ -172,7 +175,7 @@ class EditProfile extends Component {
                                 morphIndex: 150
                         }).start();
                         break;
-                    case inputType.birthDay:
+                    case inputType.birth_day:
                         kute.fromTo(
                             '#at-pc', 
                             {path: '#at-pc' }, 
@@ -242,9 +245,28 @@ class EditProfile extends Component {
             }
         }
     }
-    validateImage = (image) => {
-        if (image.size > _maxFileSize) {
-            this.showToast('Your image is too long, please upload image up to 10mb.', messageType.ERR, 5000);
+    validateImage = (evt) => {
+        const extention = evt.currentTarget.files[0].name
+        .split('.')
+        .pop()
+        .toLowerCase();
+        const allowedFormats = ['png', 'gif', 'jpg', 'jpeg'];
+        const resetInput = () => {
+            evt.currentTarget.value = '';
+        };
+
+        // Validate size;
+        if (evt.currentTarget.files[0].size > _maxFileSize) {
+            this.showToast('Your image is too big, please upload image up to 10mb.', messageType.ERR, 5000);
+        }
+
+        /** 
+         * Validate format, at moment we are ok with extension;
+         * Mime type validation can be added later;
+         * */
+        if (!allowedFormats.some((el) => el === extention)) {
+            this.showToast('This file format is disallowed, please upload another image', messageType.ERR, 5000);
+            resetInput();
         }
     }
     handleWindowResize = () => {
@@ -346,8 +368,8 @@ class EditProfile extends Component {
         const data = {};
 
         // Update user info, send ONLY CHANGED items;
-        Object.keys(this.state).filter(function(key) {
-            if (_this.state[key].wasChanged) {
+        Object.keys(this.state).forEach((key) => {
+            if (_this.state[key] && _this.state[key].wasChanged) {
                 data[key] = _this.state[key].data;
             }
         });
@@ -372,6 +394,9 @@ class EditProfile extends Component {
                 5000
             );
         });
+
+        // Remove EL;
+        window.removeEventListener('resize', this.handleWindowResize);
     }
     resetAvatar = () => {
         this.setState({avatar: ''});
@@ -398,7 +423,7 @@ class EditProfile extends Component {
                         <div key={1} className="swiper-slide  edit-profile__form-section">
                             <Grid item xs={10} sm={6} className="edit-profile__form-inner">
                                 <Typography align="center" variant="h4">
-                                    <Person fontSize="large" />
+                                    <SentimentSatisfied fontSize="inherit" />
                                         What is your first name?
                                 </Typography>
                                 <div className="edit-profile__field-wrapper">
@@ -420,7 +445,7 @@ class EditProfile extends Component {
                         <div key={2} className="swiper-slide  edit-profile__form-section">
                             <Grid item xs={10} sm={6} className="edit-profile__form-inner">
                                 <Typography align="center" variant="h4">
-                                    <SentimentSatisfied fontSize="large" />
+                                    <SentimentSatisfied fontSize="inherit" />
                                         What is your last name?
                                 </Typography>
                                 <div className="edit-profile__field-wrapper">
@@ -443,7 +468,7 @@ class EditProfile extends Component {
                         <div key={3} className="swiper-slide  edit-profile__form-section">
                             <Grid item xs={10} sm={6} className="edit-profile__form-inner">
                                 <Typography align="center" variant="h4">
-                                    <SentimentSatisfied fontSize="large" />
+                                    <MailOutline fontSize="inherit" />
                                     Your email:
                                 </Typography>
                                 <div className="edit-profile__field-wrapper">
@@ -464,7 +489,7 @@ class EditProfile extends Component {
                         <div key={4} className="swiper-slide  edit-profile__form-section">
                             <Grid item xs={10} sm={6} className="edit-profile__form-inner">
                                 <Typography align="center" variant="h4">
-                                    <DateRange fontSize="large" />
+                                    <DateRange fontSize="inherit" />
                                         Choose your birth day:
                                 </Typography>
                                 <div className="edit-profile__field-wrapper">
@@ -472,7 +497,7 @@ class EditProfile extends Component {
                                         value={this.state.birth_date.data}
                                         onChange={ (e) => {
                                             this.updateInputValue(e);
-                                            this.handleSvg(inputType.birthDay);
+                                            this.handleSvg(inputType.birth_day);
                                         }}
                                         className="input  edit-profile__date-picker"
                                         name="birth_date"
@@ -487,7 +512,7 @@ class EditProfile extends Component {
                         <div key={5} className="swiper-slide  edit-profile__form-section">
                             <Grid item xs={10} sm={6} className="edit-profile__form-inner">
                                 <Typography align="center" variant="h4">
-                                    <People fontSize="large" />
+                                    <PeopleOutline fontSize="inherit" />
                                     Choose your gender:
                                 </Typography>
                                 <div className="edit-profile__field-wrapper">
@@ -521,7 +546,7 @@ class EditProfile extends Component {
                         <div key={6} className="swiper-slide  edit-profile__form-section  edit-profile__form-section_avatar">
                             <Grid item xs={10} sm={6} className="edit-profile__form-inner">
                                 <Typography align="center" variant="h4">
-                                    <Image fontSize="large" />
+                                    <PersonOutline fontSize="inherit" />
                                     Upload your avatar:
                                 </Typography>
                                 <div className="edit-profile__field-wrapper  edit-profile__field-wrapper_avatar">
@@ -529,14 +554,17 @@ class EditProfile extends Component {
                                         {!this.state.avatar.data &&
                                             <AvatarCropper
                                                 height={this.handleAvatarDimensions()}
+                                                mimeTypes=''
                                                 imageHeight={this.handleAvatarDimensions()}
                                                 closeIconColor={window.innerWidth >= _desktopWidth ? '#f7f4e9' : '#62553a'} 
                                                 onCrop={ (image) => {this.setState({croppedImage: image})}}
-                                                onBeforeFileLoad={() => {this.handleSvg(inputType.avatar)}}
+                                                onBeforeFileLoad={(e) => {
+                                                    this.handleSvg(inputType.avatar);
+                                                    this.validateImage(e);
+                                                }}
                                                 backgroundColor='#fff'
                                                 borderStyle={this.handleAvatarBorder()}
                                                 label="Choose"
-                                                onFileLoad={this.validateImage}
                                                 labelStyle = {{
                                                     fontWeight: 100,
                                                     fontFamily: '"Roboto", "Helvetica", "Arial, sans-serif"',
