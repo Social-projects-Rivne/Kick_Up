@@ -25,7 +25,7 @@ class Events extends Component {
     showDate: true
   };
   componentDidMount() {
-    this.getDataFromDB(API.getEvents);
+    this.getSortDataFromDB(API.getEvents);
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -35,7 +35,7 @@ class Events extends Component {
     }
   }
 
-  getDataFromDB = (api, type) => {
+  getSortDataFromDB = (api, type) => {
     this.setState({ isLoading: true });
     axios
       .get(api, type)
@@ -45,10 +45,10 @@ class Events extends Component {
       .catch(err => console.log(err));
   };
 
-  postDataFromDB = (api, filter) => {
+  getFilteredDataFromDB = (api, filter) => {
     this.setState({ isLoading: true });
     axios
-      .post(api, filter)
+      .get(api, filter)
       .then(res => {
         this.setState({ eventsDB: res.data, isLoading: false });
       })
@@ -57,13 +57,15 @@ class Events extends Component {
 
   filterHandle = () => {
     const filters = {
-      category: this.state.category,
-      date: this.state.date,
-      location: this.state.location,
+      params: {
+        category: this.state.category,
+        date: this.state.date,
+        location: this.state.location,
+      },
     };
     filters
-      ? this.postDataFromDB(API.filter, filters)
-      : this.getDataFromDB(API.getRooms);
+      ? this.getFilteredDataFromDB(API.filter, filters)
+      : this.getSortDataFromDB(API.getEvents);
   };
 
   sortMembersHandle = () => {
@@ -72,7 +74,7 @@ class Events extends Component {
         sort: "members"
       }
     };
-    this.getDataFromDB(API.sort, type);
+    this.getSortDataFromDB(API.sort, type);
   };
   sortStartSoonHandle = () => {
     const type = {
@@ -80,13 +82,14 @@ class Events extends Component {
         sort: "start"
       }
     };
-    this.getDataFromDB(API.sort, type);
+    this.getSortDataFromDB(API.sort, type);
   };
 
   resetFiltersHandle = () => {
-    this.getDataFromDB(API.getRooms);
+    this.getSortDataFromDB(API.getEvents);
     this.setState({
-      category: ""
+      category: "",
+      location: "",
     });
   };
 

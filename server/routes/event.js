@@ -1,6 +1,8 @@
 const Router = require('koa-router');
+
 const router = new Router({prefix: '/api/event'});
 const { Event } = require('./../models');
+const validate = require('./../services/Validator');
 const faker = require('faker')
 
 const testEvents = [
@@ -928,25 +930,25 @@ const handler = {
   async sort(ctx) {
     let result = ctx.request.query.sort;
     console.log('result', result)
-    let roomsAray = [...testEvents];
+    let eventsArray = [...testEvents];
 
     switch(result) {
       case 'rate':
-        roomsAray.sort((a, b) => b.rating - a.rating);
+        eventsArray.sort((a, b) => b.rating - a.rating);
         break;
       case 'members':
-        roomsAray.sort((a, b) => b.members - a.members);
+        eventsArray.sort((a, b) => b.members - a.members);
         break;
       case 'start':
-        roomsAray.sort((a, b) => a.start_date - b.start_date);
+        eventsArray.sort((a, b) => a.start_date - b.start_date);
         break;
     }
 
-    ctx.body = roomsAray;
+    ctx.body = eventsArray;
   },
 
   async filter(ctx) {
-    const filter = ctx.request.body;
+    const filter = ctx.request.query;
     console.log('filter', filter);
     formatDate = d => {
       let curr_date = d.getDate();
@@ -957,10 +959,10 @@ const handler = {
       const date = curr_year + "-" + curr_month + "-" + curr_date;
       return date;
     };
-    let rooms = [...testEvents]
+    let events = [...testEvents]
     if (filter.date && filter.category && filter.location) {
       console.log('1')
-      filterRooms = rooms.filter(e => {
+      filterEvents = events.filter(e => {
         
         return this.formatDate(new Date(e.created_at)) === this.formatDate(new Date(filter.date)) 
             && e.category.title === filter.category
@@ -968,41 +970,78 @@ const handler = {
       });
     } else if (!filter.date && filter.category && filter.location) {
       console.log('2')
-      filterRooms = rooms.filter(e => {
+      filterEvents = events.filter(e => {
         return e.category.title === filter.category && e.location === filter.location;
       });
     } else if (filter.date && !filter.category && filter.location){
       console.log('3')
-      filterRooms = rooms.filter(e => {
+      filterEvents = events.filter(e => {
         return this.formatDate(new Date(e.created_at)) === this.formatDate(new Date(filter.date))
             && e.location === filter.location;
       });
     } else if (!filter.date && !filter.category && filter.location){
         console.log('4')
-        filterRooms = rooms.filter(e => {
+        filterEvents = events.filter(e => {
           return e.location === filter.location;
         });
       } else if (filter.date && filter.category && !filter.location){
         console.log('5')
-        filterRooms = rooms.filter(e => {
+        filterEvents = events.filter(e => {
             return this.formatDate(new Date(e.created_at)) === this.formatDate(new Date(filter.date)) 
                 && e.category.title === filter.category;
         });
       } else if (!filter.date && filter.category && !filter.location){
         console.log('6')
-        filterRooms = rooms.filter(e => {
+        filterEvents = events.filter(e => {
             return e.category.title === filter.category;
         });
       } else if (filter.date && !filter.category && !filter.location){
         console.log('7')
-        filterRooms = rooms.filter(e => {
+        filterEvents = events.filter(e => {
             return this.formatDate(new Date(e.created_at)) === this.formatDate(new Date(filter.date));
         });
       } else {
-      filterRooms = rooms;
+      filterEvents = events;
     }
-    ctx.body = filterRooms;
+    ctx.body = filterEvents;
   },
+  async createEvent(ctx){
+    await validate(ctx.request.body, {
+        title:'required|string|min:3',
+        creator_id:'required|numeric|min:1',
+        category_id:'required|numeric|min:1',
+        room_id:'required|numeric|min:1',
+        description:'required|string|min:6',
+        location:'required|string|min:3',
+        permission:'required|numeric|min:0',
+        members_limit:'numeric|min:1',
+    })
+    const newEvent = {
+        title,
+        creator_id,
+        category_id,
+        room_id,
+        description,
+        location,
+        permission,
+        members_limit
+    } = ctx.request.body;
+    await new Event(newEvent).save();
+    ctx.body = ''
+  },
+  async getEventById(ctx) {
+    const { id } = ctx.params;
+    const room = await Event.where({ id }).fetch({withRelated:['creator','category'],require:true})
+    ctx.body = room;
+  },
+  async updateEventById(ctx) {
+    const { id } = ctx.params;
+    const event =  await Event.where({id}).fetch({require:true});
+    const { title,description,cover,permission,members_limit,category_id, start_date } = ctx.request.body;
+    const obj = {title,description,cover,permission,members_limit,category_id, start_date};
+    await event.save( obj, { patch:true });
+    ctx.body = '';
+  }
   
 };
 
@@ -1039,6 +1078,8 @@ const handler = {
 
 router.get('/', handler.eventList);
 router.get('/sort', handler.sort);
-router.post('/filter', handler.filter);
-
+router.get('/filter', handler.filter);
+router.get('/:id', handler.getEventById);
+router.post('/', handler.createEvent);
+router.put('/:id', handler.updateEventById);
 module.exports = router.routes();
