@@ -836,17 +836,17 @@ const testRooms = [
 const handler = {
   async roomList(ctx) {
 
-    // const list = await Room.fetchAll({withRelated: ['creator','category']})
+    const list = await Room.fetchAll({withRelated: ['creator','category']})
     const members = faker.random.number(30);
     const rating = faker.random.number(5);
 
-    const newLists  = lists.map(i => i.set({members,rating}));
+    const newList  = list.map(i => i.set({members,rating}));
 
     // data from DB
-    // ctx.body = newLists;
+    ctx.body = newList;
 
     // data from mock
-    ctx.body = testRooms;
+    // ctx.body = testRooms;
   },
   async createRoom(ctx){
     await validate(ctx.request.body, {
