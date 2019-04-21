@@ -1,23 +1,31 @@
 import React, { Component } from "react";
 
 import { 
-    Typography, 
-    Grid, 
-    Paper,
-    List,
-    ListItem,
-    ListItemIcon,
-    ListItemText,
-    ListItemAvatar,
-    ExpansionPanel,
-    ExpansionPanelSummary,
-    ExpansionPanelDetails,
-    Avatar,
-    Fab
+   AppBar,
+   Tabs,
+   Tab,
+   Badge,
+   Fab,
+   Typography,
+   Grid,
+   Paper,
+   Avatar,
+   List,
+   ListItem,
+   ListItemText,
+   ListItemAvatar,
+   ListItemIcon,
+   ExpansionPanel,
+   ExpansionPanelDetails,
+   ExpansionPanelSummary
 } from '@material-ui/core';
 import {
+    Face,
+    Info,
+    Comment,
+    Collections,
     Add,
-    DateRange, 
+    DateRange,
     LocationOn,
     ExpandMore
 } from '@material-ui/icons';
@@ -45,16 +53,12 @@ const galleryParams = {
     spaceBetween: 16,
     autoplay: true
 };
+let swiperInstance;
 
 const tabsParams = {
     modules: [Pagination],
     slidesPerView: 'auto',
     loop: false,
-    pagination: {
-      el: ".event-page__section-pagination",
-      type: "bullets",
-      clickable: true
-    },
     centeredSlides: true,
     autoHeight: true,
     spaceBetween: 30,
@@ -67,7 +71,7 @@ const tabsParams = {
             this.updateAutoHeight();
         }
     }
-} 
+};
 
 class EventPage extends Component {
     constructor(props) {
@@ -76,9 +80,26 @@ class EventPage extends Component {
             gallery: [],
             title: '',
             description: '',
-            users: []
+            users: [],
+            swiper: null,
+            activeSlide: 0
         };
         this.componentDidMount = this.componentDidMount.bind(this);
+    }
+    saveSwiper = (instance) => {
+        // Save and listen for slides change;
+        if (instance) {
+            swiperInstance = instance;
+        swiperInstance.on('slideChange', this.handleSwiperSlideChange);
+        }
+    }
+    handleSwiperSlideChange = () => {
+        this.setState({ activeSlide: swiperInstance.activeIndex });
+    }
+    slideTo = (idx) => {
+        if (idx >= 0) {
+            swiperInstance.slideTo(idx);
+        }
     }
     componentDidMount = () => {
         // Get data, @todo get it from server via axios;
@@ -147,15 +168,28 @@ class EventPage extends Component {
     render() {
         return (
             <div className="event-page">
-                {this.state.gallery.length > 0 &&
-                    <Swiper {...galleryParams} >
-                        {this.state.gallery.map((slide, idx) => 
-                            <div key={idx} className="swiper-slide">
-                                <img src={slide} alt="" />
-                            </div>
-                        )}
-                    </Swiper>
-                }
+                <AppBar position="fixed" className="tab-bar">
+                    <Tabs
+                        value={this.state.activeSlide}
+                        className="event-page__tab-menu"
+                    >
+                        <Tab label="Info" icon={<Info />} onClick={() => {this.slideTo(0)}}/>
+                        <Tab label="Q&A" icon={<Comment /> } onClick={() => {this.slideTo(1)}} />
+                        <Tab label="Gallery" icon={<Collections />} onClick={() => {this.slideTo(2)}} />
+                        <Tab 
+                            onClick={() => {this.slideTo(3)}}
+                            label={
+                                <div className="event-page__badge-wrapper">
+                                    <Badge badgeContent={3} >
+                                        <Face />
+                                    </Badge>
+                                    <p className="badge-members">Members</p>
+                                </div>
+                            }
+                        />
+                    </Tabs>
+                </AppBar>
+
                 <div className="event-page__title-wrapper">
                     {this.state.title &&
                         <Typography variant="h5" className="event-page__title">
@@ -167,7 +201,8 @@ class EventPage extends Component {
                         <span className="event-page__fab-text">Join now</span>
                     </Fab>
                 </div>
-                <Swiper {...tabsParams} >
+
+                <Swiper {...tabsParams} getSwiper={this.saveSwiper}>
                     <Grid className="event-page__section" item xs={12}>
                         <List>
                             <ListItem className="event-page__list-item">
@@ -268,7 +303,11 @@ class EventPage extends Component {
                             }   
                         </List>
                     </Grid>
+                    <Grid className="event-page__section" item xs={12}>
+                        <h1>Here we will have gallery</h1>
+                    </Grid>
                 </Swiper>
+
             </div>
         );
     }

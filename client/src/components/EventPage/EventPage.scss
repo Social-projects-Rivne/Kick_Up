@@ -8,6 +8,95 @@
     }
 }
 
+.event-page .event-page__tab-menu {
+    position: fixed;
+    justify-content: space-between;
+    left: 0;
+    bottom: 0;
+    z-index: 1;
+    width: 100%;
+    max-height: 72px;
+    background-color: $primary;
+
+    [class*=MuiButtonBase-root] {
+      color: $secondaryBlack;
+    }
+
+    button[class*=selected] {
+      color: $black;
+    }
+
+    span[class*=colorSecondary] {
+      background-color: $black;
+    }
+  }
+
+  .event-page .event-page__tab-menu {
+
+  .event-page .event-page__tab-menu button {
+      padding-top: 0;
+      min-width: 25%;
+      max-width: 25%;
+      overflow: hidden;
+  }
+
+  .event-page__badge-wrapper > span > svg {
+      transform: translate3d(0, 8px, 0);
+  }
+
+  .event-page__badge-wrapper > span > span {
+    top: 8px;
+  }
+
+  .event-page__badge-wrapper span > span {
+    color: $black;
+    background-color: $white;
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // For better UX;
 .event-page > * {
     opacity: 0;
@@ -148,51 +237,51 @@
     padding-right: 16px;
 }
 
-.event-page__section-pagination {
-    padding-top: 10px;
-    padding-bottom: 10px;
-    text-align: center;
-}
+// .event-page__section-pagination {
+//     padding-top: 10px;
+//     padding-bottom: 10px;
+//     text-align: center;
+// }
 
-.event-page .swiper-pagination-bullet {
-    background-color: $white;
-    opacity: 0.7;
-}
+// .event-page .swiper-pagination-bullet {
+//     background-color: $white;
+//     opacity: 0.7;
+// }
 
-.event-page .swiper-pagination-bullet-active {
-    background-color: $indigoBright;
-    opacity: 1;
-}
+// .event-page .swiper-pagination-bullet-active {
+//     background-color: $indigoBright;
+//     opacity: 1;
+// }
 
-#root .event-page .event-page__section-pagination span {
-    margin: 0;
-    margin-right: 20px;
-    height: auto;
-    background-color: transparent;
-    width: unset;
+// #root .event-page .event-page__section-pagination span {
+//     margin: 0;
+//     margin-right: 20px;
+//     height: auto;
+//     background-color: transparent;
+//     width: unset;
 
-    &::before {
-        color: $indigoBright;
-        font-weight: 400;
-        font-size: 1rem;
-        line-height: 1.286rem;
-    }
+//     &::before {
+//         color: $indigoBright;
+//         font-weight: 400;
+//         font-size: 1rem;
+//         line-height: 1.286rem;
+//     }
 
-    &.swiper-pagination-bullet-active::before {
-        font-weight: 600;
-    }
+//     &.swiper-pagination-bullet-active::before {
+//         font-weight: 600;
+//     }
 
-    &:nth-child(1)::before {
-        content: 'Info';
-    }
+//     &:nth-child(1)::before {
+//         content: 'Info';
+//     }
 
-    &:nth-child(2)::before {
-        content: 'FAQ';
-    }
+//     &:nth-child(2)::before {
+//         content: 'FAQ';
+//     }
 
-    &:nth-child(3)::before {
-        content: 'Members';
-    }
+//     &:nth-child(3)::before {
+//         content: 'Members';
+//     }
 }
 
 .event-page .event-page__desktop-subtitle {
