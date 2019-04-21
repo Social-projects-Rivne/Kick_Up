@@ -31,6 +31,7 @@ import {
 } from '@material-ui/icons';
 import Swiper from 'react-id-swiper/lib/ReactIdSwiper.full';
 import { Pagination, Autoplay } from 'swiper/dist/js/swiper.esm';
+import Gallery from 'react-grid-gallery';
 import "react-id-swiper/src/styles/scss/swiper.scss";
 
 // Global constants;
@@ -77,14 +78,13 @@ class EventPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            gallery: [],
             title: '',
             description: '',
             users: [],
             swiper: null,
-            activeSlide: 0
+            activeSlide: 0,
+            gallery: []
         };
-        this.componentDidMount = this.componentDidMount.bind(this);
     }
     saveSwiper = (instance) => {
         // Save and listen for slides change;
@@ -109,11 +109,6 @@ class EventPage extends Component {
             The Lyrids peaking! Keep your eyes to the sky! A meteor shower is \
             a celestial event in which a number of meteors are observed to radiate, \
             or originate, from one point in the night sky. Don\'t miss it!',
-            gallery: [
-                'http://dennisradai.com/projects/kick/ms1.jpg',
-                'http://dennisradai.com/projects/kick/ms2.jpg',
-                'http://dennisradai.com/projects/kick/ms3.jpg'
-            ],
             users: [
                 {
                     id: 1,
@@ -157,9 +152,42 @@ class EventPage extends Component {
                     image: 'http://i.pravatar.cc/36',
                     joined: '12 days ago'
                 }
+            ],
+            gallery: [
+                {
+                  src: "http://en.es-static.us/upl/2018/12/meteor-geminids-venus-12-15-2018-Kota-Belud-Sabah-Emma-Zulaiha-Zulkifli-e1545048674227.jpg",
+                  thumbnail: "http://en.es-static.us/upl/2018/12/meteor-geminids-venus-12-15-2018-Kota-Belud-Sabah-Emma-Zulaiha-Zulkifli-e1545048674227.jpg",
+                  thumbnailWidth: 520,
+                  thumbnailHeight: 274
+                },
+                {
+                  src: "https://bloximages.chicago2.vip.townnews.com/postregister.com/content/tncms/assets/v3/editorial/4/82/482ee1c8-a447-5c16-a0e4-b350d77faea2/5b6dcccf942ce.image.jpg?resize=400%2C600",
+                  thumbnail: "https://bloximages.chicago2.vip.townnews.com/postregister.com/content/tncms/assets/v3/editorial/4/82/482ee1c8-a447-5c16-a0e4-b350d77faea2/5b6dcccf942ce.image.jpg?resize=400%2C600",
+                  thumbnailWidth: 320,
+                  thumbnailHeight: 512,
+                  tags: [{value: "Rivne", title: "Rivne"}],
+                },
+                {
+                  src: "https://texashillcountry.com/wp-content/uploads/Meteor-Shower.jpg",
+                  thumbnail: "https://texashillcountry.com/wp-content/uploads/Meteor-Shower.jpg",
+                  thumbnailWidth: 450,
+                  thumbnailHeight: 260
+                },
+                {
+                  src: "https://r.hswstatic.com/w_907/gif/leonidmeteors-1.jpg",
+                  thumbnail: "https://r.hswstatic.com/w_907/gif/leonidmeteors-1.jpg",
+                  thumbnailWidth: 320,
+                  thumbnailHeight: 430,
+                  tags: [{value: "Rivne", title: "Rivne"}]
+                },
+                {
+                  src: "https://cdn-az.allevents.in/banners/85c41d80-b181-11e8-81c9-1b431fd718bc-rimg-w400-h400-dc374665-gmir.jpg",
+                  thumbnail: "https://cdn-az.allevents.in/banners/85c41d80-b181-11e8-81c9-1b431fd718bc-rimg-w400-h400-dc374665-gmir.jpg",
+                  thumbnailWidth: 620,
+                  thumbnailHeight: 374
+                }
             ]
         }
-
         // @temp, immitate delay;
         window.setTimeout(() => {
             this.setState(() => data); 
@@ -279,6 +307,9 @@ class EventPage extends Component {
                             </ExpansionPanelDetails>
                         </ExpansionPanel>
                     </Grid>
+                    <Grid className="event-page__section" item xs={12}>
+                        <Gallery images={this.state.gallery} backdropClosesModal={true} />
+                    </Grid>
                     <Grid className="event-page__section" item xs={12} md={6}>
                         <Typography className="event-page__desktop-subtitle" variant="h5">
                             Members
@@ -303,11 +334,7 @@ class EventPage extends Component {
                             }   
                         </List>
                     </Grid>
-                    <Grid className="event-page__section" item xs={12}>
-                        <h1>Here we will have gallery</h1>
-                    </Grid>
                 </Swiper>
-
             </div>
         );
     }
