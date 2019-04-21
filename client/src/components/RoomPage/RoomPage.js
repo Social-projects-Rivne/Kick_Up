@@ -18,6 +18,7 @@ function TabContainer(props) {
 }
 
 class RoomPage extends React.Component {
+
     state = {
         roomPageDB: roomPageDB,
         value: 0,
@@ -33,6 +34,9 @@ class RoomPage extends React.Component {
 
     render() {
         const { value } = this.state;
+
+        const id = this.props.match.params.id;
+
         return (
             <div className="room-page-details">
                 <AppBar position="static" className="tab-bar">
