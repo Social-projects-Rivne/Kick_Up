@@ -9,7 +9,7 @@ const handler = {
     async getSelfUser(ctx){
         const { user_id } = ctx.state; 
         const user = await User.where({id:user_id}).fetch();
-        ctx.body = user;        
+        ctx.body = user;
     },
     async updateUser(ctx){
         const { user_id } = ctx.state; 

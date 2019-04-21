@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import axios from "axios";
-import jwt_decode from "jwt-decode";
 
 import { Grid, TextField, Button, Typography } from "@material-ui/core";
 import { Person, Send, Email, Lock } from "@material-ui/icons";
@@ -63,35 +62,38 @@ class Login extends Component {
     axios
       .post("/api/signin", user)
       .then(res => {
-        console.log("login response data=>", res);
-        this.props.userHasAuthenticated(true);
         const { token } = res.data;
-        localStorage.setItem("authorization", token);
+        this.props.userHasAuthenticated(true);
         this.props.setAuthToken(token);
-        const decoded = jwt_decode(token);
-        console.log('signIn DECODE', decoded)
-        this.setState({
-          message: res ? "Welcome!" : "Something went wrong :( Please retry!",
-          messageType: res ? messageType.SUCCESS : messageType.ERR,
+        localStorage.setItem("authorization", token);
+        return axios.get('api/profile')
+      })
+      .then((res) => {
+        //TODO decide with team if this action is necessary
+        if (res.data && res.data.email) {
+          return  res.data;
+        }
+        throw new Error('There is no user.');
+      })
+      .then(user => this.setState({
+          message: "Welcome!",
+          messageType: messageType.SUCCESS,
           messageOpened: true,
           email: "",
           password: "",
           emailInputValid: true,
           passwordInputValid: true,
           formInFocus: false
-        });
-        this.props.history.push({
-          pathname: "/",
-          state: {
-            token: decoded
-          }
-        });
-      })
+        }, () => setTimeout(() => {
+          console.log('sigin', this.props.setUser, {user})
+          this.props.setUser(user);
+          this.props.history.push({
+            pathname: "/",
+          });
+        }, 500)))
       .catch(err => {
-        console.log(err.response.data.error.errors.message[0]);
-        console.log(err.response);
         this.setState({
-          message: err.response.data.error.errors.message[0],
+          message: (err.response && err.response.data.error.errors.message[0]) || err.message,
           messageType: messageType.ERR,
         })
       });

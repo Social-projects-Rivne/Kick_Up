@@ -1,8 +1,7 @@
 .toolbar {
+  width: 100% !important;
+  margin: 0 !important;
   background-color: $black;
-  .swiper-slide {
-    width: 140px !important;
-  }
   button.toolbar-sort, .toolbar-add {
       background-color: $primary;
       &:hover {
@@ -50,7 +49,7 @@
     }
   }
   #select-category,
-  #select-city {
+  #select-location {
     padding: 9px 15px;
   }
   input {
@@ -90,6 +89,7 @@
     
     top: 0px;
   }
+  
   .toolbar-mobile {
     padding: 7px 0; 
   }
@@ -103,3 +103,10 @@
     display: none !important;
   }
 }
+#root {
+  .react-calendar__tile--active {
+  background: $primary;
+  color: $black;
+}
+}
+

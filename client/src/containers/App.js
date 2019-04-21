@@ -7,7 +7,8 @@ import Router from "./../router";
 
 class App extends Component {
   state = {
-    isAuthenticated: false
+    isAuthenticated: false,
+    user: null,
   };
 
   userHasAuthenticated = authenticated => {
@@ -20,20 +21,27 @@ class App extends Component {
       delete axios.defaults.headers.common["Authorization"];
     }
   };
-  render() {
-    const childProps = {
-      isAuthenticated: this.state.isAuthenticated,
+  setUser = (user) => this.setState({ user }); 
+  getChildProps() {
+    const { isAuthenticated, user } = this.state;
+    return {
+      isAuthenticated,
       userHasAuthenticated: this.userHasAuthenticated,
-      setAuthToken: this.setAuthToken
-    };
+      setAuthToken: this.setAuthToken, 
+      setUser: this.setUser,
+      user,
+    }
+  } 
+  render() {
     return (
       <BrowserRouter>
         <PageContainer 
           isAuthenticated={this.state.isAuthenticated}
           userHasAuthenticated={this.userHasAuthenticated}
           setAuthToken={this.setAuthToken}
+          user={this.state.user}
         >
-          <Router childProps={childProps}/>
+          <Router childProps={this.getChildProps()}/>
         </PageContainer>
       </BrowserRouter>
     );

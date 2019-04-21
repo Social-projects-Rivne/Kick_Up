@@ -17,11 +17,9 @@ import {CalendarToday, Close, KeyboardArrowDownRounded} from "@material-ui/icons
 import Calendar from "react-calendar";
 import Drawer from '@material-ui/core/Drawer';
 
-//TODO create for mobile
 class Toolbar extends Component {
   state = {
     isToggleOn: false,
-    date: new Date(),
     mobileToolbarIsOpen: false
   };
 
@@ -30,9 +28,8 @@ class Toolbar extends Component {
   };
 
   onChange = date => {
-    console.log("date", date);
-    this.setState({ date, isToggleOn: false });
-    this.props.changeDate(date);
+    this.setState({ isToggleOn: false });
+    this.props.changeDate(date.toISOString());
   };
 
   toggleFiltersHandler = () => {
@@ -121,14 +118,14 @@ class Toolbar extends Component {
         <Calendar
           name="date"
           onChange={this.onChange}
-          value={this.props.date}
-        />
+          value={new Date(this.props.date)}
+          />
       </Grid>
       
     ) : null;
 
     return (
-      <Grid container justify="center">
+      <>
         <Grid container justify="center" alignItems="center" spacing={8} className="toolbar toolbar-desktop">
             <Grid item>
               <Link to="/add-room">
@@ -156,7 +153,6 @@ class Toolbar extends Component {
           <div
             tabIndex={0}
             role="button"
-            // onClick={this.toggleDrawer}
             onKeyDown={this.toggleDrawer}
           >
           <Grid container justify="center" alignItems="center" spacing={8} className="toolbar toolbar-mobile">
@@ -176,7 +172,7 @@ class Toolbar extends Component {
           </Grid>
           </div>
         </Drawer>
-      </Grid>
+      </>
     );
   }
 }
