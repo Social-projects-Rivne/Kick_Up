@@ -1,7 +1,5 @@
 import React from "react";
 
-import "./StarRating.scss";
-
 const starRating = props => {
     let stars = [];
     for (let i = 0; i < 5; i++) {
