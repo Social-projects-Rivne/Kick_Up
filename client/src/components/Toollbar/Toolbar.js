@@ -150,7 +150,7 @@ class Toolbar extends Component {
           open={this.state.mobileToolbarIsOpen}
           onClose={this.toggleDrawer}
         >
-          <IconButton onClick={this.toggleDrawer} class="mobile-button-close-filters">
+          <IconButton onClick={this.toggleDrawer} className="mobile-button-close-filters">
             <KeyboardArrowDownRounded/>
           </IconButton>
           <div

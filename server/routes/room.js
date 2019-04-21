@@ -895,23 +895,6 @@ const handler = {
     ctx.body = filterRooms;
   },
 
-  async filterByDate(ctx) {
-    const {filter} = ctx.request.body;
-    formatDate = d => {
-      let curr_date = d.getDate();
-      let curr_month = d.getMonth() + 1;
-      const curr_year = d.getFullYear();
-      if (curr_month < 10) curr_month = "0" + curr_month;
-      if (curr_date < 10) curr_date = "0" + curr_date;
-      const date = curr_year + "-" + curr_month + "-" + curr_date;
-      return date;
-    };
-    const filterRoomsByDate = [...testRooms].filter(e => {
-      return this.formatDate(new Date(e.created_at)) === filter;
-    });
-    ctx.body = filterRoomsByDate;
-  },
-
 }
 
 // router.post("/save-room", (ctx) => {
@@ -963,11 +946,6 @@ const handler = {
 
 router.get('/', handler.roomList);
 router.get('/sort', handler.sort);
-// router.get('/sort-rating', handler.sortByRating);
-// router.get('/sort-members', handler.sortByMembers);
-// router.get('/sort-created', handler.sortByCreated);
 router.post('/filter', handler.filter);
-// router.post('/filter-by-category', handler.filterByCategory);
-// router.post('/filter-by-date', handler.filterByDate);
 
 module.exports = router.routes();
