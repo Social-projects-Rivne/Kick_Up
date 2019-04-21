@@ -30,48 +30,57 @@ import {
     ExpandMore
 } from '@material-ui/icons';
 import Swiper from 'react-id-swiper/lib/ReactIdSwiper.full';
-import { Pagination, Autoplay } from 'swiper/dist/js/swiper.esm';
+import { Pagination } from 'swiper/dist/js/swiper.esm';
 import Gallery from 'react-grid-gallery';
 import "react-id-swiper/src/styles/scss/swiper.scss";
 
 // Global constants;
 
 // Swipers params for event page;
-const galleryParams = {
-    modules: [Pagination, Autoplay],
+const userParams = {
+    modules: [Pagination],
+    horizontal: true,
     effect: 'slide',
-    slidesPerView: 'auto',
-    centeredSlides: false,
-    loop: true,
-    containerClass: 'swiper-container  event-page__gallery-swiper',
+    slidesPerView: 1,
+    centeredSlides: true,
+    containerClass: 'swiper-container  event-page__users-swiper',
     rebuildOnUpdate: true,
     shouldSwiperUpdate: true,
+    nested: true,
+    //simulateTouch: false,
     pagination: {
-      el: ".swiper-pagination",
-      type: "bullets",
-      clickable: true
-    },
-    spaceBetween: 16,
-    autoplay: true
+        el: ".swiper-pagination",
+        type: "bullets",
+        clickable: true
+    }
 };
 let swiperInstance;
 
 const tabsParams = {
     modules: [Pagination],
-    slidesPerView: 'auto',
+    slidesPerView: 1,
     loop: false,
     centeredSlides: true,
     autoHeight: true,
     spaceBetween: 30,
     rebuildOnUpdate: true,
     shouldSwiperUpdate: true,
+    noSwipingClass: 'event-page__users-swiper',
     containerClass: 'swiper-container  event-page__tabs-swiper',
     // Update height;
     on: {
         click: function() {
-            this.updateAutoHeight();
+            //this.updateAutoHeight();
         }
     }
+};
+const chunkArr = (array, size)  => {
+    let chunked = []
+
+    while(array.length > 0) {
+      chunked.push(array.splice(0, size))
+    }
+    return chunked
 };
 
 class EventPage extends Component {
@@ -79,6 +88,7 @@ class EventPage extends Component {
         super(props);
         this.state = {
             title: '',
+            cover: '',
             description: '',
             users: [],
             swiper: null,
@@ -104,12 +114,55 @@ class EventPage extends Component {
     componentDidMount = () => {
         // Get data, @todo get it from server via axios;
         const data = {
-            title: 'Meteor shower gathering',
+            title: 'Meteor shower in Rivne',
+            cover: 'https://s.abcnews.com/images/International/perseid-meteor-shower-05-rt-jef-180814_hpEmbed_3x2_992.jpg',
             description: '9 meteor showers in August 2019 among others! \
             The Lyrids peaking! Keep your eyes to the sky! A meteor shower is \
             a celestial event in which a number of meteors are observed to radiate, \
             or originate, from one point in the night sky. Don\'t miss it!',
             users: [
+                {
+                    id: 1,
+                    name: 'Ramon Good',
+                    image: 'http://i.pravatar.cc/36',
+                    joined: '7 days ago'
+                },
+                {
+                    id: 2,
+                    name: 'Mauricio Hawkins',
+                    image: 'http://i.pravatar.cc/36',
+                    joined: '2 days ago'
+                },
+                {
+                    id: 3,
+                    name: 'Sage Gates',
+                    image: 'http://i.pravatar.cc/36',
+                    joined: '5 days ago'
+                },
+                {
+                    id: 4,
+                    name: 'Heath Meadows',
+                    image: 'http://i.pravatar.cc/36',
+                    joined: '8 days ago'
+                },
+                {
+                    id: 5,
+                    name: 'Davion Dennis',
+                    image: 'http://i.pravatar.cc/36',
+                    joined: '2 days ago'
+                },
+                {
+                    id: 6,
+                    name: 'Remington Dalton',
+                    image: 'http://i.pravatar.cc/36',
+                    joined: '1 day ago'
+                },
+                {
+                    id: 7,
+                    name: 'Direct Elton',
+                    image: 'http://i.pravatar.cc/36',
+                    joined: '12 days ago'
+                },
                 {
                     id: 1,
                     name: 'Ramon Good',
@@ -188,10 +241,22 @@ class EventPage extends Component {
                 }
             ]
         }
+       
         // @temp, immitate delay;
-        window.setTimeout(() => {
-            this.setState(() => data); 
-        }, 500);
+        this.setState((prev) => {
+            return {
+                title: data.title,
+                cover: data.cover,
+                description: data.description,
+                gallery: data.gallery,
+                users: data.users
+            }
+        });
+        
+        
+        // window.setTimeout(() => {
+        //     this.setState(() => data);
+        // }, 500);   
     }
     render() {
         return (
@@ -228,6 +293,10 @@ class EventPage extends Component {
                         <Add />
                         <span className="event-page__fab-text">Join now</span>
                     </Fab>
+                    {
+                        this.state.cover &&
+                        <div style={{ backgroundImage: `url(${this.state.cover})` }} className="event-page__img-wrapper"></div>
+                    }
                 </div>
 
                 <Swiper {...tabsParams} getSwiper={this.saveSwiper}>
@@ -259,7 +328,7 @@ class EventPage extends Component {
                     </Grid>
                     <Grid className="event-page__section" item xs={12}>
                         <Typography className="event-page__desktop-subtitle" variant="h5">
-                        Questions
+                            Questions
                         </Typography>
                         <ExpansionPanel>
                             <ExpansionPanelSummary className="event-page__faq-title" expandIcon={<ExpandMore />}>
@@ -308,31 +377,83 @@ class EventPage extends Component {
                         </ExpansionPanel>
                     </Grid>
                     <Grid className="event-page__section" item xs={12}>
+                        <Typography className="event-page__desktop-subtitle" variant="h5">
+                            Gallery
+                        </Typography>
+                        <Fab className="event-page__fab  event-page__fab_upload" variant="extended" color="primary">
+                            <input
+                                accept="image/*"
+                                id="event-page-upload-images"
+                                multiple
+                                type="file"
+                            />
+                            <label htmlFor="event-page-upload-images">
+                                <Add />
+                                <span className="event-page__fab-text">Upload</span>
+                            </label>
+                        </Fab>
                         <Gallery images={this.state.gallery} backdropClosesModal={true} />
                     </Grid>
                     <Grid className="event-page__section" item xs={12} md={6}>
                         <Typography className="event-page__desktop-subtitle" variant="h5">
                             Members
                         </Typography>
-                        <List className="event-page__users-list">   
-                            {
-                                this.state.users.length > 0 &&
-                                this.state.users.map((user, idx) => {
-                                    return (<ListItem key={idx} className="event-page__users-list-item">
-                                        <ListItemAvatar>
-                                        <Avatar>
-                                            {/* @todo take data from db */}
-                                            <Avatar alt="" src={user.image} />
-                                        </Avatar>
-                                        </ListItemAvatar>
-                                        <ListItemText
-                                            primary={user.name}
-                                            secondary={user.joined}
-                                        />
-                                    </ListItem>)
-                                })
-                            }   
-                        </List>
+                        {
+                            this.state.users.length > 0 &&
+                            <Swiper {...userParams}>
+                                {
+                                    chunkArr(this.state.users, 9).map((users, idx) => (
+                                            <div key={idx}>
+                                                <List className="event-page__users-list">
+                                                {
+                                                    users.map((user, idx) => (
+                                                        <ListItem key={idx + Math.floor(Math.random() * 1000) + 1} className="event-page__users-list-item">
+                                                            <ListItemAvatar>
+                                                                <Avatar>
+                                                                    {/* @todo take data from db */}
+                                                                    <Avatar alt="" src={user.image} />
+                                                                </Avatar>
+                                                            </ListItemAvatar>
+                                                            <ListItemText
+                                                                primary={user.name}
+                                                                secondary={user.joined}
+                                                            />
+                                                        </ListItem>
+                                                    ))
+                                                }
+                                                </List>
+                                            </div>
+                                        )
+                                    )
+                                }
+                            </Swiper>
+                        }
+                        {
+                            this.state.users.length <= 0 &&
+                            <h1>aaaa</h1>
+                        }
+                        {
+                            this.state.users.length > 0 &&
+                            <List className="event-page__users-list">   
+                                {
+                                    this.state.users.length > 0 &&
+                                    this.state.users.map((user, idx) => {
+                                        return (<ListItem key={idx} className="event-page__users-list-item">
+                                            <ListItemAvatar>
+                                            <Avatar>
+                                                {/* @todo take data from db */}
+                                                <Avatar alt="" src={user.image} />
+                                            </Avatar>
+                                            </ListItemAvatar>
+                                            <ListItemText
+                                                primary={user.name}
+                                                secondary={user.joined}
+                                            />
+                                        </ListItem>)
+                                    })
+                                }   
+                            </List>
+                        }
                     </Grid>
                 </Swiper>
             </div>

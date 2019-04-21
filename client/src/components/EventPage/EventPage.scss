@@ -160,6 +160,35 @@
     color: $black;
     background-color: $primary;
     box-shadow: none;
+
+    &.event-page__fab_upload {
+        position: absolute;
+        top: 0;
+        right: 0;
+        margin: 0;
+        color: $secondaryBlack;
+        background-color: transparent;
+        cursor: pointer;
+
+        & *  {
+            cursor: pointer;
+        }
+
+        &:hover,
+        &:active {
+            background-color: transparent;
+            color: $primary;
+        }
+    }
+}
+
+.event-page .event-page__fab input[type=file] {
+    display: none;
+}
+
+.event-page .event-page__fab label {
+    display: flex;
+    align-items: center;
 }
 
 .event-page .event-page__fab .event-page__fab-text {
@@ -337,9 +366,37 @@ div[class*=MuiExpansionPanel]::before {
     box-shadow: none;
 }
 
-.event-page__masonry img {
-    height: 100px;
-    width: auto;
+.event-page__img-wrapper {
+    display: none;
+}
+
+.event-page__users-swiper .swiper-slide {
+    display: block;
+    width: 100%;
+}
+
+.event-page .event-page__users-swiper .swiper-pagination {
+    bottom: -3px;
+}
+
+.event-page__users-swiper .swiper-pagination-bullet {
+    width: 10px;
+    height: 10px;
+}
+
+.event-page__users-swiper
+.swiper-pagination-bullet.swiper-pagination-bullet-active {
+    background-color: $primary;
+}
+
+.event-page__users-list {
+    width: 100%;
+}
+
+.event-page .event-page__tabs-swiper >
+.swiper-wrapper .swiper-slide {
+    min-width: 100vw;
+    max-width: 100vw;
 }
 
 // Mobile landscape;
@@ -356,17 +413,45 @@ div[class*=MuiExpansionPanel]::before {
 }
 
 @media only screen and (min-width: 768px) {
+    .event-page {
+        padding-bottom: 0;
+        border-top: 1px solid transparent;
+    }
+
+    .event-page .event-page__tab-menu {
+        display: none;
+    }
+
     .event-page__title-wrapper {
+        position: relative;
         max-width: 1168px;
         margin: 30px auto;
+        padding-left: 24px;
+        padding-right: 24px;
         display: flex;
         justify-content: center;
         align-items: center;
     }
 
+    .event-page .event-page__title-wrapper h5 {
+        padding: 0;
+    }
+
+    .event-page__img-wrapper {
+        display: block;
+        width: 350px;
+        height: 200px;
+        margin-left: auto;
+        box-shadow: inset 0px 0px 3px 3px #f6f5f3;
+        overflow: hidden;
+        background-size: cover;
+    }
+
     .event-page .event-page__fab {
-        margin-left: 10px;
-        margin-right: 0;
+        position: absolute;
+        right: calc(16px + 24px);
+        bottom: 16px;
+        margin: 0;
     }
 
     .event-page .event-page__title {
@@ -392,9 +477,15 @@ div[class*=MuiExpansionPanel]::before {
         overflow: visible;
     }
 
-    .event-page .event-page__tabs-swiper
+    .event-page .event-page__tabs-swiper >
     .swiper-wrapper {
         flex-wrap: wrap;
+    }
+
+    .event-page .event-page__tabs-swiper >
+    .swiper-wrapper .swiper-slide {
+        min-width: auto;
+        max-width: auto;
     }
 
     .event-page .event-page__section-pagination {
@@ -402,7 +493,7 @@ div[class*=MuiExpansionPanel]::before {
     }
 
     // Need !important to overwrite Swiper styles;
-    .event-page__tabs-swiper .swiper-wrapper {
+    .event-page__tabs-swiper > .swiper-wrapper {
         height: unset !important;
         transform: none !important;
     }
@@ -460,27 +551,54 @@ div[class*=MuiExpansionPanel]::before {
     .event-page .MuiExpansionPanelSummary-expandIcon-215 {
         top: 22px;
     }
+
+    .event-page [class*=ReactGridGallery] {
+        background-color: transparent;
+    }
 }
 
 @media only screen and (min-width: 1168px) {
     .event-page .event-page__tabs-swiper {
-        padding-left: 30px;
-        padding-right: 0;
+        padding-left: 24px;
+        padding-right: 24px;
     }
 
-    .event-page__section {
+    .event-page .event-page__tabs-swiper >
+    .swiper-wrapper .swiper-slide.event-page__section {
         &:nth-child(1) {
             max-width: 33%;
+            order: -2;
         }
 
         &:nth-child(2) {
-            max-width: 61%;
+            min-width: 100%;
+            max-width: 100%;
         }
 
         &:nth-child(3) {
             min-width: 100%;
             max-width: 100%;
         }
+
+        &:nth-child(4) {
+            order: -1;
+            min-width: 60%;
+            max-width: 60%;
+        }
+    }
+
+    .event-page__title-wrapper {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .event-page__img-wrapper {
+        width: 500px;
+        height: 300px;
+    }
+
+    .event-page .event-page__fab {
+        right: 16px;
     }
 }
 
