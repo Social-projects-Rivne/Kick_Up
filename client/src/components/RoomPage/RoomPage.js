@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 
@@ -7,7 +8,7 @@ import { AppBar, Tabs, Tab, Typography, Grid, Avatar, Card, CardActions, CardCon
 import { Comment, Collections, Face, NewReleases, EventAvailable, Add, Info } from '@material-ui/icons';
 import Gallery from 'react-grid-gallery';
 import SwipeableViews from 'react-swipeable-views';
-import roomPageDB from './../../mocks/roomPage';
+import Spinner from './../UI/Spinner/Spinner';
 
 function TabContainer(props) {
     return (
@@ -20,8 +21,17 @@ function TabContainer(props) {
 class RoomPage extends React.Component {
 
     state = {
-        roomPageDB: roomPageDB,
         value: 0,
+        roomPageDB: null
+    };
+
+    componentDidMount() {
+        const { id } = this.props.match.params;
+        axios.get("/api/room/" + id)
+            .then(res => {
+                this.setState({ roomPageDB: res.data });
+            })
+            .catch(err => console.log(err));
     };
 
     handleChange = (event, value) => {
@@ -33,9 +43,11 @@ class RoomPage extends React.Component {
     };
 
     render() {
-        const { value } = this.state;
+        const { value, roomPageDB } = this.state;
 
-        const id = this.props.match.params.id;
+        if (!roomPageDB) {
+            return (<Spinner className="rooms-page"/>);
+        }
 
         return (
             <div className="room-page-details">
