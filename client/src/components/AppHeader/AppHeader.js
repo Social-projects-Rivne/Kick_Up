@@ -40,10 +40,9 @@ class AppHeader extends React.Component {
         this.setState({ mobileMenuOpened: this.mobileMenuOpened });
     };
 
-    //TODO handleUserProfile
-    // handleUserProfile = (id) => {
-    //     this.props.history.push({ pathname: "/profile/" + id });
-    // }
+    handleUserProfile = () => {
+        this.props.history.push({ pathname: "/profile/" + this.props.user.id });
+    }
 
     render() {
         console.log('appheader props', this.props)
@@ -53,11 +52,10 @@ class AppHeader extends React.Component {
             <img src={user.avatar} alt={user.email}/> 
             : <img src={face} alt ="user" />
         console.log('[appheader user]', user)
-
-        const authField = isAuthenticated
+        const authField = isAuthenticated && user
         ?   <BottomNavigation value={activePage} onChange={this.handleChangeActivePage} className="navigation-buttons">
                 <BottomNavigationAction className="icon-details" label="avatar"
-                //  onClick={this.handleUserProfile(1)}
+                 onClick={this.handleUserProfile}
                   icon={avatarURL} />
                 <BottomNavigationAction className="icon-details" label="Sign Out" onClick={this.handleLogout} icon={<PowerOff />} />
             </BottomNavigation>
@@ -66,13 +64,13 @@ class AppHeader extends React.Component {
                 <BottomNavigationAction className="icon-details" label="Sign Up" value="/sign-up" icon={<PersonAdd />} />
             </BottomNavigation>;
 
-        const authFieldForMobile = isAuthenticated
+        const authFieldForMobile = isAuthenticated && user
         ?   <>
                 <BottomNavigation value={activePage} onChange={this.handleChangeActivePage} className="navigation-buttons">
                     <BottomNavigationAction className="icon-details" label="Events" value="/events" icon={<EventAvailable />} />
                     <BottomNavigationAction className="icon-details" label="Spaces" value="/rooms" icon={<SupervisorAccount />} />
                     <BottomNavigationAction className="icon-details" label="avatar" 
-                    // onClick={this.handleUserProfile(1)} 
+                    onClick={this.handleUserProfile} 
                     icon={avatarURL} />
                     <BottomNavigationAction className="icon-details" label="Sign Out" onClick={this.handleLogout} icon={<PowerOff />} />
                 </BottomNavigation>
