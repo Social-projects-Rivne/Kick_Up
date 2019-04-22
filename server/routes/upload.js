@@ -15,7 +15,7 @@ const handler = {
         const { user_id } = ctx.state;
         const { uploadType } = ctx.params;
         const { file } = ctx.request.files;
-        const filePath = await uploader(file,uploadType);
+        const filePath = await uploader.upload(file,uploadType);
         if(uploadType === 'avatar'){
             //TO DO create media model and save path to media table
             await User.where({id:user_id}).save({ avatar: filePath }, { patch: true });
