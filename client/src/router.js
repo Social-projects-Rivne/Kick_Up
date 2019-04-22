@@ -10,6 +10,7 @@ import AddRoom from './components/AddRoom/AddRoom';
 import SignIn from './components/SignIn/SignIn';
 import AppliedRoute from './hoc/AppliedRoute/AppliedRoute';
 import RoomPage from './components/RoomPage/RoomPage';
+import EditProfile from './components/EditProfile/EditProfile';
 
 const router = ({ childProps }) => {
     return (
@@ -22,6 +23,7 @@ const router = ({ childProps }) => {
             <Route path="/rooms" exact component={Rooms} />
             <Route path="/rooms/:id" component={RoomPage} />
             <Route path="/add-room" component={AddRoom} />
+            <Route path="/profile/:id/edit" component={EditProfile} />
             <Route render={() => (<div style={{color: "red", textAlign: "center", fontSize: "2rem"}}>Page not found </div>)} />
         </Switch>
     );
