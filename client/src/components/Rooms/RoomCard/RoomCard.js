@@ -16,7 +16,9 @@ const roomCard = props => {
           style={backgroundImage}
         >
           <div className="inner">
-          <img src={props.avatar} alt={props.avatar}/>
+          <img src={props.avatar} 
+          alt={props.avatar}
+          />
             <p>{props.title}</p>
             <span>{props.category}</span>
             <Grid className="cardInfo">

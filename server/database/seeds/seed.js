@@ -18,8 +18,6 @@ const categories = [
     title: 'Dancing'
   }
 ];
-
-
 const users = [
   {
     id: 1,
@@ -70,12 +68,119 @@ const users = [
     is_banned: false,
   }
 ];
+const rooms = [
+  {
+    id: 1,
+    title: faker.company.companyName(),
+    creator_id: 1,
+    category_id: 1,
+    description: faker.company.catchPhraseDescriptor(),
+    cover: faker.image.nature(),
+    permission: 1,
+    members_limit: 25,
+    is_banned: 0
+  },
+  {
+    id: 2,
+    title: faker.company.companyName(),
+    creator_id: 1,
+    category_id: 1,
+    description: faker.company.catchPhraseDescriptor(),
+    cover: faker.image.nature(),
+    permission: 1,
+    members_limit: 25,
+    is_banned: 0
+  },
+  {
+    id: 3,
+    title: faker.company.companyName(),
+    creator_id: 1,
+    category_id: 1,
+    description: faker.company.catchPhraseDescriptor(),
+    cover: faker.image.nature(),
+    permission: 1,
+    members_limit: 25,
+    is_banned: 0
+  },
+  {
+    id: 4,
+    title: faker.company.companyName(),
+    creator_id: 1,
+    category_id: 1,
+    description: faker.company.catchPhraseDescriptor(),
+    cover: faker.image.nature(),
+    permission: 1,
+    members_limit: 25,
+    is_banned: 0
+  },
+];
+const events = [
+  {
+    id: 1,
+    title: faker.company.companyName(),
+    creator_id: 1,
+    category_id: 1,
+    description: faker.company.catchPhraseDescriptor(),
+    cover: faker.image.nature(),
+    location: faker.random.locale(),
+    permission: 1,
+    start_date: faker.date.future(),
+    members_limit: 25,
+    is_banned: 0
+  },
+  {
+    id: 2,
+    title: faker.company.companyName(),
+    creator_id: 1,
+    category_id: 1,
+    description: faker.company.catchPhraseDescriptor(),
+    cover: faker.image.nature(),
+    location: faker.random.locale(),
+    permission: 1,
+    start_date: faker.date.future(),
+    members_limit: 25,
+    is_banned: 0
+  },
+  {
+    id: 3,
+    title: faker.company.companyName(),
+    creator_id: 1,
+    category_id: 1,
+    description: faker.company.catchPhraseDescriptor(),
+    cover: faker.image.nature(),
+    location: faker.random.locale(),
+    permission: 1,
+    start_date: faker.date.future(),
+    members_limit: 25,
+    is_banned: 0
+  },
+  {
+    id: 4,
+    title: faker.company.companyName(),
+    creator_id: 1,
+    category_id: 1,
+    description: faker.company.catchPhraseDescriptor(),
+    cover: faker.image.nature(),
+    location: faker.random.locale(),
+    permission: 1,
+    start_date: faker.date.future(),
+    members_limit: 25,
+    is_banned: 0
+  },
+];
+
+
+
 exports.seed = async knex => {
   await knex('users').insert(users);
   await knex('categories').insert(categories);
+  await knex('rooms').insert(rooms);
+  await knex('events').insert(events);
 };
 
 exports.seedData = {
   users,
-  categories
+  categories,
+  rooms,
+  events
 };

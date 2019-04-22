@@ -13,8 +13,8 @@ exports.up = async knex => {
     t.integer('members_limit').nullable();
     t.boolean('is_banned').defaultTo(false);
     t.dateTime('start_date').notNull();
-    t.dateTime('created_at').notNull();
-    t.dateTime('updated_at').nullable();
+    t.dateTime('created_at').notNullable().defaultTo(knex.raw('now()'));
+    t.dateTime('updated_at').nullable().defaultTo(knex.raw('now()'));
     t.foreign('creator_id')
       .references('users.id')
       .onDelete('CASCADE');
