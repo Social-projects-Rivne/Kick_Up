@@ -18,7 +18,6 @@ const handler = {
     },
     async updateUser(ctx){
         const { user_id } = ctx.state; 
-        console.log('++++++++++++++++',ctx.request.body)
         const { nick, first_name, last_name, avatar, birth_date } = ctx.request.body;
         const user = await User.where({id:user_id}).save({nick, first_name, last_name, avatar, birth_date},{ patch:true })
         ctx.body = user       
