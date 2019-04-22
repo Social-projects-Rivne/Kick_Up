@@ -1,0 +1,50 @@
+.add-room-page {
+  padding: 24px;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  font-weight: 100;
+  max-width: 900px;
+  margin-right: auto;
+  margin-left: auto;
+
+  .add-room-header {
+    font-size: 2rem;
+    display: flex;
+    padding-bottom: 24px;
+  }
+
+  .add-room-text-field {
+    padding-bottom: 24px;
+
+    div[class*=MuiFilledInput] {
+      background: lighten($primary, 10%);
+    }
+  }
+}
+
+#root label[class*=MuiFormLabel] {
+  color: $black;
+}
+
+#root label, #root legend[class*=MuiFormLabel-focused] {
+  color: $black;
+  width: fit-content;
+}
+
+#root legend[class*=MuiFormLabel] {
+  color: $black;
+}
+//MuiFilledInput-underline
+#root div[class*=MuiInput-underline]:after {
+  border-bottom: 2px solid $black;
+}
+
+#root span[class*=MuiSwitch-bar] {
+  background-color: $primary;
+  opacity: 0.6;
+}
+
+#root span[class*=MuiSwitch-checked] {
+  color: $primary;
+}
+
