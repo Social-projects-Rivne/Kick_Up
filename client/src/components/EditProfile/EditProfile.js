@@ -286,16 +286,15 @@ class EditProfile extends Component {
         };
 
         axios.get(_userDataRoute, {
-            // @todo we need ok flow for token;
             headers: {
-                authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjoxOH0sImV4cCI6MTU2MDg2MjMyNiwiaWF0IjoxNTU1Njc5OTIwfQ.5HOFclQmtX2YcnLF0F5CEgenZ03fE-0qpMj8fRA3thQ'
+                authorization: localStorage.getItem('authorization')
             }
         })
             .then((res) => {
                 res = res.data;
                 fireCallback(res);
              })
-            .catch((err) => {
+            .catch(() => {
                 fireCallback(false);
             })
     }
@@ -304,16 +303,15 @@ class EditProfile extends Component {
             if (typeof callback === 'function') callback(res);
         };
 
-        // @todo handle authotization;
         axios.put(_userDataUpdateRoute, data, {
             headers: {
-                authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjoxOH0sImV4cCI6MTU2MDg2MjMyNiwiaWF0IjoxNTU1Njc5OTIwfQ.5HOFclQmtX2YcnLF0F5CEgenZ03fE-0qpMj8fRA3thQ'
+                authorization: localStorage.getItem('authorization')
             }
         })
-        .then((res) => {
+        .then(() => {
             fireCallback(true)
         })
-        .catch((err) => { fireCallback(false) });
+        .catch(() => { fireCallback(false) });
     }
     componentDidMount = () => {
         const messageAwaitTime = 5000;
