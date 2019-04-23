@@ -1,5 +1,7 @@
 const path = require('path');
 const fs = require('fs');
+const moment = require('moment');
+const base64Img = require('base64-img');
 
 upload  = async (file, uploadType) => {
     const type = file.type;
@@ -17,5 +19,18 @@ upload  = async (file, uploadType) => {
       });
     })
 };
+uploadAvatar = async (base64) => {
+    const bucketPath =  'static/uploads/avatars/';
+    return new Promise((resolve, reject) => {
+    base64Img.img(base64,bucketPath,moment().unix(), (error, filepath) => {
+        if(error){
+            reject(error)
+        } else {
+            const path = filepath.substring(filepath.split('/')[0].length);
+            resolve(path);
+        }
+    })
+    });
+}
 
-module.exports = upload; 
+module.exports = { upload, uploadAvatar}; 

@@ -101,7 +101,7 @@ class Events extends Component {
     this.setState({ date });
   };
 
-  selectedRoomHandler = id => {
+  selectedEventHandler = id => {
     this.props.history.push({ pathname: "/event/" + id });
   };
 
@@ -172,7 +172,7 @@ class Events extends Component {
                 // rating={event.rating}
                 members={event.members}
                 background={event.cover}
-                clicked={() => this.selectedRoomHandler(event.id)}
+                clicked={() => this.selectedEventHandler(event.id)}
               />
             );
           })} 

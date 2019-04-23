@@ -1,11 +1,62 @@
 .event-page {
+   
     /* fallback for old browsers */
     background: #ECE9E6;
     background: linear-gradient(to right, #FFFFFF, #ECE9E6); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    padding-bottom: 26px;
 
     & * {
         box-sizing: border-box;
     }
+}
+
+
+// Tabs;
+.event-page .event-page__tab-menu {
+    position: fixed;
+    justify-content: space-between;
+    left: 0;
+    bottom: 0;
+    z-index: 1;
+    width: 100%;
+    max-height: 72px;
+    background-color: $primary;
+
+    [class*=MuiButtonBase-root] {
+      color: $secondaryBlack;
+    }
+
+    button[class*=selected] {
+      color: $black;
+    }
+
+    span[class*=colorSecondary] {
+      background-color: $black;
+    }
+
+    & * {
+        max-height: 72px;
+    }
+}
+
+.event-page .event-page__tab-menu button {
+    padding-top: 0;
+    min-width: 25%;
+    max-width: 25%;
+    overflow: hidden;
+}
+
+.event-page__badge-wrapper > span > svg {
+    transform: translate3d(0, 8px, 0);
+}
+
+.event-page__badge-wrapper > span > span {
+  top: 8px;
+}
+
+.event-page__badge-wrapper span > span {
+  color: $black;
+  background-color: $white;
 }
 
 // For better UX;
@@ -24,14 +75,23 @@
     margin-bottom: 8px;
 }
 
-.event-page__main-details {
+.event-page .event-page__main-details {
     padding: 8px;
+    color: black;
+    font-size: 1rem;
+    line-height: 1.5rem;
+    font-weight: 100;
+}
+
+.event-page__title-desktop-wrapper h5 ~ * {
+    display: none;
 }
 
 .event-page .event-page__title {
-    padding-top: 8px;
-    padding-left: 16px;
-    padding-right: 16px;
+    padding-top: 24px;
+    padding-left: 24px;
+    padding-right: 24px;
+    color: $black;
     text-align: center;
     font-weight: 100;
 }
@@ -42,20 +102,60 @@
 }
 
 .event-page .event-page__list-item svg {
-    fill: $indigoBright;
+    fill: $secondaryBlack;
 }
 
 .event-page .event-page__list-item-text {
     padding-left: 0;
+}
+
+.event-page .event-page__list-item-text span {
     padding-right: 0;
+    font-size: 1rem;
+    line-height: 1.143rem;
+    color: $black;
+}
+
+// To show upload button;
+.event-page .event-page__section:nth-of-type(3) {
+    padding-top: 48px;
 }
 
 .event-page .event-page__fab {
     display: flex;
-    margin-top: 10px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 5px; 
+    margin: 10px auto 40px;
+    color: $black;
+    background-color: $primary;
+    box-shadow: none;
+
+    &.event-page__fab_upload {
+        position: absolute;
+        top: 0;
+        right: 0;
+        margin: 0;
+        color: $secondaryBlack;
+        background-color: transparent;
+        cursor: pointer;
+
+        & *  {
+            cursor: pointer;
+        }
+
+        &:hover,
+        &:active {
+            background-color: transparent;
+            color: $primary;
+        }
+    }
+}
+
+.event-page .event-page__fab input[type=file] {
+    display: none;
+}
+
+.event-page .event-page__fab label {
+    display: flex;
+    align-items: center;
 }
 
 .event-page .event-page__fab .event-page__fab-text {
@@ -70,7 +170,9 @@
 }
 
 .event-page .event-page__faq-title p {
-    color: $indigo;
+    font-size: 1rem;
+    line-height: 1.5rem;
+    color: $black;
 }
 
 .event-page .event-page__faq-title + div 
@@ -79,6 +181,8 @@
 }
 
 .event-page .event-page__faq-text {
+    font-size: 1rem;
+    line-height: 1.5rem;
     font-weight: 100;
 }
 
@@ -129,11 +233,25 @@
 .event-page .event-page__tabs-swiper {
     display: flex;
     width: 100%;
-    // @todo update after ok header and footer;
     min-height: calc(100vh - (0.67rem * 2) - #{$footerHeight} - #{$maxEventSwiperHeight} - #{$header-height});
     max-height: unset;
     flex-direction: column-reverse;
     justify-content: flex-end;
+}
+
+.event-page__tabs-swiper .swiper-wrapper 
+.swiper-slide:nth-of-type(2) [class*=MuiExpansionPanel] {
+    border: 0;
+    box-shadow: none;
+
+    &::before {
+        background-color: $primary;
+    }
+}
+
+.event-page__tabs-swiper .swiper-wrapper 
+.swiper-slide:nth-of-type(2) > [class*=MuiExpansionPanel]:first-of-type::before {
+    display: none;
 }
 
 .event-page__sections-wrapper {
@@ -141,58 +259,26 @@
     flex-direction: column;
 }
 
-.event-page .event-page__section {
+.event-page .event-page__section.swiper-slide {
+    opacity: 0;
+}
+
+// Animation is used to hide jump defect caused by gallery;
+.event-page .event-page__section.swiper-slide-active {
     display: block;
     width: 100%;
     padding-left: 16px;
     padding-right: 16px;
+    animation-name: fade-in;
+    animation-duration: 0.3s;
+    animation-delay: 0.4s;
+    animation-fill-mode: forwards;
 }
 
-.event-page__section-pagination {
-    padding-top: 10px;
-    padding-bottom: 10px;
-    text-align: center;
-}
-
-.event-page .swiper-pagination-bullet {
-    background-color: $white;
-    opacity: 0.7;
-}
-
-.event-page .swiper-pagination-bullet-active {
-    background-color: $indigoBright;
-    opacity: 1;
-}
-
-#root .event-page .event-page__section-pagination span {
-    margin: 0;
-    margin-right: 20px;
-    height: auto;
-    background-color: transparent;
-    width: unset;
-
-    &::before {
-        color: $indigoBright;
-        font-weight: 400;
-        font-size: 1rem;
-        line-height: 1.286rem;
-    }
-
-    &.swiper-pagination-bullet-active::before {
-        font-weight: 600;
-    }
-
-    &:nth-child(1)::before {
-        content: 'Info';
-    }
-
-    &:nth-child(2)::before {
-        content: 'FAQ';
-    }
-
-    &:nth-child(3)::before {
-        content: 'Members';
-    }
+.event-page .event-page__section > 
+div[class*=MuiExpansionPanel]::before {
+    background-color: rgba(17, 17, 17, 0.12);
+    top: 0;
 }
 
 .event-page .event-page__desktop-subtitle {
@@ -201,6 +287,43 @@
     padding-right: 12px;
     padding-bottom: 6px;
     font-weight: 100;
+}
+
+.event-page [class*=MuiFab-primary]:hover {
+    background-color: $primary;
+    box-shadow: none;
+}
+
+.event-page__img-wrapper {
+    display: none;
+}
+
+.event-page .event-page__users-swiper {
+    padding-bottom: 30px;
+}
+
+.event-page__users-swiper .swiper-slide {
+    display: flex;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.event-page .event-page__users-swiper .swiper-pagination {
+    transform: translateY(14px);
+}
+
+.event-page__users-swiper .swiper-pagination-bullet {
+    width: 10px;
+    height: 10px;
+}
+
+.event-page__users-swiper
+.swiper-pagination-bullet.swiper-pagination-bullet-active {
+    background-color: $primary;
+}
+
+.event-page__users-list {
+    width: 100%;
 }
 
 // Mobile landscape;
@@ -217,17 +340,49 @@
 }
 
 @media only screen and (min-width: 768px) {
+    .event-page {
+        padding-bottom: 0;
+        border-top: 1px solid transparent;
+    }
+
+    .event-page .event-page__tab-menu {
+        display: none;
+    }
+
+    .event-page .event-page__section:nth-of-type(3) {
+        padding-top: 0;
+    }
+
     .event-page__title-wrapper {
+        position: relative;
         max-width: 1168px;
         margin: 30px auto;
+        padding-left: 24px;
+        padding-right: 24px;
         display: flex;
         justify-content: center;
         align-items: center;
     }
 
+    .event-page .event-page__title-wrapper h5 {
+        padding: 0;
+    }
+
+    .event-page__img-wrapper {
+        display: block;
+        width: 350px;
+        height: 200px;
+        margin-left: auto;
+        box-shadow: inset 0px 0px 3px 3px #f6f5f3;
+        overflow: hidden;
+        background-size: cover;
+    }
+
     .event-page .event-page__fab {
-        margin-left: 10px;
-        margin-right: 0;
+        position: absolute;
+        right: calc(16px + 24px);
+        bottom: 16px;
+        margin: 0;
     }
 
     .event-page .event-page__title {
@@ -253,9 +408,16 @@
         overflow: visible;
     }
 
-    .event-page .event-page__tabs-swiper
+    .event-page .event-page__tabs-swiper >
     .swiper-wrapper {
         flex-wrap: wrap;
+    }
+
+    .event-page .event-page__tabs-swiper >
+    .swiper-wrapper .swiper-slide {
+        min-width: auto;
+        max-width: auto;
+        opacity: 1;
     }
 
     .event-page .event-page__section-pagination {
@@ -263,7 +425,7 @@
     }
 
     // Need !important to overwrite Swiper styles;
-    .event-page__tabs-swiper .swiper-wrapper {
+    .event-page__tabs-swiper > .swiper-wrapper {
         height: unset !important;
         transform: none !important;
     }
@@ -309,12 +471,6 @@
         }
     }
 
-    .event-page .event-page__faq-text,
-    .event-page .event-page__faq-title p {
-        font-size: 1rem;
-        line-height: 1.5rem;
-    }
-
     .event-page .event-page__faq-answer {
         padding-left: 32px;
     }
@@ -322,28 +478,70 @@
     .event-page .MuiExpansionPanelSummary-expandIcon-215 {
         top: 22px;
     }
+
+    .event-page [class*=ReactGridGallery] {
+        background-color: transparent;
+    }
 }
 
 @media only screen and (min-width: 1168px) {
     .event-page .event-page__tabs-swiper {
-        padding-left: 30px;
-        padding-right: 0;
+        padding-left: 24px;
+        padding-right: 24px;
     }
 
-    .event-page__section {
+    .event-page .event-page__tabs-swiper >
+    .swiper-wrapper .swiper-slide.event-page__section {
         &:nth-child(1) {
-            max-width: 33%;
+           display: none;
         }
 
         &:nth-child(2) {
-            max-width: 61%;
+            order: -2;
+            min-width: 62%;
+            max-width: 62%;
         }
 
         &:nth-child(3) {
             min-width: 100%;
             max-width: 100%;
         }
+
+        &:nth-child(4) {
+            order: -1;
+            min-width: 38%;
+            max-width: 38%;
+        }
     }
+
+    .event-page__title-wrapper {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .event-page__title-desktop-wrapper {
+        display: flex;
+        max-width: calc(100% - 510px);
+        flex-wrap: wrap;
+    }
+
+    .event-page__title-desktop-wrapper h5 {
+        margin-bottom: 16px;
+    }
+
+    .event-page__title-desktop-wrapper h5 ~ * {
+        display: block;
+    }
+
+    .event-page__img-wrapper {
+        width: 500px;
+        height: 300px;
+    }
+
+    .event-page .event-page__fab {
+        right: 16px;
+    }
+    
 }
 
 // Animation;

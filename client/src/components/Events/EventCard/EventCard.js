@@ -33,7 +33,7 @@ const eventCard = props => {
           <span>{props.location}</span>
         </div>
         <div className="data">
-          <div className="content">
+          <div className="content" onClick={props.clicked}>
             <span className="category">{props.category}</span>
             <h1 className="title">{props.title}</h1>
             <p className="text">{props.description}</p>

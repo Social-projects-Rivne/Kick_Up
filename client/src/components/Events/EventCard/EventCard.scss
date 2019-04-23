@@ -127,5 +127,8 @@
   .content {
     background-color: $white;
     box-shadow: 0 5px 30px 10px rgba($black, 0.3);
+    &:hover {
+        cursor: pointer;
+    }
   }
 }
