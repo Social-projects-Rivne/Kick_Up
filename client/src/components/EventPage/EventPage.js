@@ -47,7 +47,7 @@ const userParams = {
     rebuildOnUpdate: true,
     shouldSwiperUpdate: true,
     nested: true,
-    //simulateTouch: false,
+    simulateTouch: false,
     pagination: {
         el: ".swiper-pagination",
         type: "bullets",
@@ -62,15 +62,18 @@ const tabsParams = {
     loop: false,
     centeredSlides: true,
     autoHeight: true,
-    spaceBetween: 30,
+    spaceBetween: 0,
     rebuildOnUpdate: true,
     shouldSwiperUpdate: true,
     noSwipingClass: 'event-page__users-swiper',
     containerClass: 'swiper-container  event-page__tabs-swiper',
     // Update height;
     on: {
-        click: function() {
-            //this.updateAutoHeight();
+        slideChangeTransitionEnd: function() {
+            this.update();
+        },
+        resize: function() {
+            this.update();
         }
     }
 };
@@ -100,7 +103,7 @@ class EventPage extends Component {
         // Save and listen for slides change;
         if (instance) {
             swiperInstance = instance;
-        swiperInstance.on('slideChange', this.handleSwiperSlideChange);
+            swiperInstance.on('slideChange', this.handleSwiperSlideChange);
         }
     }
     handleSwiperSlideChange = () => {
@@ -164,43 +167,43 @@ class EventPage extends Component {
                     joined: '12 days ago'
                 },
                 {
-                    id: 1,
+                    id: 8,
                     name: 'Ramon Good',
                     image: 'http://i.pravatar.cc/36',
                     joined: '7 days ago'
                 },
                 {
-                    id: 2,
+                    id: 9,
                     name: 'Mauricio Hawkins',
                     image: 'http://i.pravatar.cc/36',
                     joined: '2 days ago'
                 },
                 {
-                    id: 3,
+                    id: 10,
                     name: 'Sage Gates',
                     image: 'http://i.pravatar.cc/36',
                     joined: '5 days ago'
                 },
                 {
-                    id: 4,
+                    id: 11,
                     name: 'Heath Meadows',
                     image: 'http://i.pravatar.cc/36',
                     joined: '8 days ago'
                 },
                 {
-                    id: 5,
+                    id: 12,
                     name: 'Davion Dennis',
                     image: 'http://i.pravatar.cc/36',
                     joined: '2 days ago'
                 },
                 {
-                    id: 6,
+                    id: 13,
                     name: 'Remington Dalton',
                     image: 'http://i.pravatar.cc/36',
                     joined: '1 day ago'
                 },
                 {
-                    id: 7,
+                    id: 14,
                     name: 'Direct Elton',
                     image: 'http://i.pravatar.cc/36',
                     joined: '12 days ago'
@@ -241,22 +244,13 @@ class EventPage extends Component {
                 }
             ]
         }
-       
+
+        const _this = this;
+        
         // @temp, immitate delay;
-        this.setState((prev) => {
-            return {
-                title: data.title,
-                cover: data.cover,
-                description: data.description,
-                gallery: data.gallery,
-                users: data.users
-            }
-        });
-        
-        
-        // window.setTimeout(() => {
-        //     this.setState(() => data);
-        // }, 500);   
+        window.setTimeout(() => {
+            this.setState({...data});
+        }, 500);   
     }
     render() {
         return (
@@ -402,7 +396,7 @@ class EventPage extends Component {
                             this.state.users.length > 0 &&
                             <Swiper {...userParams}>
                                 {
-                                    chunkArr(this.state.users, 9).map((users, idx) => (
+                                    chunkArr([].slice.call(this.state.users), 9).map((users, idx) => (
                                             <div key={idx}>
                                                 <List className="event-page__users-list">
                                                 {
@@ -427,32 +421,6 @@ class EventPage extends Component {
                                     )
                                 }
                             </Swiper>
-                        }
-                        {
-                            this.state.users.length <= 0 &&
-                            <h1>aaaa</h1>
-                        }
-                        {
-                            this.state.users.length > 0 &&
-                            <List className="event-page__users-list">   
-                                {
-                                    this.state.users.length > 0 &&
-                                    this.state.users.map((user, idx) => {
-                                        return (<ListItem key={idx} className="event-page__users-list-item">
-                                            <ListItemAvatar>
-                                            <Avatar>
-                                                {/* @todo take data from db */}
-                                                <Avatar alt="" src={user.image} />
-                                            </Avatar>
-                                            </ListItemAvatar>
-                                            <ListItemText
-                                                primary={user.name}
-                                                secondary={user.joined}
-                                            />
-                                        </ListItem>)
-                                    })
-                                }   
-                            </List>
                         }
                     </Grid>
                 </Swiper>

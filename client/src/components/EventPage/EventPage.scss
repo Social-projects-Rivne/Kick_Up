@@ -293,11 +293,20 @@
     flex-direction: column;
 }
 
-.event-page .event-page__section {
+.event-page .event-page__section.swiper-slide {
+    opacity: 0;
+}
+
+// Animation is used to hide jump defect caused by gallery;
+.event-page .event-page__section.swiper-slide-active {
     display: block;
     width: 100%;
     padding-left: 16px;
     padding-right: 16px;
+    animation-name: fade-in;
+    animation-duration: 0.3s;
+    animation-delay: 0.4s;
+    animation-fill-mode: forwards;
 }
 
 .event-page .event-page__section > 
@@ -393,12 +402,6 @@ div[class*=MuiExpansionPanel]::before {
     width: 100%;
 }
 
-.event-page .event-page__tabs-swiper >
-.swiper-wrapper .swiper-slide {
-    min-width: 100vw;
-    max-width: 100vw;
-}
-
 // Mobile landscape;
 @media only screen and (max-width: 768px) and (orientation: landscape) {
     .event-page__users-list {
@@ -486,6 +489,7 @@ div[class*=MuiExpansionPanel]::before {
     .swiper-wrapper .swiper-slide {
         min-width: auto;
         max-width: auto;
+        opacity: 1;
     }
 
     .event-page .event-page__section-pagination {
