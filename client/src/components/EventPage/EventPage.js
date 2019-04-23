@@ -82,7 +82,6 @@ const tabsParams = {
             noSwipingClass: 'swiper-container'
         }
     },
-    // Update height;
     on: {
         slideChangeTransitionEnd: function() {
             window.dispatchEvent(new Event('resize'));
@@ -91,14 +90,6 @@ const tabsParams = {
             this.update();   
         }
     }
-};
-const chunkArr = (array, size)  => {
-    let chunked = []
-
-    while(array.length > 0) {
-      chunked.push(array.splice(0, size))
-    }
-    return chunked
 };
 let swiperInstance;
 

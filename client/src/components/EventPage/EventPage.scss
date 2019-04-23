@@ -10,6 +10,8 @@
     }
 }
 
+
+// Tabs;
 .event-page .event-page__tab-menu {
     position: fixed;
     justify-content: space-between;
@@ -35,71 +37,27 @@
     & * {
         max-height: 72px;
     }
-  }
+}
 
-  .event-page .event-page__tab-menu button {
-      padding-top: 0;
-      min-width: 25%;
-      max-width: 25%;
-      overflow: hidden;
-  }
+.event-page .event-page__tab-menu button {
+    padding-top: 0;
+    min-width: 25%;
+    max-width: 25%;
+    overflow: hidden;
+}
 
-  .event-page__badge-wrapper > span > svg {
-      transform: translate3d(0, 8px, 0);
-  }
+.event-page__badge-wrapper > span > svg {
+    transform: translate3d(0, 8px, 0);
+}
 
-  .event-page__badge-wrapper > span > span {
-    top: 8px;
-  }
+.event-page__badge-wrapper > span > span {
+  top: 8px;
+}
 
-  .event-page__badge-wrapper span > span {
-    color: $black;
-    background-color: $white;
-  }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+.event-page__badge-wrapper span > span {
+  color: $black;
+  background-color: $white;
+}
 
 // For better UX;
 .event-page > * {
@@ -275,7 +233,6 @@
 .event-page .event-page__tabs-swiper {
     display: flex;
     width: 100%;
-    // @todo update after ok header and footer;
     min-height: calc(100vh - (0.67rem * 2) - #{$footerHeight} - #{$maxEventSwiperHeight} - #{$header-height});
     max-height: unset;
     flex-direction: column-reverse;
@@ -513,11 +470,6 @@ div[class*=MuiExpansionPanel]::before {
             display: none;
         }
     }
-
-    // .event-page .event-page__faq-text,
-    // .event-page .event-page__faq-title p {
-    //     line-height: 1.5rem;
-    // }
 
     .event-page .event-page__faq-answer {
         padding-left: 32px;
