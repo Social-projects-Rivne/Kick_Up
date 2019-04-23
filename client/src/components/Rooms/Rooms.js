@@ -24,7 +24,7 @@ class Rooms extends Component {
       date: null
     },
     category: "",
-    date: null,
+    date: new Date().toISOString(),
     showDate: true
   };
   componentDidMount() {
@@ -149,6 +149,7 @@ class Rooms extends Component {
           changeHandle={this.changeHandle}
           category={this.state.category}
           showDate={true}
+          date={this.state.date}
           changeDate={this.changeDate}
         />
         <Grid container spacing={8} justify="center" className="rooms-page-cards">

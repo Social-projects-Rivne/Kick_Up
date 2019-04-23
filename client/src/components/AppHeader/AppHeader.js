@@ -1,6 +1,7 @@
 import React from 'react';
 
 import logo from '../../assets/images/logo.png';
+import face from '../../assets/images/face.png';
 
 import { AppBar, Toolbar, IconButton, InputBase, Link, BottomNavigation, BottomNavigationAction } from '@material-ui/core';
 //You can find icon names here: https://jxnblk.com/rmdi/
@@ -39,24 +40,41 @@ class AppHeader extends React.Component {
         this.setState({ mobileMenuOpened: this.mobileMenuOpened });
     };
 
+    handleUserProfile = () => {
+        this.props.history.push({ pathname: "/profile/" + this.props.user.id });
+    }
+
     render() {
         console.log('appheader props', this.props)
+        const { user, isAuthenticated } = this.props;
         const { mobileMenuOpened, activePage } = this.state;
-
-        const authField = this.props.isAuthenticated
+        const avatarURL = user && user.avatar ? 
+            <img src={user.avatar} alt={user.email}/> 
+            : <img src={face} alt ="user" />
+        console.log('[appheader user]', user)
+        const authField = isAuthenticated && user
         ?   <BottomNavigation value={activePage} onChange={this.handleChangeActivePage} className="navigation-buttons">
+                <BottomNavigationAction className="icon-details" label="avatar"
+                 onClick={this.handleUserProfile}
+                  icon={avatarURL} />
                 <BottomNavigationAction className="icon-details" label="Sign Out" onClick={this.handleLogout} icon={<PowerOff />} />
             </BottomNavigation>
         :   <BottomNavigation value={activePage} onChange={this.handleChangeActivePage} className="navigation-buttons">
                 <BottomNavigationAction className="icon-details" label="Sign In" value="/sign-in" icon={<Person />} />
                 <BottomNavigationAction className="icon-details" label="Sign Up" value="/sign-up" icon={<PersonAdd />} />
             </BottomNavigation>;
-        const authFieldForMobile = this.props.isAuthenticated
-        ?   <BottomNavigation value={activePage} onChange={this.handleChangeActivePage} className="navigation-buttons">
-                <BottomNavigationAction className="icon-details" label="Events" value="/events" icon={<EventAvailable />} />
-                <BottomNavigationAction className="icon-details" label="Spaces" value="/rooms" icon={<SupervisorAccount />} />
-                <BottomNavigationAction className="icon-details" label="Sign Out" onClick={this.handleLogout} icon={<PowerOff />} />
-            </BottomNavigation>
+
+        const authFieldForMobile = isAuthenticated && user
+        ?   <>
+                <BottomNavigation value={activePage} onChange={this.handleChangeActivePage} className="navigation-buttons">
+                    <BottomNavigationAction className="icon-details" label="Events" value="/events" icon={<EventAvailable />} />
+                    <BottomNavigationAction className="icon-details" label="Spaces" value="/rooms" icon={<SupervisorAccount />} />
+                    <BottomNavigationAction className="icon-details" label="avatar" 
+                    onClick={this.handleUserProfile} 
+                    icon={avatarURL} />
+                    <BottomNavigationAction className="icon-details" label="Sign Out" onClick={this.handleLogout} icon={<PowerOff />} />
+                </BottomNavigation>
+            </>
         :   <BottomNavigation value={activePage} onChange={this.handleChangeActivePage} className="navigation-buttons">
                 <BottomNavigationAction className="icon-details" label="Events" value="/events" icon={<EventAvailable />} />
                 <BottomNavigationAction className="icon-details" label="Spaces" value="/rooms" icon={<SupervisorAccount />} />

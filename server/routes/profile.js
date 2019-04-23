@@ -10,7 +10,7 @@ const handler = {
     async getSelfProfile(ctx){
         const { user_id } = ctx.state; 
         const user = await User.where({id:user_id}).fetch();
-        ctx.body = user;        
+        ctx.body = user;
     },
     async getUserProfileById(ctx){
         const { id } = ctx.params;

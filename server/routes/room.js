@@ -842,11 +842,11 @@ const handler = {
 
     const newList  = list.map(i => i.set({members,rating}));
 
-    // // data from DB
+    // data from DB
     ctx.body = newList;
 
     // data from mock
-    ctx.body = testRooms;
+    // ctx.body = testRooms;
   },
   async createRoom(ctx){
     await validate(ctx.request.body, {
@@ -1096,7 +1096,7 @@ const handler = {
   },
 
   async filter(ctx) {
-    const filter = ctx.request.query;
+    const filter = ctx.request.body;
     console.log('filter', filter);
     formatDate = d => {
       let curr_date = d.getDate();
@@ -1130,7 +1130,24 @@ const handler = {
     ctx.body = filterRooms;
   },
 
-}
+  async filterByDate(ctx) {
+    const {filter} = ctx.request.body;
+    formatDate = d => {
+      let curr_date = d.getDate();
+      let curr_month = d.getMonth() + 1;
+      const curr_year = d.getFullYear();
+      if (curr_month < 10) curr_month = "0" + curr_month;
+      if (curr_date < 10) curr_date = "0" + curr_date;
+      const date = curr_year + "-" + curr_month + "-" + curr_date;
+      return date;
+    };
+    const filterRoomsByDate = [...testRooms].filter(e => {
+      return this.formatDate(new Date(e.created_at)) === filter;
+    });
+    ctx.body = filterRoomsByDate;
+  },
+
+};
 
 // router.post("/save-room", (ctx) => {
 //   const {
@@ -1181,7 +1198,7 @@ const handler = {
 
 router.get('/', handler.roomList);
 router.get('/sort', handler.sort);
-router.get('/filter', handler.filter);
+router.post('/filter', handler.filter);
 router.get('/:id', handler.getRoomById);
 router.post('/', handler.createRoom);
 router.put('/:id', handler.updateRoomById);

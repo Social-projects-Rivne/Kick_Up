@@ -2,9 +2,6 @@
   width: 100% !important;
   margin: 0 !important;
   background-color: $black;
-  .swiper-slide {
-    width: 140px !important;
-  }
   button.toolbar-sort, .toolbar-add {
       background-color: $primary;
       &:hover {
@@ -100,6 +97,7 @@
     position: relative;
     top: 0px;
   }
+  
   .toolbar-mobile {
     padding: 7px 0; 
   }
