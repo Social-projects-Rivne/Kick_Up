@@ -67,13 +67,20 @@ const tabsParams = {
     shouldSwiperUpdate: true,
     noSwipingClass: 'event-page__users-swiper',
     containerClass: 'swiper-container  event-page__tabs-swiper',
+    breakpointsInverse: true,
+    breakpoints: {
+        768: {
+            noSwipingClass: 'swiper-container'
+        }
+    },
     // Update height;
     on: {
         slideChangeTransitionEnd: function() {
-            this.update();
+            window.dispatchEvent(new Event('resize'));
         },
         resize: function() {
             this.update();
+            
         }
     }
 };
