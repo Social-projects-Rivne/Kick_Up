@@ -6,6 +6,9 @@
 }
 .events-card {
   .menu-content {
+    display: flex;
+    justify-content: space-around;
+    background-color: $primary;
     margin: 0;
     padding: 0;
     list-style-type: none;
@@ -19,15 +22,13 @@
     transform: translateY(0);
     li {
       display: inline-block;
-      width: 33.333333%;
-      float: left;
-      background-color: $primary;
       height: 60px;
     }
     span {
       position: relative;
       top: 10px;
-      font-size: 1.2vw;
+      font-size: inherit;
+      margin-left: 5px;
     }
     img {
       position: relative;
@@ -85,12 +86,6 @@
     height: 70px;
     margin: 0;
   }
-  // input[type="checkbox"] {
-  //   display: none;
-  // }
-  // input[type="checkbox"]:checked + .menu-content {
-  //   transform: translateY(-60px);
-  // }
   .date {
     position: absolute;
     top: 0;
@@ -115,42 +110,22 @@
       font-size: 12px;
     }
   }
+  .location {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: $primary;
+    color: $black;
+    padding: 0.8em;
+    span {
+      display: inline-block;
+      text-align: center;
+    }
+  }
   .content {
     background-color: $white;
     box-shadow: 0 5px 30px 10px rgba($black, 0.3);
-  }
-  .menu-button {
-    position: absolute;
-    z-index: 999;
-    top: 16px;
-    right: 16px;
-    width: 25px;
-    text-align: center;
-    cursor: pointer;
-    span {
-      width: 5px;
-      height: 5px;
-      background-color: lighten($black, 50%);
-      color: lighten($black, 50%);
-      position: relative;
-      display: inline-block;
-      border-radius: 50%;
-      &::after,
-      &::before {
-        content: "";
-        display: block;
-        width: 5px;
-        height: 5px;
-        background-color: currentColor;
-        position: absolute;
-        border-radius: 50%;
-      }
-      &::before {
-        left: -10px;
-      }
-      &::after {
-        right: -10px;
-      }
-    }
   }
 }

@@ -8,20 +8,18 @@ const eventCard = props => {
   const backgroundImage = {
     backgroundImage: `url(${props.background})`
   };
+  if(!isToggle) setTimeout(() => ToggleHandler(!isToggle), 500);
   const dateToArr = props.startDate.slice(0, 10).split("-");
-  const menuContent = <ul className={`menu-content ${isToggle}`}>
-                        <li>
-                          <LocationOn className="menu-content-icons" />
-                          <span>{props.location}</span>
-                        </li>
-                        <li>
-                          <People className="menu-content-icons" />
-                          <span>{props.members}</span>
-                        </li>
-                        <li>
-                          <img src={props.avatar} alt={props.avatar}/>
-                        </li>
-                      </ul>
+  const menuContent = 
+    <ul className={`menu-content ${isToggle}`}>               
+      <li>
+        <People className="menu-content-icons" />
+        <span>{props.members}</span>
+      </li>
+      <li>
+        <img src={props.avatar} alt={props.avatar}/>
+      </li>
+    </ul>;
   return (
     <Grid item xs={12} sm={6} md={4} className="events-card">
       <div className="wrapper" style={backgroundImage}>
@@ -30,17 +28,15 @@ const eventCard = props => {
           <span className="month">{dateToArr[1]}</span>
           <span className="year">{dateToArr[0]}</span>
         </div>
+        <div className="location">
+          <LocationOn />
+          <span>{props.location}</span>
+        </div>
         <div className="data">
           <div className="content">
             <span className="category">{props.category}</span>
             <h1 className="title">{props.title}</h1>
             <p className="text">{props.description}</p>
-            <label 
-            onClick={() => ToggleHandler(!isToggle)}
-            className="menu-button"
-            >
-              <span />
-            </label>
           </div>
           {menuContent}
         </div>

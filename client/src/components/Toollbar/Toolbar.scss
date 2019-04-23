@@ -75,6 +75,14 @@
     right: 10px;
     background-color: $black !important;
     color: $primary !important;
+    border-radius: 5px;
+    padding: 5px;
+    &:hover {
+      cursor: pointer;
+      background-color: $primary !important;
+      color: $black !important;
+      transition: all 0.3s;
+    }
     &-close-filters {
       background-color: $black;
       color: $primary;
