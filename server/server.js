@@ -4,6 +4,7 @@ const koaJson = require('koa-json');
 const koaParser = require('koa-bodyparser');
 const mongoose = require("mongoose");
 const cors = require('@koa/cors');
+const serve = require('koa-static');
 
 const dbRoute = require("./mongoDB/constants/db");
 
@@ -19,7 +20,7 @@ app.use(koaJson({
   pretty: false
 }));
 
-
+app.use(serve('./static'));
 require('./routes')(app);
 
 app.listen(process.env.PORT, () => {
