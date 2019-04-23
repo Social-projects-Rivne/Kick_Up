@@ -2,6 +2,7 @@ const Router = require('koa-router');
 const { authenticated } = require('./../middlewares');
 const { User } = require('./../models');
 const validate = require('./../services/Validator');
+const { uploader } = require('./../services');
 
 const router = new Router({prefix:'/api/profile'});
 
@@ -19,7 +20,14 @@ const handler = {
     async updateUser(ctx){
         const { user_id } = ctx.state; 
         const { nick, first_name, last_name, avatar, birth_date } = ctx.request.body;
-        const user = await User.where({id:user_id}).save({nick, first_name, last_name, avatar, birth_date},{ patch:true })
+        const updateUser = {
+            nick, first_name, last_name, birth_date
+        }
+        if(avatar){
+            const avatarPath = await uploader.uploadAvatar(avatar);
+            updateUser.avatar = avatarPath
+        }
+        const user = await User.where({id:user_id}).save(updateUser,{ patch:true })
         ctx.body = user       
     }
 }

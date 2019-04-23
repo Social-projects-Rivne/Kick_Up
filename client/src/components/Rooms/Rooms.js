@@ -28,7 +28,7 @@ class Rooms extends Component {
     showDate: true
   };
   componentDidMount() {
-    this.getDataFromDB(API.getRooms);
+    this.getSortDataFromDB(API.getRooms);
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -38,7 +38,7 @@ class Rooms extends Component {
     }
   }
 
-  getDataFromDB = (api, type) => {
+  getSortDataFromDB = (api, type) => {
     this.setState({ isLoading: true });
     axios
       .get(api, type)
@@ -48,10 +48,10 @@ class Rooms extends Component {
       .catch(err => console.log(err));
   };
 
-  postDataFromDB = (api, filter) => {
+  getFilteredDataFromDB = (api, filter) => {
     this.setState({ isLoading: true });
     axios
-      .post(api, filter)
+      .get(api, filter)
       .then(console.log("Data filtered by", api))
       .then(res => {
         this.setState({ roomsDB: res.data, isLoading: false });
@@ -61,12 +61,12 @@ class Rooms extends Component {
 
   filterHandle = () => {
     const filters = {
-      category: this.state.category,
-      date: this.state.date
+      params: {
+        category: this.state.category,
+        date: this.state.date,
+      },
     };
-    filters
-      ? this.postDataFromDB(API.filter, filters)
-      : this.getDataFromDB(API.getRooms);
+    this.getFilteredDataFromDB(API.filter, filters);
   };
 
   sortRateHandle = () => {
@@ -75,7 +75,7 @@ class Rooms extends Component {
         sort: "rate"
       }
     };
-    this.getDataFromDB(API.sort, type);
+    this.getSortDataFromDB(API.sort, type);
   };
   sortMembersHandle = () => {
     const type = {
@@ -83,7 +83,7 @@ class Rooms extends Component {
         sort: "members"
       }
     };
-    this.getDataFromDB(API.sort, type);
+    this.getSortDataFromDB(API.sort, type);
   };
   sortCreatedHandle = () => {
     const type = {
@@ -91,11 +91,11 @@ class Rooms extends Component {
         sort: "create"
       }
     };
-    this.getDataFromDB(API.sort, type);
+    this.getSortDataFromDB(API.sort, type);
   };
 
   resetFiltersHandle = () => {
-    this.getDataFromDB(API.getRooms);
+    this.getSortDataFromDB(API.getRooms);
     this.setState({
       category: ""
     });
