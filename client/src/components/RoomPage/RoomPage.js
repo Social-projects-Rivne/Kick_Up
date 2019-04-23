@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 
@@ -7,7 +8,7 @@ import { AppBar, Tabs, Tab, Typography, Grid, Avatar, Card, CardActions, CardCon
 import { Comment, Collections, Face, NewReleases, EventAvailable, Add, Info } from '@material-ui/icons';
 import Gallery from 'react-grid-gallery';
 import SwipeableViews from 'react-swipeable-views';
-import roomPageDB from './../../mocks/roomPage';
+import Spinner from './../UI/Spinner/Spinner';
 
 function TabContainer(props) {
     return (
@@ -18,9 +19,29 @@ function TabContainer(props) {
 }
 
 class RoomPage extends React.Component {
+
     state = {
-        roomPageDB: roomPageDB,
         value: 0,
+        roomPageDB: null
+    };
+
+    componentDidMount() {
+        const { id } = this.props.match.params;
+        axios.get("/api/room/" + id)
+            .then(res => {
+                this.setState({ roomPageDB: res.data });
+            })
+            .catch(err => console.log(err));
+    };
+
+    refReadMore = (element) => {
+        if (!element)
+            return;
+
+        // 5px padding bottom, 48px == 3rem
+        if (element.clientHeight - 5 < 48) {
+            document.getElementById("read-more-button").style.display = "none";
+        }
     };
 
     handleChange = (event, value) => {
@@ -32,7 +53,12 @@ class RoomPage extends React.Component {
     };
 
     render() {
-        const { value } = this.state;
+        const { value, roomPageDB } = this.state;
+
+        if (!roomPageDB) {
+            return (<Spinner className="rooms-page"/>);
+        }
+
         return (
             <div className="room-page-details">
                 <AppBar position="static" className="tab-bar">
@@ -49,7 +75,7 @@ class RoomPage extends React.Component {
                         <Tab label="Gallery" icon={<Collections />} />
                         <Tab label="Posts" icon={<NewReleases />} />
                         <Tab label={
-                            <Badge className="badge-room-margin" badgeContent={this.state.roomPageDB.members.length}>
+                            <Badge className="badge-room-margin" badgeContent={roomPageDB.members.length}>
                                 <Face /> <p className="badge-members">Members</p>
                             </Badge>
                         }
@@ -61,7 +87,7 @@ class RoomPage extends React.Component {
                     index={value}
                     onChangeIndex={this.handleChangeIndex}
                 >
-                    {value === 0 && <TabContainer>
+                    { (value === 0 && <TabContainer>
                         <Grid container spacing={24} className="room-details-page-content">
                             <Grid item md={6} xs={12}>
                                 <div className="room-details-page-wrapper">
@@ -70,26 +96,26 @@ class RoomPage extends React.Component {
                                         <span className="room-details-page-join">Join</span>
                                     </Fab>
                                     <Typography className="room-details-page-title">
-                                        {this.state.roomPageDB.title}
+                                        {roomPageDB.title}
                                     </Typography>
                                 </div>
                                 <Paper className="room-details-page-paper" elevation={1}>
                                     <input type="checkbox" className="read-more-state" id="post-1"/>
-                                    <Typography className="read-more-wrap">
-                                        {this.state.roomPageDB.description}
-                                    </Typography>
-                                    <label htmlFor="post-1" className="read-more-trigger"></label>
+                                    <div ref={this.refReadMore} className="read-more-wrap">
+                                        {roomPageDB.description}
+                                    </div>
+                                    <label htmlFor="post-1" className="read-more-trigger" id="read-more-button"></label>
                                 </Paper>
                             </Grid>
                             <Grid item md={6} xs={12} className="room-details-page-cover-grid">
-                                <img src={this.state.roomPageDB.cover} className="room-details-page-cover"/>
+                                <img src={roomPageDB.cover} alt={roomPageDB.title} className="room-details-page-cover"/>
                             </Grid>
                         </Grid>
-                    </TabContainer> }
+                    </TabContainer>) || <TabContainer></TabContainer> }
 
-                    {value === 1 && <TabContainer>
+                    { (value === 1 && <TabContainer>
                         <Grid container spacing={24} className="room-details-card">
-                            {this.state.roomPageDB.feeds.map((feed) =>
+                            {roomPageDB.feeds.map((feed) =>
                                 <Grid item xs={12} className="room-details-card-grid">
                                     <Card className="feed-card">
                                         <CardActionArea>
@@ -116,11 +142,11 @@ class RoomPage extends React.Component {
                                 </Grid>
                             )}
                         </Grid>
-                    </TabContainer> }
+                    </TabContainer>) || <TabContainer></TabContainer> }
 
-                    {value === 2 && <TabContainer>
+                    { (value === 2 && <TabContainer>
                         <Grid container spacing={24} className="room-details-card">
-                            {this.state.roomPageDB.events.map((event) =>
+                            {roomPageDB.events.map((event) =>
                                 <Grid item md={6} xs={12} className="room-details-card-grid">
                                     <Card>
                                         <CardActionArea>
@@ -147,19 +173,19 @@ class RoomPage extends React.Component {
                                 </Grid>
                             )}
                         </Grid>
-                    </TabContainer> }
+                    </TabContainer>) || <TabContainer></TabContainer> }
 
-                    {value === 3 && <TabContainer>
+                    { (value === 3 && <TabContainer>
                         <Fab variant="extended" className="room-details-page-photo-fab">
                             <Add />
                             <span>upload photo</span>
                         </Fab>
-                        <Gallery images={this.state.roomPageDB.gallery} backdropClosesModal={true} />
-                    </TabContainer> }
+                        <Gallery images={roomPageDB.gallery} backdropClosesModal={true} />
+                    </TabContainer>) || <TabContainer></TabContainer> }
 
-                    {value === 4 && <TabContainer>
+                    { (value === 4 && <TabContainer>
                         <Grid container spacing={24} className="room-details-card">
-                            {this.state.roomPageDB.posts.map((post) =>
+                            {roomPageDB.posts.map((post) =>
                                 <Grid item xs={12} className="room-details-card-grid">
                                     <Card className="post-card">
                                         <CardActionArea>
@@ -186,11 +212,11 @@ class RoomPage extends React.Component {
                                 </Grid>
                             )}
                         </Grid>
-                    </TabContainer> }
+                    </TabContainer>) || <TabContainer></TabContainer> }
 
-                    {value === 5 && <TabContainer>
+                    { (value === 5 && <TabContainer>
                         <Grid container spacing={24}>
-                            {this.state.roomPageDB.members.map((member) =>
+                            {roomPageDB.members.map((member) =>
                                 <Grid item lg={3} md={4} sm={6} xs={12}>
                                     <ListItem className="avatar-center">
                                         <ListItemAvatar>
@@ -203,7 +229,7 @@ class RoomPage extends React.Component {
                                 </Grid>
                             )}
                         </Grid>
-                    </TabContainer> }
+                    </TabContainer>) || <TabContainer></TabContainer> }
                 </SwipeableViews>
             </div>
         );
