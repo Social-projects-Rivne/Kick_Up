@@ -8853,6 +8853,8 @@ react-app-polyfill@^0.2.2:
     raf "3.4.1"
     whatwg-fetch "3.0.0"
 
+<<<<<<< HEAD
+=======
 react-avatar-edit@^0.8.2:
   version "0.8.2"
   resolved "https://registry.yarnpkg.com/react-avatar-edit/-/react-avatar-edit-0.8.2.tgz#b4e4cef5a541479852d9ca31b0f20bad9ddaa039"
@@ -8860,6 +8862,7 @@ react-avatar-edit@^0.8.2:
   dependencies:
     konva "2.5.1"
 
+>>>>>>> 1524f9dfc9f7482fdc1e380024f7730b70194f54
 react-calendar@^2.18.1:
   version "2.18.1"
   resolved "https://registry.yarnpkg.com/react-calendar/-/react-calendar-2.18.1.tgz#f8ef9468d8566aa0d47d9d70c88917bb2030bcb9"
@@ -8973,9 +8976,9 @@ react-prop-toggle@^1.0.2:
   integrity sha512-JmerjAXs7qJ959+d0Ygt7Cb2+4fG+n3I2VXO6JO0AcAY1vkRN/JpZKAN67CMXY889xEJcfylmMPhzvf6nWO68Q==
 
 react-responsive-carousel@^3.1.47:
-  version "3.1.47"
-  resolved "https://registry.yarnpkg.com/react-responsive-carousel/-/react-responsive-carousel-3.1.47.tgz#0d1442284e2c45854d81bc2f0c24d0f838d274b6"
-  integrity sha512-mA8ZEUGk5UIFskZTa4Tc3dhs7pln+nHxpoOnUhkprr9xK7BSGBfJcHT+EQIrmVNXGKln8t5kzKv3EaXdIaN/Cg==
+  version "3.1.49"
+  resolved "https://registry.yarnpkg.com/react-responsive-carousel/-/react-responsive-carousel-3.1.49.tgz#5a074c09965533f49163d79c7f86a46e0c0eaea2"
+  integrity sha512-mudzwtDUWY4Apl00V6ycYJxVdiggXF46GegGFdeR72FL9Km8RDyFPQFBqsaKWCX5uTxWkLEw5qgn2uHsn2gnJA==
   dependencies:
     classnames "^2.2.5"
     prop-types "^15.5.8"

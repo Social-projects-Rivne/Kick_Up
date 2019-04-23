@@ -1,4 +1,6 @@
 .toolbar {
+  width: 100% !important;
+  margin: 0 !important;
   background-color: $black;
   .swiper-slide {
     width: 140px !important;
@@ -49,8 +51,9 @@
       }
     }
   }
+  //TODO create dynamic select
   #select-category,
-  #select-city {
+  #select-location {
     padding: 9px 15px;
   }
   input {
@@ -72,6 +75,14 @@
     right: 10px;
     background-color: $black !important;
     color: $primary !important;
+    border-radius: 5px;
+    padding: 5px;
+    &:hover {
+      cursor: pointer;
+      background-color: $primary !important;
+      color: $black !important;
+      transition: all 0.3s;
+    }
     &-close-filters {
       background-color: $black;
       color: $primary;
@@ -87,7 +98,6 @@
     z-index: 1002;
     transition: all 0.3s;
     position: relative;
-    
     top: 0px;
   }
   .toolbar-mobile {
@@ -101,5 +111,12 @@
   }
   .toolbar-mobile {
     display: none !important;
+  }
+}
+
+#root {
+  .react-calendar__tile--active {
+    background: $primary;
+    color: $black;
   }
 }
