@@ -30,32 +30,41 @@ import {
     ExpandMore
 } from '@material-ui/icons';
 import Swiper from 'react-id-swiper/lib/ReactIdSwiper.full';
-import { Pagination } from 'swiper/dist/js/swiper.esm';
+import { Pagination, Autoplay } from 'swiper/dist/js/swiper.esm';
 import Gallery from 'react-grid-gallery';
 import "react-id-swiper/src/styles/scss/swiper.scss";
 
-// Global constants;
-
 // Swipers params for event page;
 const userParams = {
-    modules: [Pagination],
-    horizontal: true,
-    effect: 'slide',
-    slidesPerView: 1,
-    centeredSlides: true,
+    modules: [Pagination, Autoplay],
+    slidesPerView: 2,
+    slidesPerColumn: 3,
     containerClass: 'swiper-container  event-page__users-swiper',
     rebuildOnUpdate: true,
     shouldSwiperUpdate: true,
     nested: true,
+    autoplay: {
+        delay: 4000,
+        disableOnInteraction: true,
+    },
     simulateTouch: false,
+    breakpointsInverse: true,
+    breakpoints: {
+        768: {
+            slidesPerView: 3,
+            slidesPerColumn: 2
+        },
+        1168: {
+            slidesPerView: 2,
+            slidesPerColumn: 2
+        }
+    },
     pagination: {
         el: ".swiper-pagination",
         type: "bullets",
         clickable: true
     }
 };
-let swiperInstance;
-
 const tabsParams = {
     modules: [Pagination],
     slidesPerView: 1,
@@ -79,8 +88,7 @@ const tabsParams = {
             window.dispatchEvent(new Event('resize'));
         },
         resize: function() {
-            this.update();
-            
+            this.update();   
         }
     }
 };
@@ -92,6 +100,7 @@ const chunkArr = (array, size)  => {
     }
     return chunked
 };
+let swiperInstance;
 
 class EventPage extends Component {
     constructor(props) {
@@ -286,9 +295,35 @@ class EventPage extends Component {
 
                 <div className="event-page__title-wrapper">
                     {this.state.title &&
-                        <Typography variant="h5" className="event-page__title">
-                            {this.state.title}
-                        </Typography>
+                        <div className="event-page__title-desktop-wrapper">
+                            <Typography variant="h5" className="event-page__title">
+                                {this.state.title}
+                            </Typography>
+                            <List>
+                                <ListItem className="event-page__list-item">
+                                    <ListItemIcon>
+                                        <DateRange />
+                                    </ListItemIcon>
+                                    {/* @todo, display via moment.js; */}
+                                    <ListItemText className="event-page__list-item-text" primary="April 7th 2019, 4:30 pm" />
+                                </ListItem>
+                                <ListItem className="event-page__list-item">
+                                    <ListItemIcon>
+                                        <LocationOn />
+                                    </ListItemIcon>
+                                    {/* @todo, display from DB; */}
+                                    <ListItemText className="event-page__list-item-text" primary="4-6 Slovatsʹkoho str., Rivne, 33017"/>
+                                </ListItem>
+                            </List>
+                            <Paper elevation={1} className="event-page__main-details-wrapper">
+                                {
+                                    this.state.description &&
+                                    <Typography component="p" className="event-page__main-details">
+                                        {this.state.description}
+                                    </Typography>
+                                }
+                            </Paper>
+                        </div>
                     }
                     <Fab className="event-page__fab" variant="extended" color="primary">
                         <Add />
@@ -402,31 +437,20 @@ class EventPage extends Component {
                         {
                             this.state.users.length > 0 &&
                             <Swiper {...userParams}>
-                                {
-                                    chunkArr([].slice.call(this.state.users), 9).map((users, idx) => (
-                                            <div key={idx}>
-                                                <List className="event-page__users-list">
-                                                {
-                                                    users.map((user, idx) => (
-                                                        <ListItem key={idx + Math.floor(Math.random() * 1000) + 1} className="event-page__users-list-item">
-                                                            <ListItemAvatar>
-                                                                <Avatar>
-                                                                    {/* @todo take data from db */}
-                                                                    <Avatar alt="" src={user.image} />
-                                                                </Avatar>
-                                                            </ListItemAvatar>
-                                                            <ListItemText
-                                                                primary={user.name}
-                                                                secondary={user.joined}
-                                                            />
-                                                        </ListItem>
-                                                    ))
-                                                }
-                                                </List>
-                                            </div>
-                                        )
-                                    )
-                                }
+                                {this.state.users.map((user, idx) => 
+                                    <ListItem key={idx} className="event-page__users-list-item">
+                                        <ListItemAvatar>
+                                            <Avatar>
+                                                {/* @todo take data from db */}
+                                                <Avatar alt="" src={user.image} />
+                                            </Avatar>
+                                        </ListItemAvatar>
+                                        <ListItemText
+                                            primary={user.name}
+                                            secondary={user.joined}
+                                        />
+                                    </ListItem>
+                                )}
                             </Swiper>
                         }
                     </Grid>
