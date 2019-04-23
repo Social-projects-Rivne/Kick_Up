@@ -1,0 +1,9 @@
+.events-page {
+    background-color: $white;
+
+    &-cards {
+        width: 90% !important;
+        margin: 0 auto !important;
+        max-width: 80rem;
+    }
+}
