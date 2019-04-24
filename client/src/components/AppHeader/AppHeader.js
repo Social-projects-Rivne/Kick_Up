@@ -5,7 +5,7 @@ import face from '../../assets/images/face.png';
 
 import { AppBar, Toolbar, IconButton, InputBase, Link, BottomNavigation, BottomNavigationAction } from '@material-ui/core';
 //You can find icon names here: https://jxnblk.com/rmdi/
-import { EventAvailable, SupervisorAccount, PersonAdd, Person, PowerOff, MoreVert, Search } from '@material-ui/icons';
+import { EventAvailable, SupervisorAccount, PersonAdd, Person, ExitToApp, MoreVert, Search } from '@material-ui/icons';
 import { Link as RouterLink, withRouter } from 'react-router-dom';
 
 class AppHeader extends React.Component {
@@ -57,7 +57,7 @@ class AppHeader extends React.Component {
                 <BottomNavigationAction className="icon-details" label="avatar"
                  onClick={this.handleUserProfile}
                   icon={avatarURL} />
-                <BottomNavigationAction className="icon-details" label="Sign Out" onClick={this.handleLogout} icon={<PowerOff />} />
+                <BottomNavigationAction className="icon-details" label="Sign Out" onClick={this.handleLogout} icon={<ExitToApp />} />
             </BottomNavigation>
         :   <BottomNavigation value={activePage} onChange={this.handleChangeActivePage} className="navigation-buttons">
                 <BottomNavigationAction className="icon-details" label="Sign In" value="/sign-in" icon={<Person />} />
@@ -72,7 +72,7 @@ class AppHeader extends React.Component {
                     <BottomNavigationAction className="icon-details" label="avatar" 
                     onClick={this.handleUserProfile} 
                     icon={avatarURL} />
-                    <BottomNavigationAction className="icon-details" label="Sign Out" onClick={this.handleLogout} icon={<PowerOff />} />
+                    <BottomNavigationAction className="icon-details" label="Sign Out" onClick={this.handleLogout} icon={<ExitToApp />} />
                 </BottomNavigation>
             </>
         :   <BottomNavigation value={activePage} onChange={this.handleChangeActivePage} className="navigation-buttons">

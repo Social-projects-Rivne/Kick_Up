@@ -1091,8 +1091,11 @@ const handler = {
         roomsAray.sort((a, b) => a.created_at - b.created_at);
         break;
     }
-
     ctx.body = roomsAray;
+
+    // const room = await Room.forge().orderBy('created_at', 'ASC').fetchAll();
+    // console.log('room', room)
+    // ctx.body = room;
   },
 
   async filter(ctx) {

@@ -21,7 +21,7 @@ class Events extends Component {
     isLoading: true,
     category: "",
     location: "",
-    date: null,
+    date: new Date().toISOString(),
     showDate: true
   };
   componentDidMount() {
@@ -154,6 +154,7 @@ class Events extends Component {
           sortHandle={this.sortHandle}
           changeHandle={this.changeHandle}
           category={this.state.category}
+          date={this.state.date}
           showDate={true}
           changeDate={this.changeDate}
         />

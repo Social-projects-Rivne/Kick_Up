@@ -75,7 +75,7 @@ const rooms = [
     creator_id: 1,
     category_id: 1,
     description: faker.company.catchPhraseDescriptor(),
-    cover: faker.image.nature(),
+    cover: "https://picsum.photos/200/300/?random",
     permission: 1,
     members_limit: 25,
     is_banned: 0
@@ -86,7 +86,7 @@ const rooms = [
     creator_id: 1,
     category_id: 1,
     description: faker.company.catchPhraseDescriptor(),
-    cover: faker.image.nature(),
+    cover: "https://picsum.photos/200/300/?random",
     permission: 1,
     members_limit: 25,
     is_banned: 0
@@ -97,8 +97,7 @@ const rooms = [
     creator_id: 1,
     category_id: 1,
     description: faker.company.catchPhraseDescriptor(),
-    cover: faker.image.nature(),
-    permission: 1,
+    cover: "https://picsum.photos/200/300/?random",
     members_limit: 25,
     is_banned: 0
   },
@@ -108,7 +107,7 @@ const rooms = [
     creator_id: 1,
     category_id: 1,
     description: faker.company.catchPhraseDescriptor(),
-    cover: faker.image.nature(),
+    cover: "https://picsum.photos/200/300/?random",
     permission: 1,
     members_limit: 25,
     is_banned: 0
