@@ -280,6 +280,16 @@ class EditProfile extends Component {
             _this.setState({ windowWidth: window.innerWidth });
         }, _awaitTime);
     }
+    validateEmail = () => {
+        // Validate email;
+        if (this.state.email.data && !is.email(this.state.email.data)) {
+            this.showToast(
+                `Your new email address is not valid, so we didn't save it`,
+                messageType.ERR,
+                5000
+            );
+        }
+    }
     getUserData = (callback) => {
         const fireCallback = (res) => {
             if (typeof callback === 'function') callback(res);
@@ -372,15 +382,8 @@ class EditProfile extends Component {
             }
         });
 
-        // Validate email before update;
-        if (data.email && !is.email(data.email)) {
-            delete data.email;
-            this.showToast(
-                `Your new email address is not valid, so we didn't save it`,
-                messageType.ERR,
-                5000
-            );
-        }
+        // If needed, remove email;
+        if (data.email && !is.email(data.email)) delete data.email;
 
         if (Object.keys(data).length)
 
@@ -473,11 +476,13 @@ class EditProfile extends Component {
                                     <TextField
                                         value={this.state.email.data}
                                         onChange={this.updateInputValue}
+                                        onBlur={this.validateEmail}
                                         onFocus={() => { this.handleSvg(inputType.email) }}
                                         className="input"
                                         name="email"
                                         label="Enter a valid email address"
                                         type="email"
+                                        minLength="3"
                                         margin="normal"
                                         autoComplete="on"
                                     />

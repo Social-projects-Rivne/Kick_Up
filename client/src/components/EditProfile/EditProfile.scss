@@ -201,8 +201,9 @@ input[type=date]::-webkit-inner-spin-button {
     cursor: pointer;
 }
 
-.edit-profile__cropper-wrapper label {
+#root .edit-profile .edit-profile__cropper-wrapper label {
     position: absolute;
+    min-width: 100%;
     left: 0;
     right: 0;
     top: 0;
