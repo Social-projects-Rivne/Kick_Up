@@ -195,8 +195,7 @@ class Register extends Component {
                     <div className="register__btn-wrapper">
                         <Button
                             className="register__submit-btn"
-                            variant="contained"
-                            color="primary"
+                            variant="outlined"
                             onClick={this.submitHandler}
                             disabled={this.state.messageOpened}
                         >
