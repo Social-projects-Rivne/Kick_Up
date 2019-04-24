@@ -56,7 +56,7 @@ header.root {
             border-radius: 50px;
             background-color: $icon-color;
             width: 100%;
-            color: $white;
+            color: $black;
 
             @include media-breakpoint-up(lg) {
                 margin-left: 0;
