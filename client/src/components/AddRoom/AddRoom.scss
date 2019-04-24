@@ -1,4 +1,4 @@
-.add-room-page {
+#root .add-room-page {
   padding: 24px;
   font-size: 1rem;
   line-height: 1.5rem;
@@ -11,104 +11,105 @@
     max-width: 900px;
     margin-right: auto;
     margin-left: auto;
-  }
 
-  .add-room-header {
-    font-size: 2rem;
-    display: flex;
-    padding-bottom: 24px;
-  }
-
-  .add-room-text-field {
-    padding-bottom: 24px;
-
-    div[class*=MuiFilledInput] {
-      background: lighten($primary, 10%);
+    .add-room-header {
+      font-size: 2rem;
+      display: flex;
+      padding-bottom: 24px;
     }
-  }
 
-  .formControl {
-    min-width: 120px;
-    padding-bottom: 24px;
-  }
+    .add-room-text-field {
+      padding-bottom: 24px;
 
-  .add-room-button, .add-room-button:hover, .add-room-button-upload, .add-room-button-upload:hover {
-    background-color: $primary;
-    border-radius: 50px;
-
-    input[type="file"] {
-      cursor: pointer;
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      right: 0;
-      left: 0;
-      width: 100%;
-      opacity: 0;
+      div[class*=MuiFilledInput] {
+        background: lighten($primary, 10%);
+      }
     }
-  }
 
-.add-room-select option {
-    font-size: 1rem;
-    line-height: 1.5rem;
-    font-weight: 100;
-  }
+    .formControl {
+      min-width: 120px;
+      padding-bottom: 24px;
+    }
 
-  .add-room-select select:focus {
-    background: none;
-  }
+    .add-room-button, .add-room-button:hover, .add-room-button-upload, .add-room-button-upload:hover {
+      background-color: $primary;
+      border-radius: 50px;
 
-  .add-room-invite-members {
-    padding-bottom: 24px;
+      input[type="file"] {
+        cursor: pointer;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        width: 100%;
+        opacity: 0;
+      }
+    }
 
-    .invite-link {
-      color: $black;
+    .add-room-select option {
+      font-size: 1rem;
+      line-height: 1.5rem;
+      font-weight: 100;
+    }
 
-      .textField {
+    .add-room-select select:focus {
+      background: none;
+    }
+
+    .add-room-invite-members {
+      padding-bottom: 24px;
+
+      .invite-link {
+        color: $black;
+
+        .textField {
+          width: 100%;
+        }
+      }
+    }
+
+    .add-room-create-button {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .add-room-button, .add-room-create-button {
+      @include media-breakpoint-down(lg) {
         width: 100%;
       }
     }
-  }
 
-  .add-room-create-button {
-    display: flex;
-    justify-content: flex-end;
-  }
-  .add-room-button, .add-room-create-button {
-    @include media-breakpoint-down(lg) {
-      width: 100%;
+    div[class*=MuiInput-underline]:after {
+      border-bottom: 2px solid $primary;
+    }
+
+    label[class*=MuiFormLabel] {
+      color: $black;
+    }
+
+    label, legend[class*=MuiFormLabel-focused] {
+      color: $black;
+      width: fit-content;
+    }
+
+    legend[class*=MuiFormLabel] {
+      color: $black;
+    }
+
+    span[class*=MuiSwitch-bar] {
+      background-color: $primary;
+      opacity: 0.6;
+    }
+
+    span[class*=MuiSwitch-checked] {
+      color: $primary;
+    }
+
+    span[class*=MuiTypography-body1] {
+      font-size: 1rem;
+      line-height: 1.5rem;
+      font-weight: 100;
     }
   }
-}
-
-span[class*=MuiTypography-body1] {
-  font-size: 1rem;
-  line-height: 1.5rem;
-  font-weight: 100;
-}
-
-#root label[class*=MuiFormLabel] {
-  color: $black;
-}
-
-#root label, #root legend[class*=MuiFormLabel-focused] {
-  color: $black;
-  width: fit-content;
-}
-
-#root legend[class*=MuiFormLabel] {
-  color: $black;
-}
-
-#root div[class*=MuiInput-underline]:after {
-  border-bottom: 2px solid $primary;
-}
-
-#root span[class*=MuiSwitch-bar] {
-  background-color: $primary;
-  opacity: 0.6;
-}
-
-#root span[class*=MuiSwitch-checked] {
-  color: $primary;
 }
