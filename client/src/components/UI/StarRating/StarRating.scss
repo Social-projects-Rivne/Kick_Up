@@ -1,4 +1,5 @@
-  .star-rating {
+  #root {
+    .star-rating {
   
     &__star {
       display: inline-block;
@@ -19,3 +20,5 @@
       }
     }
   }
+}
+  

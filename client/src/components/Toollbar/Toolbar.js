@@ -13,7 +13,7 @@ import {
   IconButton
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
-import {CalendarToday, Close, KeyboardArrowDownRounded, HourglassEmptyRounded} from "@material-ui/icons";
+import {CalendarToday, Close, KeyboardArrowDownRounded, FilterList} from "@material-ui/icons";
 import Calendar from "react-calendar";
 import Drawer from '@material-ui/core/Drawer';
 
@@ -141,7 +141,7 @@ class Toolbar extends Component {
               {calendar}
             </Grid>
         </Grid>
-        <HourglassEmptyRounded 
+        <FilterList 
           onClick={this.toggleFiltersHandler} 
           fontSize="large"
           className="mobile-button" 
