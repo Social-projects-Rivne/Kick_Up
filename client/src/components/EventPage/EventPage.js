@@ -33,6 +33,11 @@ import Swiper from 'react-id-swiper/lib/ReactIdSwiper.full';
 import { Pagination, Autoplay } from 'swiper/dist/js/swiper.esm';
 import Gallery from 'react-grid-gallery';
 import "react-id-swiper/src/styles/scss/swiper.scss";
+import axios from 'axios';
+import { withSnackbar } from 'notistack';
+
+// @temp, we need add get data from MongoDB;
+import mock from '../../mocks/eventPage';
 
 // Swipers params for event page;
 const userParams = {
@@ -91,6 +96,11 @@ const tabsParams = {
         }
     }
 };
+const messageType = {
+    SUCCESS: 'success',
+    INFO: 'info',
+    ERR: 'error'
+};
 let swiperInstance;
 
 class EventPage extends Component {
@@ -99,6 +109,8 @@ class EventPage extends Component {
         this.state = {
             title: '',
             cover: '',
+            location: '',
+            date: '',
             description: '',
             users: [],
             swiper: null,
@@ -121,147 +133,66 @@ class EventPage extends Component {
             swiperInstance.slideTo(idx);
         }
     }
+    showToast = (message, variant) => {
+        this.props.enqueueSnackbar(message, {
+            variant: variant ? variant : 'default',
+            anchorOrigin: {
+                vertical: 'top',
+                horizontal: 'center',
+            }
+        });
+    }
     componentDidMount = () => {
-        // Get data, @todo get it from server via axios;
-        const data = {
-            title: 'Meteor shower in Rivne',
-            cover: 'https://s.abcnews.com/images/International/perseid-meteor-shower-05-rt-jef-180814_hpEmbed_3x2_992.jpg',
-            description: '9 meteor showers in August 2019 among others! \
-            The Lyrids peaking! Keep your eyes to the sky! A meteor shower is \
-            a celestial event in which a number of meteors are observed to radiate, \
-            or originate, from one point in the night sky. Don\'t miss it!',
-            users: [
-                {
-                    id: 1,
-                    name: 'Ramon Good',
-                    image: 'http://i.pravatar.cc/36',
-                    joined: '7 days ago'
-                },
-                {
-                    id: 2,
-                    name: 'Mauricio Hawkins',
-                    image: 'http://i.pravatar.cc/36',
-                    joined: '2 days ago'
-                },
-                {
-                    id: 3,
-                    name: 'Sage Gates',
-                    image: 'http://i.pravatar.cc/36',
-                    joined: '5 days ago'
-                },
-                {
-                    id: 4,
-                    name: 'Heath Meadows',
-                    image: 'http://i.pravatar.cc/36',
-                    joined: '8 days ago'
-                },
-                {
-                    id: 5,
-                    name: 'Davion Dennis',
-                    image: 'http://i.pravatar.cc/36',
-                    joined: '2 days ago'
-                },
-                {
-                    id: 6,
-                    name: 'Remington Dalton',
-                    image: 'http://i.pravatar.cc/36',
-                    joined: '1 day ago'
-                },
-                {
-                    id: 7,
-                    name: 'Direct Elton',
-                    image: 'http://i.pravatar.cc/36',
-                    joined: '12 days ago'
-                },
-                {
-                    id: 8,
-                    name: 'Ramon Good',
-                    image: 'http://i.pravatar.cc/36',
-                    joined: '7 days ago'
-                },
-                {
-                    id: 9,
-                    name: 'Mauricio Hawkins',
-                    image: 'http://i.pravatar.cc/36',
-                    joined: '2 days ago'
-                },
-                {
-                    id: 10,
-                    name: 'Sage Gates',
-                    image: 'http://i.pravatar.cc/36',
-                    joined: '5 days ago'
-                },
-                {
-                    id: 11,
-                    name: 'Heath Meadows',
-                    image: 'http://i.pravatar.cc/36',
-                    joined: '8 days ago'
-                },
-                {
-                    id: 12,
-                    name: 'Davion Dennis',
-                    image: 'http://i.pravatar.cc/36',
-                    joined: '2 days ago'
-                },
-                {
-                    id: 13,
-                    name: 'Remington Dalton',
-                    image: 'http://i.pravatar.cc/36',
-                    joined: '1 day ago'
-                },
-                {
-                    id: 14,
-                    name: 'Direct Elton',
-                    image: 'http://i.pravatar.cc/36',
-                    joined: '12 days ago'
-                }
-            ],
-            gallery: [
-                {
-                  src: "http://en.es-static.us/upl/2018/12/meteor-geminids-venus-12-15-2018-Kota-Belud-Sabah-Emma-Zulaiha-Zulkifli-e1545048674227.jpg",
-                  thumbnail: "http://en.es-static.us/upl/2018/12/meteor-geminids-venus-12-15-2018-Kota-Belud-Sabah-Emma-Zulaiha-Zulkifli-e1545048674227.jpg",
-                  thumbnailWidth: 520,
-                  thumbnailHeight: 274
-                },
-                {
-                  src: "https://bloximages.chicago2.vip.townnews.com/postregister.com/content/tncms/assets/v3/editorial/4/82/482ee1c8-a447-5c16-a0e4-b350d77faea2/5b6dcccf942ce.image.jpg?resize=400%2C600",
-                  thumbnail: "https://bloximages.chicago2.vip.townnews.com/postregister.com/content/tncms/assets/v3/editorial/4/82/482ee1c8-a447-5c16-a0e4-b350d77faea2/5b6dcccf942ce.image.jpg?resize=400%2C600",
-                  thumbnailWidth: 320,
-                  thumbnailHeight: 512,
-                  tags: [{value: "Rivne", title: "Rivne"}],
-                },
-                {
-                  src: "https://texashillcountry.com/wp-content/uploads/Meteor-Shower.jpg",
-                  thumbnail: "https://texashillcountry.com/wp-content/uploads/Meteor-Shower.jpg",
-                  thumbnailWidth: 450,
-                  thumbnailHeight: 260
-                },
-                {
-                  src: "https://r.hswstatic.com/w_907/gif/leonidmeteors-1.jpg",
-                  thumbnail: "https://r.hswstatic.com/w_907/gif/leonidmeteors-1.jpg",
-                  thumbnailWidth: 320,
-                  thumbnailHeight: 430,
-                  tags: [{value: "Rivne", title: "Rivne"}]
-                },
-                {
-                  src: "https://cdn-az.allevents.in/banners/85c41d80-b181-11e8-81c9-1b431fd718bc-rimg-w400-h400-dc374665-gmir.jpg",
-                  thumbnail: "https://cdn-az.allevents.in/banners/85c41d80-b181-11e8-81c9-1b431fd718bc-rimg-w400-h400-dc374665-gmir.jpg",
-                  thumbnailWidth: 620,
-                  thumbnailHeight: 374
-                }
-            ]
-        }
+        const timeOptions = {
+            hour12: false,
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: 'numeric', 
+            minute: '2-digit',
+        };
+        const { id } = this.props.match.params;
 
-        const _this = this;
-        
-        // @temp, immitate delay;
-        window.setTimeout(() => {
-            this.setState({...data});
-        }, 500);   
+        // Get data of  event;
+        axios
+        .get('/api/event/' + id)
+        .then(res => {
+            res = res.data;
+            res.users = mock.users;
+            res.gallery = mock.gallery;
+
+            this.setState({
+                title: res.title,
+                cover: res.cover,
+                location: res.location,
+                date: new Date(res.start_date).toLocaleString('en-US', timeOptions),
+                description: res.description,
+                users: mock.users,
+                gallery: mock.gallery
+            });
+        })
+        .catch((err) => {
+            const data = err.response.data.error.errors;
+            let res = [];
+
+            // Retrieve all errors;
+            Object.values(data).forEach((el) => {
+                res.push(el[0]);
+            });
+
+            // Show all messages;
+            try {
+                res.forEach(msg => {
+                    this.showToast(msg, messageType.ERR);
+                });
+            } catch(err) {
+                this.showToast('Something went wrong :( Try reload your page', messageType.ERR);
+            }
+        });
     }
     render() {
         return (
-            <div className="event-page">
+            <div className={!this.state.title ? 'event-page  event-page_loading' : 'event-page'}>
                 <AppBar position="fixed" className="tab-bar">
                     <Tabs
                         value={this.state.activeSlide}
@@ -296,20 +227,20 @@ class EventPage extends Component {
                                         <DateRange />
                                     </ListItemIcon>
                                     {/* @todo, display via moment.js; */}
-                                    <ListItemText className="event-page__list-item-text" primary="April 7th 2019, 4:30 pm" />
+                                    <ListItemText className="event-page__list-item-text" primary={this.state.date} />
                                 </ListItem>
                                 <ListItem className="event-page__list-item">
                                     <ListItemIcon>
                                         <LocationOn />
                                     </ListItemIcon>
                                     {/* @todo, display from DB; */}
-                                    <ListItemText className="event-page__list-item-text" primary="4-6 Slovatsʹkoho str., Rivne, 33017"/>
+                                    <ListItemText className="event-page__list-item-text" primary={this.state.location}/>
                                 </ListItem>
                             </List>
                             <Paper elevation={1} className="event-page__main-details-wrapper">
                                 {
                                     this.state.description &&
-                                    <Typography component="p" className="event-page__main-details">
+                                    <Typography id="event-page-main-info" component="p" className="event-page__main-details">
                                         {this.state.description}
                                     </Typography>
                                 }
@@ -451,4 +382,4 @@ class EventPage extends Component {
     }
 }
 
-export default EventPage;
+export default withSnackbar(EventPage);
