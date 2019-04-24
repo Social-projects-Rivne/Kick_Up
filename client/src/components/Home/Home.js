@@ -16,7 +16,6 @@ const messageType = {
 };
 
 class Home extends Component {
-    constructor(props) { super(props) };
     state = {
         events: [],
         rooms: []
