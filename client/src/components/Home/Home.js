@@ -29,6 +29,9 @@ class Home extends Component {
             }
         });
     }
+    selectedRoomHandler = id => {
+        this.props.history.push({ pathname: "/rooms/" + id });
+    };
     loadData = (callback) => {
         async function getUser() {
             try {
@@ -94,6 +97,7 @@ class Home extends Component {
                             description={room.description}
                             members={room.members}
                             limit={room.members_limit}
+                            clicked={() => this.selectedRoomHandler(room.id)}
                         />
                     ))
                 }
