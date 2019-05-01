@@ -5,8 +5,7 @@
     background-size: cover;
     background-position: center center;
     user-select: none;
-    /* (screen height) - (header height) - (footer height) */
-    min-height: calc(100vh - 89px);
+    height: calc(100vh - #{$footer-height} - #{$header-height});
 }
 
 .sign-in hr {
@@ -23,7 +22,7 @@
 
 // Left part;
 .sign-in .sign-in__info {
-    display: none;
+    display: none !important;
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -33,7 +32,8 @@
     color: white;
     box-shadow: none;
     background-color: transparent;
-}
+} 
+
 
 .sign-in__info h1 {
     font-weight: 600;
@@ -76,54 +76,15 @@
     margin-bottom: 0;
 }
 
-// @todo move these styles to index scss, we will need this for other inputs;
-.sign-in__input label {
-    color: white;
-    font-size: 1.143rem;
-
-    &.MuiInputLabel-shrink-154 {
-        color: #e5e5e5;
-    }
-}
-
-.sign-in__input label + div::before,
-.sign-in__input label + div::after,
-#root .MuiInput-underline-169.MuiInput-error-170::after {
-    border-color: white;
-}
-
-#root .sign-in__input:hover label + div::before,
-#root .sign-in__input:hover label + div::after {
-    border-color: #e5e5e5;
-}
-
-#root .MuiFormLabel-focused-159 .MuiFormLabel-asterisk-164,
-#root .MuiFormLabel-filled-162 .MuiFormLabel-asterisk-164 {
-    color: #e5e5e5;
-}
-
 .sign-in__field-wrapper {
     display: flex;
     align-items: baseline;
     color: rgba(255, 255, 255, 0.8);
 }
 
-.sign-in__input {
-    width: 100%;
-    margin-top: 6px !important;
-}
-
 .sign-in__field-wrapper + .sign-in__field-wrapper 
 .sign-in__input {
     margin-top: 16px;
-}
-
-.sign-in__input input {
-    box-sizing: border-box;
-    width: 100%;
-    min-height: 40px;
-    padding: 8px 0;
-    color: white;
 }
 
 .sign-in__field-wrapper svg {
@@ -135,14 +96,20 @@
     margin-top: 30px;
     text-align: center;
 }
-
-.sign-in__submit-btn {
-    color: #e5e5e5 !important;
-    border-color: #e5e5e5 !important;
-    & svg {
-        margin-left: 12px;
-        margin-right: 0;
+#root {
+    .sign-in__submit-btn {
+        color: $white;
+        border-color: $white;
+        & svg {
+            margin-left: 12px;
+            margin-right: 0;
+        }
     }
+}
+
+
+#root [class*="MuiFormLabel-focused"] {
+    color: $white;
 }
 
 @media only screen and (min-width: 767px) {

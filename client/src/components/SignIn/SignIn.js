@@ -162,7 +162,7 @@ class Login extends Component {
               <Email />
               <TextField
                 required
-                className="sign-in__input"
+                className="input"
                 name="email"
                 label="Your email"
                 type="email"
@@ -177,7 +177,7 @@ class Login extends Component {
               <Lock />
               <TextField
                 required
-                className="sign-in__input"
+                className="input"
                 name="password"
                 label="Enter password, min. 6 chars"
                 type="password"

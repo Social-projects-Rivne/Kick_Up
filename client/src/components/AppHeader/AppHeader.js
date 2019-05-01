@@ -14,7 +14,6 @@ class AppHeader extends React.Component {
         activePage: window.location.pathname,
     };
     handleLogout = () => {
-        console.log(this.props);
         this.props.userHasAuthenticated(false);
         localStorage.removeItem("authorization");
         this.props.setAuthToken(null);
@@ -45,13 +44,11 @@ class AppHeader extends React.Component {
     }
 
     render() {
-        console.log('appheader props', this.props)
         const { user, isAuthenticated } = this.props;
         const { mobileMenuOpened, activePage } = this.state;
         const avatarURL = user && user.avatar ? 
             <img src={user.avatar} alt={user.email}/> 
-            : <img src={face} alt ="user" />
-        console.log('[appheader user]', user)
+            : <img src={face} alt ="user" />;
         const authField = isAuthenticated && user
         ?   <BottomNavigation value={activePage} onChange={this.handleChangeActivePage} className="navigation-buttons">
                 <BottomNavigationAction className="icon-details" label="avatar"
