@@ -19,16 +19,18 @@ class AddRoom extends React.Component {
         return (
             <div className="add-room-page">
                 <form className="add-room-page-container">
-                    <label className="add-room-header">Please fill in all fields</label>
+                    <label className="add-room-header">Please fill in all fields to create room</label>
                     <TextField
+                        required
                         className="add-room-text-field"
-                        label="Room name"
+                        label="Title"
                         fullWidth
                         autoComplete="off"
                         inputProps={{ maxLength: 70 }}
                     />
 
                     <TextField
+                        required
                         className="add-room-text-field"
                         label="Description"
                         fullWidth

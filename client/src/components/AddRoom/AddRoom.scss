@@ -6,6 +6,7 @@
 
   @include svg-settings-bg('#{$secondaryBlack}');
   background-color: white;
+  min-height: calc(100vh - 86px - 51px);
 
   .add-room-page-container {
     max-width: 900px;
