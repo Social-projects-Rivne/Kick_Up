@@ -1,0 +1,197 @@
+#root .add-event-page {
+  padding: 24px;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  font-weight: 100;
+
+  @include svg-settings-bg('#{$secondaryBlack}');
+  background-color: white;
+  min-height: calc(100vh - 86px - 51px);
+
+  .add-event-picker {
+    padding-bottom: 24px;
+  }
+
+  .add-event-page-container {
+    max-width: 900px;
+    margin-right: auto;
+    margin-left: auto;
+
+    .add-event-header {
+      font-size: 2rem;
+      display: flex;
+      padding-bottom: 24px;
+    }
+
+    .add-event-text-field {
+      padding-bottom: 24px;
+
+      div[class*=MuiFilledInput] {
+        background: lighten($primary, 10%);
+      }
+    }
+
+    .formControl {
+      min-width: 120px;
+      padding-bottom: 24px;
+    }
+
+    .add-event-button, .add-event-button:hover, .add-event-button-upload, .add-event-button-upload:hover {
+      background-color: $primary;
+      border-radius: 50px;
+
+      input[type="file"] {
+        cursor: pointer;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        width: 100%;
+        opacity: 0;
+      }
+    }
+
+    .add-event-select option {
+      font-size: 1rem;
+      line-height: 1.5rem;
+      font-weight: 100;
+    }
+
+    .add-event-select select:focus {
+      background: none;
+    }
+
+    .add-event-create-button {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .add-event-button, .add-event-create-button {
+      @include media-breakpoint-down(lg) {
+        width: 100%;
+      }
+    }
+
+    div[class*=MuiInput-underline]:after {
+      border-bottom: 2px solid $primary;
+    }
+
+    label[class*=MuiFormLabel] {
+      color: $black;
+    }
+
+    label, legend[class*=MuiFormLabel-focused] {
+      color: $black;
+      width: fit-content;
+    }
+
+    legend[class*=MuiFormLabel] {
+      color: $black;
+    }
+
+    span[class*=MuiTypography-body1] {
+      font-size: 1rem;
+      line-height: 1.5rem;
+      font-weight: 100;
+    }
+  }
+
+  .add-event-location{
+    padding-bottom: 24px;
+
+    label {
+      margin: 0;
+      width: 100%;
+    }
+
+    span {
+      width: 133%;
+      transform: scale(0.75);
+    }
+  }
+
+  .geosuggest {
+    font-size: 1rem;
+    line-height: 1.5rem;
+    font-weight: 100;
+    position: relative;
+    width: 100%;
+    text-align: left;
+  }
+  .geosuggest__input {
+    font-size: 1rem;
+    line-height: 1.5rem;
+    font-weight: 100;
+    width: 100%;
+    border: 2px solid transparent;
+    box-shadow: 0 0 1px $black;
+    padding: .25em 0.5em;
+    transition: border 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+    outline: none;
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    background-color: transparent;
+  }
+  .geosuggest__input:focus {
+    border-color: $primary;
+    box-shadow: 0 0 0 transparent;
+  }
+
+  .geosuggest__input:hover:not(:focus){
+    border-color: $black;
+    box-shadow: 0 0 0 transparent;
+  }
+
+  .geosuggest__suggests {
+    font-size: 1rem;
+    line-height: 1.5rem;
+    font-weight: 100;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    max-height: 25em;
+    padding: 0;
+    margin-top: -1px;
+    background: #fff;
+    border: 2px solid $primary;
+    border-top-width: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    list-style: none;
+    z-index: 5;
+    transition: max-height 0.2s, border 0.2s;
+  }
+  .geosuggest__suggests--hidden {
+    max-height: 0;
+    overflow: hidden;
+    border-width: 0;
+  }
+
+  .geosuggest__item {
+    font-size: 1rem;
+    line-height: 1.5rem;
+    font-weight: 100;
+    padding: .5em .65em;
+    cursor: pointer;
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  }
+
+  .geosuggest__item:hover, .geosuggest__item:focus {
+    background: $white;
+  }
+
+  .geosuggest__item--active {
+    background: $primary;
+    color: $white;
+  }
+
+  .geosuggest__item--active:hover, .geosuggest__item--active:focus {
+    background: $primary;
+  }
+
+  .geosuggest__item__matched-text {
+    font-weight: bold;
+  }
+}

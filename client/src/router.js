@@ -11,6 +11,7 @@ import SignIn from './components/SignIn/SignIn';
 import AppliedRoute from './hoc/AppliedRoute/AppliedRoute';
 import RoomPage from './components/RoomPage/RoomPage';
 import EditProfile from './components/EditProfile/EditProfile';
+import AddEvent from "./components/AddEvent/AddEvent";
 
 const router = ({ childProps }) => {
     return (
@@ -20,6 +21,7 @@ const router = ({ childProps }) => {
             <AppliedRoute path="/sign-in" exact component={SignIn} props={childProps} />
             <Route path="/events" exact component={Events} />
             <Route path="/event/:id" component={EventPage} />
+            <Route path="/events/add" component={AddEvent} />
             <Route path="/rooms" exact component={Rooms} />
             <Route path="/rooms/:id" component={RoomPage} />
             <Route path="/add-room" component={AddRoom} />
