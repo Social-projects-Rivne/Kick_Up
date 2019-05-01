@@ -80,6 +80,41 @@ code {
   max-height: 36px;
 }
 
+#picker-popover {
+  div[class*=MuiPickerDTHeader] > * {
+    color: rgba($black, 0.54);
+
+    &[class*=toolbarBtnSelected] {
+      color: $black;
+    }
+  }
+
+  div[class*=MuiPickerDTTabs-tabs] {
+    background-color: $primary;
+
+    svg {
+      color: $black;
+    }
+  }
+
+  span[class*=MuiPrivateTabIndicator-colorSecondary], button[class*=MuiPickersDay-selected] {
+    background-color: $black;
+  }
+
+  button[class*=MuiPickersDay-current], div[class*=MuiTypography-colorPrimary], div[class*=MuiPickersYear-root]:focus {
+    color: $primary;
+  }
+
+  div[class*=MuiPickersClock-pin], div[class*=MuiPickersClockPointer-pointer], div[class*=MuiPickersClockPointer-noPoint],
+  div[class*=MuiPickersToolbar-toolbar] {
+    background-color: $primary;
+  }
+
+  div[class*=MuiPickersClockPointer-noPoint], div[class*=MuiPickersClockPointer-thumb] {
+    border: 14px solid $primary;
+  }
+}
+
 @import '../containers/PageContainer/PageContainer.scss';
 @import '../components/AppHeader/AppHeader.scss';
 @import '../components/Footer/Footer.scss';
@@ -97,4 +132,5 @@ code {
 @import "../components/UI/StarRating/StarRating.scss";
 @import "../components//Events/Events.scss";
 @import "../components//Events/EventCard/EventCard.scss";
+@import '../components/AddEvent/AddEvent.scss';
 
