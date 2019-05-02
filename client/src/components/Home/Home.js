@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 
+import Swiper from 'react-id-swiper/lib/ReactIdSwiper.full';
+import { Pagination, Navigation } from 'swiper/dist/js/swiper.esm';
 import axios from "axios";
 import RoomCard from '../Rooms/RoomCard/RoomCard';
 import { Grid } from '@material-ui/core';
@@ -13,6 +15,23 @@ const messageType = {
     SUCCESS: 'success',
     INFO: 'info',
     ERR: 'error'
+};
+const mainSliderParams = {
+    modules: [Pagination, Navigation],
+    containerClass: 'home__main-swiper',
+    direction: 'vertical',
+    slidesPerView: 1,
+    simulateTouch: true,
+    pagination: {
+        el: ".home__main-swiper-pagination",
+        type: 'bullets',
+        clickable: true
+    },
+    speed: 800,
+    navigation: {
+        prevEl: '.edit-profile__form-prev',
+        nextEl: '.edit-profile__form-next',
+    },
 };
 
 class Home extends Component {
@@ -83,25 +102,18 @@ class Home extends Component {
         });
     }
     render = () => (
-        <div className="main-content" >
-            <Grid container spacing={24}>
-                {
-                    this.state.rooms &&
-                    this.state.rooms.map(room => (
-                        <RoomCard 
-                            background={room.cover}
-                            avatar={room.creator.avatar}
-                            title={room.title}
-                            category={room.category.title}
-                            rating={room.rating}
-                            description={room.description}
-                            members={room.members}
-                            limit={room.members_limit}
-                            clicked={() => this.selectedRoomHandler(room.id)}
-                        />
-                    ))
-                }
-            </Grid>
+        <div className="main-content  home" >
+            <Swiper {...mainSliderParams} getSwiper={ this.setSwiper } >
+                <div key={1} className="swiper-slide  home__main-swiper-slide">
+                    <h1>Here we have slide 1</h1>
+                </div>
+                <div key={2} className="swiper-slide  home__main-swiper-slide">
+                    <h1>Here we have slide 2</h1>
+                </div>
+                <div key={3} className="swiper-slide  home__main-swiper-slide">
+                    <h1>Here we have slide 3</h1>
+                </div>
+            </Swiper>
         </div>
     );
 };
