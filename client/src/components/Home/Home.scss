@@ -62,6 +62,18 @@
     }    
 }
 
+.home__rooms-wrapper {
+    padding-top: $normalSpacing;
+}
+
+.home__img-wrapper {
+    min-height: 250px;
+}
+
+.home .home__group-members {
+    margin-left: auto;
+}
+
 // Tablets;
 @include media-breakpoint-up(md) {
     .home__main-swiper {
