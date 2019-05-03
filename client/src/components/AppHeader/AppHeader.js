@@ -48,7 +48,7 @@ class AppHeader extends React.Component {
         const { mobileMenuOpened, activePage } = this.state;
         const avatarURL = user && user.avatar ? 
             <img src={user.avatar} alt={user.email}/> 
-            : <img src={face} alt ="user" />;
+            : <img src={face} alt ="" />;
         const authField = isAuthenticated && user
         ?   <BottomNavigation value={activePage} onChange={this.handleChangeActivePage} className="navigation-buttons">
                 <BottomNavigationAction className="icon-details" label="avatar"
