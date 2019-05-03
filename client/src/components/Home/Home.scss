@@ -24,15 +24,30 @@
 }
 
 .home__main-swiper {
-    height: calc(100vh - #{$footer-height} - #{$header-height});
+    //max-height: calc(100vh - #{$footer-height} - #{$header-height});
     padding: 0;
     overflow: hidden;
 }
 
 .home__main-swiper-slide {
     min-width: 100%;
-    max-height: 100%;
+    //max-height: 100%;
     overflow: hidden;
+    border: 1px solid red;
+}
+
+.home__main-swiper-slide h4 {
+    display: none;
+    padding-top: 8px;
+    color: $primary;
+    text-align: center;
+    font-weight: 100;
+    transform: scale(0);
+    transform-origin: 50% 50%;
+    animation-name: scale-in;
+    animation-duration: 0.7s;
+    animation-delay: 0.4s;
+    animation-fill-mode: forwards;
 }
 
 .home__main-swiper-pagination {
@@ -63,15 +78,12 @@
 }
 
 .home__rooms-wrapper {
-    padding-top: $normalSpacing;
+    padding-top: 10px;
 }
 
-.home__img-wrapper {
-    min-height: 250px;
-}
-
-.home .home__group-members {
-    margin-left: auto;
+// Related to modificators;
+.home__main-swiper-slide.swiper-slide-active h4 {
+    display: block;
 }
 
 // Tablets;
