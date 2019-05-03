@@ -1,34 +1,43 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-require('./modelRoomComment');
-require('./modelPhoto');
-require('./modelRating');
-
 const roomsSchema = new Schema (
     {
         room_id: Number,
         comments: [
-            { 
-                type: mongoose.Schema.Types.ObjectId, 
-                ref: 'Room_comment'
-            },
+            {
+                author_id: Number,
+                text: String,
+                created_at: {
+                    type: Date,
+                    default: Date.now,
+                },
+                updated_at: Date,
+                is_banned: Boolean,
+                child_comments: Array,
+            }
         ],
         moderators_list: Array,
         gallery: [
-            { 
-                type: mongoose.Schema.Types.ObjectId, 
-                ref: 'Photo'
-            },
+            {
+                src: String,
+                user_id: Number,
+                created_at: {
+                    type: Date,
+                    default: Date.now,
+                },
+                is_banned: Boolean,
+                tags: Array,
+            }
         ],
         tags: Array,
         members: Array,
         room_information: String,
         ratings: [
-            { 
-                type: mongoose.Schema.Types.ObjectId, 
-                ref: 'Rating'
-            },
+            {
+                user_id: Number,
+                rating: Number,
+            }
         ]
     }
 );

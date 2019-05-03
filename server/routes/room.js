@@ -1,5 +1,5 @@
 const Router = require('koa-router');
-// const Room = require("./../mongoDB/models/modelRoom");
+const RoomMongo = require("./../mongoDB/models/modelRoom");
 const { Room } =require('./../models');
 const validate = require('./../services/Validator');
 const router = new Router({ prefix: '/api/room'});
@@ -837,10 +837,19 @@ const handler = {
   async roomList(ctx) {
 
     const list = await Room.fetchAll({withRelated: ['creator','category']});
+    const mongoData = await RoomMongo.find({});
+    if (!mongoData) {
+      throw new Error("There was an error retrieving your tasks.")
+    } else {
+      console.log('mongoData==>', mongoData[0].ratings)
+    }
+
     const members = faker.random.number(30);
     const rating = faker.random.number(5);
 
     const newList  = list.map(i => i.set({members,rating}));
+
+    
 
     // data from DB
     ctx.body = newList;
