@@ -20,8 +20,8 @@ const router = ({ childProps }) => {
             <Route path="/sign-up" component={Register} />
             <AppliedRoute path="/sign-in" exact component={SignIn} props={childProps} />
             <Route path="/events" exact component={Events} />
+            <Route path="/event/add" exact component={AddEvent} />
             <Route path="/event/:id" component={EventPage} />
-            <Route path="/events/add" component={AddEvent} />
             <Route path="/rooms" exact component={Rooms} />
             <Route path="/rooms/:id" component={RoomPage} />
             <Route path="/add-room" component={AddRoom} />
