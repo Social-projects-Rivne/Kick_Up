@@ -128,7 +128,7 @@ class Toolbar extends Component {
       <>
         <Grid container justify="center" alignItems="center" spacing={8} className="toolbar toolbar-desktop">
             <Grid item>
-              <Link to="/add-room">
+              <Link to="/room/add">
                 <Fab size="small" aria-label="Add" className="toolbar-add">
                   <AddIcon />
                 </Fab>
@@ -161,7 +161,7 @@ class Toolbar extends Component {
           >
           <Grid container justify="center" alignItems="center" spacing={8} className="toolbar toolbar-mobile">
             <Grid item>
-              <Link to="/add-room">
+              <Link to="/room/add">
                 <Fab size="small" aria-label="Add">
                   <AddIcon />
                 </Fab>

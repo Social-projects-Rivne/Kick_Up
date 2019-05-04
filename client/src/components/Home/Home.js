@@ -30,7 +30,7 @@ class Home extends Component {
         });
     }
     selectedRoomHandler = id => {
-        this.props.history.push({ pathname: "/rooms/" + id });
+        this.props.history.push({ pathname: "/room/" + id });
     };
     loadData = (callback) => {
         async function getUser() {

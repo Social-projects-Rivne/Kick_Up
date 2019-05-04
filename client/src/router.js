@@ -21,9 +21,9 @@ const router = ({ childProps }) => {
             <Route path="/events" exact component={Events} />
             <Route path="/event/:id" component={EventPage} />
             <Route path="/rooms" exact component={Rooms} />
-            <Route path="/rooms/:id" component={RoomPage} />
-            <Route path="/add-room" component={AddRoom} />
-            <Route path="/profile/:id/edit" component={EditProfile} />
+            <Route path="/room/add" exact component={AddRoom} />
+            <Route path="/room/:id" component={RoomPage} />
+            <Route path="/profile/edit" component={EditProfile} />
             <Route render={() => (<div style={{color: "red", textAlign: "center", fontSize: "2rem"}}>Page not found </div>)} />
         </Switch>
     );
