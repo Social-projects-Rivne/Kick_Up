@@ -8,6 +8,9 @@ import axios from "axios";
 import { withSnackbar } from 'notistack';
 import NroomCard from '../nRoomCard/nRoomCard';
 
+// Require smooth scroll polyfill;
+import smoothscroll from 'smoothscroll-polyfill';
+
 const API = {
     getRooms: '/api/room/',
     getEvents: '/api/event/'
@@ -16,30 +19,6 @@ const messageType = {
     SUCCESS: 'success',
     INFO: 'info',
     ERR: 'error'
-};
-const mainSliderParams = {
-    modules: [Pagination, Navigation],
-    containerClass: 'home__main-swiper',
-    direction: 'vertical',
-    slidesPerView: 1,
-    simulateTouch: true,
-    autoHeight: true,
-    pagination: {
-        el: ".home__main-swiper-pagination",
-        type: 'bullets',
-        clickable: true,
-        hideOnClick: true
-    },
-    speed: 800,
-    navigation: {
-        prevEl: '.edit-profile__form-prev',
-        nextEl: '.edit-profile__form-next',
-    },
-    renderFraction: function() {
-        return `
-            <h1>aaa</h1>
-        `
-    }
 };
 
 const roomsSliderParams = {
@@ -54,13 +33,23 @@ const roomsSliderParams = {
         clickable: true,
         hideOnClick: true
     },
+    parallax: true,
     speed: 800
 };
+let mainSwiperInstance = null;
+let prevTimer;
+
+// Init smooth scroll polyfill;
+window.__forceSmoothScrollPolyfill__ = true;
+smoothscroll.polyfill();
 
 class Home extends Component {
     state = {
         events: [],
-        rooms: []
+        rooms: [],
+        offset: 0,
+        currentSlide: 1,
+        scrollInProgress: false
     };
     showToast = (message, variant) => {
         this.props.enqueueSnackbar(message, {
@@ -73,7 +62,7 @@ class Home extends Component {
     }
     selectedRoomHandler = id => {
         this.props.history.push({ pathname: "/rooms/" + id });
-    };
+    }
     loadData = (callback) => {
         async function getUser() {
             try {
@@ -113,6 +102,98 @@ class Home extends Component {
             this.showToast('Something went wrong :( Try reload your page', messageType.ERR);
         }
     }
+    handleScroll = (scrollEvt) => {
+        const awaitTime = 500;
+        const animationTime = 600;
+        const minHeightToScroll = 50;
+        const setNewSlide = () => {
+            const minSlide = 1;
+            const maxSlide =  3;
+            const increaseIdxBy = Math.floor(scrollDiff / window.innerHeight);
+            let slideIdx = null;
+
+            if (direction === 'up') {
+                slideIdx = this.state.currentSlide - 1 - increaseIdxBy;
+                if (slideIdx < minSlide) slideIdx = minSlide;
+            } else {
+                slideIdx = this.state.currentSlide + 1 + increaseIdxBy;
+                if (slideIdx > maxSlide) slideIdx = maxSlide;
+            } 
+
+            return slideIdx;
+        };
+        let direction = null;
+        let scrollIntoEl = null;
+        let scrollDiff = 0;
+
+        // In case animation wasn't finished, return;
+        if (this.state.scrollInProgress) return;
+
+        // Let's do some debouncing;
+        window.clearTimeout(prevTimer);
+        prevTimer = window.setTimeout(() => {
+            // Get offset;
+            const currentOffset = document.documentElement.scrollTop || 
+            document.body.scrollTop;
+
+            // Get scroll diff;
+            scrollDiff = Math.abs(currentOffset - this.state.offset);
+
+            // Define direction;
+            if (currentOffset > this.state.offset) {
+                direction = 'down';
+            } else if (currentOffset < this.state.offset) {
+                direction = 'up';
+            }
+
+            /* In cases: 
+                * 1) no direction;
+                * 2) last slide and direction is down;
+                * 3) first slide and direction is up;
+                * 4) Difference in scroll is less than min val, minHeightToScroll;
+                * we do nothing and return;
+            */ 
+            if (
+                !direction ||
+                this.state.currentSlide === 3 && direction === 'down' ||
+                this.state.currentSlide === 1 && direction === 'up' ||
+                scrollDiff <= minHeightToScroll
+            ) {
+                return;
+            }
+
+            const newSlide = setNewSlide();
+
+            // Save new data into state;
+            this.setState({
+                currentSlide: newSlide,
+                offset : currentOffset
+            });
+
+            // Scroll into required slide;
+            try {
+                if (this.state.currentSlide === 1) {
+                    scrollIntoEl = document.querySelector('header');
+                } else {
+                    scrollIntoEl = document.querySelector(`[data-main-slide="${this.state.currentSlide}"]`);
+                }
+               
+                this.setState({scrollInProgress: true});
+
+                // Allow scrolls after scroll animation finished;
+                window.setTimeout(() => {
+                    this.setState({scrollInProgress: false});
+
+                    // Update current position, as it could be changed;
+                    this.setState({
+                        offset: document.documentElement.scrollTop || document.body.scrollTop
+                    });
+                }, animationTime);
+                
+                scrollIntoEl.scrollIntoView({ behavior: 'smooth' });
+            } catch(err) {}
+        }, awaitTime);
+    }
     componentDidMount = () => {
         // Retrieve items;
         this.loadData(res => {
@@ -123,40 +204,43 @@ class Home extends Component {
                 });
             }
         });
+
+        // Add event listeners;
+        document.addEventListener('scroll', this.handleScroll);
     }
     render = () => (
-        <div className="main-content  home" >
-            <Swiper {...mainSliderParams} getSwiper={ this.setSwiper } >
-                <div key={1} className="swiper-slide  home__main-swiper-slide">
-                    <h1>Here we have slide 1</h1>
-                </div>
-                <div key={2} className="swiper-slide home__main-swiper-slide">
-                    <Typography variant="h4">
-                        Interesting rooms:
-                    </Typography>
-
-
-
-                    <Swiper {...roomsSliderParams} getSwiper={ this.setSwiper } >
-                        <div key={1} className="swiper-slide">
-                            <NroomCard />
-                        </div>
-                        <div key={2} className="swiper-slide">
-                            <NroomCard />
-                        </div>
-                        <div key={3} className="swiper-slide">
-                            <NroomCard />
-                        </div>
-                    </Swiper>
-
-
-                </div>
-                <div key={3} className="swiper-slide  home__main-swiper-slide">
-                    <h1>Here we have slide 3</h1>
-                </div>
-            </Swiper>
+        <div className="main-content home">
+            <div data-main-slide="1" className="main-content__slide">
+                <h1>Here we have slide 1</h1>
+                <h1>Here we have slide 1</h1>
+                <h1>Here we have slide 1</h1>
+                <h1>Here we have slide 1</h1>
+            </div>
+            <div data-main-slide="2" className="main-content__slide">
+                <h1>Here we have slide 2</h1>
+                <h1>Here we have slide 2</h1>
+                <h1>Here we have slide 2</h1>
+                <h1>Here we have slide 2</h1>
+                <h1>Here we have slide 2</h1>
+                <h1>Here we have slide 2</h1>
+                <h1>Here we have slide 2</h1>
+                <h1>Here we have slide 2</h1>
+            </div>
+            <div data-main-slide="3" className="main-content__slide">
+                <Swiper {...roomsSliderParams} >
+                    <div key={1} className="swiper-slide">
+                        <NroomCard />
+                    </div>
+                    <div key={2} className="swiper-slide">
+                        <NroomCard />
+                    </div>
+                    <div key={3} className="swiper-slide">
+                        <NroomCard />
+                    </div>
+                </Swiper>
+            </div>
         </div>
-    );
+    )
 };
 
 export default withSnackbar(Home);

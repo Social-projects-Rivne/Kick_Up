@@ -1,13 +1,21 @@
+/* Available modificators:
+* roomcard__events-btn_expanded;
+*/
+
 .roomcard__img-wrapper {
     min-height: 35vh;
 }
 
 .roomcard .roomcard__group-members {
     margin-left: auto;
+
+    & [class*=MuiTouchRipple] {
+        display: none;
+    }
 }
 
 .roomcard .roomcard__header {
-    padding: 8px;
+    padding: 10px;
 }
 
 .roomcard__header span:first-of-type {
@@ -25,4 +33,31 @@
 .roomcard__header > div:first-child > div {
     width: 50px;
     height: 50px;
+}
+
+#root .roomcard .roomcard__events-btn {
+    padding-right: 22px; 
+    background-color: $primary;
+    color: $black;
+    box-shadow: none;
+
+    &.roomcard__events-btn_expanded svg {
+        transform: rotate(180deg);
+    }
+
+    // For better look;
+    & [class*=MuiFab-label] {
+        padding-top: 2px;
+    }
+}
+
+.roomcard__members-amount {
+    margin-left: 5px;
+    font-size: 0.8571rem;
+    line-height: 1rem;
+    color: lighten($secondaryBlack, 50%);
+}
+
+.roomcard .roomcard__description {
+    padding-bottom: 6px;
 }
