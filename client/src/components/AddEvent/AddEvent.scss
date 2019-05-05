@@ -12,6 +12,15 @@
     padding-bottom: 24px;
   }
 
+  svg[class*=MuiStepIcon-active], svg[class*=MuiStepIcon-completed] {
+    color: $primary;
+  }
+
+  text[class*=MuiStepIcon-text] {
+    fill: $black;
+    font-size: 0.9rem;
+  }
+
   .add-event-page-container {
     max-width: 900px;
     margin-right: auto;
@@ -21,6 +30,10 @@
       font-size: 2rem;
       display: flex;
       padding-bottom: 24px;
+    }
+
+    .add-event-stepper {
+      background-color: transparent;
     }
 
     .add-event-text-field {
@@ -36,9 +49,16 @@
       padding-bottom: 24px;
     }
 
-    .add-event-button, .add-event-button:hover, .add-event-button-upload, .add-event-button-upload:hover {
-      background-color: $primary;
+    .add-event-button-update-cover {
+      margin-top: 48px;
+      width: 100%;
+    }
+
+    .add-event-button-upload, .add-event-button-upload:hover,
+    .add-event-button-create, .add-event-button-create:hover{
+      background-color: $secondaryBlack;
       border-radius: 50px;
+      color: $primary;
 
       input[type="file"] {
         cursor: pointer;
@@ -50,6 +70,12 @@
         width: 100%;
         opacity: 0;
       }
+    }
+
+    .add-event-button-update-cover, .add-event-button-update-cover:hover{
+      background-color: $primary;
+      border-radius: 50px;
+      color: $black;
     }
 
     .add-event-select option {
@@ -65,12 +91,6 @@
     .add-event-create-button {
       display: flex;
       justify-content: flex-end;
-    }
-
-    .add-event-button, .add-event-create-button {
-      @include media-breakpoint-down(lg) {
-        width: 100%;
-      }
     }
 
     div[class*=MuiInput-underline]:after {
