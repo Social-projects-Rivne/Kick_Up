@@ -32,8 +32,6 @@ import {
     CheckCircleOutlineOutlined
 } from '@material-ui/icons';
 
-const _userDataRoute = 'http://localhost:3001/api/profile';
-const _userDataUpdateRoute = 'http://localhost:3001/api/profile/update';
 const _maxFileSize = 10000000;
 const _desktopWidth = 1168;
 const swiperParams = {
@@ -295,11 +293,7 @@ class EditProfile extends Component {
             if (typeof callback === 'function') callback(res);
         };
 
-        axios.get(_userDataRoute, {
-            headers: {
-                authorization: localStorage.getItem('authorization')
-            }
-        })
+        axios.get('/api/profile')
             .then((res) => {
                 res = res.data;
                 fireCallback(res);
@@ -313,11 +307,7 @@ class EditProfile extends Component {
             if (typeof callback === 'function') callback(res);
         };
 
-        axios.put(_userDataUpdateRoute, data, {
-            headers: {
-                authorization: localStorage.getItem('authorization')
-            }
-        })
+        axios.put('/api/profile/update', data)
         .then(() => {
             fireCallback(true)
         })

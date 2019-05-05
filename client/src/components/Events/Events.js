@@ -30,7 +30,7 @@ class Events extends Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     const { category, date, location } = this.state;
-    if (prevState.category !== category || prevState.date !== date || prevState.date !== date) {
+    if (prevState.category !== category || prevState.date !== date || prevState.date !== date || prevState.location !== location) {
       this.filterHandle();
     }
   }
@@ -106,7 +106,6 @@ class Events extends Component {
   };
 
   render() {
-    {console.log('events==>', this.state.eventsDB)}
     const { eventsDB, isLoading } = this.state;
     const toolbarButtons = [
       { name: "Top Members", method: this.sortMembersHandle },

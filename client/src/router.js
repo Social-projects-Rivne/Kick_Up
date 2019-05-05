@@ -12,6 +12,7 @@ import AppliedRoute from './hoc/AppliedRoute/AppliedRoute';
 import RoomPage from './components/RoomPage/RoomPage';
 import EditProfile from './components/EditProfile/EditProfile';
 import PrivacyPolicy from "./components/PrivacyPolicy/PrivacyPolicy";
+import UserProfile from './components/UserProfile/UserProfile';
 
 const router = ({ childProps }) => {
     return (
@@ -24,6 +25,7 @@ const router = ({ childProps }) => {
             <Route path="/rooms" exact component={Rooms} />
             <Route path="/rooms/:id" component={RoomPage} />
             <Route path="/add-room" component={AddRoom} />
+            <Route path="/profile/:id" exact component={UserProfile} />
             <Route path="/profile/:id/edit" component={EditProfile} />
             <Route path="/privacy-policy" component={PrivacyPolicy} />
             <Route render={() => (<div style={{color: "red", textAlign: "center", fontSize: "2rem"}}>Page not found </div>)} />
