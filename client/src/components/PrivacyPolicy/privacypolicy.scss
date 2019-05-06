@@ -4,8 +4,10 @@ h1 {
 }
 
 .privacy-policy {
-  font-family: Montserrat, sans-serif;
   display: flex;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  font-weight: 100;
   flex-direction: column;
   max-width: 1200px;
   margin: auto;
