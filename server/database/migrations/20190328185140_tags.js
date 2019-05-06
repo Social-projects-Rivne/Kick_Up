@@ -2,7 +2,7 @@
 exports.up = async knex => {
   await knex.schema.createTable('tags', t => {
     t.increments('id').unsigned().primary();
-    t.string('tag').nullable();
+    t.string('title').nullable();
   });
 };
 
