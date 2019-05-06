@@ -1,49 +1,106 @@
 import React from 'react';
 
+import axios from 'axios';
+
 import { TextField, Input, FormControlLabel, Switch, FormGroup, Button, NativeSelect,
     InputLabel, FormControl, InputAdornment, Grid, Stepper, Step, StepLabel, StepContent } from '@material-ui/core';
 import { CloudUpload, Link } from '@material-ui/icons';
+import Spinner from "../UI/Spinner/Spinner";
 
 class AddRoom extends React.Component {
     state = {
-        available: true,
-        invite: false,
-        members_limit: false,
-
         activeStep: 0,
+        roomId: 1,
+        userId: 0,
+        loading: true,
         roomData: {
             title: '',
             description: '',
             category: 0,
             tags: 0,
-            members_limit: '',
+            permission: false,
+            invite: false,
+            members_limit: 1,
+            members_limit_checked: false,
         },
-        roomId: 1,
+        addRoomDB: {
+            categories: [],
+            tags: [],
+        }
     };
 
-    handleChange = name => event => {
-        this.setState({ [name]: event.target.checked });
+    componentDidMount() {
+        axios.get("/api/category")
+            .then(res => {
+                this.setState({
+                    addRoomDB:{
+                        ...this.state.addRoomDB,
+                        categories: res.data
+                    }
+                });
+
+                return axios.get("/api/tag");
+            })
+            .then(res => {
+                this.setState({
+                    addRoomDB: {
+                        ...this.state.addRoomDB,
+                        tags: res.data
+                    }
+                });
+
+                return axios.get('/api/profile');
+            })
+            .then(res => {
+                this.setState({
+                    loading: false,
+                    userId: res.data.id
+                });
+            })
+            .catch(err => {
+                this.setState({ loading: false });
+                console.log(err.response.data.error.errors);
+            });
     };
 
     handleUpdateData (event) {
         this.setState({
             roomData:{
                 ...this.state.roomData,
-                [event.target.name]: event.target.value
+                [event.target.name]: event.target.type === "checkbox" ? event.target.checked : event.target.value
             }
         });
     }
 
     handleNext = () => {
         const { activeStep } = this.state;
-        this.setState({
-            activeStep: activeStep + 1
-        });
 
-        switch (this.state.activeStep) {
+        switch (activeStep) {
             case 0:
-                //ToDo Create room
-                console.log(this.state);
+                this.setState({ loading: true });
+
+                const data = {
+                    title: this.state.roomData.title,
+                    creator_id: this.state.userId,
+                    category_id: this.state.roomData.category,
+                    description: this.state.roomData.description,
+                    cover: "http://excitermag.net/wp-content/uploads/2012/12/24fae0cf4e190078d5b9896e00870cd9.jpg", //TODO
+                    permission: this.state.roomData.permission ? 1 : 0,
+                    members_limit: this.state.roomData.members_limit_checked ? this.state.roomData.members_limit : 1
+                };
+
+                axios.post("/api/room/", data)
+                    .then(res => {
+                        this.setState({
+                            loading: false,
+                            roomId: res.data.id,
+                            activeStep: activeStep + 1
+                        });
+                    })
+                    .catch(err => {
+                        this.setState({ loading: false });
+                        console.log(err.response.data.error.errors);
+                    });
                 break;
             case 1:
                 //ToDo upload cover and invite members
@@ -56,7 +113,11 @@ class AddRoom extends React.Component {
     };
 
     render() {
-        const { activeStep  } = this.state;
+        const { activeStep, addRoomDB } = this.state;
+
+        if (this.state.loading) {
+            return (<Spinner className="rooms-page"/>);
+        }
 
         return (
             <div className="add-room-page">
@@ -95,17 +156,16 @@ class AddRoom extends React.Component {
                                             Category
                                         </InputLabel>
                                         <NativeSelect
-                                            value={this.state.category}
+                                            value={this.state.roomData.category}
                                             name="category"
                                             onChange={event => this.handleUpdateData(event)}
                                             input={<Input name="category" />}
                                             className="add-room-select"
                                         >
                                             <option value="">none</option>
-                                            <option value={10}>sport</option>
-                                            <option value={20}>music</option>
-                                            <option value={30}>education</option>
-                                            <option value={40}>films</option>
+                                            {addRoomDB.categories.map((category) =>
+                                                <option value={category.id}>{category.title}</option>
+                                            )}
                                         </NativeSelect>
                                     </FormControl>
 
@@ -121,10 +181,9 @@ class AddRoom extends React.Component {
                                             className="add-room-select"
                                         >
                                             <option value="">none</option>
-                                            <option value={10}>sport</option>
-                                            <option value={20}>music</option>
-                                            <option value={30}>education</option>
-                                            <option value={40}>films</option>
+                                            {addRoomDB.tags.map((tag) =>
+                                                <option value={tag.id}>{tag.title}</option>
+                                            )}
                                         </NativeSelect>
                                     </FormControl>
 
@@ -133,9 +192,9 @@ class AddRoom extends React.Component {
                                             label="Private room"
                                             control={
                                                 <Switch
-                                                    checked={this.state.available}
-                                                    onChange={this.handleChange('available')}
-                                                    value="available"
+                                                    name="permission"
+                                                    onChange={event => this.handleUpdateData(event)}
+                                                    checked={this.state.roomData.permission}
                                                 />
                                             }
                                         />
@@ -147,18 +206,20 @@ class AddRoom extends React.Component {
                                             label="Members limits"
                                             control={
                                                 <Switch
-                                                    checked={this.state.members_limit}
-                                                    onChange={this.handleChange('members_limit')}
-                                                    value="members_limit"
+                                                    checked={this.state.roomData.members_limit_checked}
+                                                    name="members_limit_checked"
+                                                    onChange={event => this.handleUpdateData(event)}
                                                 />
                                             }
                                         />
 
-                                        {this.state.members_limit && <div className="invite-link">
+                                        {this.state.roomData.members_limit_checked && <div className="invite-link">
                                             <FormControl  className="textField">
                                                 <TextField
                                                     className="add-room-text-field"
                                                     label="Members limit"
+                                                    type="number"
+                                                    min="1"
                                                     name="members_limit"
                                                     onChange={event => this.handleUpdateData(event)}
                                                     value={this.state.roomData.members_limit}
@@ -191,22 +252,22 @@ class AddRoom extends React.Component {
                                             label="Invite members"
                                             control={
                                                 <Switch
-                                                    checked={this.state.invite}
-                                                    onChange={this.handleChange('invite')}
-                                                    value="invite"
+                                                    checked={this.state.roomData.invite}
+                                                    name="invite"
+                                                    onChange={event => this.handleUpdateData(event)}
+                                                    value="1"
                                                 />
                                             }
                                         />
 
-                                        {this.state.invite && <div className="invite-link">
+                                        {this.state.roomData.invite && <div className="invite-link">
                                             <FormControl  className="textField">
                                                 <TextField
-                                                    defaultValue="Invite Link"
                                                     InputProps={{
                                                         readOnly: true,
                                                         startAdornment: (
                                                             <InputAdornment position="start">
-                                                                <Link />
+                                                                <Link /> &nbsp;{window.location.origin + '/room/' + this.state.roomId}
                                                             </InputAdornment>
                                                         ),
                                                     }}

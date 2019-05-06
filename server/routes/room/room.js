@@ -39,8 +39,8 @@ const handler = {
         permission,
         members_limit
     } = ctx.request.body;
-    await new Room(newRoom).save();
-    ctx.body = '';
+      const room = await new Room(newRoom).save();
+      ctx.body = room;
   },
   async getRoomById(ctx) {
     const { id } = ctx.params;
