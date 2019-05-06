@@ -5,6 +5,7 @@ exports.up = async knex => {
     t.string('nick').nullable();
     t.string('first_name').nullable();
     t.string('last_name').nullable();
+    t.integer('gender').notNull().defaultTo(3);
     t.string('email').notNull();
     t.string('password').notNull();
     t.string('avatar').nullable();

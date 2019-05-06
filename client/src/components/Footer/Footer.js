@@ -1,7 +1,5 @@
 import React from 'react';
 
-import '../../styles/index.scss';
-
 import { Link as RouterLink } from 'react-router-dom';
 import { Link } from "@material-ui/core";
 
@@ -9,7 +7,7 @@ const Footer = props => {
     return (
         <footer className="footer-content">
             <div className="privacy-policy">
-                <Link component={RouterLink} to="/privacypolicy">
+                <Link component={RouterLink} to="/privacy-policy">
                     Privacy Policy
                 </Link>
             </div>
