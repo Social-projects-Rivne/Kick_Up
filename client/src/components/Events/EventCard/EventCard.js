@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
-import { Grid, Button } from "@material-ui/core";
-import {LocationOn, People, ToggleOff} from "@material-ui/icons";
+import { Grid } from "@material-ui/core";
+import { LocationOn, People } from "@material-ui/icons";
 
 const eventCard = props => {
   const [isToggle, ToggleHandler] = useState(false);
