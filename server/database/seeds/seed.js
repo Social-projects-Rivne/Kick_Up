@@ -18,6 +18,24 @@ const categories = [
     title: 'Dancing'
   }
 ];
+const tags = [
+  {
+    id: 1,
+    title: 'Nature'
+  },
+  {
+    id: 2,
+    title: 'Birds'
+  },
+  {
+    id: 3,
+    title: 'Games'
+  },
+  {
+    id: 4,
+    title: 'Beer'
+  }
+];
 const users = [
   {
     id: 1,
@@ -175,11 +193,13 @@ exports.seed = async knex => {
   await knex('categories').insert(categories);
   await knex('rooms').insert(rooms);
   await knex('events').insert(events);
+  await knex('tags').insert(tags);
 };
 
 exports.seedData = {
   users,
   categories,
   rooms,
-  events
+  events,
+  tags
 };

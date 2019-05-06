@@ -1,8 +1,8 @@
 const Router = require('koa-router');
-const { authenticated } = require('./../middlewares');
-const { User } = require('./../models');
-const validate = require('./../services/Validator');
-const { uploader } = require('./../services');
+const { authenticated } = require('../../middlewares');
+const { User } = require('../../models');
+const validate = require('../../services/Validator');
+const { uploader } = require('../../services');
 
 const router = new Router({prefix:'/api/profile'});
 
@@ -18,10 +18,16 @@ const handler = {
         ctx.body = user;        
     },
     async updateUser(ctx){
+        await validate(ctx.request.body, {
+            nick:'string|min:3',
+            first_name:'string|min:3',
+            last_name:'string|min:3',
+            gender:'required|numeric|min:1'
+        });
         const { user_id } = ctx.state; 
-        const { nick, first_name, last_name, avatar, birth_date } = ctx.request.body;
+        const { nick, first_name, last_name, gender, birth_date } = ctx.request.body;
         const updateUser = {
-            nick, first_name, last_name, birth_date
+            nick, first_name, last_name, gender, birth_date
         }
         if(avatar){
             const avatarPath = await uploader.uploadAvatar(avatar);

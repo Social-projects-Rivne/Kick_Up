@@ -15,7 +15,7 @@ mongoose.connect(dbRoute, { useNewUrlParser: true }, err => {
 
 const app = new Koa();
 app.use(cors());
-app.use(koaParser({ enableTypes: ['json', 'form'] }));
+app.use(koaParser({enableTypes: ['json', 'form'] }));
 app.use(koaJson({
   pretty: false
 }));
