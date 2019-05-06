@@ -6,11 +6,25 @@
 
   @include svg-settings-bg('#{$secondaryBlack}');
   background-color: white;
+  min-height: calc(100vh - 86px - 51px);
 
   .add-room-page-container {
-    max-width: 900px;
+    max-width: 1000px;
     margin-right: auto;
     margin-left: auto;
+
+    .add-room-stepper {
+      background-color: transparent;
+    }
+
+    svg[class*=MuiStepIcon-active], svg[class*=MuiStepIcon-completed] {
+      color: $primary;
+    }
+
+    text[class*=MuiStepIcon-text] {
+      fill: $black;
+      font-size: 0.9rem;
+    }
 
     .add-room-header {
       font-size: 2rem;
@@ -27,13 +41,16 @@
     }
 
     .formControl {
-      min-width: 120px;
+      width: 210px;
       padding-bottom: 24px;
+      display: flex;
     }
 
-    .add-room-button, .add-room-button:hover, .add-room-button-upload, .add-room-button-upload:hover {
-      background-color: $primary;
+    .add-room-button-upload, .add-room-button-upload:hover,
+    .add-room-button-create, .add-room-button-create:hover{
+      background-color: $secondaryBlack;
       border-radius: 50px;
+      color: $white;
 
       input[type="file"] {
         cursor: pointer;
@@ -45,6 +62,15 @@
         width: 100%;
         opacity: 0;
       }
+    }
+
+    .add-room-button-update-cover, .add-room-button-update-cover:hover{
+      background-color: $primary;
+      border-radius: 50px;
+      color: $black;
+
+      margin-top: 48px;
+      width: 100%;
     }
 
     .add-room-select option {
@@ -67,11 +93,6 @@
           width: 100%;
         }
       }
-    }
-
-    .add-room-create-button {
-      display: flex;
-      justify-content: flex-end;
     }
 
     .add-room-button, .add-room-create-button {
