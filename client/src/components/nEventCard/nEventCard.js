@@ -9,13 +9,14 @@ import {
     Avatar,
     Typography,
     IconButton,
-    Collapse,
-    Fab
+    Collapse
 } from '@material-ui/core';
+import { LocationOn } from '@material-ui/icons';
 import { Group, ExpandMore } from '@material-ui/icons';
 import StarRating from "../UI/StarRating/StarRating";
 
-class NroomCard extends Component {
+
+class NeventCard extends Component {
     constructor(props) {
         super(props);
         this.state = { expanded: false };
@@ -25,6 +26,15 @@ class NroomCard extends Component {
     };
     render = () => (
         <Card className="roomcard">
+            <div className="date">
+                <span>29</span>
+                <span>April</span>
+                <span>2019</span>
+            </div>
+            <div className="location">
+                <LocationOn />
+                <span>Rivne</span>
+            </div>
             <CardHeader
                 className="roomcard__header"
                 avatar={
@@ -32,14 +42,14 @@ class NroomCard extends Component {
                     R
                     </Avatar>
                 }
-                title="Shrimp and Chorizo Paella"
+                title="Street drinkers in Rivne!"
                 subheader={<StarRating rating="10" />}
             >
             </CardHeader>
             <CardMedia
                 data-swiper-parallax="-100"
                 className="roomcard__img-wrapper"
-                image="https://material-ui.com/static/images/cards/paella.jpg"
+                image="https://c8.alamy.com/comp/FWXDB4/street-drinkers-in-glasgow-shortly-before-it-was-made-illegal-FWXDB4.jpg"
                 title="Paella dish"
             />
             <CardContent data-swiper-parallax="-300" className="roomcard__description">
@@ -53,21 +63,11 @@ class NroomCard extends Component {
             </CardContent>
             <CardActions 
                 disableActionSpacing 
-                data-swiper-parallax="-500" >
-                <Fab
-                    className={this.state.expanded ? 'roomcard__events-btn  roomcard__events-btn_expanded' : 'roomcard__events-btn'}
-                    variant="extended"
-                    size="medium"
-                    color="primary"
-                    aria-label="Extend"
-                    onClick={ this.handleExpandClick }
-                >
-                    <ExpandMore />
-                    3 events
-                </Fab>
+                data-swiper-parallax="-500" 
+            >
                 <IconButton className="roomcard__group-members">
                     <Group />
-                    <span className="roomcard__members-amount">13 of 55 allowed</span>
+                    <span className="roomcard__members-amount">13 will attend</span>
                 </IconButton>
             </CardActions>
             <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
@@ -81,4 +81,4 @@ class NroomCard extends Component {
     );
 };
 
-export default NroomCard;
+export default NeventCard;

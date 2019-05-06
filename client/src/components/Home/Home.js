@@ -7,6 +7,7 @@ import axios from "axios";
 //import RoomCard from '../Rooms/RoomCard/RoomCard';
 import { withSnackbar } from 'notistack';
 import NroomCard from '../nRoomCard/nRoomCard';
+import NeventCard from '../nEventCard/nEventCard';
 
 // Require smooth scroll polyfill;
 import smoothscroll from 'smoothscroll-polyfill';
@@ -26,7 +27,6 @@ const roomsSliderParams = {
     containerClass: 'home__rooms-swiper',
     slidesPerView: 1,
     simulateTouch: true,
-    nested: true,
     pagination: {
         el: ".home__rooms-swiper-pagination",
         type: 'bullets',
@@ -36,7 +36,21 @@ const roomsSliderParams = {
     parallax: true,
     speed: 800
 };
-let mainSwiperInstance = null;
+const eventsSliderParams = {
+    modules: [Pagination],
+    containerClass: 'home__events-swiper',
+    slidesPerView: 1,
+    simulateTouch: true,
+    pagination: {
+        el: ".home__events-swiper-pagination",
+        type: 'bullets',
+        clickable: true,
+        hideOnClick: true
+    },
+    parallax: true,
+    speed: 800
+};
+
 let prevTimer;
 
 // Init smooth scroll polyfill;
@@ -103,8 +117,9 @@ class Home extends Component {
         }
     }
     handleScroll = (scrollEvt) => {
+        return;
         const awaitTime = 500;
-        const animationTime = 600;
+        const animationTime = 550;
         const minHeightToScroll = 50;
         const setNewSlide = () => {
             const minSlide = 1;
@@ -132,6 +147,8 @@ class Home extends Component {
         // Let's do some debouncing;
         window.clearTimeout(prevTimer);
         prevTimer = window.setTimeout(() => {
+            console.log('Inside handleScroll');
+
             // Get offset;
             const currentOffset = document.documentElement.scrollTop || 
             document.body.scrollTop;
@@ -217,14 +234,17 @@ class Home extends Component {
                 <h1>Here we have slide 1</h1>
             </div>
             <div data-main-slide="2" className="main-content__slide">
-                <h1>Here we have slide 2</h1>
-                <h1>Here we have slide 2</h1>
-                <h1>Here we have slide 2</h1>
-                <h1>Here we have slide 2</h1>
-                <h1>Here we have slide 2</h1>
-                <h1>Here we have slide 2</h1>
-                <h1>Here we have slide 2</h1>
-                <h1>Here we have slide 2</h1>
+                <Swiper {...eventsSliderParams} >
+                    <div key={1} className="swiper-slide">
+                        <NeventCard />
+                    </div>
+                    <div key={2} className="swiper-slide">
+                        <NeventCard />
+                    </div>
+                    <div key={3} className="swiper-slide">
+                        <NeventCard />
+                    </div>
+                </Swiper>
             </div>
             <div data-main-slide="3" className="main-content__slide">
                 <Swiper {...roomsSliderParams} >
