@@ -12,6 +12,21 @@ import NeventCard from '../nEventCard/nEventCard';
 // Require smooth scroll polyfill;
 import smoothscroll from 'smoothscroll-polyfill';
 
+// Import media;
+import bg1_desk from '../../assets/images/intro-slider/bg-1-desk.png';
+import bg1_desk_placeholder from '../../assets/images/intro-slider/bg-1-desk.svg';
+import bg1_mob_vert from '../../assets/images/intro-slider/bg-1-mob-vert.png';
+import bg1_mob_vert_placeholder from '../../assets/images/intro-slider/bg-1-mob-vert.svg';
+import bg1_mob_hor from '../../assets/images/intro-slider/bg-1-mob-hor.png';
+import bg1_mob_hor_placeholder from '../../assets/images/intro-slider/bg-1-mob-hor.svg';
+
+import bg2_desk from '../../assets/images/intro-slider/bg-2-desk.png';
+import bg2_desk_placeholder from '../../assets/images/intro-slider/bg-2-desk.svg';
+import bg2_mob_vert from '../../assets/images/intro-slider/bg-2-mob-vert.png';
+import bg2_mob_vert_placeholder from '../../assets/images/intro-slider/bg-2-mob-vert.svg';
+import bg2_mob_hor from '../../assets/images/intro-slider/bg-2-mob-hor.png';
+import bg2_mob_hor_placeholder from '../../assets/images/intro-slider/bg-2-mob-hor.svg';
+
 const API = {
     getRooms: '/api/room/',
     getEvents: '/api/event/'
@@ -20,6 +35,73 @@ const messageType = {
     SUCCESS: 'success',
     INFO: 'info',
     ERR: 'error'
+};
+const placeholders = [
+    {
+        mobileVert: bg1_mob_vert_placeholder,
+        mobileHor: bg1_mob_hor_placeholder,
+        desktop: bg1_desk_placeholder
+    },
+    {
+        mobileVert: bg2_mob_vert_placeholder,
+        mobileHor: bg2_mob_hor_placeholder,
+        desktop: bg2_desk_placeholder
+    }
+];
+const slides = [
+    {
+        mobileVert: bg1_mob_vert,
+        mobileHor: bg1_mob_hor,
+        desktop: bg1_desk
+    },
+    {
+        mobileVert: bg2_mob_vert,
+        mobileHor: bg2_mob_hor,
+        desktop: bg2_desk
+    }
+];
+const selectors = {
+    activeIntroSlide: '.home__intro-slide.swiper-slide-active',
+    loadingImageClass: 'home__intro-slide_loading',
+};
+const applySVGImage = function() {
+    const _desktopWidth = 1024;
+    const svg = document.createElement('img');
+    const img = document.createElement('img');
+    let svgPath = null;
+    let imgToLoadPath = null;
+    const activeSlide = document.querySelector(selectors.activeIntroSlide);
+    
+    /** 
+     * In case image was loaded already, return;
+     * 1 is h2 tag, description;
+     * */
+    if (activeSlide.children.length > 1) return;
+    
+    // Define svg placeholder and image to be applied;
+    svgPath = window.innerWidth < _desktopWidth 
+    ? window.innerWidth >= window.innerHeight
+        ? placeholders[this.activeIndex].mobileHor 
+        : placeholders[this.activeIndex].mobileVert
+    : placeholders[this.activeIndex].desktop;
+    
+    imgToLoadPath = window.innerWidth < _desktopWidth 
+    ? window.innerWidth >= window.innerHeight
+        ? slides[this.activeIndex].mobileHor
+        : slides[this.activeIndex].mobileVert
+    : slides[this.activeIndex].desktop;
+
+    // Prepend placeholder, add loading class;
+    if (svgPath) svg.setAttribute('src', svgPath);
+    activeSlide.insertAdjacentElement('afterbegin', svg);
+    activeSlide.classList.add(selectors.loadingImageClass);
+
+    // Prepend image, show on load;
+    if (imgToLoadPath) img.setAttribute('src', imgToLoadPath);
+    activeSlide.insertAdjacentElement('beforeend', img);
+    img.addEventListener('load', () => {
+        activeSlide.classList.remove(selectors.loadingImageClass);
+    });
 };
 
 const roomsSliderParams = {
@@ -50,6 +132,32 @@ const eventsSliderParams = {
     parallax: true,
     speed: 800
 };
+const inrtoSlidesSliderParams = {
+    containerClass: 'home__intro',
+    slidesPerView: 1,
+    simulateTouch: true,
+    parallax: true,
+    speed: 800,
+    //noSwiping: true,
+    autoplay: {
+        delay: 50000,
+    },
+    on: {
+        init: applySVGImage,
+        slideChangeTransitionStart: applySVGImage,
+        resize: function() {
+            const images = this.el.querySelectorAll('.home__intro-slide img');
+            
+            // Remove all images;
+            [].slice.call(images).forEach(el => {
+                el.parentElement.removeChild(el);
+            });
+
+            // Load new ones;
+            applySVGImage.call(this);
+        }
+    }
+}
 
 let prevTimer;
 
@@ -228,10 +336,21 @@ class Home extends Component {
     render = () => (
         <div className="main-content home">
             <div data-main-slide="1" className="main-content__slide">
-                <h1>Here we have slide 1</h1>
-                <h1>Here we have slide 1</h1>
-                <h1>Here we have slide 1</h1>
-                <h1>Here we have slide 1</h1>
+                <Swiper {...inrtoSlidesSliderParams} >
+                    <div key={1} className="swiper-slide  home__intro-slide" data-intro-swiper-slide="1">
+                        <Typography className="home__intro-title" variant="h3" gutterBottom>
+                            Do you like sport?
+                        </Typography>
+                    </div>
+                    <div key={2} className="swiper-slide  home__intro-slide" data-intro-swiper-slide="2" >
+                        <Typography className="home__intro-title" variant="h3" gutterBottom>
+                            And adventures?
+                        </Typography>
+                    </div>
+                    <div key={3} className="swiper-slide  home__intro-slide" data-intro-swiper-slide="3">
+                        3333
+                    </div>
+                </Swiper>
             </div>
             <div data-main-slide="2" className="main-content__slide">
                 <Swiper {...eventsSliderParams} >

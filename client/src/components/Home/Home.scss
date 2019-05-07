@@ -27,6 +27,105 @@
     padding-top: 10px;
 }
 
+.home__intro-slide {
+    width: 100%;
+    position: relative;
+    max-height: calc(100vh - #{$header-height});
+    min-height: calc(100vh - #{$header-height});
+    overflow: hidden;
+}
+
+.home__intro-slide img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 100%;
+    height: auto;
+
+    &:first-of-type {
+        opacity: 0;
+        transition: opacity 5.5s;
+    }
+
+    &:last-of-type {
+        opacity: 0;
+        animation-name: fade-in;
+        animation-duration: 5.5s;
+        animation-fill-mode: forwards;
+    }
+}
+
+.home .home__intro-title {
+    position: relative;
+    z-index: 1;
+    margin-top: 14vh;
+    text-align: center;
+    // Fallback for old browsers;
+    color: darken($primary, 14%);
+    font-weight: 100;
+    opacity: 0;
+    transition: opacity 0.3s;
+    transition-delay: 3s;
+    font-weight: 800;
+}
+
+.home .home__intro-slide:nth-of-type(1) 
+.home__intro-title {
+    background: url('../assets/images/text-bg-1.jpg') repeat 60% 50%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.home .home__intro-slide:nth-of-type(2) 
+.home__intro-title {
+    background: url('../assets/images/text-bg-2.jpg') repeat 60% 50%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+// Related to modificators;
+.home .home__intro-slide.home__intro-slide_loading {
+    & img:first-of-type {
+        opacity: 1;
+    }
+
+    & img:last-of-type {
+        display: none;
+    }
+
+    & .home__intro-title {
+        opacity: 0;
+        transition: all 0s;
+        transition-delay: 0;
+    }
+}
+
+.home .swiper-slide-active .home__intro-title {
+    opacity: 1;
+    transition: opacity 0.3;
+}
+
+// Landscape mode;
+@media only screen and (max-width: 768px) and (orientation: landscape) {
+    .home .home__intro-title {
+        position: absolute;
+        bottom: 16px;
+        left: 0;
+        right: 0;
+        margin: auto;
+    }
+}
+
 // Tablets;
-@include media-breakpoint-up(md) {
+@include media-breakpoint-up(lg) {
+    .home .home__intro-title {
+        position: absolute;
+        bottom: calc(100vh - 750px + 5rem + 2rem);
+        left: 0;
+        right: 0;
+        margin: auto;
+        font-size: 5rem;
+    }
 }
