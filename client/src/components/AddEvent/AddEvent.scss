@@ -21,6 +21,27 @@
     font-size: 0.9rem;
   }
 
+  .add-event-invite-members {
+    padding-bottom: 24px;
+
+    .invite-link {
+      color: $black;
+
+      .textField {
+        width: 100%;
+      }
+    }
+  }
+
+  span[class*=MuiSwitch-bar] {
+    background-color: $primary;
+    opacity: 0.6;
+  }
+
+  span[class*=MuiSwitch-checked] {
+    color: $primary;
+  }
+
   .add-event-page-container {
     max-width: 900px;
     margin-right: auto;
@@ -45,8 +66,9 @@
     }
 
     .formControl {
-      min-width: 120px;
+      width: 210px;
       padding-bottom: 24px;
+      display: flex;
     }
 
     .add-event-button-update-cover {

@@ -114,8 +114,8 @@ const handler = {
         permission,
         members_limit
     } = ctx.request.body;
-    await new Event(newEvent).save();
-    ctx.body = ''
+    const event = await new Event(newEvent).save();
+    ctx.body = event;
   },
   async getEventById(ctx) {
     const { id } = ctx.params;

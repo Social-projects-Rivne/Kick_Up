@@ -1,26 +1,81 @@
 import React from 'react';
 
+import axios from 'axios';
+
 import { TextField, Input, FormControlLabel, FormGroup, Button, NativeSelect,
-    InputLabel, FormControl, Grid, Stepper, Step, StepLabel, StepContent} from '@material-ui/core';
-import { CloudUpload} from '@material-ui/icons';
+    InputLabel, FormControl, Grid, Stepper, Step, StepLabel, StepContent, Switch, InputAdornment } from '@material-ui/core';
+import { CloudUpload, Link } from '@material-ui/icons';
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, InlineDateTimePicker } from 'material-ui-pickers';
 import Geosuggest from 'react-geosuggest';
+import Spinner from "../UI/Spinner/Spinner";
 
 class AddEvent extends React.Component {
     state = {
         activeStep: 0,
+        eventId: 1,
+        userId: 0,
+        roomId: 1,
+        loading: true,
         eventData: {
             title: '',
             description: '',
-            location: '',
             category: 0,
             tags: 0,
+            permission: false,
+            invite: false,
+            members_limit: 1,
+            members_limit_checked: false,
+            location: '',
             start_date: new Date(),
-            members_limit: '',
         },
-        eventId: 1,
+        addEventDB: {
+            categories: [],
+            tags: [],
+        }
+    };
+
+    componentDidMount() {
+        axios.get("/api/category")
+            .then(res => {
+                this.setState({
+                    addEventDB:{
+                        ...this.state.addEventDB,
+                        categories: res.data
+                    }
+                });
+
+                return axios.get("/api/tag");
+            })
+            .then(res => {
+                this.setState({
+                    addEventDB: {
+                        ...this.state.addEventDB,
+                        tags: res.data
+                    }
+                });
+
+                return axios.get('/api/profile');
+            })
+            .then(res => {
+                this.setState({
+                    loading: false,
+                    userId: res.data.id
+                });
+
+                return axios.get('/api/room/' + this.state.roomId);
+            })
+            .then(res => {
+                this.setState({
+                    loading: false,
+                    roomId: res.data.id
+                });
+            })
+            .catch(err => {
+                this.setState({ loading: false });
+                console.log(err.response.data.error.errors);
+            });
     };
 
     handleUpdateStartDate = date => {
@@ -45,24 +100,50 @@ class AddEvent extends React.Component {
         this.setState({
             eventData:{
                 ...this.state.eventData,
-                [event.target.name]: event.target.value
+                [event.target.name]: event.target.type === "checkbox" ? event.target.checked : event.target.value
             }
         });
     }
 
     handleNext = () => {
         const { activeStep } = this.state;
-        this.setState({
-            activeStep: activeStep + 1
-        });
 
-        switch (this.state.activeStep) {
+        switch (activeStep) {
             case 0:
-                //ToDo Create event
-                console.log(this.state);
+                this.setState({ loading: true });
+
+                const data = {
+                    title: this.state.eventData.title,
+                    creator_id: this.state.userId,
+                    category_id: this.state.eventData.category,
+                    room_id:  this.state.roomId,
+                    description: this.state.eventData.description,
+                    cover: "http://excitermag.net/wp-content/uploads/2012/12/24fae0cf4e190078d5b9896e00870cd9.jpg", //TODO
+                    location: "hhh",
+                    permission: this.state.eventData.permission ? 1 : 0,
+                    start_date: this.state.eventData.start_date.getFullYear() + "."
+                        + ("0" + (this.state.eventData.start_date.getMonth() + 1)).slice(-2) +
+                        "." + ("0" + (this.state.eventData.start_date.getDate())).slice(-2)
+                        + " " + ("0" + (this.state.eventData.start_date.getHours())).slice(-2) +
+                        ":" + ("0" + (this.state.eventData.start_date.getMinutes())).slice(-2),
+                    members_limit: this.state.eventData.members_limit_checked ? this.state.eventData.members_limit : 1
+                };
+
+                axios.post("/api/event/", data)
+                    .then(res => {
+                        this.setState({
+                            loading: false,
+                            eventId: res.data.id,
+                            activeStep: activeStep + 1
+                        });
+                    })
+                    .catch(err => {
+                        this.setState({ loading: false });
+                        console.log(err.response.data.error.errors);
+                    });
                 break;
             case 1:
-                //ToDo upload cover
+                //ToDo upload cover and invite members
                 this.props.history.push({ pathname: "/event/" + this.state.eventId });
                 break;
             default:
@@ -72,7 +153,11 @@ class AddEvent extends React.Component {
     };
 
     render() {
-        const { activeStep  } = this.state;
+        const { activeStep, addEventDB } = this.state;
+
+        if (this.state.loading) {
+            return (<Spinner className="rooms-page"/>);
+        }
 
         return (
             <div className="add-event-page">
@@ -110,22 +195,27 @@ class AddEvent extends React.Component {
 
                                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                                         <InlineDateTimePicker
-                                            label="Choose date and time"
+                                            label="Choose date and time *"
                                             ampm={false}
+                                            //name="start_date"
                                             value={this.state.eventData.start_date}
                                             onChange={this.handleUpdateStartDate}
                                             className="add-event-picker"
+                                            format="yyyy.MM.dd HH:mm"
                                         />
                                     </MuiPickersUtilsProvider>
 
                                     <FormGroup className="add-event-location">
                                         <FormControlLabel
                                             labelPlacement="top"
-                                            label="Location"
-                                            value={this.state.eventData.location}
-                                            onChange={this.handleUpdateLocation}
+                                            label="Location *"
                                             control={
-                                                <Geosuggest />
+                                                <Geosuggest
+                                                    name="location"
+                                                    onActivateFirstSuggest="true"
+                                                    value={this.state.eventData.location}
+                                                    onChange={this.handleUpdateLocation}
+                                                />
                                             }
                                         />
                                     </FormGroup>
@@ -142,22 +232,11 @@ class AddEvent extends React.Component {
                                             className="add-event-select"
                                         >
                                             <option value="">none</option>
-                                            <option value={10}>sport</option>
-                                            <option value={20}>music</option>
-                                            <option value={30}>education</option>
-                                            <option value={40}>films</option>
+                                            {addEventDB.categories.map((category) =>
+                                                <option value={category.id}>{category.title}</option>
+                                            )}
                                         </NativeSelect>
                                     </FormControl>
-
-                                    <TextField
-                                        className="add-event-text-field"
-                                        label="Members limit"
-                                        name="members_limit"
-                                        onChange={event => this.handleUpdateData(event)}
-                                        value={this.state.eventData.members_limit}
-                                        fullWidth
-                                        autoComplete="off"
-                                    />
 
                                     <FormControl className="formControl">
                                         <InputLabel shrink htmlFor="age-native-label-placeholder">
@@ -171,12 +250,55 @@ class AddEvent extends React.Component {
                                             className="add-event-select"
                                         >
                                             <option value="">none</option>
-                                            <option value={10}>sport</option>
-                                            <option value={20}>music</option>
-                                            <option value={30}>education</option>
-                                            <option value={40}>films</option>
+                                            {addEventDB.tags.map((tag) =>
+                                                <option value={tag.id}>{tag.title}</option>
+                                            )}
                                         </NativeSelect>
                                     </FormControl>
+
+                                    <FormGroup className="add-event-text-field">
+                                        <FormControlLabel
+                                            label="Private event"
+                                            control={
+                                                <Switch
+                                                    name="permission"
+                                                    onChange={event => this.handleUpdateData(event)}
+                                                    checked={this.state.eventData.permission}
+                                                />
+                                            }
+                                        />
+                                    </FormGroup>
+
+                                    <FormGroup className="add-event-invite-members">
+                                        <FormControlLabel
+                                            className="invite-members"
+                                            label="Members limits"
+                                            control={
+                                                <Switch
+                                                    checked={this.state.eventData.members_limit_checked}
+                                                    name="members_limit_checked"
+                                                    onChange={event => this.handleUpdateData(event)}
+                                                />
+                                            }
+                                        />
+
+                                        {this.state.eventData.members_limit_checked && <div className="invite-link">
+                                            <FormControl  className="textField">
+                                                <TextField
+                                                    className="add-event-text-field"
+                                                    label="Members limit"
+                                                    type="number"
+                                                    min="1"
+                                                    name="members_limit"
+                                                    onChange={event => this.handleUpdateData(event)}
+                                                    value={this.state.eventData.members_limit}
+                                                    fullWidth
+                                                    //variant="filled"
+                                                    autoComplete="off"
+                                                />
+                                            </FormControl>
+                                        </div>}
+                                    </FormGroup>
                                 </div>
                                 <div>
                                     <Button
@@ -193,6 +315,36 @@ class AddEvent extends React.Component {
                             <StepLabel>Upload cover</StepLabel>
                             <StepContent>
                                 <div>
+                                    <FormGroup className="add-event-invite-members">
+                                        <FormControlLabel
+                                            className="invite-members"
+                                            label="Invite members"
+                                            control={
+                                                <Switch
+                                                    checked={this.state.eventData.invite}
+                                                    name="invite"
+                                                    onChange={event => this.handleUpdateData(event)}
+                                                    value="1"
+                                                />
+                                            }
+                                        />
+
+                                        {this.state.eventData.invite && <div className="invite-link">
+                                            <FormControl className="textField">
+                                                <TextField
+                                                    InputProps={{
+                                                        readOnly: true,
+                                                        startAdornment: (
+                                                            <InputAdornment position="start">
+                                                                <Link /> &nbsp;{window.location.origin + '/event/' + this.state.eventId}
+                                                            </InputAdornment>
+                                                        ),
+                                                    }}
+                                                />
+                                            </FormControl>
+                                        </div>}
+                                    </FormGroup>
+
                                     <Grid container spacing={24}>
                                         <Grid item md={12}>
                                             <Button variant="contained" className="add-event-button-upload">
