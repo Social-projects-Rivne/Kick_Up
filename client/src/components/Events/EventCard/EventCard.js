@@ -11,7 +11,7 @@ const eventCard = props => {
   if(!isToggle) setTimeout(() => ToggleHandler(!isToggle), 500);
   const dateToArr = props.startDate.slice(0, 10).split("-");
   const menuContent = 
-    <ul className={`menu-content ${isToggle}`}>               
+    <ul className={`menu-content ${isToggle}`}>
       <li>
         <People className="menu-content-icons" />
         <span>{props.members}</span>
@@ -23,17 +23,17 @@ const eventCard = props => {
   return (
     <Grid item xs={12} sm={6} md={4} className="events-card">
       <div className="wrapper" style={backgroundImage}>
-        <div className="date">
-          <span className="day">{dateToArr[2]}</span>
-          <span className="month">{dateToArr[1]}</span>
-          <span className="year">{dateToArr[0]}</span>
+        <div className="wrapper-header">
+          <div className="date">
+            <div className="day"><span>{dateToArr[2]}</span>.{dateToArr[1]}.{dateToArr[0]}</div>
+          </div>
+          <div className="location">
+            <LocationOn />
+            <span>{props.location}</span>
+          </div>
         </div>
-        <div className="location">
-          <LocationOn />
-          <span>{props.location}</span>
-        </div>
-        <div className="data">
-          <div className="content" onClick={props.clicked}>
+        <div className="data" onClick={props.clicked}>
+          <div className="content">
             <span className="category">{props.category}</span>
             <h1 className="title">{props.title}</h1>
             <p className="text">{props.description}</p>

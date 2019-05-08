@@ -156,6 +156,7 @@ class Events extends Component {
           date={this.state.date}
           showDate={true}
           changeDate={this.changeDate}
+          addLink="/add-event"
         />
         <Grid container spacing={16} justify="center" className="events-page-cards">
           {eventsDB.map(event => {
