@@ -21,6 +21,13 @@
     & * {
         box-sizing: border-box;
     }
+
+    & > * {
+        opacity: 0;
+        animation-name: fade-in;
+        animation-duration: 0.3s;
+        animation-fill-mode: forwards;
+    }
 }
 
 .home__rooms-wrapper {
@@ -33,6 +40,7 @@
     max-height: calc(100vh - #{$header-height});
     min-height: calc(100vh - #{$header-height});
     overflow: hidden;
+    background-color: rgba(0, 0, 0, 0.3);
 }
 
 .home__intro-slide img {
@@ -46,43 +54,38 @@
 
     &:first-of-type {
         opacity: 0;
-        transition: opacity 5.5s;
+        transition: opacity 10s;
     }
 
     &:last-of-type {
         opacity: 0;
         animation-name: fade-in;
-        animation-duration: 5.5s;
+        animation-duration: 10s;
         animation-fill-mode: forwards;
     }
 }
 
 .home .home__intro-title {
     position: relative;
-    z-index: 1;
-    margin-top: 14vh;
+    margin-top: 8vh;
+    padding: 0 1rem;
     text-align: center;
     // Fallback for old browsers;
     color: darken($primary, 14%);
     font-weight: 100;
     opacity: 0;
     transition: opacity 0.3s;
-    transition-delay: 3s;
+    transition-delay: 0.5s;
     font-weight: 800;
+    z-index: 1;
 }
 
-.home .home__intro-slide:nth-of-type(1) 
-.home__intro-title {
-    background: url('../assets/images/text-bg-1.jpg') repeat 60% 50%;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.home .home__intro-slide:nth-of-type(2) 
-.home__intro-title {
-    background: url('../assets/images/text-bg-2.jpg') repeat 60% 50%;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+@for $i from 1 through 3 {
+    .home .home__intro-slide:nth-of-type(#{$i}) .home__intro-title {
+        background: url('../assets/images/text-bg-#{$i}.jpg') repeat 60% 50%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
 }
 
 // Related to modificators;
@@ -94,17 +97,16 @@
     & img:last-of-type {
         display: none;
     }
-
-    & .home__intro-title {
-        opacity: 0;
-        transition: all 0s;
-        transition-delay: 0;
-    }
 }
 
 .home .swiper-slide-active .home__intro-title {
     opacity: 1;
     transition: opacity 0.3;
+}
+
+// Buttons wrapper;
+.home__intro-btns-wrapper {
+    display: none;
 }
 
 // Landscape mode;
@@ -115,6 +117,8 @@
         left: 0;
         right: 0;
         margin: auto;
+        padding-left: 2rem;
+        padding-right: 2rem;
     }
 }
 

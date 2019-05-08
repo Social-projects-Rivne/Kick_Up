@@ -27,6 +27,13 @@ import bg2_mob_vert_placeholder from '../../assets/images/intro-slider/bg-2-mob-
 import bg2_mob_hor from '../../assets/images/intro-slider/bg-2-mob-hor.png';
 import bg2_mob_hor_placeholder from '../../assets/images/intro-slider/bg-2-mob-hor.svg';
 
+import bg3_desk from '../../assets/images/intro-slider/bg-3-desk.png';
+import bg3_desk_placeholder from '../../assets/images/intro-slider/bg-3-desk.svg';
+import bg3_mob_vert from '../../assets/images/intro-slider/bg-3-mob-vert.png';
+import bg3_mob_vert_placeholder from '../../assets/images/intro-slider/bg-3-mob-vert.svg';
+import bg3_mob_hor from '../../assets/images/intro-slider/bg-3-mob-hor.png';
+import bg3_mob_hor_placeholder from '../../assets/images/intro-slider/bg-3-mob-hor.svg';
+
 const API = {
     getRooms: '/api/room/',
     getEvents: '/api/event/'
@@ -46,6 +53,11 @@ const placeholders = [
         mobileVert: bg2_mob_vert_placeholder,
         mobileHor: bg2_mob_hor_placeholder,
         desktop: bg2_desk_placeholder
+    },
+    {
+        mobileVert: bg3_mob_vert_placeholder,
+        mobileHor: bg3_mob_hor_placeholder,
+        desktop: bg3_desk_placeholder
     }
 ];
 const slides = [
@@ -58,6 +70,11 @@ const slides = [
         mobileVert: bg2_mob_vert,
         mobileHor: bg2_mob_hor,
         desktop: bg2_desk
+    },
+    {
+        mobileVert: bg3_mob_vert,
+        mobileHor: bg3_mob_hor,
+        desktop: bg3_desk
     }
 ];
 const selectors = {
@@ -144,6 +161,7 @@ const inrtoSlidesSliderParams = {
     },
     on: {
         init: applySVGImage,
+        sliderMove: applySVGImage,
         slideChangeTransitionStart: applySVGImage,
         resize: function() {
             const images = this.el.querySelectorAll('.home__intro-slide img');
@@ -336,19 +354,24 @@ class Home extends Component {
     render = () => (
         <div className="main-content home">
             <div data-main-slide="1" className="main-content__slide">
+                <aside className="home__intro-btns-wrapper">
+                    Here will go btns wrapper
+                </aside>
                 <Swiper {...inrtoSlidesSliderParams} >
                     <div key={1} className="swiper-slide  home__intro-slide" data-intro-swiper-slide="1">
                         <Typography className="home__intro-title" variant="h3" gutterBottom>
-                            Do you like sport?
+                            Got hobby? You're in the right place
                         </Typography>
                     </div>
                     <div key={2} className="swiper-slide  home__intro-slide" data-intro-swiper-slide="2" >
                         <Typography className="home__intro-title" variant="h3" gutterBottom>
-                            And adventures?
+                            Kick Up unites people of same interests into virtual rooms
                         </Typography>
                     </div>
                     <div key={3} className="swiper-slide  home__intro-slide" data-intro-swiper-slide="3">
-                        3333
+                        <Typography className="home__intro-title" variant="h3" gutterBottom>
+                            Kick Up offers splendid events for you and your mates
+                        </Typography>
                     </div>
                 </Swiper>
             </div>
