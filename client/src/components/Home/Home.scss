@@ -40,6 +40,7 @@
     max-height: calc(100vh - #{$header-height});
     min-height: calc(100vh - #{$header-height});
     overflow: hidden;
+    text-align: center;
     background-color: rgba(0, 0, 0, 0.3);
 }
 
@@ -86,6 +87,13 @@
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
     }
+}
+
+.home .home__intro-btn {
+    color: $primary;
+    border-color: $primary;
+    background-color: lighten($secondaryBlack, 40%);
+    z-index: 1;
 }
 
 // Related to modificators;

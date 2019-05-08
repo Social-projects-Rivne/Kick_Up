@@ -2,7 +2,8 @@ import React, {Component} from 'react';
 
 import Swiper from 'react-id-swiper/lib/ReactIdSwiper.full';
 import { Pagination, Navigation } from 'swiper/dist/js/swiper.esm';
-import { Typography } from '@material-ui/core'; 
+import { Typography, Button } from '@material-ui/core';
+import { EventAvailable, SupervisorAccount, ExpandMore } from "@material-ui/icons";
 import axios from "axios";
 //import RoomCard from '../Rooms/RoomCard/RoomCard';
 import { withSnackbar } from 'notistack';
@@ -38,6 +39,7 @@ const API = {
     getRooms: '/api/room/',
     getEvents: '/api/event/'
 };
+const _desktopWidth = 1024;
 const messageType = {
     SUCCESS: 'success',
     INFO: 'info',
@@ -81,19 +83,17 @@ const selectors = {
     activeIntroSlide: '.home__intro-slide.swiper-slide-active',
     loadingImageClass: 'home__intro-slide_loading',
 };
-const applySVGImage = function() {
-    const _desktopWidth = 1024;
+
+// Need this as swiper here, cannot bind it, as swiper is initialized aync; 
+const applySVGImage = function() {    
     const svg = document.createElement('img');
     const img = document.createElement('img');
     let svgPath = null;
     let imgToLoadPath = null;
     const activeSlide = document.querySelector(selectors.activeIntroSlide);
     
-    /** 
-     * In case image was loaded already, return;
-     * 1 is h2 tag, description;
-     * */
-    if (activeSlide.children.length > 1) return;
+    // In case image was loaded already, return;
+    if (activeSlide.querySelectorAll('img').length > 0) return;
     
     // Define svg placeholder and image to be applied;
     svgPath = window.innerWidth < _desktopWidth 
@@ -149,7 +149,7 @@ const eventsSliderParams = {
     parallax: true,
     speed: 800
 };
-const inrtoSlidesSliderParams = {
+const introSlidesSliderParams = {
     containerClass: 'home__intro',
     slidesPerView: 1,
     simulateTouch: true,
@@ -357,7 +357,7 @@ class Home extends Component {
                 <aside className="home__intro-btns-wrapper">
                     Here will go btns wrapper
                 </aside>
-                <Swiper {...inrtoSlidesSliderParams} >
+                <Swiper {...introSlidesSliderParams} >
                     <div key={1} className="swiper-slide  home__intro-slide" data-intro-swiper-slide="1">
                         <Typography className="home__intro-title" variant="h3" gutterBottom>
                             Got hobby? You're in the right place
@@ -367,6 +367,14 @@ class Home extends Component {
                         <Typography className="home__intro-title" variant="h3" gutterBottom>
                             Kick Up unites people of same interests into virtual rooms
                         </Typography>
+                        <Button
+                            className="home__intro-btn"
+                            variant="outlined"
+                        >
+                            <SupervisorAccount />
+                            Explore rooms now
+                            <ExpandMore />
+                        </Button>
                     </div>
                     <div key={3} className="swiper-slide  home__intro-slide" data-intro-swiper-slide="3">
                         <Typography className="home__intro-title" variant="h3" gutterBottom>
