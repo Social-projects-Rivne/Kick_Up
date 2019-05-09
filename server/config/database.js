@@ -29,5 +29,6 @@ const bookshelf = bookshelfInstance(knex);
 
 bookshelf.plugin('registry');
 bookshelf.plugin('visibility');
+bookshelf.plugin('pagination');
 
 module.exports = { bookshelf, knex, knexConnectionObject };
