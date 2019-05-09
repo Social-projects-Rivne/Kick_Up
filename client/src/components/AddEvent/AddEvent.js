@@ -10,6 +10,14 @@ import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, InlineDateTimePicker } from 'material-ui-pickers';
 import Geosuggest from 'react-geosuggest';
 import Spinner from "../UI/Spinner/Spinner";
+import CustomizedSnackbars from "../Toast/Toast";
+import {withSnackbar} from "notistack";
+
+const messageType = {
+    SUCCESS: "success",
+    INFO: "info",
+    ERR: "error"
+};
 
 class AddEvent extends React.Component {
     state = {
@@ -33,7 +41,23 @@ class AddEvent extends React.Component {
         addEventDB: {
             categories: [],
             tags: [],
-        }
+        },
+        errors: {
+            title: false,
+            description: false,
+            start_date: false,
+            location: false,
+            category: false,
+            tags: false,
+            members_limit: false,
+            permission: false
+        },
+    };
+
+    showToast = (message, variant) => {
+        this.props.enqueueSnackbar(message, {
+            variant: variant ? variant : 'default',
+        });
     };
 
     componentDidMount() {
@@ -74,7 +98,6 @@ class AddEvent extends React.Component {
             })
             .catch(err => {
                 this.setState({ loading: false });
-                console.log(err.response.data.error.errors);
             });
     };
 
@@ -87,11 +110,14 @@ class AddEvent extends React.Component {
         });
     };
 
-    handleUpdateLocation = date => {
+    handleGeosuggestChange = location => {
+        if ( !location ) {
+            return;
+        }
         this.setState({
             eventData:{
                 ...this.state.eventData,
-                location: date
+                location: location.label
             }
         });
     };
@@ -119,14 +145,14 @@ class AddEvent extends React.Component {
                     room_id:  this.state.roomId,
                     description: this.state.eventData.description,
                     cover: "http://excitermag.net/wp-content/uploads/2012/12/24fae0cf4e190078d5b9896e00870cd9.jpg", //TODO
-                    location: "hhh",
+                    location:  this.state.eventData.location,
                     permission: this.state.eventData.permission ? 1 : 0,
                     start_date: this.state.eventData.start_date.getFullYear() + "."
                         + ("0" + (this.state.eventData.start_date.getMonth() + 1)).slice(-2) +
                         "." + ("0" + (this.state.eventData.start_date.getDate())).slice(-2)
                         + " " + ("0" + (this.state.eventData.start_date.getHours())).slice(-2) +
                         ":" + ("0" + (this.state.eventData.start_date.getMinutes())).slice(-2),
-                    members_limit: this.state.eventData.members_limit_checked ? this.state.eventData.members_limit : 1
+                    members_limit: this.state.eventData.members_limit_checked ? this.state.eventData.members_limit : null
                 };
 
                 axios.post("/api/event/", data)
@@ -138,13 +164,18 @@ class AddEvent extends React.Component {
                         });
                     })
                     .catch(err => {
-                        this.setState({ loading: false });
-                        console.log(err.response.data.error.errors);
+                        let errors = err.response.data.error.errors;
+                        for (const key in errors) {
+                            this.showToast(errors[key][0], messageType.ERR);
+                            errors[key] = true;
+                        }
+                        this.setState({ loading: false, errors: errors });
                     });
                 break;
             case 1:
                 //ToDo upload cover and invite members
                 this.props.history.push({ pathname: "/event/" + this.state.eventId });
+                this.showToast(messageType.SUCCESS);
                 break;
             default:
                 console.log("Unknown step");
@@ -178,6 +209,7 @@ class AddEvent extends React.Component {
                                         fullWidth
                                         autoComplete="off"
                                         inputProps={{ maxLength: 100 }}
+                                        error={this.state.errors.title}
                                     />
 
                                     <TextField
@@ -191,6 +223,7 @@ class AddEvent extends React.Component {
                                         multiline
                                         autoComplete="off"
                                         inputProps={{ maxLength: 300 }}
+                                        error={this.state.errors.description}
                                     />
 
                                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -202,6 +235,7 @@ class AddEvent extends React.Component {
                                             onChange={this.handleUpdateStartDate}
                                             className="add-event-picker"
                                             format="yyyy.MM.dd HH:mm"
+                                            error={this.state.errors.start_date}
                                         />
                                     </MuiPickersUtilsProvider>
 
@@ -213,8 +247,11 @@ class AddEvent extends React.Component {
                                                 <Geosuggest
                                                     name="location"
                                                     onActivateFirstSuggest="true"
-                                                    value={this.state.eventData.location}
-                                                    onChange={this.handleUpdateLocation}
+                                                    initialValue={this.state.eventData.location}
+                                                    onSuggestSelect={this.handleGeosuggestChange}
+                                                    autoActivateFirstSuggest={true}
+                                                    error={this.state.errors.location}
+                                                    autoComplete="off"
                                                 />
                                             }
                                         />
@@ -230,6 +267,7 @@ class AddEvent extends React.Component {
                                             onChange={event => this.handleUpdateData(event)}
                                             input={<Input name="category" />}
                                             className="add-event-select"
+                                            error={this.state.errors.category}
                                         >
                                             <option value="">none</option>
                                             {addEventDB.categories.map((category) =>
@@ -248,6 +286,7 @@ class AddEvent extends React.Component {
                                             onChange={event => this.handleUpdateData(event)}
                                             input={<Input name="tags" />}
                                             className="add-event-select"
+                                            error={this.state.errors.tags}
                                         >
                                             <option value="">none</option>
                                             {addEventDB.tags.map((tag) =>
@@ -264,6 +303,7 @@ class AddEvent extends React.Component {
                                                     name="permission"
                                                     onChange={event => this.handleUpdateData(event)}
                                                     checked={this.state.eventData.permission}
+                                                    error={this.state.errors.permission}
                                                 />
                                             }
                                         />
@@ -293,8 +333,8 @@ class AddEvent extends React.Component {
                                                     onChange={event => this.handleUpdateData(event)}
                                                     value={this.state.eventData.members_limit}
                                                     fullWidth
-                                                    //variant="filled"
                                                     autoComplete="off"
+                                                    error={this.state.errors.members_limit}
                                                 />
                                             </FormControl>
                                         </div>}
@@ -380,4 +420,4 @@ class AddEvent extends React.Component {
     }
 }
 
-export default AddEvent;
+export default withSnackbar(AddEvent);

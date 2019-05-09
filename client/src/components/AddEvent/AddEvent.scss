@@ -80,7 +80,7 @@
     .add-event-button-create, .add-event-button-create:hover{
       background-color: $secondaryBlack;
       border-radius: 50px;
-      color: $primary;
+      color: $white;
 
       input[type="file"] {
         cursor: pointer;
@@ -115,21 +115,16 @@
       justify-content: flex-end;
     }
 
-    div[class*=MuiInput-underline]:after {
+    div[class*=MuiInput-underline]:not([class*=-error-]):after {
       border-bottom: 2px solid $primary;
     }
 
-    label[class*=MuiFormLabel] {
+    label[class*=MuiFormLabel], legend[class*=MuiFormLabel] {
       color: $black;
-    }
 
-    label, legend[class*=MuiFormLabel-focused] {
-      color: $black;
-      width: fit-content;
-    }
-
-    legend[class*=MuiFormLabel] {
-      color: $black;
+      &[class*=-error-] {
+        color: #f44336;
+      }
     }
 
     span[class*=MuiTypography-body1] {
