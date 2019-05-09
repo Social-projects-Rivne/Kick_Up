@@ -1,4 +1,5 @@
-import React, {Component} from "react";
+import React from "react";
+import { Link as RouterLink, withRouter } from 'react-router-dom';
 
 import {
     Card, 
@@ -9,76 +10,67 @@ import {
     Avatar,
     Typography,
     IconButton,
-    Collapse
+    Link
 } from '@material-ui/core';
 import { LocationOn } from '@material-ui/icons';
-import { Group, ExpandMore } from '@material-ui/icons';
+import { Group } from '@material-ui/icons';
 import StarRating from "../UI/StarRating/StarRating";
 
-
-class NeventCard extends Component {
-    constructor(props) {
-        super(props);
-        this.state = { expanded: false };
-    }
-    handleExpandClick = () => {
-        this.setState({ expanded: !this.state.expanded });
-    };
-    render = () => (
-        <Card className="roomcard">
-            <div className="date">
-                <span>29</span>
-                <span>April</span>
+const NeventCard = props => (
+    <Card className="event-card">
+        <CardHeader
+            className="event-card__header"
+            title="Street drinkers in Rivne!"
+            subheader={
+                <div className="event-card__header-info">
+                    <Link component={RouterLink} to="/" className="event-card__avatar-wrapper">
+                        <Avatar 
+                            className="event-card__avatar" 
+                            src="https://material-ui.com/static/images/avatar/1.jpg" 
+                            aria-label="Recipe">
+                            W
+                        </Avatar>
+                        <span>@daniel</span>
+                    </Link>
+                    <StarRating rating="10" />
+                </div>
+            }
+        >
+        </CardHeader>
+        <CardMedia
+            data-swiper-parallax="-100"
+            className="event-card__img-wrapper"
+            image="https://c8.alamy.com/comp/FWXDB4/street-drinkers-in-glasgow-shortly-before-it-was-made-illegal-FWXDB4.jpg"
+            title="Street drinkers in Rivne"
+        >
+            <div className="event-card__date">
+                <b>29 April</b>
                 <span>2019</span>
             </div>
-            <div className="location">
+            <div className="event-card__location">
                 <LocationOn />
-                <span>Rivne</span>
+                <b>Rivne</b>
             </div>
-            <CardHeader
-                className="roomcard__header"
-                avatar={
-                    <Avatar aria-label="Recipe">
-                    R
-                    </Avatar>
-                }
-                title="Street drinkers in Rivne!"
-                subheader={<StarRating rating="10" />}
-            >
-            </CardHeader>
-            <CardMedia
-                data-swiper-parallax="-100"
-                className="roomcard__img-wrapper"
-                image="https://c8.alamy.com/comp/FWXDB4/street-drinkers-in-glasgow-shortly-before-it-was-made-illegal-FWXDB4.jpg"
-                title="Paella dish"
-            />
-            <CardContent data-swiper-parallax="-300" className="roomcard__description">
-                <Typography component="p">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing 
-                    elit. Duis lacinia efficitur ligula, vitae vehicula 
-                    nunc viverra et. Praesent erat tellus, dictum ac eleifend 
-                    a, egestas nec nisl. Donec id tempor nulla. Fusce pretium 
-                    urna non odio ullamcorper lacinia.
-                </Typography>
-            </CardContent>
-            <CardActions 
-                disableActionSpacing 
-                data-swiper-parallax="-500" 
-            >
-                <IconButton className="roomcard__group-members">
-                    <Group />
-                    <span className="roomcard__members-amount">13 will attend</span>
-                </IconButton>
-            </CardActions>
-            <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
-                <CardContent>
-                    <h1>Here will go event</h1>
-                    <h1>Here will go event</h1>
-                    <h1>Here will go event</h1>
-                </CardContent>
-            </Collapse>
-        </Card>
-    );
-};
+        </CardMedia>
+        <CardContent data-swiper-parallax="-300" className="event-card__description">
+            <Typography component="p" className="event-card__main-content">
+                Lorem ipsum dolor sit amet, consectetur adipiscing 
+                elit. Duis lacinia efficitur ligula, vitae vehicula 
+                nunc viverra et. Praesent erat tellus, dictum ac eleifend 
+                a, egestas nec nisl. Donec id tempor nulla. Fusce pretium 
+                urna non odio ullamcorper lacinia.
+            </Typography>
+        </CardContent>
+        <CardActions 
+            disableActionSpacing 
+            data-swiper-parallax="-500" 
+        >
+            <IconButton className="event-card__group-members">
+                <Group />
+                <span className="event-card__members-amount">13 people will attend</span>
+            </IconButton>
+        </CardActions>
+    </Card>
+);
 
-export default NeventCard;
+export default withRouter(NeventCard);

@@ -10,7 +10,7 @@ import { EventAvailable, SupervisorAccount, ExpandMore } from "@material-ui/icon
 import axios from "axios";
 
 // Scroll to plugin;
-import { Element, Events, scroller } from 'react-scroll';
+import { Element, Events, Link, scroller } from 'react-scroll';
 
 import NroomCard from '../nRoomCard/nRoomCard';
 import NeventCard from '../nEventCard/nEventCard';
@@ -36,6 +36,7 @@ import bg3_mob_vert from '../../assets/images/intro-slider/bg-3-mob-vert.png';
 import bg3_mob_vert_placeholder from '../../assets/images/intro-slider/bg-3-mob-vert.svg';
 import bg3_mob_hor from '../../assets/images/intro-slider/bg-3-mob-hor.png';
 import bg3_mob_hor_placeholder from '../../assets/images/intro-slider/bg-3-mob-hor.svg';
+import { instanceOf } from 'prop-types';
 
 const API = {
     getRooms: '/api/room/',
@@ -85,6 +86,15 @@ const selectors = {
     activeIntroSlide: '.home__intro-slide.swiper-slide-active',
     loadingImageClass: 'home__intro-slide_loading',
 };
+let roomsSlider = null;
+
+// Helpers;
+const setRoomsSlider = instance => {
+    roomsSlider = instance;
+};
+const getRoomsSlider = () => {
+    return roomsSlider;
+};
 
 // Need this as swiper here, cannot bind it, as swiper is initialized aync; 
 const applySVGImage = function() {    
@@ -128,6 +138,7 @@ const roomsSliderParams = {
     containerClass: 'home__rooms-swiper',
     slidesPerView: 1,
     simulateTouch: true,
+    //autoHeight: true,
     pagination: {
         el: ".home__rooms-swiper-pagination",
         type: 'bullets',
@@ -135,7 +146,12 @@ const roomsSliderParams = {
         hideOnClick: true
     },
     parallax: true,
-    speed: 800
+    speed: 800,
+    on: {
+        slideChangeTransitionEnd: function() {
+            this.update();
+        }
+    }
 };
 const eventsSliderParams = {
     modules: [Pagination],
@@ -148,7 +164,7 @@ const eventsSliderParams = {
         clickable: true,
         hideOnClick: true
     },
-    parallax: true,
+    //parallax: true,
     speed: 800
 };
 const introSlidesSliderParams = {
@@ -245,7 +261,7 @@ class Home extends Component {
         document.body.scrollTop;
         return currentOffset;
     }
-    handleScroll = (scrollEvt) => {
+    handleScroll = () => {
         const awaitTime = 500;
         const minHeightToScroll = 100;
         const setNewSlide = () => {
@@ -261,8 +277,7 @@ class Home extends Component {
                 slideIdx = this.state.currentSlide + 1 + increaseIdxBy;
                 if (slideIdx > maxSlide) slideIdx = maxSlide;
             } 
-            
-            console.log('So new slide is, > ', slideIdx);
+
             return slideIdx;
         };
         let direction = null;
@@ -349,6 +364,7 @@ class Home extends Component {
         // Add event listeners;
         document.addEventListener('scroll', this.handleScroll);
         Events.scrollEvent.register('end', () => {
+            console.log('And our animation ended!');
             this.setState({
                 scrollInProgress: false,
                 offset: this.getScrollPos()
@@ -368,27 +384,61 @@ class Home extends Component {
                 </aside>
                 <Swiper {...introSlidesSliderParams} >
                     <div key={1} className="swiper-slide  home__intro-slide" data-intro-swiper-slide="1">
-                        <Typography className="home__intro-title" variant="h3" gutterBottom>
-                            Got hobby? You're in the right place
-                        </Typography>
+                        <div className="home__intro-title-wrapper">
+                            <Typography className="home__intro-title" variant="h3" gutterBottom>
+                                Got hobby? You're in the right place
+                            </Typography>
+                        </div>
                     </div>
                     <div key={2} className="swiper-slide  home__intro-slide" data-intro-swiper-slide="2" >
-                        <Typography className="home__intro-title" variant="h3" gutterBottom>
-                            Kick Up unites people of same interests into virtual rooms
-                        </Typography>
-                        <Button
-                            className="home__intro-btn"
-                            variant="outlined"
-                        >
-                            <SupervisorAccount />
-                            Explore rooms now
-                            <ExpandMore />
-                        </Button>
+                        <div className="home__intro-title-wrapper">
+                            <Typography className="home__intro-title" variant="h3" gutterBottom>
+                                Kick Up unites people of same interests into virtual rooms
+                            </Typography>
+                            <Link 
+                                to="main-swiper-slide-3" 
+                                smooth={true} 
+                                duration={500}
+                            >
+                                <Button
+                                    className="home__intro-btn"
+                                    variant="outlined"
+                                    onClick={() => {this.setState({ 
+                                        scrollInProgress: true,
+                                        currentSlide: 3
+                                    })}}
+                                >
+                                    <SupervisorAccount />
+                                    Explore rooms now
+                                    <ExpandMore />
+                                </Button>
+                            </Link>
+                        </div>
                     </div>
                     <div key={3} className="swiper-slide  home__intro-slide" data-intro-swiper-slide="3">
-                        <Typography className="home__intro-title" variant="h3" gutterBottom>
-                            Kick Up offers splendid events for you and your mates
-                        </Typography>
+                        <div className="home__intro-title-wrapper">
+                            <Typography className="home__intro-title" variant="h3" gutterBottom>
+                                Kick Up offers splendid events for you and your mates
+                            </Typography>
+                            <Link 
+                                to="main-swiper-slide-2" 
+                                smooth={true} 
+                                duration={500}
+                            >
+                                <Button
+                                    className="home__intro-btn"
+                                    variant="outlined"
+                                    onClick={() => {this.setState({ 
+                                        scrollInProgress: true,
+                                        currentSlide: 2
+                                    })}}
+                                >
+                                    <EventAvailable />
+                                    View events now
+                                    <ExpandMore />
+                                </Button>
+                            </Link>
+                        </div>
                     </div>
                 </Swiper>
             </div>
@@ -408,7 +458,7 @@ class Home extends Component {
             </div>
             <div data-main-slide="3" className="main-content__slide">
                 <Element name="main-swiper-slide-3"></Element>
-                <Swiper {...roomsSliderParams} >
+                <Swiper {...roomsSliderParams} getSwiper={setRoomsSlider}>
                     <div key={1} className="swiper-slide">
                         <NroomCard />
                     </div>

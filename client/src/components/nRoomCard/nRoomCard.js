@@ -60,7 +60,7 @@ class NroomCard extends Component {
                     size="medium"
                     color="primary"
                     aria-label="Extend"
-                    onClick={ this.handleExpandClick }
+                    onClick={this.handleExpandClick}
                 >
                     <ExpandMore />
                     3 events

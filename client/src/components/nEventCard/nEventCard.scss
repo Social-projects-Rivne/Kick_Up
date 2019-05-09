@@ -1,3 +1,238 @@
-.event-card {
-    border:3xp solid red;
+#root .event-card {
+    background: linear-gradient(to bottom, #FFFFFF, #ECE9E6);
+    box-shadow: none;
+}
+
+.event-card .event-card__header {
+    padding: 10px;
+}
+
+.event-card__header span:first-of-type {
+    padding-bottom: 3px;
+    font-size: 1.571rem;
+    line-height: 2rem;
+    letter-spacing: 1px;
+    color: $black;
+    font-weight: 100;
+}
+
+#root .event-card .event-card__main-content {
+    font-size: 1.071rem;
+    line-height: 1.286rem;
+    font-weight: 100;
+}
+
+.event-card__header-info {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 5px;
+}
+
+.event-card .event-card__avatar-wrapper {
+    display: flex;
+    align-items: center;
+
+    &:hover,
+    &:active {
+        background-color: transparent;
+        text-decoration: none;
+    }
+}
+
+.event-card .event-card__avatar {
+    width: 28px;
+    height: 28px;
+}
+
+.event-card .event-card__avatar-wrapper span {
+    margin-left: 10px;
+    font-size: 15px;
+    line-height: 18px;
+    color: $black;
+
+    &::before {
+        content: 'by '; 
+        font-size: 13px;
+        font-weight: 100;
+        opacity: 0.8;
+    }
+}
+
+.event-card__img-wrapper {
+    position: relative;
+    min-height: 35vh;
+}
+
+.event-card .event-card__description {
+    padding-bottom: 6px;
+}
+
+.event-card .event-card__date {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 53px;
+    bottom: 0;
+    left: 0;
+    padding: 5px 10px;
+    padding-right: 40px;
+    color: $primary;
+    transform: translate3d(-100%, 0, 0);
+    background-color: transparent;
+}
+
+.event-card .event-card__date b {
+    font-size: 20px;
+    line-height: 24px;
+}
+
+.event-card .event-card__date span {
+    opacity: 0.7;
+}
+
+.event-card .event-card__location {
+    position: absolute;
+    min-height: 53px;
+    display: flex;
+    align-items: center;
+    bottom: 0;
+    right: 0;
+    padding: 5px 10px;
+    padding-left: 40px;
+    color: $primary;
+    background-color: transparent;
+    transform: translate3d(100%, 0, 0);
+}
+
+.event-card .event-card__location b {
+    font-size: 20px;
+    line-height: 24px;
+}
+
+.event-card .event-card__location svg {
+    opacity: 0.7;
+    margin-right: 3px;
+}
+
+.event-card .event-card__group-members {
+    margin-left: auto;
+
+    & [class*=MuiTouchRipple] {
+        display: none;
+    }
+}
+
+.event-card__members-amount {
+    margin-left: 5px;
+    font-size: 0.9286rem;
+    line-height: 1.143rem;
+    color: $secondaryBlack;
+}
+
+// Related to modificators;
+.swiper-slide.swiper-slide-active .event-card__date {
+    animation:
+        roll-in-left 0.7s ease-in-out 1.5s,
+        set-label-bg-left 0.7s ease-in 3s;
+    animation-fill-mode: forwards;  
+}
+
+.swiper-slide.swiper-slide-active .event-card__location {
+    animation:
+        roll-in-right 0.7s ease-in-out 1.5s,
+        set-label-bg-right 0.7s ease-in 3s;
+    animation-fill-mode: forwards;  
+}
+
+@keyframes roll-in-left {
+    0% {
+        transform: translate3d(-100%, 0, 0);
+    }
+    80% {
+        transform: translate3d(10%, 0, 0);
+    }
+    100% {
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+@keyframes roll-in-right {
+    0% {
+        transform: translate3d(100%, 0, 0);
+    }
+    80% {
+        transform: translate3d(-10%, 0, 0);
+    }
+    100% {
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+@keyframes set-label-bg-left {
+    0% {
+        background: linear-gradient(to right, rgba(lighten($secondaryBlack, 20%), 0.1), transparent);
+    }
+    10% {
+        background: linear-gradient(to right, rgba(lighten($secondaryBlack, 20%), 0.2), transparent);
+    }
+    20% {
+        background: linear-gradient(to right, rgba(lighten($secondaryBlack, 20%), 0.3), transparent);
+    }
+    30% {
+        background: linear-gradient(to right, rgba(lighten($secondaryBlack, 20%), 0.4), transparent);
+    }
+    40% {
+        background: linear-gradient(to right, rgba(lighten($secondaryBlack, 20%), 0.5), transparent);
+    }
+    50% {
+        background: linear-gradient(to right, rgba(lighten($secondaryBlack, 20%), 0.6), transparent);
+    }
+    60% {
+        background: linear-gradient(to right, rgba(lighten($secondaryBlack, 20%), 0.7), transparent);
+    }
+    70% {
+        background: linear-gradient(to right, rgba(lighten($secondaryBlack, 20%), 0.8), transparent);
+    }
+    80% {
+        background: linear-gradient(to right, rgba(lighten($secondaryBlack, 20%), 0.9), transparent);
+    }
+    100% {
+        background: linear-gradient(to right, rgba(lighten($secondaryBlack, 20%), 1), transparent);
+    }
+}
+
+@keyframes set-label-bg-right {
+    0% {
+        background: linear-gradient(to left, rgba(lighten($secondaryBlack, 20%), 0.1), transparent);
+    }
+    10% {
+        background: linear-gradient(to left, rgba(lighten($secondaryBlack, 20%), 0.2), transparent);
+    }
+    20% {
+        background: linear-gradient(to left, rgba(lighten($secondaryBlack, 20%), 0.3), transparent);
+    }
+    30% {
+        background: linear-gradient(to left, rgba(lighten($secondaryBlack, 20%), 0.4), transparent);
+    }
+    40% {
+        background: linear-gradient(to left, rgba(lighten($secondaryBlack, 20%), 0.5), transparent);
+    }
+    50% {
+        background: linear-gradient(to left, rgba(lighten($secondaryBlack, 20%), 0.6), transparent);
+    }
+    60% {
+        background: linear-gradient(to left, rgba(lighten($secondaryBlack, 20%), 0.7), transparent);
+    }
+    70% {
+        background: linear-gradient(to left, rgba(lighten($secondaryBlack, 20%), 0.8), transparent);
+    }
+    80% {
+        background: linear-gradient(to left, rgba(lighten($secondaryBlack, 20%), 0.9), transparent);
+    }
+    100% {
+        background: linear-gradient(to left, rgba(lighten($secondaryBlack, 20%), 1), transparent);
+    }
 }

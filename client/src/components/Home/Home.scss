@@ -30,10 +30,6 @@
     }
 }
 
-.home__rooms-wrapper {
-    padding-top: 10px;
-}
-
 .home__intro-slide {
     width: 100%;
     position: relative;
@@ -41,7 +37,7 @@
     min-height: calc(100vh - #{$header-height});
     overflow: hidden;
     text-align: center;
-    background-color: rgba(0, 0, 0, 0.3);
+    background-color: rgba(250, 205, 61, 0.1);
 }
 
 .home__intro-slide img {
@@ -66,11 +62,16 @@
     }
 }
 
+.home__intro-title-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 3vh;
+    padding: 0 1rem;
+}
+
 .home .home__intro-title {
     position: relative;
-    margin-top: 8vh;
-    padding: 0 1rem;
-    text-align: center;
     // Fallback for old browsers;
     color: darken($primary, 14%);
     font-weight: 100;
@@ -78,6 +79,8 @@
     transition: opacity 0.3s;
     transition-delay: 0.5s;
     font-weight: 800;
+    font-size: 3rem;
+    line-height: 3.571rem;
     z-index: 1;
 }
 
@@ -89,11 +92,46 @@
     }
 }
 
+.home .home__intro-slide:first-of-type
+.home__intro-title {
+    margin-top: 6vh;
+}
+
 .home .home__intro-btn {
+    margin-top: 10px;
+    font-size: 16px;
     color: $primary;
-    border-color: $primary;
-    background-color: lighten($secondaryBlack, 40%);
+    letter-spacing: 0.5px;
+    border: 0;
+    background-color: rgba(17, 17, 17, 0.75);
     z-index: 1;
+    border-radius: 50px;
+    transform: scale(0);
+    
+    &:hover,
+    &:active {
+        background-color: rgba(17, 17, 17, 0.8);
+    }
+}
+
+.home .home__intro-btn svg {
+    &:first-of-type {
+        margin-right: 8px;
+    }
+
+    &:last-of-type {
+        margin-left: 8px;
+    }
+}
+
+// Related to rooms;
+.home__rooms-wrapper {
+    padding-top: 10px;
+}
+
+.home .home__rooms-swiper {
+    border: 2px solid red;
+    height: unset !important;
 }
 
 // Related to modificators;
@@ -107,9 +145,20 @@
     }
 }
 
-.home .swiper-slide-active .home__intro-title {
-    opacity: 1;
-    transition: opacity 0.3;
+// Related to active slide changes;
+.home .swiper-slide-active {
+    
+    & .home__intro-title {
+        opacity: 1;
+        transition: opacity 0.3;
+    }
+
+    & .home__intro-btn {
+        animation-name: scale-in;
+        animation-delay: 1s;
+        animation-duration: 0.5s;
+        animation-fill-mode: forwards;
+    }
 }
 
 // Buttons wrapper;
