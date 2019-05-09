@@ -21,6 +21,7 @@
     "react-responsive-carousel": "^3.1.47",
     "react-router-dom": "^5.0.0",
     "react-scripts": "2.1.8",
+    "react-scroll": "^1.7.11",
     "react-swipeable-views": "^0.13.1",
     "smoothscroll-polyfill": "^0.4.4",
     "swiper": "^4.5.0"

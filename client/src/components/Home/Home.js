@@ -2,11 +2,16 @@ import React, {Component} from 'react';
 
 import Swiper from 'react-id-swiper/lib/ReactIdSwiper.full';
 import { Pagination, Navigation } from 'swiper/dist/js/swiper.esm';
+
+import { withSnackbar } from 'notistack';
 import { Typography, Button } from '@material-ui/core';
 import { EventAvailable, SupervisorAccount, ExpandMore } from "@material-ui/icons";
+
 import axios from "axios";
-//import RoomCard from '../Rooms/RoomCard/RoomCard';
-import { withSnackbar } from 'notistack';
+
+// Scroll to plugin;
+import { Element, Events, scroller } from 'react-scroll';
+
 import NroomCard from '../nRoomCard/nRoomCard';
 import NeventCard from '../nEventCard/nEventCard';
 
@@ -242,11 +247,14 @@ class Home extends Component {
             this.showToast('Something went wrong :( Try reload your page', messageType.ERR);
         }
     }
+    getScrollPos = () => {
+        const currentOffset = document.documentElement.scrollTop || 
+        document.body.scrollTop;
+        return currentOffset;
+    }
     handleScroll = (scrollEvt) => {
-        return;
         const awaitTime = 500;
-        const animationTime = 550;
-        const minHeightToScroll = 50;
+        const minHeightToScroll = 100;
         const setNewSlide = () => {
             const minSlide = 1;
             const maxSlide =  3;
@@ -260,11 +268,11 @@ class Home extends Component {
                 slideIdx = this.state.currentSlide + 1 + increaseIdxBy;
                 if (slideIdx > maxSlide) slideIdx = maxSlide;
             } 
-
+            
+            console.log('So new slide is, > ', slideIdx);
             return slideIdx;
         };
         let direction = null;
-        let scrollIntoEl = null;
         let scrollDiff = 0;
 
         // In case animation wasn't finished, return;
@@ -273,11 +281,8 @@ class Home extends Component {
         // Let's do some debouncing;
         window.clearTimeout(prevTimer);
         prevTimer = window.setTimeout(() => {
-            console.log('Inside handleScroll');
-
             // Get offset;
-            const currentOffset = document.documentElement.scrollTop || 
-            document.body.scrollTop;
+            const currentOffset = this.getScrollPos();
 
             // Get scroll diff;
             scrollDiff = Math.abs(currentOffset - this.state.offset);
@@ -310,30 +315,30 @@ class Home extends Component {
             // Save new data into state;
             this.setState({
                 currentSlide: newSlide,
-                offset : currentOffset
+                offset: currentOffset
             });
 
             // Scroll into required slide;
             try {
-                if (this.state.currentSlide === 1) {
-                    scrollIntoEl = document.querySelector('header');
-                } else {
-                    scrollIntoEl = document.querySelector(`[data-main-slide="${this.state.currentSlide}"]`);
-                }
-               
                 this.setState({scrollInProgress: true});
+                scroller.scrollTo('main-swiper-slide-' + newSlide, {
+                    duration: 500,
+                    delay: 100,
+                    smooth: true,
+                    isDynamic: true,
+                    offset: (() => {
+                        const headerHeight = {
+                            DESKTOP: -87,
+                            MOBILE: -80
+                        };
 
-                // Allow scrolls after scroll animation finished;
-                window.setTimeout(() => {
-                    this.setState({scrollInProgress: false});
-
-                    // Update current position, as it could be changed;
-                    this.setState({
-                        offset: document.documentElement.scrollTop || document.body.scrollTop
-                    });
-                }, animationTime);
-                
-                scrollIntoEl.scrollIntoView({ behavior: 'smooth' });
+                        if (newSlide === 1) {
+                            return window.innerWidth >= _desktopWidth 
+                            ? headerHeight.DESKTOP 
+                            : headerHeight.MOBILE;   
+                        } else { return 0; }
+                    })()
+                });
             } catch(err) {}
         }, awaitTime);
     }
@@ -350,10 +355,21 @@ class Home extends Component {
 
         // Add event listeners;
         document.addEventListener('scroll', this.handleScroll);
+        Events.scrollEvent.register('end', () => {
+            this.setState({
+                scrollInProgress: false,
+                offset: this.getScrollPos()
+            })
+        });
+    }
+    componentWillUnmount = () => {
+        document.removeEventListener('scroll', this.handleScroll);
+        Events.scrollEvent.remove('end');
     }
     render = () => (
         <div className="main-content home">
             <div data-main-slide="1" className="main-content__slide">
+                <Element name="main-swiper-slide-1"></Element>
                 <aside className="home__intro-btns-wrapper">
                     Here will go btns wrapper
                 </aside>
@@ -384,6 +400,7 @@ class Home extends Component {
                 </Swiper>
             </div>
             <div data-main-slide="2" className="main-content__slide">
+                <Element name="main-swiper-slide-2"></Element>
                 <Swiper {...eventsSliderParams} >
                     <div key={1} className="swiper-slide">
                         <NeventCard />
@@ -397,6 +414,7 @@ class Home extends Component {
                 </Swiper>
             </div>
             <div data-main-slide="3" className="main-content__slide">
+                <Element name="main-swiper-slide-3"></Element>
                 <Swiper {...roomsSliderParams} >
                     <div key={1} className="swiper-slide">
                         <NroomCard />

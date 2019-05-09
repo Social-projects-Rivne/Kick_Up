@@ -2,8 +2,8 @@ import React, { Component } from "react";
 
 import axios from 'axios';
 import is from 'is_js';
-import { withSnackbar } from 'notistack';
 
+import { withSnackbar } from 'notistack';
 import { Grid, TextField, Button, Typography } from '@material-ui/core';
 import { Person, Send, Email, Lock } from '@material-ui/icons';
 
