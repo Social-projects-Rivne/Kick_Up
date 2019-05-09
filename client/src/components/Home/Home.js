@@ -15,9 +15,6 @@ import { Element, Events, scroller } from 'react-scroll';
 import NroomCard from '../nRoomCard/nRoomCard';
 import NeventCard from '../nEventCard/nEventCard';
 
-// Require smooth scroll polyfill;
-import smoothscroll from 'smoothscroll-polyfill';
-
 // Import media;
 import bg1_desk from '../../assets/images/intro-slider/bg-1-desk.png';
 import bg1_desk_placeholder from '../../assets/images/intro-slider/bg-1-desk.svg';
@@ -183,10 +180,6 @@ const introSlidesSliderParams = {
 }
 
 let prevTimer;
-
-// Init smooth scroll polyfill;
-window.__forceSmoothScrollPolyfill__ = true;
-smoothscroll.polyfill();
 
 class Home extends Component {
     state = {
