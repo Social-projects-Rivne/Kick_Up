@@ -43,7 +43,7 @@ class Rooms extends Component {
     axios
       .get(api, type)
       .then(res => {
-        this.setState({ roomsDB: res.data, isLoading: false });
+        this.setState({ roomsDB: res.data.rooms, isLoading: false });
       })
       .catch(err => console.log(err));
   };
