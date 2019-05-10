@@ -5,6 +5,7 @@ const { Room } =require('../../models');
 const validate = require('../../services/Validator');
 const router = new Router({ prefix: '/api/room'});
 const faker = require('faker');
+const { sum, floor } = require('lodash');
 
 const handler = {
   async roomList(ctx) {
@@ -12,17 +13,22 @@ const handler = {
       page: 'numeric|min:1'
     })
     const { page } = ctx.query;
-    const list = await Room.fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category']});
+    const rooms = await Room.fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating']});
     const members = faker.random.number(30);
-    const rating = faker.random.number(5);
-
-    const newList  = list.map(i => i.set({members,rating}));
-
-    // data from DB
+    rooms.forEach(room => {
+      const roomRatings = room.serialize().rating.filter(i => i.entity_id === room.id);
+      if(room.serialize().rating.length){
+        const sumOfVotes = room.serialize().rating.length;
+        room.set({roomRating: floor((sum(roomRatings.map(item => item.rating))/sumOfVotes),2)});
+        }else {
+          room.set({roomRating: 0});
+        }
+    });
+    const newList  = rooms.map(i => i.set({members}));
     ctx.body = {
       rooms: newList,
-      roomCount: list.pagination.rowCount,
-      pageCount: list.pagination.pageCount
+      roomCount: rooms.pagination.rowCount,
+      pageCount: rooms.pagination.pageCount
     }
 
     // data from mock
@@ -47,8 +53,8 @@ const handler = {
         permission,
         members_limit
     } = ctx.request.body;
-    await new Room(newRoom).save();
-    ctx.body = '';
+    const room = await new Room(newRoom).save();
+    ctx.body = room;
   },
   async getRoomById(ctx) {
     const { id } = ctx.params;
