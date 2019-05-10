@@ -1,6 +1,71 @@
 /* Available modificators:
 * roomcard__events-btn_expanded;
 */
+#root .roomcard {
+    box-shadow: none;
+}
+
+.roomcard .roomcard__header {
+    padding: 10px;
+}
+
+.roomcard__header span:first-of-type {
+    padding-bottom: 3px;
+    font-size: 1.571rem;
+    line-height: 2rem;
+    letter-spacing: 1px;
+    color: $black;
+    font-weight: 100;
+}
+
+#root .roomcard .roomcard__main-content {
+    font-size: 1.071rem;
+    line-height: 1.286rem;
+    font-weight: 100;
+}
+
+.roomcard__header-info {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 5px;
+}
+
+.roomcard .roomcard__avatar-wrapper {
+    display: flex;
+    align-items: center;
+
+    &:hover,
+    &:active {
+        background-color: transparent;
+        text-decoration: none;
+    }
+}
+
+.roomcard .roomcard__avatar {
+    width: 28px;
+    height: 28px;
+}
+
+.roomcard .roomcard__avatar-wrapper span {
+    margin-left: 10px;
+    font-size: 15px;
+    line-height: 18px;
+    color: $black;
+
+    &::before {
+        content: 'by '; 
+        font-size: 13px;
+        font-weight: 100;
+        opacity: 0.8;
+    }
+}
+
+.roomcard__img-wrapper {
+    position: relative;
+    min-height: 35vh;
+}
 
 .roomcard__img-wrapper {
     min-height: 35vh;
@@ -16,13 +81,6 @@
 
 .roomcard .roomcard__header {
     padding: 10px;
-}
-
-.roomcard__header span:first-of-type {
-    font-size: 1.571rem;
-    line-height: 2rem;
-    color: $black;
-    font-weight: 100;
 }
 
 .roomcard__header > div:first-child {
@@ -51,6 +109,31 @@
     }
 }
 
+.roomcard .roomcard__label {
+    position: absolute;
+    min-height: 53px;
+    display: flex;
+    align-items: center;
+    bottom: 0;
+    left: 0;
+    padding: 5px 10px;
+    padding-right: 40px;
+    color: $primary;
+    background-color: transparent;
+    transform: translate3d(-100%, 0, 0);
+    z-index: 1;
+}
+
+.roomcard .roomcard__label b {
+    font-size: 20px;
+    line-height: 24px;
+}
+
+.roomcard .roomcard__label svg {
+    opacity: 0.7;
+    margin-right: 3px;
+}
+
 .roomcard__members-amount {
     margin-left: 5px;
     font-size: 0.8571rem;
@@ -62,7 +145,72 @@
     padding-bottom: 6px;
 }
 
+#root .roomcard .roomcard__events-wrapper {
+    border-top: 1px solid lighten($secondaryBlack, 90%);
+    padding: 0;
+}
+
+.roomcard__events-wrapper > div {
+    margin-bottom: 20px;
+
+    &:last-of-type {
+        margin-bottom: 0;
+    }
+}
+
 // Anti-BEM will be best option here;
 .swiper-slide:not(.swiper-slide-active) .roomcard__collpse-content {
    display: none;
+}
+
+.swiper-slide.swiper-slide-active > .roomcard .roomcard__label {
+    animation:
+        roll-in-left 0.7s ease-in-out 1.5s,
+        set-label-bg-left 0.7s ease-in 3s;
+    animation-fill-mode: forwards;  
+}
+
+@keyframes roll-in-left {
+    0% {
+        transform: translate3d(-100%, 0, 0);
+    }
+    80% {
+        transform: translate3d(10%, 0, 0);
+    }
+    100% {
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+@keyframes set-label-bg-left {
+    0% {
+        background: linear-gradient(to right, rgba(lighten($secondaryBlack, 20%), 0.1), transparent);
+    }
+    10% {
+        background: linear-gradient(to right, rgba(lighten($secondaryBlack, 20%), 0.2), transparent);
+    }
+    20% {
+        background: linear-gradient(to right, rgba(lighten($secondaryBlack, 20%), 0.3), transparent);
+    }
+    30% {
+        background: linear-gradient(to right, rgba(lighten($secondaryBlack, 20%), 0.4), transparent);
+    }
+    40% {
+        background: linear-gradient(to right, rgba(lighten($secondaryBlack, 20%), 0.5), transparent);
+    }
+    50% {
+        background: linear-gradient(to right, rgba(lighten($secondaryBlack, 20%), 0.6), transparent);
+    }
+    60% {
+        background: linear-gradient(to right, rgba(lighten($secondaryBlack, 20%), 0.7), transparent);
+    }
+    70% {
+        background: linear-gradient(to right, rgba(lighten($secondaryBlack, 20%), 0.8), transparent);
+    }
+    80% {
+        background: linear-gradient(to right, rgba(lighten($secondaryBlack, 20%), 0.9), transparent);
+    }
+    100% {
+        background: linear-gradient(to right, rgba(lighten($secondaryBlack, 20%), 1), transparent);
+    }
 }

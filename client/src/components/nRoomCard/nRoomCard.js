@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import { Link as RouterLink, withRouter } from 'react-router-dom';
 
 import {
     Card, 
@@ -10,10 +11,13 @@ import {
     Typography,
     IconButton,
     Collapse,
-    Fab
+    Fab,
+    Link
 } from '@material-ui/core';
-import { Group, ExpandMore } from '@material-ui/icons';
+import { Group, ExpandMore, Loyalty } from '@material-ui/icons';
 import StarRating from "../UI/StarRating/StarRating";
+
+import NeventCard from '../nEventCard/nEventCard';
 
 class NroomCard extends Component {
     constructor(props) {
@@ -26,22 +30,35 @@ class NroomCard extends Component {
     render = () => (
         <Card className="roomcard">
             <CardHeader
-                className="roomcard__header"
-                avatar={
-                    <Avatar aria-label="Recipe">
-                    R
-                    </Avatar>
-                }
-                title="Shrimp and Chorizo Paella"
-                subheader={<StarRating rating="10" />}
-            >
-            </CardHeader>
+            className="roomcard__header"
+            title="Food lovers in Rivne"
+            subheader={
+                <div className="roomcard__header-info">
+                    <Link component={RouterLink} to="/" className="roomcard__avatar-wrapper">
+                        <Avatar 
+                            className="roomcard__avatar" 
+                            src="https://material-ui.com/static/images/avatar/1.jpg" 
+                            aria-label="Recipe">
+                            W
+                        </Avatar>
+                        <span>@daniel</span>
+                    </Link>
+                    <StarRating rating="10" />
+                </div>
+            }
+        >
+        </CardHeader>
             <CardMedia
                 data-swiper-parallax="-100"
                 className="roomcard__img-wrapper"
                 image="https://material-ui.com/static/images/cards/paella.jpg"
                 title="Paella dish"
-            />
+            >
+                <div className="roomcard__label">
+                    <Loyalty />
+                    <b>Food</b>
+                </div>
+            </CardMedia>
             <CardContent data-swiper-parallax="-300" className="roomcard__description">
                 <Typography component="p">
                     Lorem ipsum dolor sit amet, consectetur adipiscing 
@@ -77,14 +94,14 @@ class NroomCard extends Component {
                 </IconButton>
             </CardActions>
             <Collapse className="roomcard__collpse-content" in={this.state.expanded} timeout="auto" unmountOnExit>
-                <CardContent>
-                    <h1>Here will go event</h1>
-                    <h1>Here will go event</h1>
-                    <h1>Here will go event</h1>
+                <CardContent className="roomcard__events-wrapper">
+                    <NeventCard />
+                    <NeventCard />
+                    <NeventCard />
                 </CardContent>
             </Collapse>
         </Card>
     );
 };
 
-export default NroomCard;
+export default withRouter(NroomCard);

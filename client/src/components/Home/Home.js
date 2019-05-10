@@ -162,7 +162,6 @@ const roomsSliderParams = {
         clickable: true,
         hideOnClick: true
     },
-    parallax: true,
     speed: 800,
     on: {
         slideChangeTransitionEnd: updateSwipersHeight

@@ -45,7 +45,7 @@ const NeventCard = props => (
         >
             <div className="event-card__date">
                 <b>29 April</b>
-                <span>2019</span>
+                <span>13:45</span>
             </div>
             <div className="event-card__location">
                 <LocationOn />

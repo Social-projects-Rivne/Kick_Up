@@ -30,17 +30,26 @@
     }
 }
 
+.home__main-swiper > .swiper-wrapper {
+    transform: none !important;
+} 
+
 // Related to pagination;
 .home [data-main-slide]:nth-of-type(2),
 .home [data-main-slide]:nth-of-type(3) {
     position: relative;
-    min-height:100vh;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
 
+.home [data-main-slide]:nth-of-type(3) {
+    min-height: calc(100vh - #{$footer-height});
+}
+
 .home [data-main-slide] .swiper-pagination-bullets {
+    margin-top: 5px;
     text-align: center;
 
     & span {
