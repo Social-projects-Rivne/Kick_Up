@@ -133,14 +133,14 @@
 }
 
 // Related to modificators;
-.swiper-slide.swiper-slide-active .event-card__date {
+.swiper-slide.swiper-slide-active > .event-card .event-card__date {
     animation:
         roll-in-left 0.7s ease-in-out 1.5s,
         set-label-bg-left 0.7s ease-in 3s;
     animation-fill-mode: forwards;  
 }
 
-.swiper-slide.swiper-slide-active .event-card__location {
+.swiper-slide.swiper-slide-active > .event-card .event-card__location {
     animation:
         roll-in-right 0.7s ease-in-out 1.5s,
         set-label-bg-right 0.7s ease-in 3s;

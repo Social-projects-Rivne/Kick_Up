@@ -1,10 +1,11 @@
 import React, {Component} from 'react';
+import { Link as DomLink } from 'react-router-dom';
 
 import Swiper from 'react-id-swiper/lib/ReactIdSwiper.full';
 import { Pagination, Navigation } from 'swiper/dist/js/swiper.esm';
 
 import { withSnackbar } from 'notistack';
-import { Typography, Button } from '@material-ui/core';
+import { Typography, Button, Badge } from '@material-ui/core';
 import { EventAvailable, SupervisorAccount, ExpandMore } from "@material-ui/icons";
 
 import axios from "axios";
@@ -36,7 +37,6 @@ import bg3_mob_vert from '../../assets/images/intro-slider/bg-3-mob-vert.png';
 import bg3_mob_vert_placeholder from '../../assets/images/intro-slider/bg-3-mob-vert.svg';
 import bg3_mob_hor from '../../assets/images/intro-slider/bg-3-mob-hor.png';
 import bg3_mob_hor_placeholder from '../../assets/images/intro-slider/bg-3-mob-hor.svg';
-import { instanceOf } from 'prop-types';
 
 const API = {
     getRooms: '/api/room/',
@@ -86,14 +86,24 @@ const selectors = {
     activeIntroSlide: '.home__intro-slide.swiper-slide-active',
     loadingImageClass: 'home__intro-slide_loading',
 };
-let roomsSlider = null;
+let mainSwiper, roomsSwiper;
 
-// Helpers;
-const setRoomsSlider = instance => {
-    roomsSlider = instance;
+// Helper functions;
+const setMainSwiper = instance => {
+    mainSwiper = instance;
 };
-const getRoomsSlider = () => {
-    return roomsSlider;
+const setRoomsSwiper = instance => {
+    roomsSwiper = instance;
+};
+const updateSwipersHeight = () => {
+    try {
+        roomsSwiper.updateAutoHeight(300);
+        
+        // Wait rooms update, then main;
+        window.setTimeout(() => {
+            mainSwiper.updateAutoHeight(300);
+        }, 300);
+    } catch(err) {}
 };
 
 // Need this as swiper here, cannot bind it, as swiper is initialized aync; 
@@ -133,12 +143,19 @@ const applySVGImage = function() {
     });
 };
 
+const mainSwiperParams = {
+    containerClass: 'home__main-swiper',
+    slidesPerView: 1,
+    autoHeight: true
+};
+
 const roomsSliderParams = {
     modules: [Pagination],
     containerClass: 'home__rooms-swiper',
     slidesPerView: 1,
     simulateTouch: true,
-    //autoHeight: true,
+    nested: true,
+    autoHeight: true,
     pagination: {
         el: ".home__rooms-swiper-pagination",
         type: 'bullets',
@@ -148,9 +165,7 @@ const roomsSliderParams = {
     parallax: true,
     speed: 800,
     on: {
-        slideChangeTransitionEnd: function() {
-            this.update();
-        }
+        slideChangeTransitionEnd: updateSwipersHeight
     }
 };
 const eventsSliderParams = {
@@ -158,13 +173,14 @@ const eventsSliderParams = {
     containerClass: 'home__events-swiper',
     slidesPerView: 1,
     simulateTouch: true,
+    nested: true,
+    autoHeight: true,
     pagination: {
         el: ".home__events-swiper-pagination",
         type: 'bullets',
         clickable: true,
         hideOnClick: true
     },
-    //parallax: true,
     speed: 800
 };
 const introSlidesSliderParams = {
@@ -173,7 +189,7 @@ const introSlidesSliderParams = {
     simulateTouch: true,
     parallax: true,
     speed: 800,
-    //noSwiping: true,
+    nested: true,
     autoplay: {
         delay: 50000,
     },
@@ -282,7 +298,7 @@ class Home extends Component {
         };
         let direction = null;
         let scrollDiff = 0;
-
+        
         // In case animation wasn't finished, return;
         if (this.state.scrollInProgress) return;
 
@@ -311,8 +327,8 @@ class Home extends Component {
             */ 
             if (
                 !direction ||
-                this.state.currentSlide === 3 && direction === 'down' ||
-                this.state.currentSlide === 1 && direction === 'up' ||
+                (this.state.currentSlide === 3 && direction === 'down') ||
+                (this.state.currentSlide === 1 && direction === 'up') ||
                 scrollDiff <= minHeightToScroll
             ) {
                 return;
@@ -365,6 +381,7 @@ class Home extends Component {
         document.addEventListener('scroll', this.handleScroll);
         Events.scrollEvent.register('end', () => {
             console.log('And our animation ended!');
+
             this.setState({
                 scrollInProgress: false,
                 offset: this.getScrollPos()
@@ -377,100 +394,120 @@ class Home extends Component {
     }
     render = () => (
         <div className="main-content home">
-            <div data-main-slide="1" className="main-content__slide">
-                <Element name="main-swiper-slide-1"></Element>
-                <aside className="home__intro-btns-wrapper">
-                    Here will go btns wrapper
-                </aside>
-                <Swiper {...introSlidesSliderParams} >
-                    <div key={1} className="swiper-slide  home__intro-slide" data-intro-swiper-slide="1">
-                        <div className="home__intro-title-wrapper">
-                            <Typography className="home__intro-title" variant="h3" gutterBottom>
-                                Got hobby? You're in the right place
-                            </Typography>
+            <Swiper {...mainSwiperParams} getSwiper={setMainSwiper}>
+                <div>
+                    <div data-main-slide="1" className="main-content__slide">
+                    <Element name="main-swiper-slide-1"></Element>
+                    <aside className="home__intro-btns-wrapper">
+                        Here will go btns wrapper
+                    </aside>
+                    <Swiper {...introSlidesSliderParams} >
+                        <div key={1} className="swiper-slide  home__intro-slide" data-intro-swiper-slide="1">
+                            <div className="home__intro-title-wrapper">
+                                <Typography className="home__intro-title" variant="h3" gutterBottom>
+                                    Got hobby? You're in the right place
+                                </Typography>
+                            </div>
                         </div>
-                    </div>
-                    <div key={2} className="swiper-slide  home__intro-slide" data-intro-swiper-slide="2" >
-                        <div className="home__intro-title-wrapper">
-                            <Typography className="home__intro-title" variant="h3" gutterBottom>
-                                Kick Up unites people of same interests into virtual rooms
-                            </Typography>
-                            <Link 
-                                to="main-swiper-slide-3" 
-                                smooth={true} 
-                                duration={500}
-                            >
-                                <Button
-                                    className="home__intro-btn"
-                                    variant="outlined"
-                                    onClick={() => {this.setState({ 
-                                        scrollInProgress: true,
-                                        currentSlide: 3
-                                    })}}
+                        <div key={2} className="swiper-slide  home__intro-slide" data-intro-swiper-slide="2" >
+                            <div className="home__intro-title-wrapper">
+                                <Typography className="home__intro-title" variant="h3" gutterBottom>
+                                    Kick Up unites people of same interests into virtual rooms
+                                </Typography>
+                                <Link 
+                                    to="main-swiper-slide-3" 
+                                    smooth={true} 
+                                    duration={500}
                                 >
-                                    <SupervisorAccount />
-                                    Explore rooms now
-                                    <ExpandMore />
-                                </Button>
-                            </Link>
+                                    <Button
+                                        className="home__intro-btn"
+                                        variant="outlined"
+                                        onClick={() => {this.setState({ 
+                                            scrollInProgress: true,
+                                            currentSlide: 3
+                                        })}}
+                                    >
+                                        <SupervisorAccount />
+                                        Explore rooms now
+                                        <ExpandMore />
+                                    </Button>
+                                </Link>
+                            </div>
                         </div>
-                    </div>
-                    <div key={3} className="swiper-slide  home__intro-slide" data-intro-swiper-slide="3">
-                        <div className="home__intro-title-wrapper">
-                            <Typography className="home__intro-title" variant="h3" gutterBottom>
-                                Kick Up offers splendid events for you and your mates
-                            </Typography>
-                            <Link 
-                                to="main-swiper-slide-2" 
-                                smooth={true} 
-                                duration={500}
-                            >
-                                <Button
-                                    className="home__intro-btn"
-                                    variant="outlined"
-                                    onClick={() => {this.setState({ 
-                                        scrollInProgress: true,
-                                        currentSlide: 2
-                                    })}}
+                        <div key={3} className="swiper-slide  home__intro-slide" data-intro-swiper-slide="3">
+                            <div className="home__intro-title-wrapper">
+                                <Typography className="home__intro-title" variant="h3" gutterBottom>
+                                    Kick Up offers splendid events for you and your mates
+                                </Typography>
+                                <Link 
+                                    to="main-swiper-slide-2" 
+                                    smooth={true} 
+                                    duration={500}
                                 >
-                                    <EventAvailable />
-                                    View events now
-                                    <ExpandMore />
-                                </Button>
-                            </Link>
+                                    <Button
+                                        className="home__intro-btn"
+                                        variant="outlined"
+                                        onClick={() => {this.setState({ 
+                                            scrollInProgress: true,
+                                            currentSlide: 2
+                                        })}}
+                                    >
+                                        <EventAvailable />
+                                        View events now
+                                        <ExpandMore />
+                                    </Button>
+                                </Link>
+                            </div>
                         </div>
-                    </div>
-                </Swiper>
+                    </Swiper>
+                </div>
+                <div data-main-slide="2" className="main-content__slide">
+                    <Element name="main-swiper-slide-2"></Element>
+                    <DomLink to={'events'} className="home__cards-slide">
+                        <EventAvailable fontSize="large" />
+                        <Badge className="home__badge" badgeContent={328}>
+                            <Typography className="home__cards-slide-title" variant="h4">
+                                Events      
+                            </Typography>
+                        </Badge>
+                    </DomLink>
+                    <Swiper {...eventsSliderParams} >
+                        <div key={1} className="swiper-slide">
+                            <NeventCard />
+                        </div>
+                        <div key={2} className="swiper-slide">
+                            <NeventCard />
+                        </div>
+                        <div key={3} className="swiper-slide">
+                            <NeventCard />
+                        </div>
+                    </Swiper>
+                </div>
+                <div data-main-slide="3" className="main-content__slide">
+                    <Element name="main-swiper-slide-3"></Element>
+                    <DomLink to={'rooms'} className="home__cards-slide">
+                        <SupervisorAccount fontSize="large" />
+                        <Badge className="home__badge" badgeContent={328}>
+                            <Typography className="home__cards-slide-title" variant="h4">
+                                groups      
+                            </Typography>
+                        </Badge>
+                    </DomLink>
+                    <Swiper {...roomsSliderParams} getSwiper={setRoomsSwiper}>
+                        <div key={1} className="swiper-slide">
+                            <NroomCard btnClickHandler={updateSwipersHeight} />
+                        </div>
+                        <div key={2} className="swiper-slide">
+                            <NroomCard btnClickHandler={updateSwipersHeight} />
+                        </div>
+                        <div key={3} className="swiper-slide">
+                            <NroomCard btnClickHandler={updateSwipersHeight} />
+                        </div>
+                    </Swiper>
+                </div>
             </div>
-            <div data-main-slide="2" className="main-content__slide">
-                <Element name="main-swiper-slide-2"></Element>
-                <Swiper {...eventsSliderParams} >
-                    <div key={1} className="swiper-slide">
-                        <NeventCard />
-                    </div>
-                    <div key={2} className="swiper-slide">
-                        <NeventCard />
-                    </div>
-                    <div key={3} className="swiper-slide">
-                        <NeventCard />
-                    </div>
-                </Swiper>
-            </div>
-            <div data-main-slide="3" className="main-content__slide">
-                <Element name="main-swiper-slide-3"></Element>
-                <Swiper {...roomsSliderParams} getSwiper={setRoomsSlider}>
-                    <div key={1} className="swiper-slide">
-                        <NroomCard />
-                    </div>
-                    <div key={2} className="swiper-slide">
-                        <NroomCard />
-                    </div>
-                    <div key={3} className="swiper-slide">
-                        <NroomCard />
-                    </div>
-                </Swiper>
-            </div>
-        </div>
+        </Swiper>        
+    </div>
     )
 };
 

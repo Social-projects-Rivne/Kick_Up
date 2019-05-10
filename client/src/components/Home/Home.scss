@@ -30,6 +30,29 @@
     }
 }
 
+// Related to pagination;
+.home [data-main-slide]:nth-of-type(2),
+.home [data-main-slide]:nth-of-type(3) {
+    position: relative;
+    min-height:100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.home [data-main-slide] .swiper-pagination-bullets {
+    text-align: center;
+
+    & span {
+        background-color: $secondaryBlack;
+    }
+
+    & span.swiper-pagination-bullet-active {
+        background-color: $primary;
+    }
+}
+
+// Related to intro slide;
 .home__intro-slide {
     width: 100%;
     position: relative;
@@ -124,14 +147,52 @@
     }
 }
 
+// Related to cards slide;
+.home__cards-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 10px;
+    background-color: rgba(17, 17, 17, 0.9);
+    color: $primary;
+    text-decoration: none;
+    z-index: 1;
+}
+
+.home .home__cards-slide-title {
+    font-size: 18px;
+    line-height: 1.286rem;
+    color: $primary;
+    text-transform: uppercase;
+    font-weight: 100;
+    letter-spacing: 2px;
+}
+
+.home__badge {
+    padding-right: 44px;
+}
+
+.home__badge span {
+    right: 20px;
+    border: 1px solid $primary;
+}
+
 // Related to rooms;
 .home__rooms-wrapper {
     padding-top: 10px;
 }
 
-.home .home__rooms-swiper {
-    border: 2px solid red;
-    height: unset !important;
+// Related to events;
+.home .home__rooms-swiper,
+.home .home__events-swiper {
+    margin-top: auto;
+    // To make it centered, add padding of title;
+    padding-top: 45px;
+    margin-bottom: auto;
 }
 
 // Related to modificators;

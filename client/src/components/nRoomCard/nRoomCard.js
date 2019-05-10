@@ -60,7 +60,13 @@ class NroomCard extends Component {
                     size="medium"
                     color="primary"
                     aria-label="Extend"
-                    onClick={this.handleExpandClick}
+                    onClick={() => {
+                        const doUpd = this.props.btnClickHandler;
+                        this.handleExpandClick();
+                        
+                        // We need delay while collapse opens;
+                        if (doUpd) window.setTimeout(doUpd, 400);
+                    }}
                 >
                     <ExpandMore />
                     3 events
@@ -70,7 +76,7 @@ class NroomCard extends Component {
                     <span className="roomcard__members-amount">13 of 55 allowed</span>
                 </IconButton>
             </CardActions>
-            <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
+            <Collapse className="roomcard__collpse-content" in={this.state.expanded} timeout="auto" unmountOnExit>
                 <CardContent>
                     <h1>Here will go event</h1>
                     <h1>Here will go event</h1>

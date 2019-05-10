@@ -61,3 +61,8 @@
 .roomcard .roomcard__description {
     padding-bottom: 6px;
 }
+
+// Anti-BEM will be best option here;
+.swiper-slide:not(.swiper-slide-active) .roomcard__collpse-content {
+   display: none;
+}
