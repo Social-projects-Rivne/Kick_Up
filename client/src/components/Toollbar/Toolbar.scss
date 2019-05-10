@@ -1,7 +1,12 @@
+#root .toolbar {
+  width: 100%;
+  margin: 0;
+}
 .toolbar {
-  width: 100% !important;
-  margin: 0 !important;
   background-color: $black;
+  button.toolbar-sort {
+    height: 37px;
+  }
   button.toolbar-sort, .toolbar-add {
       background-color: $primary;
       &:hover {
@@ -13,11 +18,16 @@
   &-filter {
     &-formControl {
       label {
-        transform: translate(14px, 12px) scale(1);
+        transform: translate(12px, 12px) scale(1);
+        text-transform: uppercase;
+        color: black;
+        font-size: 0.875rem;
+        font-weight: 500;
       }
     }
     &-inputLabel {
       padding: 15px;
+
     }
     &-outlinedinput {
       margin: 10px auto;
@@ -43,8 +53,11 @@
       right: 20px;
       z-index: 500;
       transition: all 0.3s;
+      text-align: left;
       &-close {
-        background-color: #fff;
+        color: $white;
+        position: relative;
+        top: 3px;
       }
     }
   }
@@ -61,33 +74,44 @@
 
 }
 
+//filter buttons
+#root .toolbar [class*=MuiFormLabel-focused],
+#root ~ div .toolbar [class*=MuiFormLabel-focused] {
+   color: $primary;
+}
+#root .toolbar [class*=MuiOutlinedInput],
+#root ~ div .toolbar [class*=MuiOutlinedInput] {
+   border-color: $primary;
+}
+
 @media (max-width: 768px) {
-  .toolbar-desktop {
-    display: none !important;
+  #root .toolbar-desktop {
+    display: none;
   }
-  .mobile-button {
+  #root .mobile-button {
     z-index: 101;
-    position: fixed !important;
+    position: fixed;
     bottom: 10px;
     right: 10px;
-    background-color: $black !important;
-    color: $primary !important;
+    background-color: $black;
+    color: $primary;
     border-radius: 5px;
     padding: 5px;
     &:hover {
       cursor: pointer;
-      background-color: $primary !important;
-      color: $black !important;
+      background-color: $primary;
+      color: $black;
       transition: all 0.3s;
     }
-    &-close-filters {
-      background-color: $black;
-      color: $primary;
-      padding: 0;
-      border: 0;
-      svg {
-        margin: 0 auto;
-      }
+  }
+  #root ~ div .mobile-button-close-filters {
+    color: $primary;
+    padding: 0;
+    span {
+      background-color: #181818;
+    }
+    svg {
+      z-index: 100;
     }
   }
   .toolbar-filter-calendar {
@@ -104,17 +128,18 @@
 }
 
 @media (min-width: 769px) {
-  .mobile-button {
-    display: none !important;
-  }
-  .toolbar-mobile {
-    display: none !important;
+  #root .mobile-button, 
+  #root ~ div .mobile-button-close-filters,
+  #root ~ div .toolbar-mobile {
+    display: none;
   }
 }
 
-#root {
-  .react-calendar__tile--active {
-    background: $primary;
-    color: $black;
-  }
+.react-calendar {
+  border-radius: 5px;
+}
+#root .react-calendar__tile--active,
+#root ~ div .react-calendar__tile--active {
+  background: $primary;
+  color: $black;
 }

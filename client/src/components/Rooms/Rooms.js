@@ -43,7 +43,7 @@ class Rooms extends Component {
     axios
       .get(api, type)
       .then(res => {
-        this.setState({ roomsDB: res.data, isLoading: false });
+        this.setState({ roomsDB: res.data.rooms, isLoading: false });
       })
       .catch(err => console.log(err));
   };
@@ -151,6 +151,7 @@ class Rooms extends Component {
           showDate={true}
           date={this.state.date}
           changeDate={this.changeDate}
+          addLink="/add-room"
         />
         <Grid container spacing={8} justify="center" className="rooms-page-cards">
           {roomsDB.map(room => {
