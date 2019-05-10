@@ -6,6 +6,7 @@ import { Person, Send, Email, Lock } from "@material-ui/icons";
 import is from "is_js";
 import { withSnackbar } from 'notistack';
 import CustomizedSnackbars from "../Toast/Toast";
+import setAuthToken from '../../setAuthToken';
 
 const PASSWORD_LENGTH = 6;
 const messageType = {
@@ -57,7 +58,7 @@ class Login extends Component {
       .then(res => {
         const { token } = res.data;
         this.props.userHasAuthenticated(true);
-        this.props.setAuthToken(token);
+        setAuthToken(token);
         localStorage.setItem("authorization", token);
         return axios.get('api/profile')
       })

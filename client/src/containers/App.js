@@ -2,32 +2,46 @@ import React, { Component } from "react";
 import { BrowserRouter } from "react-router-dom";
 import axios from "axios";
 
+import setAuthToken from '../setAuthToken';
 import PageContainer from "./PageContainer/PageContainer";
 import Router from "./../router";
+
+if(localStorage.authorization) {
+  setAuthToken(localStorage.authorization);
+}
 
 class App extends Component {
   state = {
     isAuthenticated: false,
     user: null,
   };
+  componentWillMount() {
+    axios.get('http://localhost:3000/api/profile')
+    .then((res) => {
+        //TODO decide with team if this action is necessary
+        if (res.data && res.data.email) {
+          return  res.data;
+        }
+        throw new Error('There is no user.');
+      })
+      .then(user => {
+        this.userHasAuthenticated(true);
+        this.setUser(user);
+      })
+      .catch(err => {
+        console.log('Authtorization failed');
+      });
+  }
 
   userHasAuthenticated = authenticated => {
     this.setState({ isAuthenticated: authenticated });
   }
-  setAuthToken = token => {
-    if (token) {
-      axios.defaults.headers.common["authorization"] = token;
-    } else {
-      delete axios.defaults.headers.common["authorization"];
-    }
-  };
   setUser = (user) => this.setState({ user }); 
   getChildProps() {
     const { isAuthenticated, user } = this.state;
     return {
       isAuthenticated,
       userHasAuthenticated: this.userHasAuthenticated,
-      setAuthToken: this.setAuthToken, 
       setUser: this.setUser,
       user,
     }
@@ -38,7 +52,6 @@ class App extends Component {
         <PageContainer 
           isAuthenticated={this.state.isAuthenticated}
           userHasAuthenticated={this.userHasAuthenticated}
-          setAuthToken={this.setAuthToken}
           user={this.state.user}
         >
           <Router childProps={this.getChildProps()}/>
