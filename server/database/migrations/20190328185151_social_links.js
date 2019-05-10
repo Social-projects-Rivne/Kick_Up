@@ -10,6 +10,7 @@ exports.up = async knex => {
     t.foreign('user_id')
       .references('users.id')
       .onDelete('CASCADE');
+    t.collate('utf8_general_ci');
   });
 };
 

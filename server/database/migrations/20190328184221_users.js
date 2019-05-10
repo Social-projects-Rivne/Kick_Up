@@ -15,6 +15,7 @@ exports.up = async knex => {
     t.date('birth_date').nullable();
     t.dateTime('created_at').notNullable().defaultTo(knex.raw('now()'));
     t.dateTime('updated_at').nullable().defaultTo(knex.raw('now()'));
+    t.collate('utf8_general_ci');
   });
 };
 
