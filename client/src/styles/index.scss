@@ -22,7 +22,8 @@ body {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  overflow-x: hidden;
+  //overflow-x: hidden;
+  overflow: hidden;
 }
 
 code {

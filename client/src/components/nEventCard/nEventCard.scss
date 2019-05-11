@@ -208,6 +208,13 @@
     }
 }
 
+// Desktops;
+@media only screen and (min-width: 1024px) {
+    .event-card {
+        max-width: 375px;
+    }
+}
+
 @keyframes roll-in-left {
     0% {
         transform: translate3d(-100%, 0, 0);

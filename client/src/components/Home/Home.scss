@@ -337,3 +337,45 @@
         }
     }
 }
+
+// Related to desktops;
+@media only screen and (min-width: 1024px) {
+
+    .home .home__intro-slide img {
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .home .home__intro-slide .home__intro-title {
+        font-size: 3.5rem;
+        line-height: 4.5rem;
+        max-width: 75vw;
+    }
+
+    .home .home__intro-slide:first-of-type .home__intro-title {
+        margin-top: 3vh;
+    }
+
+    .home .home__intro-slide .home__intro-title + a {
+        position: absolute;
+        bottom: 10vh;
+
+        & .home__intro-btn {
+            font-size: 36px;
+        }
+
+        & .home__intro-btn svg:first-of-type {
+            display: none;
+        }
+    }
+
+    .home [data-main-slide]:first-child .swiper-pagination-bullets {
+        bottom: 30px;
+
+        & .swiper-pagination-bullet {
+            width: 16px;
+            height: 16px;
+            margin: 0 8px;
+        }
+    }
+}

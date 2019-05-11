@@ -86,7 +86,7 @@ const selectors = {
     activeIntroSlide: '.home__intro-slide.swiper-slide-active',
     loadingImageClass: 'home__intro-slide_loading',
 };
-let mainSwiper, roomsSwiper;
+let mainSwiper, roomsSwiper, eventsSwiper;
 
 // Helper functions;
 const setMainSwiper = instance => {
@@ -94,6 +94,9 @@ const setMainSwiper = instance => {
 };
 const setRoomsSwiper = instance => {
     roomsSwiper = instance;
+};
+const setEventsSwiper = instance => {
+    eventsSwiper = instance;
 };
 const updateSwipersHeight = () => {
     try {
@@ -171,9 +174,38 @@ const roomsSliderParams = {
     }
 };
 const eventsSliderParams = {
+    shouldSwiperUpdate: true,
+    rebuildOnUpdate: true,
     modules: [Pagination],
     containerClass: 'home__events-swiper',
-    slidesPerView: 1,
+    spaceBetween: function() {
+        const spacePx = 20;
+
+        if (
+            window.innerWidth >= 768 &&
+            window.innerWidth < window.innerHeight ||
+            window.innerWidth >= 1024
+        ) {
+            return spacePx;
+        } else {
+            return 0;
+        }
+    }(),
+    slidesPerView: function() {
+        const desktopSlideWidth = 375;
+        let res = 1;
+
+        if (
+            window.innerWidth >= 768 &&
+            window.innerWidth < window.innerHeight
+        ) {
+            res = 2;
+        } else if (window.innerWidth >= 1024) {
+            res = Math.floor(window.innerWidth / desktopSlideWidth);
+        }
+
+        return res;
+    }(),
     simulateTouch: true,
     nested: true,
     autoHeight: true,
@@ -183,22 +215,35 @@ const eventsSliderParams = {
         clickable: true,
         hideOnClick: true
     },
-    breakpointsInverse: true,
-    breakpoints: {
-        768: function() {
-            if (window.innerWidth < window.innerHeight) {
-                return {
-                    slidesPerView: 2,
-                    spaceBetween: 20,
-                    slidesPerGroup: 2
-                }
-            }
-        }()
+    observer: true,
+    observeParents: true,
+    speed: 800
+};
+
+
+const eventsSliderParams2 = {
+    shouldSwiperUpdate: true,
+    rebuildOnUpdate: true,
+    modules: [Pagination],
+    containerClass: 'home__events-swiper',
+    spaceBetween: 20,
+    slidesPerView: 3,
+    simulateTouch: true,
+    nested: true,
+    autoHeight: true,
+    pagination: {
+        el: ".home__events-swiper-pagination",
+        type: 'bullets',
+        clickable: true,
+        hideOnClick: true
     },
     observer: true,
     observeParents: true,
     speed: 800
 };
+
+
+
 const introSlidesSliderParams = {
     modules: [Pagination],
     containerClass: 'home__intro',
@@ -236,7 +281,7 @@ const introSlidesSliderParams = {
     }
 };
 
-let prevTimer, prevResizeTimer;
+let prevTimer, prevResizeTimer, prevReInitTimer;
 
 class Home extends Component {
     state = {
@@ -244,7 +289,9 @@ class Home extends Component {
         rooms: [],
         offset: 0,
         currentSlide: 1,
-        scrollInProgress: false
+        scrollInProgress: false,
+        a: true,
+        b: false
     };
     showToast = (message, variant) => {
         this.props.enqueueSnackbar(message, {
@@ -400,6 +447,24 @@ class Home extends Component {
             applySVGImage();
         }, _awaitTime);
     }
+    handleSwipersReinint = () => {
+        const _awaitTime = 300;
+
+        window.clearTimeout(prevReInitTimer);
+        prevReInitTimer = window.setTimeout(() => {
+            if (window.innerWidth >= 1024) {
+                // eventsSwiper.destroy();
+                // eventsSwiper = null;
+                this.setState({a: false});
+                this.setState({
+                    a: false,
+                    b: true
+                });
+
+               
+            }
+        }, _awaitTime);
+    }
     componentDidMount = () => {
         // Retrieve items;
         this.loadData(res => {
@@ -414,6 +479,7 @@ class Home extends Component {
         // Add event listeners;
         document.addEventListener('scroll', this.handleScroll);
         window.addEventListener('resize', this.handleResize);
+        window.addEventListener('resize', this.handleSwipersReinint);
         Events.scrollEvent.register('end', () => {
             console.log('And our animation ended!');
 
@@ -426,6 +492,7 @@ class Home extends Component {
     componentWillUnmount = () => {
         document.removeEventListener('scroll', this.handleScroll);
         window.removeEventListener('resize', this.handleResize);
+        window.removeEventListener('resize', this.handleSwipersReinint);
         Events.scrollEvent.remove('end');
     }
     render = () => (
@@ -507,23 +574,55 @@ class Home extends Component {
                             </Typography>
                         </Badge>
                     </DomLink>
-                    <Swiper {...eventsSliderParams} >
-                        <div key={1} className="swiper-slide">
-                            <NeventCard />
-                        </div>
-                        <div key={2} className="swiper-slide">
-                            <NeventCard />
-                        </div>
-                        <div key={3} className="swiper-slide">
-                            <NeventCard />
-                        </div>
-                        <div key={4} className="swiper-slide">
-                            <NeventCard />
-                        </div>
-                        <div key={5} className="swiper-slide">
-                            <NeventCard />
-                        </div>
-                    </Swiper>
+                    {
+                        this.state.a &&
+                        <Swiper {
+                            ...eventsSliderParams
+                        } getSwiper={setEventsSwiper} >
+                            <div key={1} className="swiper-slide">
+                                <NeventCard />
+                            </div>
+                            <div key={2} className="swiper-slide">
+                                <NeventCard />
+                            </div>
+                            <div key={3} className="swiper-slide">
+                                <NeventCard />
+                            </div>
+                            <div key={4} className="swiper-slide">
+                                <NeventCard />
+                            </div>
+                            <div key={5} className="swiper-slide">
+                                <NeventCard />
+                            </div>
+                        </Swiper>
+                    }
+
+
+                    {
+                        this.state.b &&
+                        <Swiper {
+                            ...eventsSliderParams2
+                        } getSwiper={setEventsSwiper} >
+                            <div key={1} className="swiper-slide">
+                                <NeventCard />
+                            </div>
+                            <div key={2} className="swiper-slide">
+                                <NeventCard />
+                            </div>
+                            <div key={3} className="swiper-slide">
+                                <NeventCard />
+                            </div>
+                            <div key={4} className="swiper-slide">
+                                <NeventCard />
+                            </div>
+                            <div key={5} className="swiper-slide">
+                                <NeventCard />
+                            </div>
+                        </Swiper>
+                    }
+
+
+
                 </div>
                 <div data-main-slide="3" className="main-content__slide">
                     <Element name="main-swiper-slide-3"></Element>
