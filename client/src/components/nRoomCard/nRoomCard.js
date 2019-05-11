@@ -70,7 +70,9 @@ class NroomCard extends Component {
             </CardContent>
             <CardActions 
                 disableActionSpacing 
-                data-swiper-parallax="-500" >
+                data-swiper-parallax="-500"
+                className="roomcard__members"
+            >
                 <Fab
                     className={this.state.expanded ? 'roomcard__events-btn  roomcard__events-btn_expanded' : 'roomcard__events-btn'}
                     variant="extended"
@@ -93,7 +95,12 @@ class NroomCard extends Component {
                     <span className="roomcard__members-amount">13 of 55 allowed</span>
                 </IconButton>
             </CardActions>
-            <Collapse className="roomcard__collpse-content" in={this.state.expanded} timeout="auto" unmountOnExit>
+            <Collapse 
+                className="roomcard__collpse-content" 
+                in={ window.innerWidth >= 768 && window.innerWidth < window.innerHeight ? true : this.state.expanded } 
+                timeout="auto" 
+                unmountOnExit
+            >
                 <CardContent className="roomcard__events-wrapper">
                     <NeventCard />
                     <NeventCard />

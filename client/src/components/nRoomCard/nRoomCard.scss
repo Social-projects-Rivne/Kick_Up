@@ -151,10 +151,11 @@
 }
 
 .roomcard__events-wrapper > div {
+    position: relative;
     margin-bottom: 20px;
 
     &:last-of-type {
-        margin-bottom: 0;
+        margin-bottom: $footer-height;
     }
 }
 
@@ -168,6 +169,110 @@
         roll-in-left 0.7s ease-in-out 1.5s,
         set-label-bg-left 0.7s ease-in 3s;
     animation-fill-mode: forwards;  
+}
+
+// Landscape mode;
+@media only screen and (max-width: 823px) and (orientation: landscape) {
+    .roomcard {
+        display: flex;
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    .roomcard__header {
+        width: 100%;
+    }
+
+    .roomcard__img-wrapper {
+        max-width: 45vw;
+        min-width: 45vw;
+        min-height: 55vh;
+        overflow: hidden;
+    }
+
+    .roomcard .roomcard__description {
+        min-width: 55vw;
+        max-width: 55vw;
+        padding-top: 0;
+    }
+
+    .roomcard__members {
+        position: absolute;
+        width: 55vw;
+        top: calc(1.464rem * 8 + 16px);
+        right: 0;
+    }
+}
+
+@media only screen and (min-width: 768px) and (orientation: portrait) {
+    .roomcard {
+        max-width: 375px;
+    }
+    
+    .roomcard__collpse-content { 
+        position: absolute;
+        top: 64px;
+        animation-name: roll-room-events;
+        animation-duration: 1s;
+        animation-fill-mode: forwards;
+        animation-timing-function: ease-in-out;
+        z-index: 2;
+    }
+
+    .roomcard__events-wrapper {
+        max-height: 70vh;
+        overflow-y: scroll;
+    }
+
+    .roomcard__members {
+        position: absolute;
+        min-width: 375px;
+        max-width: 375px;
+        top: 0;
+        right: 0;
+        min-height: 64px;
+        max-height: 64px;
+        justify-content: center;
+        overflow: auto;
+    }
+
+    .roomcard .roomcard__group-members {
+        display: none;
+    }
+
+    .roomcard__events-btn {
+        pointer-events: none;
+    }
+
+    #root .roomcard .roomcard__events-btn {
+        transform: rotate(0);
+        background-color: transparent;
+        font-size: 1.571rem;
+        line-height: 2rem;
+        font-weight: 100;
+        text-transform: capitalize;
+        letter-spacing: 1px;
+
+        & svg {
+            display: none;
+        }
+
+        & span:first-child::after {
+            content: ' coming soon:';
+            white-space: pre;
+            text-transform: lowercase;
+        }
+    }
+
+    #root .roomcard .roomcard__events-wrapper {
+        border-top-color: transparent;
+    }
+
+    // Anti-BEM here will be best option;
+    #root .roomcard .roomcard__events-wrapper
+    .event-card__img-wrapper > div {
+        transform: none;
+    }
 }
 
 @keyframes roll-in-left {
@@ -212,5 +317,14 @@
     }
     100% {
         background: linear-gradient(to right, rgba(lighten($secondaryBlack, 20%), 1), transparent);
+    }
+}
+
+// Animatable el should be relative or absolute;
+@keyframes roll-room-events {
+    from {
+        right: -100%;
+    } to {
+        right: 0;
     }
 }

@@ -144,6 +144,7 @@ const applySVGImage = function() {
 };
 
 const mainSwiperParams = {
+    modules: [Pagination],
     containerClass: 'home__main-swiper',
     slidesPerView: 1,
     autoHeight: true
@@ -163,6 +164,8 @@ const roomsSliderParams = {
         hideOnClick: true
     },
     speed: 800,
+    observer: true,
+    observeParents: true,
     on: {
         slideChangeTransitionEnd: updateSwipersHeight
     }
@@ -180,17 +183,40 @@ const eventsSliderParams = {
         clickable: true,
         hideOnClick: true
     },
+    breakpointsInverse: true,
+    breakpoints: {
+        768: function() {
+            if (window.innerWidth < window.innerHeight) {
+                return {
+                    slidesPerView: 2,
+                    spaceBetween: 20,
+                    slidesPerGroup: 2
+                }
+            }
+        }()
+    },
+    observer: true,
+    observeParents: true,
     speed: 800
 };
 const introSlidesSliderParams = {
+    modules: [Pagination],
     containerClass: 'home__intro',
     slidesPerView: 1,
     simulateTouch: true,
     parallax: true,
     speed: 800,
     nested: true,
+    observer: true,
+    observeParents: true,
     autoplay: {
-        delay: 50000,
+        delay: 5000,
+    },
+    pagination: {
+        el: ".home__intro-pagination",
+        type: 'bullets',
+        clickable: true,
+        hideOnClick: true
     },
     on: {
         init: applySVGImage,
@@ -208,9 +234,9 @@ const introSlidesSliderParams = {
             applySVGImage.call(this);
         }
     }
-}
+};
 
-let prevTimer;
+let prevTimer, prevResizeTimer;
 
 class Home extends Component {
     state = {
@@ -365,6 +391,15 @@ class Home extends Component {
             } catch(err) {}
         }, awaitTime);
     }
+    handleResize = () => {
+        const _awaitTime = 500;
+
+        window.clearTimeout(prevResizeTimer);
+        prevResizeTimer = window.setTimeout(() => {
+            updateSwipersHeight();
+            applySVGImage();
+        }, _awaitTime);
+    }
     componentDidMount = () => {
         // Retrieve items;
         this.loadData(res => {
@@ -378,6 +413,7 @@ class Home extends Component {
 
         // Add event listeners;
         document.addEventListener('scroll', this.handleScroll);
+        window.addEventListener('resize', this.handleResize);
         Events.scrollEvent.register('end', () => {
             console.log('And our animation ended!');
 
@@ -389,6 +425,7 @@ class Home extends Component {
     }
     componentWillUnmount = () => {
         document.removeEventListener('scroll', this.handleScroll);
+        window.removeEventListener('resize', this.handleResize);
         Events.scrollEvent.remove('end');
     }
     render = () => (
@@ -478,6 +515,12 @@ class Home extends Component {
                             <NeventCard />
                         </div>
                         <div key={3} className="swiper-slide">
+                            <NeventCard />
+                        </div>
+                        <div key={4} className="swiper-slide">
+                            <NeventCard />
+                        </div>
+                        <div key={5} className="swiper-slide">
                             <NeventCard />
                         </div>
                     </Swiper>

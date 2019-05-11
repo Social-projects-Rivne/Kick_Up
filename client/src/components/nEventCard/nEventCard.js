@@ -64,6 +64,7 @@ const NeventCard = props => (
         <CardActions 
             disableActionSpacing 
             data-swiper-parallax="-500" 
+            className="event-card__members"
         >
             <IconButton className="event-card__group-members">
                 <Group />

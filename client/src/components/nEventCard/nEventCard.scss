@@ -147,6 +147,67 @@
     animation-fill-mode: forwards;  
 }
 
+// Landscape mode;
+@media only screen and (max-width: 823px) and (orientation: landscape) {
+    .event-card {
+        display: flex;
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    .event-card__header {
+        width: 100%;
+    }
+
+    .event-card__img-wrapper {
+        max-width: 45vw;
+        min-width: 45vw;
+        min-height: 55vh;
+        overflow: hidden;
+    }
+
+    .event-card .event-card__description {
+        min-width: 55vw;
+        max-width: 55vw;
+        padding-top: 0;
+    }
+
+    .event-card__members {
+        position: absolute;
+        top: calc(1.071rem * 12 + 16px);
+        right: 0;
+    }
+}
+
+// Tablets;
+@media only screen and (min-width: 768px) and (orientation: portrait) {
+    .event-card {
+        max-width: 375px;
+    }
+
+    // Anti-BEM here will be best option;
+    .home__events-swiper .swiper-slide-next .event-card__date,
+    .home__events-swiper .swiper-slide-prev .event-card__date {
+        animation:
+            roll-in-left 0.7s ease-in-out 1.5s,
+            set-label-bg-left 0.7s ease-in 3s;
+        animation-fill-mode: forwards;
+    }
+    .home__events-swiper .swiper-slide-next .event-card__location,
+    .home__events-swiper .swiper-slide-prev .event-card__location {
+        animation:
+            roll-in-right 0.7s ease-in-out 1.5s,
+            set-label-bg-right 0.7s ease-in 3s;
+        animation-fill-mode: forwards;
+    }
+
+    .home .home__rooms-swiper-pagination {
+        position: absolute;
+        top: calc(3rem + 3.429rem + 30px);
+        left: 0;
+    }
+}
+
 @keyframes roll-in-left {
     0% {
         transform: translate3d(-100%, 0, 0);
