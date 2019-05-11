@@ -119,19 +119,52 @@
     margin-top: 10px;
     color: lighten($black, 50%);
   }
-  .text {
-    /* autoprefixer: off */
-    -webkit-box-orient: vertical;
-    /* autoprefixer: on */
-    margin: 0;
-    display: block;
-    display: -webkit-box;
-    -webkit-line-clamp: 4;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+  // .text {
+  //   /* autoprefixer: off */
+  //   -webkit-box-orient: vertical;
+  //   /* autoprefixer: on */
+  //   margin: 0;
+  //   display: block;
+  //   display: -webkit-box;
+  //   -webkit-line-clamp: 4;
+  //   overflow: hidden;
+  //   text-overflow: ellipsis;
+  // }
   .content {
     background-color: $white;
     box-shadow: 0 5px 30px 10px rgba($black, 0.3);
+  }
+}
+
+/* mixin for multiline */
+@mixin multiLineEllipsis($lineHeight: 1.2em, $lineCount: 1, $bgColor: $white){
+  overflow: hidden;
+  position: relative;
+  line-height: $lineHeight;
+  max-height: $lineHeight * $lineCount; 
+  text-align: justify;
+  padding-right: 1.0em;
+  margin: 0 1.1em;
+
+  &:before {
+    content: '...';
+    position: absolute;
+    right: 0;
+    bottom: 0;
+  }
+  &:after {
+    content: '';
+    position: absolute;
+    right: 0;
+    width: 1em;
+    height: 1em;
+    margin-top: 0.2em;
+    background: $bgColor;
+  }
+}
+
+.events-card {
+  .text {
+    @include multiLineEllipsis($lineHeight: 1.3em, $lineCount: 4, $bgColor: $white);
   }
 }
