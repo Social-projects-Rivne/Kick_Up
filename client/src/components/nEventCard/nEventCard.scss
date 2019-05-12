@@ -149,7 +149,7 @@
 }
 
 // Landscape mode;
-@media only screen and (max-width: 767) and (orientation: landscape) {
+@media only screen and (max-width: 767px) and (orientation: landscape) {
     .event-card {
         display: flex;
         width: 100%;
@@ -232,6 +232,7 @@
     }
 }
 
+// Related to animations;
 @keyframes roll-in-left {
     0% {
         transform: translate3d(-100%, 0, 0);

@@ -1,6 +1,7 @@
 /* Available modificators:
 * roomcard__events-btn_expanded;
 */
+
 #root .roomcard {
     box-shadow: none;
 }
@@ -231,8 +232,8 @@
         z-index: 2;
     }
 
-    .swiper-slide:not(.swiper-slide-active) .roomcard__collpse-content {
-        display: block;
+    .swiper-slide .roomcard__collpse-content {
+        max-width: 100%;
     }
 
     .swiper-slide.swiper-slide-next .roomcard__collpse-content,
@@ -409,51 +410,6 @@
     .swiper-slide.swiper-slide-next .roomcard__collpse-content,
     .swiper-slide.swiper-slide-prev .roomcard__collpse-content {
         display: block;
-    }
-}
-
-@keyframes roll-in-left {
-    0% {
-        transform: translate3d(-100%, 0, 0);
-    }
-    80% {
-        transform: translate3d(10%, 0, 0);
-    }
-    100% {
-        transform: translate3d(0, 0, 0);
-    }
-}
-
-@keyframes set-label-bg-left {
-    0% {
-        background: linear-gradient(to right, rgba(lighten($secondaryBlack, 20%), 0.1), transparent);
-    }
-    10% {
-        background: linear-gradient(to right, rgba(lighten($secondaryBlack, 20%), 0.2), transparent);
-    }
-    20% {
-        background: linear-gradient(to right, rgba(lighten($secondaryBlack, 20%), 0.3), transparent);
-    }
-    30% {
-        background: linear-gradient(to right, rgba(lighten($secondaryBlack, 20%), 0.4), transparent);
-    }
-    40% {
-        background: linear-gradient(to right, rgba(lighten($secondaryBlack, 20%), 0.5), transparent);
-    }
-    50% {
-        background: linear-gradient(to right, rgba(lighten($secondaryBlack, 20%), 0.6), transparent);
-    }
-    60% {
-        background: linear-gradient(to right, rgba(lighten($secondaryBlack, 20%), 0.7), transparent);
-    }
-    70% {
-        background: linear-gradient(to right, rgba(lighten($secondaryBlack, 20%), 0.8), transparent);
-    }
-    80% {
-        background: linear-gradient(to right, rgba(lighten($secondaryBlack, 20%), 0.9), transparent);
-    }
-    100% {
-        background: linear-gradient(to right, rgba(lighten($secondaryBlack, 20%), 1), transparent);
     }
 }
 

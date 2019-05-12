@@ -89,7 +89,8 @@ const selectors = {
 let mainSwiper, roomsSwiper;
 let eventsSwipers = [];
 
-// Helper functions;
+// Helper functions. 
+// @todo convert ones that possible to methods;
 const setMainSwiper = instance => {
     mainSwiper = instance;
 };
@@ -245,6 +246,7 @@ class Home extends Component {
         this.props.history.push({ pathname: "/rooms/" + id });
     }
     loadData = (callback) => {
+        // @todo add load data from new route;
         async function getUser() {
             try {
                 const rooms = await axios.get(API.getRooms);
@@ -377,7 +379,7 @@ class Home extends Component {
     }
     handleScroll = () => {
         const awaitTime = 500;
-        const minHeightToScroll = 100;
+        const minHeightToScroll = 180;
         const setNewSlide = () => {
             const minSlide = 1;
             const maxSlide =  3;
@@ -493,7 +495,6 @@ class Home extends Component {
         document.addEventListener('scroll', this.handleScroll);
         window.addEventListener('resize', this.handleResize);
         Events.scrollEvent.register('end', () => {
-            console.log('And our animation ended!');
 
             this.setState({
                 scrollInProgress: false,

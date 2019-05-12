@@ -16,7 +16,7 @@ import { LocationOn } from '@material-ui/icons';
 import { Group } from '@material-ui/icons';
 import StarRating from "../UI/StarRating/StarRating";
 
-const NeventCard = props => (
+const NeventCard = () => (
     <Card className="event-card">
         <CardHeader
             className="event-card__header"
@@ -38,7 +38,6 @@ const NeventCard = props => (
         >
         </CardHeader>
         <CardMedia
-            data-swiper-parallax="-100"
             className="event-card__img-wrapper"
             image="https://c8.alamy.com/comp/FWXDB4/street-drinkers-in-glasgow-shortly-before-it-was-made-illegal-FWXDB4.jpg"
             title="Street drinkers in Rivne"
@@ -52,7 +51,7 @@ const NeventCard = props => (
                 <b>Rivne</b>
             </div>
         </CardMedia>
-        <CardContent data-swiper-parallax="-300" className="event-card__description">
+        <CardContent className="event-card__description">
             <Typography component="p" className="event-card__main-content">
                 Lorem ipsum dolor sit amet, consectetur adipiscing 
                 elit. Duis lacinia efficitur ligula, vitae vehicula 
@@ -63,7 +62,6 @@ const NeventCard = props => (
         </CardContent>
         <CardActions 
             disableActionSpacing 
-            data-swiper-parallax="-500" 
             className="event-card__members"
         >
             <IconButton className="event-card__group-members">

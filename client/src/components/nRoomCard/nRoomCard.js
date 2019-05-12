@@ -49,7 +49,6 @@ class NroomCard extends Component {
         >
         </CardHeader>
             <CardMedia
-                data-swiper-parallax="-100"
                 className="roomcard__img-wrapper"
                 image="https://material-ui.com/static/images/cards/paella.jpg"
                 title="Paella dish"
@@ -59,7 +58,7 @@ class NroomCard extends Component {
                     <b>Food</b>
                 </div>
             </CardMedia>
-            <CardContent data-swiper-parallax="-300" className="roomcard__description">
+            <CardContent className="roomcard__description">
                 <Typography component="p">
                     Lorem ipsum dolor sit amet, consectetur adipiscing 
                     elit. Duis lacinia efficitur ligula, vitae vehicula 
@@ -69,8 +68,7 @@ class NroomCard extends Component {
                 </Typography>
             </CardContent>
             <CardActions 
-                disableActionSpacing 
-                data-swiper-parallax="-500"
+                disableActionSpacing
                 className="roomcard__members"
             >
                 <Fab
