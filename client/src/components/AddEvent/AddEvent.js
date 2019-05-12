@@ -2,7 +2,7 @@ import React from 'react';
 
 import axios from 'axios';
 
-import { TextField, Input, FormControlLabel, FormGroup, Button, NativeSelect,
+import { TextField, Input, FormControlLabel, FormGroup, Button, NativeSelect, Paper,
     InputLabel, FormControl, Grid, Stepper, Step, StepLabel, StepContent, Switch, InputAdornment } from '@material-ui/core';
 import { CloudUpload, Link } from '@material-ui/icons';
 import 'date-fns';
@@ -10,7 +10,6 @@ import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, InlineDateTimePicker } from 'material-ui-pickers';
 import Geosuggest from 'react-geosuggest';
 import Spinner from "../UI/Spinner/Spinner";
-import CustomizedSnackbars from "../Toast/Toast";
 import {withSnackbar} from "notistack";
 
 const messageType = {
@@ -26,10 +25,11 @@ class AddEvent extends React.Component {
         userId: 0,
         roomId: 1,
         loading: true,
+        tagId: 0,
         eventData: {
             title: '',
             description: '',
-            category: 0,
+            category: 5,
             tags: 0,
             permission: false,
             invite: false,
@@ -173,9 +173,9 @@ class AddEvent extends React.Component {
                     });
                 break;
             case 1:
-                //ToDo upload cover and invite members
+                //ToDo upload cover
                 this.props.history.push({ pathname: "/event/" + this.state.eventId });
-                this.showToast(messageType.SUCCESS);
+                this.showToast("Congratulations! Event created!",messageType.SUCCESS);
                 break;
             default:
                 console.log("Unknown step");
@@ -204,6 +204,7 @@ class AddEvent extends React.Component {
                                         className="add-event-text-field"
                                         label="Title"
                                         name="title"
+                                        placeholder="Min 3 symbols, Max 100 symbols"
                                         onChange={event => this.handleUpdateData(event)}
                                         value={this.state.eventData.title}
                                         fullWidth
@@ -217,6 +218,7 @@ class AddEvent extends React.Component {
                                         className="add-event-text-field"
                                         label="Description"
                                         name="description"
+                                        placeholder="Min 6 symbols, Max 300 symbols"
                                         onChange={event => this.handleUpdateData(event)}
                                         value={this.state.eventData.description}
                                         fullWidth
@@ -230,7 +232,6 @@ class AddEvent extends React.Component {
                                         <InlineDateTimePicker
                                             label="Choose date and time *"
                                             ampm={false}
-                                            //name="start_date"
                                             value={this.state.eventData.start_date}
                                             onChange={this.handleUpdateStartDate}
                                             className="add-event-picker"
@@ -257,8 +258,8 @@ class AddEvent extends React.Component {
                                         />
                                     </FormGroup>
 
-                                    <FormControl className="formControl">
-                                        <InputLabel shrink htmlFor="age-native-label-placeholder">
+                                    <FormControl required className="formControl">
+                                        <InputLabel shrink htmlFor="uncontrolled-native">
                                             Category
                                         </InputLabel>
                                         <NativeSelect
@@ -269,7 +270,6 @@ class AddEvent extends React.Component {
                                             className="add-event-select"
                                             error={this.state.errors.category}
                                         >
-                                            <option value="">none</option>
                                             {addEventDB.categories.map((category) =>
                                                 <option value={category.id}>{category.title}</option>
                                             )}
@@ -354,54 +354,83 @@ class AddEvent extends React.Component {
                         <Step key={1}>
                             <StepLabel>Upload cover</StepLabel>
                             <StepContent>
-                                <div>
-                                    <FormGroup className="add-event-invite-members">
-                                        <FormControlLabel
-                                            className="invite-members"
-                                            label="Invite members"
-                                            control={
-                                                <Switch
-                                                    checked={this.state.eventData.invite}
-                                                    name="invite"
-                                                    onChange={event => this.handleUpdateData(event)}
-                                                    value="1"
-                                                />
-                                            }
-                                        />
-
-                                        {this.state.eventData.invite && <div className="invite-link">
-                                            <FormControl className="textField">
-                                                <TextField
-                                                    InputProps={{
-                                                        readOnly: true,
-                                                        startAdornment: (
-                                                            <InputAdornment position="start">
-                                                                <Link /> &nbsp;{window.location.origin + '/event/' + this.state.eventId}
-                                                            </InputAdornment>
-                                                        ),
-                                                    }}
-                                                />
-                                            </FormControl>
-                                        </div>}
-                                    </FormGroup>
-
-                                    <Grid container spacing={24}>
-                                        <Grid item md={12}>
-                                            <Button variant="contained" className="add-event-button-upload">
-                                                <CloudUpload />&nbsp;&nbsp;
-                                                <span>Upload cover</span>
-                                                <input id="upload" type="file"
-                                                   onChange={(event)=> {
-                                                       if (!event.target.files.length) {
-                                                           return;
-                                                       }
-                                                       event.target.previousSibling.textContent = event.target.files[0].name;
-                                                   }}
-                                                />
-                                            </Button>
-                                        </Grid>
-                                    </Grid>
-                                </div>
+                                <Paper elevation={1} className="created-event-info">
+                                    <InputLabel className="created-event-info-label-info">Event information</InputLabel>
+                                    <InputLabel className="created-event-info-label">
+                                        Title:&nbsp;{this.state.eventData.title}
+                                    </InputLabel>
+                                    <InputLabel className="created-event-info-label">
+                                        Description:&nbsp;{this.state.eventData.description}
+                                    </InputLabel>
+                                    <InputLabel className="created-event-info-label">
+                                        Date and time:&nbsp;{this.state.eventData.start_date.getFullYear() + "."
+                                        + ("0" + (this.state.eventData.start_date.getMonth() + 1)).slice(-2) +
+                                        "." + ("0" + (this.state.eventData.start_date.getDate())).slice(-2)
+                                        + ", " + ("0" + (this.state.eventData.start_date.getHours())).slice(-2) +
+                                        ":" + ("0" + (this.state.eventData.start_date.getMinutes())).slice(-2)}
+                                    </InputLabel>
+                                    <InputLabel className="created-event-info-label">
+                                        Location:&nbsp;{this.state.eventData.location}
+                                    </InputLabel>
+                                    <InputLabel className="created-event-info-label">
+                                        Category:&nbsp;
+                                        {addEventDB.categories.map((category) =>
+                                            (category.id == this.state.eventData.category) ? (category.title) : null
+                                        )}
+                                    </InputLabel>
+                                    <InputLabel className="created-event-info-label">
+                                        Tags:&nbsp;
+                                        {addEventDB.tags.map((tag) =>
+                                            (tag.id == this.state.eventData.tags) ? (tag.title) : null
+                                        )}
+                                    </InputLabel>
+                                    <InputLabel className="created-event-info-label">
+                                        Permission:&nbsp;{this.state.eventData.permission ? "Private event" : "Open event"}
+                                    </InputLabel>
+                                    <InputLabel className="created-event-info-label">
+                                        Members limit:&nbsp;{this.state.eventData.members_limit_checked ? this.state.eventData.members_limit : "-"}
+                                    </InputLabel>
+                                </Paper>
+                                <FormGroup className="add-event-invite-members">
+                                    <FormControlLabel
+                                        className="invite-members"
+                                        label="Invite members"
+                                        control={
+                                            <Switch
+                                                checked={this.state.eventData.invite}
+                                                name="invite"
+                                                onChange={event => this.handleUpdateData(event)}
+                                                value="1"
+                                            />
+                                        }
+                                    />
+                                    {this.state.eventData.invite && <div className="invite-link">
+                                        <FormControl className="textField">
+                                            <TextField
+                                                InputProps={{
+                                                    readOnly: true,
+                                                    startAdornment: (
+                                                        <InputAdornment position="start">
+                                                            <Link /> &nbsp;{window.location.origin + '/event/' + this.state.eventId}
+                                                        </InputAdornment>
+                                                    ),
+                                                }}
+                                            />
+                                        </FormControl>
+                                    </div>}
+                                </FormGroup>
+                                <Button variant="contained" className="add-event-button-upload">
+                                    <CloudUpload />&nbsp;&nbsp;
+                                    <span>Upload cover</span>
+                                    <input id="upload" type="file"
+                                       onChange={(event)=> {
+                                           if (!event.target.files.length) {
+                                               return;
+                                           }
+                                           event.target.previousSibling.textContent = event.target.files[0].name;
+                                       }}
+                                    />
+                                </Button>
                                 <div>
                                     <Button
                                         variant="contained"

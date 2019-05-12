@@ -10,6 +10,39 @@
 
   .add-event-picker {
     padding-bottom: 24px;
+
+    @include media-breakpoint-down(sm) {
+      width: 100%;
+    }
+  }
+
+  .created-event-info {
+    display: flex;
+    flex-direction: column;
+    padding: 24px 24px 24px 48px;
+    background-color: transparent;
+    border-radius: 50px;
+    margin: 24px auto;
+    box-shadow: 1px 1px 2px 1px #facd3d;
+
+    @include media-breakpoint-down(lg) {
+      width: 100%;
+      padding: 16px;
+      margin: 0;
+    }
+
+    .created-event-info-label-info {
+      text-align: center;
+      font-size: 1.5rem;
+      padding-bottom: 8px;
+    }
+
+    .created-event-info-label {
+      font-size: 1rem;
+      line-height: 1.5rem;
+      font-weight: 100;
+      padding-bottom: 8px;
+    }
   }
 
   svg[class*=MuiStepIcon-active], svg[class*=MuiStepIcon-completed] {
@@ -69,6 +102,10 @@
       width: 210px;
       padding-bottom: 24px;
       display: flex;
+
+      @include media-breakpoint-down(sm) {
+        width: 100%;
+      }
     }
 
     .add-event-button-update-cover {
