@@ -151,7 +151,7 @@ class Rooms extends Component {
           showDate={true}
           date={this.state.date}
           changeDate={this.changeDate}
-          addLink="/add-room"
+          addLink="/room/add"
         />
         <Grid container spacing={8} justify="center" className="rooms-page-cards">
           {roomsDB.map(room => {

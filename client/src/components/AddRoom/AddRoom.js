@@ -2,10 +2,17 @@ import React from 'react';
 
 import axios from 'axios';
 
-import { TextField, Input, FormControlLabel, Switch, FormGroup, Button, NativeSelect,
+import { TextField, Input, FormControlLabel, Switch, FormGroup, Button, NativeSelect, Paper,
     InputLabel, FormControl, InputAdornment, Grid, Stepper, Step, StepLabel, StepContent } from '@material-ui/core';
 import { CloudUpload, Link } from '@material-ui/icons';
 import Spinner from "../UI/Spinner/Spinner";
+import {withSnackbar} from "notistack";
+
+const messageType = {
+    SUCCESS: "success",
+    INFO: "info",
+    ERR: "error"
+};
 
 class AddRoom extends React.Component {
     state = {
@@ -13,10 +20,11 @@ class AddRoom extends React.Component {
         roomId: 1,
         userId: 0,
         loading: true,
+        tagId: 0,
         roomData: {
             title: '',
             description: '',
-            category: 0,
+            category: 5,
             tags: 0,
             permission: false,
             invite: false,
@@ -26,7 +34,21 @@ class AddRoom extends React.Component {
         addRoomDB: {
             categories: [],
             tags: [],
-        }
+        },
+        errors: {
+            title: false,
+            description: false,
+            category: false,
+            tags: false,
+            members_limit: false,
+            permission: false
+        },
+    };
+
+    showToast = (message, variant) => {
+        this.props.enqueueSnackbar(message, {
+            variant: variant ? variant : 'default',
+        });
     };
 
     componentDidMount() {
@@ -59,7 +81,6 @@ class AddRoom extends React.Component {
             })
             .catch(err => {
                 this.setState({ loading: false });
-                console.log(err.response.data.error.errors);
             });
     };
 
@@ -86,7 +107,7 @@ class AddRoom extends React.Component {
                     description: this.state.roomData.description,
                     cover: "http://excitermag.net/wp-content/uploads/2012/12/24fae0cf4e190078d5b9896e00870cd9.jpg", //TODO
                     permission: this.state.roomData.permission ? 1 : 0,
-                    members_limit: this.state.roomData.members_limit_checked ? this.state.roomData.members_limit : 1
+                    members_limit: this.state.roomData.members_limit_checked ? this.state.roomData.members_limit : null
                 };
 
                 axios.post("/api/room/", data)
@@ -98,13 +119,18 @@ class AddRoom extends React.Component {
                         });
                     })
                     .catch(err => {
-                        this.setState({ loading: false });
-                        console.log(err.response.data.error.errors);
+                        let errors = err.response.data.error.errors;
+                        for (const key in errors) {
+                            this.showToast(errors[key][0], messageType.ERR);
+                            errors[key] = true;
+                        }
+                        this.setState({ loading: false, errors: errors });
                     });
                 break;
             case 1:
                 //ToDo upload cover and invite members
                 this.props.history.push({ pathname: "/room/" + this.state.roomId });
+                this.showToast("Congratulations! Room created!", messageType.SUCCESS);
                 break;
             default:
                 console.log("Unknown step");
@@ -129,29 +155,35 @@ class AddRoom extends React.Component {
                             <StepContent>
                                 <div>
                                     <TextField
+                                        required
                                         className="add-room-text-field"
                                         label="Title"
                                         name="title"
+                                        placeholder="Min 3 symbols, Max 100 symbols"
                                         onChange={event => this.handleUpdateData(event)}
                                         value={this.state.roomData.title}
                                         fullWidth
                                         autoComplete="off"
-                                        inputProps={{ maxLength: 70 }}
+                                        inputProps={{ maxLength: 100 }}
+                                        error={this.state.errors.title}
                                     />
 
                                     <TextField
+                                        required
                                         className="add-room-text-field"
                                         label="Description"
                                         name="description"
+                                        placeholder="Min 6 symbols, Max 300 symbols"
                                         onChange={event => this.handleUpdateData(event)}
                                         value={this.state.roomData.description}
                                         fullWidth
                                         multiline
                                         autoComplete="off"
-                                        inputProps={{ maxLength: 200 }}
+                                        inputProps={{ maxLength: 300 }}
+                                        error={this.state.errors.description}
                                     />
 
-                                    <FormControl className="formControl">
+                                    <FormControl required className="formControl">
                                         <InputLabel shrink htmlFor="age-native-label-placeholder">
                                             Category
                                         </InputLabel>
@@ -161,8 +193,8 @@ class AddRoom extends React.Component {
                                             onChange={event => this.handleUpdateData(event)}
                                             input={<Input name="category" />}
                                             className="add-room-select"
+                                            error={this.state.errors.category}
                                         >
-                                            <option value="">none</option>
                                             {addRoomDB.categories.map((category) =>
                                                 <option value={category.id}>{category.title}</option>
                                             )}
@@ -179,6 +211,7 @@ class AddRoom extends React.Component {
                                             onChange={event => this.handleUpdateData(event)}
                                             input={<Input name="tags" />}
                                             className="add-room-select"
+                                            error={this.state.errors.tags}
                                         >
                                             <option value="">none</option>
                                             {addRoomDB.tags.map((tag) =>
@@ -195,6 +228,7 @@ class AddRoom extends React.Component {
                                                     name="permission"
                                                     onChange={event => this.handleUpdateData(event)}
                                                     checked={this.state.roomData.permission}
+                                                    error={this.state.errors.permission}
                                                 />
                                             }
                                         />
@@ -214,7 +248,7 @@ class AddRoom extends React.Component {
                                         />
 
                                         {this.state.roomData.members_limit_checked && <div className="invite-link">
-                                            <FormControl  className="textField">
+                                            <FormControl className="textField">
                                                 <TextField
                                                     className="add-room-text-field"
                                                     label="Members limit"
@@ -224,8 +258,8 @@ class AddRoom extends React.Component {
                                                     onChange={event => this.handleUpdateData(event)}
                                                     value={this.state.roomData.members_limit}
                                                     fullWidth
-                                                    //variant="filled"
                                                     autoComplete="off"
+                                                    error={this.state.errors.members_limit}
                                                 />
                                             </FormControl>
                                         </div>}
@@ -246,6 +280,34 @@ class AddRoom extends React.Component {
                             <StepLabel>Invite members and upload cover</StepLabel>
                             <StepContent>
                                 <div>
+                                    <Paper elevation={1} className="created-room-info">
+                                        <InputLabel className="created-room-info-label-info">Room information</InputLabel>
+                                        <InputLabel className="created-room-info-label">
+                                            Title:&nbsp;{this.state.roomData.title}
+                                        </InputLabel>
+                                        <InputLabel className="created-room-info-label">
+                                            Description:&nbsp;{this.state.roomData.description}
+                                        </InputLabel>
+                                        <InputLabel className="created-room-info-label">
+                                            Category:&nbsp;
+                                            {addRoomDB.categories.map((category) =>
+                                                (category.id == this.state.roomData.category) ? (category.title) : null
+                                            )}
+                                        </InputLabel>
+                                        <InputLabel className="created-room-info-label">
+                                            Tags:&nbsp;
+                                            {addRoomDB.tags.map((tag) =>
+                                                (tag.id == this.state.roomData.tags) ? (tag.title) : null
+                                            )}
+                                        </InputLabel>
+                                        <InputLabel className="created-room-info-label">
+                                            Permission:&nbsp;{this.state.roomData.permission ? "Private room" : "Open room"}
+                                        </InputLabel>
+                                        <InputLabel className="created-room-info-label">
+                                            Members limit:&nbsp;{this.state.roomData.members_limit_checked ? this.state.roomData.members_limit : "-"}
+                                        </InputLabel>
+                                    </Paper>
+
                                     <FormGroup className="add-room-invite-members">
                                         <FormControlLabel
                                             className="invite-members"
@@ -259,7 +321,6 @@ class AddRoom extends React.Component {
                                                 />
                                             }
                                         />
-
                                         {this.state.roomData.invite && <div className="invite-link">
                                             <FormControl  className="textField">
                                                 <TextField
@@ -311,4 +372,4 @@ class AddRoom extends React.Component {
     }
 }
 
-export default AddRoom;
+export default withSnackbar(AddRoom);

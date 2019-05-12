@@ -17,6 +17,35 @@
       background-color: transparent;
     }
 
+    .created-room-info {
+      display: flex;
+      flex-direction: column;
+      padding: 24px 24px 24px 48px;
+      background-color: transparent;
+      border-radius: 50px;
+      margin: 24px auto;
+      box-shadow: 1px 1px 2px 1px #facd3d;
+
+      @include media-breakpoint-down(lg) {
+        width: 100%;
+        padding: 16px;
+        margin: 0;
+      }
+
+      .created-room-info-label-info {
+        text-align: center;
+        font-size: 1.5rem;
+        padding-bottom: 8px;
+      }
+
+      .created-room-info-label {
+        font-size: 1rem;
+        line-height: 1.5rem;
+        font-weight: 100;
+        padding-bottom: 8px;
+      }
+    }
+
     svg[class*=MuiStepIcon-active], svg[class*=MuiStepIcon-completed] {
       color: $primary;
     }
@@ -44,6 +73,10 @@
       width: 210px;
       padding-bottom: 24px;
       display: flex;
+
+      @include media-breakpoint-down(sm) {
+        width: 100%;
+      }
     }
 
     .add-room-button-upload, .add-room-button-upload:hover,
@@ -101,21 +134,16 @@
       }
     }
 
-    div[class*=MuiInput-underline]:after {
+    div[class*=MuiInput-underline]:not([class*=-error-]):after {
       border-bottom: 2px solid $primary;
     }
 
-    label[class*=MuiFormLabel] {
+    label[class*=MuiFormLabel], legend[class*=MuiFormLabel] {
       color: $black;
-    }
 
-    label, legend[class*=MuiFormLabel-focused] {
-      color: $black;
-      width: fit-content;
-    }
-
-    legend[class*=MuiFormLabel] {
-      color: $black;
+      &[class*=-error-] {
+        color: #f44336;
+      }
     }
 
     span[class*=MuiSwitch-bar] {
