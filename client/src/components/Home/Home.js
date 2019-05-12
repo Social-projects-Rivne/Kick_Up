@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import { Link as DomLink } from 'react-router-dom';
 
 import Swiper from 'react-id-swiper/lib/ReactIdSwiper.full';
-import { Pagination, Navigation } from 'swiper/dist/js/swiper.esm';
+import { Pagination } from 'swiper/dist/js/swiper.esm';
 
 import { withSnackbar } from 'notistack';
 import { Typography, Button, Badge } from '@material-ui/core';
@@ -221,7 +221,7 @@ const introSlidesSliderParams = {
     }
 };
 
-let prevTimer, prevResizeTimer, prevReInitTimer;
+let prevTimer, prevResizeTimer;
 
 class Home extends Component {
     state = {
@@ -296,11 +296,6 @@ class Home extends Component {
         };
         const defineUniqueParams = (type) => {
             switch(type) {
-                case Type.MOBILE:
-                    return {
-                        slidesPerView: 1,
-                        spaceBetween: 0
-                    }
                 case Type.TABLET:
                     return {
                         slidesPerView: 2,
@@ -310,8 +305,13 @@ class Home extends Component {
                 case Type.DESKTOP:
                     return {
                         slidesPerView: 3,
-                        spaceBetween: 20,
+                        spaceBetween: 30,
                         grabCursor: true
+                    }
+                default:
+                    return {
+                        slidesPerView: 1,
+                        spaceBetween: 0
                     }
             }
         };
@@ -465,7 +465,7 @@ class Home extends Component {
         }, awaitTime);
     }
     handleResize = () => {
-        const _awaitTime = 100;
+        const _awaitTime = 500;
 
         window.clearTimeout(prevResizeTimer);
         prevResizeTimer = window.setTimeout(() => {
