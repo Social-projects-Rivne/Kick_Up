@@ -3,6 +3,7 @@ const constants = require('./../../config/constants');
 const router = new Router({prefix: '/api/event'});
 const { Event } = require('../../models');
 const validate = require('../../services/Validator');
+const { sum, floor } = require('lodash');
 
 const handler = {
 
@@ -11,8 +12,16 @@ const handler = {
       page: 'numeric|min:1'
     })
   const { page } = ctx.query;
-  const events = await Event.fetchPage({page, pageSize: constants.pageSize, withRelated: ['creator','category']})
-
+  const events = await Event.fetchPage({page, pageSize: constants.pageSize, withRelated: ['creator','category','rating']})
+  events.forEach(event => {
+    const eventRatings = event.serialize().rating.filter(i => i.entity_id === event.id);
+    if(event.serialize().rating.length){
+    const sumOfVotes = event.serialize().rating.length;
+    event.set({eventRating: floor((sum(eventRatings.map(item => item.rating))/sumOfVotes),2)});
+    }else {
+      event.set({eventRating: 0});
+    }
+  });
   ctx.body = {
     events,
     eventCount: events.pagination.rowCount,
@@ -119,8 +128,8 @@ const handler = {
         permission,
         members_limit
     } = ctx.request.body;
-    await new Event(newEvent).save();
-    ctx.body = ''
+    const event = await new Event(newEvent).save();
+    ctx.body = event;
   },
   async getEventById(ctx) {
     const { id } = ctx.params;
