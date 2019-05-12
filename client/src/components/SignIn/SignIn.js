@@ -4,6 +4,7 @@ import axios from "axios";
 import { Grid, TextField, Button, Typography } from "@material-ui/core";
 import { Person, Send, Email, Lock } from "@material-ui/icons";
 import is from "is_js";
+import { withSnackbar } from 'notistack';
 import CustomizedSnackbars from "../Toast/Toast";
 
 const PASSWORD_LENGTH = 6;
@@ -39,20 +40,12 @@ class Login extends Component {
     // Validate data;
     const res = this.doValidation();
     if (!res) {
-      this.setState({
-        message: "Please correct fields highlighted with red",
-        messageType: messageType.ERR,
-        messageOpened: true
-      });
-
+      this.showToast('Please correct fields highlighted with red', messageType.ERR);
       return;
     }
     // Do changes in UI;
-    this.setState({
-      message: "Working",
-      messageType: messageType.INFO,
-      messageOpened: true
-    });
+    this.showToast('Working', messageType.INFO);
+
     // Send data;
     const { email, password } = this.state;
     const user = {
@@ -75,10 +68,9 @@ class Login extends Component {
         }
         throw new Error('There is no user.');
       })
-      .then(user => this.setState({
-          message: "Welcome!",
-          messageType: messageType.SUCCESS,
-          messageOpened: true,
+      .then(user => {
+        this.showToast('Welcome!', messageType.SUCCESS);
+        this.setState({
           email: "",
           password: "",
           emailInputValid: true,
@@ -90,14 +82,17 @@ class Login extends Component {
           this.props.history.push({
             pathname: "/",
           });
-        }, 500)))
+        }, 500))})
       .catch(err => {
-        this.setState({
-          message: (err.response && err.response.data.error.errors.message[0]) || err.message,
-          messageType: messageType.ERR,
-        })
+        this.showToast('Incorrect username or password!', messageType.ERR);
       });
   };
+
+  showToast = (message, variant) => {
+    this.props.enqueueSnackbar(message, {
+        variant: variant ? variant : 'default',
+    });
+  }
   
   resetToast = () => {
     this.setState({
@@ -162,7 +157,7 @@ class Login extends Component {
               <Email />
               <TextField
                 required
-                className="sign-in__input"
+                className="input"
                 name="email"
                 label="Your email"
                 type="email"
@@ -177,7 +172,7 @@ class Login extends Component {
               <Lock />
               <TextField
                 required
-                className="sign-in__input"
+                className="input"
                 name="password"
                 label="Enter password, min. 6 chars"
                 type="password"
@@ -206,4 +201,4 @@ class Login extends Component {
   }
 }
 
-export default Login;
+export default withSnackbar(Login);

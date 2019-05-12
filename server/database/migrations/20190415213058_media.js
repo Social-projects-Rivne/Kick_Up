@@ -8,10 +8,12 @@ exports.up = async knex => {
       t.string('key', 100)
         .notNullable()
         .unique();
-      t.string('bucket').notNullable();
       t.string('type', 36)
         .nullable()
-        .comment('Type, originAvatar, smallAvatar, gallery');
+        .comment('Type, room, event');
+      t.integer('entity_id')
+        .notNullable()
+        .comment('room_id, event_id');
       t.foreign('user_id')
         .references('users.id')
         .onDelete('SET NULL');

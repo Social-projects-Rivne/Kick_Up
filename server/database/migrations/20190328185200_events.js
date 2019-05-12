@@ -24,6 +24,7 @@ exports.up = async knex => {
     t.foreign('category_id')
       .references('categories.id')
       .onDelete('CASCADE');
+    t.collate('utf8_general_ci');
   });
 };
 

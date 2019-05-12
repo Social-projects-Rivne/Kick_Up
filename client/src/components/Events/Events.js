@@ -30,7 +30,7 @@ class Events extends Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     const { category, date, location } = this.state;
-    if (prevState.category !== category || prevState.date !== date || prevState.date !== date) {
+    if (prevState.category !== category || prevState.date !== date || prevState.date !== date || prevState.location !== location) {
       this.filterHandle();
     }
   }
@@ -40,7 +40,7 @@ class Events extends Component {
     axios
       .get(api, type)
       .then(res => {
-        this.setState({ eventsDB: res.data, isLoading: false });
+        this.setState({ eventsDB: res.data.events, isLoading: false });
       })
       .catch(err => console.log(err));
   };
@@ -106,7 +106,6 @@ class Events extends Component {
   };
 
   render() {
-    {console.log('events==>', this.state.eventsDB)}
     const { eventsDB, isLoading } = this.state;
     const toolbarButtons = [
       { name: "Top Members", method: this.sortMembersHandle },
@@ -157,6 +156,7 @@ class Events extends Component {
           date={this.state.date}
           showDate={true}
           changeDate={this.changeDate}
+          addLink="/add-event"
         />
         <Grid container spacing={16} justify="center" className="events-page-cards">
           {eventsDB.map(event => {

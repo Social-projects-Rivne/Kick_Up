@@ -18,6 +18,82 @@ const categories = [
     title: 'Dancing'
   }
 ];
+const tags = [
+  {
+    id: 1,
+    title: 'Nature'
+  },
+  {
+    id: 2,
+    title: 'Birds'
+  },
+  {
+    id: 3,
+    title: 'Games'
+  },
+  {
+    id: 4,
+    title: 'Beer'
+  }
+];
+const ratings = [
+  {
+    id: 1,
+    user_id: 1,
+    entity_type: 'room',
+    rating: faker.random.number({min:1,max:5}),
+    entity_id: 1
+  },
+  {
+    id: 2,
+    user_id: 2,
+    entity_type: 'room',
+    rating: faker.random.number({min:1,max:5}),
+    entity_id: 2
+  },
+  {
+    id: 3,
+    user_id: 3,
+    entity_type: 'room',
+    rating: faker.random.number({min:1,max:5}),
+    entity_id: 3
+  },
+  {
+    id: 4,
+    user_id: 4,
+    entity_type: 'room',
+    rating: faker.random.number({min:1,max:5}),
+    entity_id: 4
+  },
+  {
+    id: 5,
+    user_id: 1,
+    entity_type: 'event',
+    rating: faker.random.number({min:1,max:5}),
+    entity_id: 1
+  },
+  {
+    id: 6,
+    user_id: 2,
+    entity_type: 'event',
+    rating: faker.random.number({min:1,max:5}),
+    entity_id: 2
+  },
+  {
+    id: 7,
+    user_id: 3,
+    entity_type: 'event',
+    rating: faker.random.number({min:1,max:5}),
+    entity_id: 3
+  },
+  {
+    id: 8,
+    user_id: 4,
+    entity_type: 'event',
+    rating: faker.random.number({min:1,max:5}),
+    entity_id: 4
+  }
+];
 const users = [
   {
     id: 1,
@@ -175,11 +251,15 @@ exports.seed = async knex => {
   await knex('categories').insert(categories);
   await knex('rooms').insert(rooms);
   await knex('events').insert(events);
+  await knex('tags').insert(tags);
+  await knex('ratings').insert(ratings);
 };
 
 exports.seedData = {
   users,
   categories,
   rooms,
-  events
+  events,
+  tags,
+  ratings
 };

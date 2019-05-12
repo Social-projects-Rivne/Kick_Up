@@ -253,8 +253,8 @@ class Home extends Component {
                 const events = await axios.get(API.getEvents);
                 
                 return {
-                    events: events.data,
-                    rooms: rooms.data
+                    events: events.data.events,
+                    rooms: rooms.data.rooms
                 }
             } catch (err) {
                 this.handleServerErrors(err.response.data.error.errors);

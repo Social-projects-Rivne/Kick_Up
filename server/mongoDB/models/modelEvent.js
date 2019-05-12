@@ -1,33 +1,42 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-require('./modelEventComment');
-require('./modelPhoto');
-require('./modelRating');
-
 const eventSchema = new Schema (
     {
         event_id: Number,
         comments: [
-            { 
-                type: mongoose.Schema.Types.ObjectId, 
-                ref: 'Event_comment'
-            },
+            {
+                author_id: Number,
+                text: String,
+                created_at: {
+                    type: Date,
+                    default: Date.now,
+                },
+                updated_at: Date,
+                is_banned: Boolean,
+                child_comments: Array,
+            }
         ],
         moderators_list: Array,
         gallery: [
-            { 
-                type: mongoose.Schema.Types.ObjectId, 
-                ref: 'Photo'
-            },
+            {
+                src: String,
+                user_id: Number,
+                created_at: {
+                    type: Date,
+                    default: Date.now,
+                },
+                is_banned: Boolean,
+                tags: Array,
+            }
         ],
         tags: Array,
         members: Array,
         ratings: [
-            { 
-                type: mongoose.Schema.Types.ObjectId, 
-                ref: 'Rating'
-            },
+            {
+                user_id: Number,
+                rating: Number,
+            }
         ]
     }
 );

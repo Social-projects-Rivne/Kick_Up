@@ -5,6 +5,7 @@ exports.up = async knex => {
     t.string('nick').nullable();
     t.string('first_name').nullable();
     t.string('last_name').nullable();
+    t.integer('gender').notNull().defaultTo(3);
     t.string('email').notNull();
     t.string('password').notNull();
     t.string('avatar').nullable();
@@ -14,6 +15,7 @@ exports.up = async knex => {
     t.date('birth_date').nullable();
     t.dateTime('created_at').notNullable().defaultTo(knex.raw('now()'));
     t.dateTime('updated_at').nullable().defaultTo(knex.raw('now()'));
+    t.collate('utf8_general_ci');
   });
 };
 
