@@ -12,7 +12,6 @@
     }
 }
 
-// Styles added by Denis;
 .home {
     flex-direction: column;
     box-sizing: border-box;
@@ -93,7 +92,7 @@
     right: 0;
     margin: auto;
     width: 100%;
-    height: auto;
+    object-fit: cover;
 
     &:first-of-type {
         opacity: 0;
@@ -255,7 +254,7 @@
 }
 
 // Landscape mode;
-@media only screen and (max-width: 823px) and (orientation: landscape) {
+@media only screen and (max-width: 767px) and (orientation: landscape) {
     .home .home__intro-title {
         position: absolute;
         top: 0;
@@ -280,13 +279,16 @@
         right: 0;
         margin: auto;
     }
+
+    .home__intro-slide img {
+        height: 100%;
+    }
 }
 
 // Tablets, omit iphone X and Pixel XL;
-@media only screen and (min-width: 768px) and (orientation: portrait) {
+@media only screen and (min-width: 768px) {
     .home .home__intro-slide img {
-        width: 100%;
-        transform: translate3d(0, -12%, 0);
+        height: 100%;
     }
 
     .home [data-main-slide]:nth-of-type(3) {
@@ -294,6 +296,7 @@
     }
 
     .home__cards-slide {
+        position: static;
         background-color: transparent;
         justify-content: center;
     }
@@ -344,10 +347,8 @@
 
 // Related to desktops;
 @media only screen and (min-width: 1024px) {
-
-    .home .home__intro-slide img {
-        height: 100%;
-        object-fit: cover;
+    .home [data-main-slide]:nth-of-type(3) {
+        border-top-color: lighten($secondaryBlack, 92%);
     }
 
     .home .home__intro-slide .home__intro-title {
@@ -376,6 +377,7 @@
     .home [data-main-slide] .swiper-pagination-bullets {
         margin-top: 24px;
         bottom: 30px;
+        top: unset;
 
         & .swiper-pagination-bullet {
             width: 16px;
@@ -385,6 +387,7 @@
     }
 
     .home__cards-slide {
+        position: static;
         background-color: transparent;
         justify-content: center;
     }
@@ -407,13 +410,36 @@
                 background-clip: text;
     }
 
+    [data-main-slide="3"] .home__cards-slide h4 {
+        padding-top: 0;
+    }
+
     .home .home__cards-slide h4 + span {
         top: 3rem;
+    }
+
+    [data-main-slide="3"] .home__cards-slide h4 + span {
+        top: 12px;
     }
 
     .home__cards-slide .home__badge span {
         padding: 12px;
         font-size: 1rem;
         line-height: 1.125rem;
+    }
+
+    .home .home__rooms-swiper {
+        padding-top: 0;
+    }
+
+    .home [data-main-slide="3"] .swiper-pagination-bullets {
+        max-width: 80vw;
+        left: 0;
+        right: 0;
+        top: 0;
+        margin-left: auto;
+        margin-right: auto;
+        text-align: right;
+        bottom: unset;
     }
 }

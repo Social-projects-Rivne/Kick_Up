@@ -359,8 +359,8 @@ class Home extends Component {
             let res = Type.MOBILE;
 
             if (
-                window.innerWidth >= 768 && 
-                window.innerWidth < window.innerHeight
+                window.innerWidth >= 768 &&
+                window.innerWidth < 1024                
             ) {
                 res = Type.TABLET;
             } else if (window.innerWidth >= 1024) {

@@ -97,7 +97,7 @@ class NroomCard extends Component {
             </CardActions>
             <Collapse 
                 className="roomcard__collpse-content" 
-                in={ window.innerWidth >= 768 && window.innerWidth < window.innerHeight ? true : this.state.expanded } 
+                in={window.innerWidth >= 768 ? true : this.state.expanded}
                 timeout="auto" 
                 unmountOnExit
             >

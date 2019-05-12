@@ -149,7 +149,7 @@
 }
 
 // Landscape mode;
-@media only screen and (max-width: 823px) and (orientation: landscape) {
+@media only screen and (max-width: 767) and (orientation: landscape) {
     .event-card {
         display: flex;
         width: 100%;
@@ -168,8 +168,8 @@
     }
 
     .event-card .event-card__description {
-        min-width: 55vw;
-        max-width: 55vw;
+        min-width: 52vw;
+        max-width: 52vw;
         padding-top: 0;
     }
 
@@ -181,10 +181,7 @@
 }
 
 // Tablets;
-@media only screen and (min-width: 768px) and (orientation: portrait) {
-    .event-card {
-        max-width: 375px;
-    }
+@media only screen and (min-width: 768px) {
 
     // Anti-BEM here will be best option;
     .home__events-swiper .swiper-slide-next .event-card__date,
