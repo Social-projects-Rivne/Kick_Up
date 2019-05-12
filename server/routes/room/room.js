@@ -5,7 +5,6 @@ const { Room } =require('../../models');
 const validate = require('../../services/Validator');
 const router = new Router({ prefix: '/api/room'});
 const faker = require('faker');
-const { sum, floor } = require('lodash');
 
 const handler = {
   async roomList(ctx) {
@@ -15,15 +14,6 @@ const handler = {
     const { page } = ctx.query;
     const rooms = await Room.fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating']});
     const members = faker.random.number(30);
-    rooms.forEach(room => {
-      const roomRatings = room.serialize().rating.filter(i => i.entity_id === room.id);
-      if(room.serialize().rating.length){
-        const sumOfVotes = room.serialize().rating.length;
-        room.set({roomRating: floor((sum(roomRatings.map(item => item.rating))/sumOfVotes),2)});
-        }else {
-          room.set({roomRating: 0});
-        }
-    });
     const newList  = rooms.map(i => i.set({members}));
     ctx.body = {
       rooms: newList,
