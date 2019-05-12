@@ -216,6 +216,10 @@
     // To make it centered, add padding of title;
     padding-top: 45px;
     margin-bottom: auto;
+    opacity: 0;
+    animation-name: fade-in;
+    animation-duration: 2s;
+    animation-fill-mode: forwards;
 }
 
 // Related to modificators;
@@ -369,7 +373,8 @@
         }
     }
 
-    .home [data-main-slide]:first-child .swiper-pagination-bullets {
+    .home [data-main-slide] .swiper-pagination-bullets {
+        margin-top: 24px;
         bottom: 30px;
 
         & .swiper-pagination-bullet {
@@ -377,5 +382,38 @@
             height: 16px;
             margin: 0 8px;
         }
+    }
+
+    .home__cards-slide {
+        background-color: transparent;
+        justify-content: center;
+    }
+
+    .home__cards-slide svg {
+        display: none;
+    }
+
+    .home .home__cards-slide h4 {
+        padding-top: 3rem;
+        font-size: 3rem;
+        font-weight: 600;
+        line-height: 3.429rem;
+        text-transform: capitalize;
+        background-color: $primary;
+        color: transparent;
+        text-shadow: 2px 2px 3px rgba(255, 255, 255, 0.3);
+        -webkit-background-clip: text;
+            -moz-background-clip: text;
+                background-clip: text;
+    }
+
+    .home .home__cards-slide h4 + span {
+        top: 3rem;
+    }
+
+    .home__cards-slide .home__badge span {
+        padding: 12px;
+        font-size: 1rem;
+        line-height: 1.125rem;
     }
 }

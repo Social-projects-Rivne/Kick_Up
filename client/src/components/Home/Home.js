@@ -86,7 +86,8 @@ const selectors = {
     activeIntroSlide: '.home__intro-slide.swiper-slide-active',
     loadingImageClass: 'home__intro-slide_loading',
 };
-let mainSwiper, roomsSwiper, eventsSwiper;
+let mainSwiper, roomsSwiper;
+let eventsSwipers = [];
 
 // Helper functions;
 const setMainSwiper = instance => {
@@ -94,9 +95,6 @@ const setMainSwiper = instance => {
 };
 const setRoomsSwiper = instance => {
     roomsSwiper = instance;
-};
-const setEventsSwiper = instance => {
-    eventsSwiper = instance;
 };
 const updateSwipersHeight = () => {
     try {
@@ -108,7 +106,6 @@ const updateSwipersHeight = () => {
         }, 300);
     } catch(err) {}
 };
-
 // Need this as swiper here, cannot bind it, as swiper is initialized aync; 
 const applySVGImage = function() {    
     const svg = document.createElement('img');
@@ -145,14 +142,12 @@ const applySVGImage = function() {
         activeSlide.classList.remove(selectors.loadingImageClass);
     });
 };
-
 const mainSwiperParams = {
     modules: [Pagination],
     containerClass: 'home__main-swiper',
     slidesPerView: 1,
     autoHeight: true
 };
-
 const roomsSliderParams = {
     modules: [Pagination],
     containerClass: 'home__rooms-swiper',
@@ -174,38 +169,8 @@ const roomsSliderParams = {
     }
 };
 const eventsSliderParams = {
-    shouldSwiperUpdate: true,
-    rebuildOnUpdate: true,
     modules: [Pagination],
     containerClass: 'home__events-swiper',
-    spaceBetween: function() {
-        const spacePx = 20;
-
-        if (
-            window.innerWidth >= 768 &&
-            window.innerWidth < window.innerHeight ||
-            window.innerWidth >= 1024
-        ) {
-            return spacePx;
-        } else {
-            return 0;
-        }
-    }(),
-    slidesPerView: function() {
-        const desktopSlideWidth = 375;
-        let res = 1;
-
-        if (
-            window.innerWidth >= 768 &&
-            window.innerWidth < window.innerHeight
-        ) {
-            res = 2;
-        } else if (window.innerWidth >= 1024) {
-            res = Math.floor(window.innerWidth / desktopSlideWidth);
-        }
-
-        return res;
-    }(),
     simulateTouch: true,
     nested: true,
     autoHeight: true,
@@ -219,31 +184,6 @@ const eventsSliderParams = {
     observeParents: true,
     speed: 800
 };
-
-
-const eventsSliderParams2 = {
-    shouldSwiperUpdate: true,
-    rebuildOnUpdate: true,
-    modules: [Pagination],
-    containerClass: 'home__events-swiper',
-    spaceBetween: 20,
-    slidesPerView: 3,
-    simulateTouch: true,
-    nested: true,
-    autoHeight: true,
-    pagination: {
-        el: ".home__events-swiper-pagination",
-        type: 'bullets',
-        clickable: true,
-        hideOnClick: true
-    },
-    observer: true,
-    observeParents: true,
-    speed: 800
-};
-
-
-
 const introSlidesSliderParams = {
     modules: [Pagination],
     containerClass: 'home__intro',
@@ -290,8 +230,7 @@ class Home extends Component {
         offset: 0,
         currentSlide: 1,
         scrollInProgress: false,
-        a: true,
-        b: false
+        renderEventsSlider: true
     };
     showToast = (message, variant) => {
         this.props.enqueueSnackbar(message, {
@@ -348,6 +287,93 @@ class Home extends Component {
         const currentOffset = document.documentElement.scrollTop || 
         document.body.scrollTop;
         return currentOffset;
+    }
+    renderEventsSwiper = () => {
+        const Type = {
+            MOBILE: 0,
+            TABLET: 1,
+            DESKTOP: 2
+        };
+        const defineUniqueParams = (type) => {
+            switch(type) {
+                case Type.MOBILE:
+                    return {
+                        slidesPerView: 1,
+                        spaceBetween: 0
+                    }
+                case Type.TABLET:
+                    return {
+                        slidesPerView: 2,
+                        spaceBetween: 20
+                        
+                    }
+                case Type.DESKTOP:
+                    return {
+                        slidesPerView: 3,
+                        spaceBetween: 20,
+                        grabCursor: true
+                    }
+            }
+        };
+
+        // Add each type;
+        for (let i = 0, length = Object.keys(Type).length; i < length; i++) {
+            eventsSwipers.push((
+                    <Swiper {...{...eventsSliderParams, ...defineUniqueParams(i)}} >
+                        <div key={1} className="swiper-slide">
+                            <NeventCard />
+                        </div>
+                        <div key={2} className="swiper-slide">
+                            <NeventCard />
+                        </div>
+                        <div key={3} className="swiper-slide">
+                            <NeventCard />
+                        </div>
+                        <div key={4} className="swiper-slide">
+                            <NeventCard />
+                        </div>
+                        <div key={5} className="swiper-slide">
+                            <NeventCard />
+                        </div>
+                         <div key={5} className="swiper-slide">
+                            <NeventCard />
+                        </div>
+                        <div key={6} className="swiper-slide">
+                            <NeventCard />
+                        </div>
+                        <div key={7} className="swiper-slide">
+                            <NeventCard />
+                        </div>
+                    </Swiper>
+                )
+            );
+        }
+    }
+    setEventsSwiper = () => {
+        const Type = {
+            MOBILE: 0,
+            TABLET: 1,
+            DESKTOP: 2
+        };
+        const defineType = () => {
+            let res = Type.MOBILE;
+
+            if (
+                window.innerWidth >= 768 && 
+                window.innerWidth < window.innerHeight
+            ) {
+                res = Type.TABLET;
+            } else if (window.innerWidth >= 1024) {
+                res = Type.DESKTOP;
+            }
+
+            return res;
+        };
+
+        // In case no instances, render them;
+        if (!eventsSwipers.length) this.renderEventsSwiper();
+
+        return eventsSwipers[defineType()];
     }
     handleScroll = () => {
         const awaitTime = 500;
@@ -439,30 +465,17 @@ class Home extends Component {
         }, awaitTime);
     }
     handleResize = () => {
-        const _awaitTime = 500;
+        const _awaitTime = 100;
 
         window.clearTimeout(prevResizeTimer);
         prevResizeTimer = window.setTimeout(() => {
             updateSwipersHeight();
             applySVGImage();
-        }, _awaitTime);
-    }
-    handleSwipersReinint = () => {
-        const _awaitTime = 300;
 
-        window.clearTimeout(prevReInitTimer);
-        prevReInitTimer = window.setTimeout(() => {
-            if (window.innerWidth >= 1024) {
-                // eventsSwiper.destroy();
-                // eventsSwiper = null;
-                this.setState({a: false});
-                this.setState({
-                    a: false,
-                    b: true
-                });
-
-               
-            }
+            // Force re-render of events swiper;
+            this.setState({ renderEventsSlider: false }, () => {
+                this.setState({ renderEventsSlider: true });
+            });
         }, _awaitTime);
     }
     componentDidMount = () => {
@@ -479,7 +492,6 @@ class Home extends Component {
         // Add event listeners;
         document.addEventListener('scroll', this.handleScroll);
         window.addEventListener('resize', this.handleResize);
-        window.addEventListener('resize', this.handleSwipersReinint);
         Events.scrollEvent.register('end', () => {
             console.log('And our animation ended!');
 
@@ -492,7 +504,6 @@ class Home extends Component {
     componentWillUnmount = () => {
         document.removeEventListener('scroll', this.handleScroll);
         window.removeEventListener('resize', this.handleResize);
-        window.removeEventListener('resize', this.handleSwipersReinint);
         Events.scrollEvent.remove('end');
     }
     render = () => (
@@ -569,68 +580,20 @@ class Home extends Component {
                     <DomLink to={'events'} className="home__cards-slide">
                         <EventAvailable fontSize="large" />
                         <Badge className="home__badge" badgeContent={328}>
-                            <Typography className="home__cards-slide-title" variant="h4">
+                            <Typography title="Click to view all events" className="home__cards-slide-title" variant="h4">
                                 Events      
                             </Typography>
                         </Badge>
                     </DomLink>
-                    {
-                        this.state.a &&
-                        <Swiper {
-                            ...eventsSliderParams
-                        } getSwiper={setEventsSwiper} >
-                            <div key={1} className="swiper-slide">
-                                <NeventCard />
-                            </div>
-                            <div key={2} className="swiper-slide">
-                                <NeventCard />
-                            </div>
-                            <div key={3} className="swiper-slide">
-                                <NeventCard />
-                            </div>
-                            <div key={4} className="swiper-slide">
-                                <NeventCard />
-                            </div>
-                            <div key={5} className="swiper-slide">
-                                <NeventCard />
-                            </div>
-                        </Swiper>
-                    }
-
-
-                    {
-                        this.state.b &&
-                        <Swiper {
-                            ...eventsSliderParams2
-                        } getSwiper={setEventsSwiper} >
-                            <div key={1} className="swiper-slide">
-                                <NeventCard />
-                            </div>
-                            <div key={2} className="swiper-slide">
-                                <NeventCard />
-                            </div>
-                            <div key={3} className="swiper-slide">
-                                <NeventCard />
-                            </div>
-                            <div key={4} className="swiper-slide">
-                                <NeventCard />
-                            </div>
-                            <div key={5} className="swiper-slide">
-                                <NeventCard />
-                            </div>
-                        </Swiper>
-                    }
-
-
-
+                    {this.state.renderEventsSlider && this.setEventsSwiper()}
                 </div>
                 <div data-main-slide="3" className="main-content__slide">
                     <Element name="main-swiper-slide-3"></Element>
                     <DomLink to={'rooms'} className="home__cards-slide">
                         <SupervisorAccount fontSize="large" />
                         <Badge className="home__badge" badgeContent={328}>
-                            <Typography className="home__cards-slide-title" variant="h4">
-                                groups      
+                            <Typography title="Click to view all rooms" className="home__cards-slide-title" variant="h4">
+                                rooms      
                             </Typography>
                         </Badge>
                     </DomLink>

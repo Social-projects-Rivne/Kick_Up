@@ -213,6 +213,24 @@
     .event-card {
         max-width: 375px;
     }
+
+    // Anti-BEM here will be best option;
+    .home__events-swiper .swiper-slide-next .event-card__date,
+    .home__events-swiper .swiper-slide-next + .swiper-slide .event-card__date,
+    .home__events-swiper .swiper-slide-prev .event-card__date {
+        animation:
+            roll-in-left 0.7s ease-in-out 1.5s,
+            set-label-bg-left 0.7s ease-in 3s;
+        animation-fill-mode: forwards;
+    }
+    .home__events-swiper .swiper-slide-next .event-card__location,
+    .home__events-swiper .swiper-slide-next + .swiper-slide .event-card__location,
+    .home__events-swiper .swiper-slide-prev .event-card__location {
+        animation:
+            roll-in-right 0.7s ease-in-out 1.5s,
+            set-label-bg-right 0.7s ease-in 3s;
+        animation-fill-mode: forwards;
+    }
 }
 
 @keyframes roll-in-left {
