@@ -84,6 +84,9 @@
     .day {
       font-size: 12px;
     }
+    .time {
+      text-align: center;
+    }
   }
   .location {
     display: flex;
@@ -100,7 +103,7 @@
     position: absolute;
     bottom: 0;
     width: 100%;
-    transform: translateY(calc(45px + 1em));
+    transform: translateY(calc(70px + 1em));
     transition: transform 0.3s;
     .content {
       padding: 1em;
@@ -118,19 +121,14 @@
     margin-top: 10px;
     color: lighten($black, 50%);
   }
-  .text {
-    /* autoprefixer: off */
-    -webkit-box-orient: vertical;
-    /* autoprefixer: on */
-    margin: 0;
-    display: block;
-    display: -webkit-box;
-    -webkit-line-clamp: 4;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
   .content {
     background-color: $white;
     box-shadow: 0 5px 30px 10px rgba($black, 0.3);
+  }
+}
+
+.events-card {
+  .text {
+    @include multiLineEllipsis($lineHeight: 1.3em, $lineCount: 4, $bgColor: $white);
   }
 }

@@ -1,0 +1,443 @@
+/* Available modificators:
+* roomcard__events-btn_expanded;
+*/
+
+#root .roomcard {
+    box-shadow: none;
+}
+
+.roomcard .roomcard__header {
+    padding: 10px;
+}
+
+.roomcard__header span:first-of-type {
+    padding-bottom: 3px;
+    font-size: 1.571rem;
+    line-height: 2rem;
+    letter-spacing: 1px;
+    color: $black;
+    font-weight: 100;
+    max-height: calc(2rem * 3);
+    overflow: hidden;
+}
+
+#root .roomcard .roomcard__main-content {
+    font-size: 1.071rem;
+    line-height: 1.286rem;
+    font-weight: 100;
+}
+
+.roomcard__header-info {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 5px;
+}
+
+.roomcard .roomcard__avatar-wrapper {
+    display: flex;
+    align-items: center;
+
+    &:hover,
+    &:active {
+        background-color: transparent;
+        text-decoration: none;
+    }
+}
+
+.roomcard .roomcard__avatar {
+    width: 28px;
+    height: 28px;
+}
+
+.roomcard .roomcard__avatar-wrapper span {
+    margin-left: 10px;
+    font-size: 15px;
+    line-height: 18px;
+    color: $black;
+
+    &::before {
+        content: 'by '; 
+        font-size: 13px;
+        font-weight: 100;
+        opacity: 0.8;
+    }
+}
+
+.roomcard__img-wrapper {
+    position: relative;
+    min-height: 35vh;
+}
+
+.roomcard__img-wrapper {
+    min-height: 35vh;
+}
+
+.roomcard .roomcard__group-members {
+    margin-left: auto;
+    pointer-events: none;
+
+    & [class*=MuiTouchRipple] {
+        display: none;
+    }
+}
+
+.roomcard .roomcard__header {
+    padding: 10px;
+}
+
+.roomcard__header > div:first-child {
+    align-self: flex-start;
+    margin-top: 6px;
+}
+
+.roomcard__header > div:first-child > div {
+    width: 50px;
+    height: 50px;
+}
+
+#root .roomcard .roomcard__events-btn {
+    padding-right: 22px; 
+    background-color: $primary;
+    color: $black;
+    box-shadow: none;
+
+    &.roomcard__events-btn_expanded svg {
+        transform: rotate(180deg);
+    }
+
+    // For better look;
+    & [class*=MuiFab-label] {
+        padding-top: 2px;
+    }
+}
+
+.roomcard .roomcard__label {
+    position: absolute;
+    min-height: 53px;
+    display: flex;
+    align-items: center;
+    bottom: 0;
+    left: 0;
+    padding: 5px 10px;
+    padding-right: 40px;
+    color: $primary;
+    background-color: transparent;
+    transform: translate3d(-100%, 0, 0);
+    z-index: 1;
+}
+
+.roomcard .roomcard__label b {
+    font-size: 20px;
+    line-height: 24px;
+}
+
+.roomcard .roomcard__label svg {
+    opacity: 0.7;
+    margin-right: 3px;
+}
+
+.roomcard__members-amount {
+    margin-left: 5px;
+    font-size: 0.8571rem;
+    line-height: 1rem;
+    color: lighten($secondaryBlack, 50%);
+}
+
+.roomcard .roomcard__description {
+    padding-bottom: 6px;
+}
+
+.roomcard .roomcard__description p {
+    font-size: 1.071rem;
+    line-height: 1.286rem;
+    font-weight: 100;
+}
+
+#root .roomcard .roomcard__events-wrapper {
+    border-top: 1px solid lighten($secondaryBlack, 90%);
+    padding: 0;
+}
+
+.roomcard__events-wrapper > div {
+    position: relative;
+    margin-bottom: 20px;
+
+    &:last-of-type {
+        margin-bottom: $footer-height;
+    }
+}
+
+// Anti-BEM will be best option here;
+.swiper-slide:not(.swiper-slide-active) .roomcard__collpse-content {
+   display: none;
+}
+
+.swiper-slide.swiper-slide-active > .roomcard .roomcard__label {
+    animation:
+        roll-in-left 0.7s ease-in-out 1.5s,
+        set-label-bg-left 0.7s ease-in 3s;
+    animation-fill-mode: forwards;  
+}
+
+// Landscape mode;
+@media only screen and (max-width: 767px) and (orientation: landscape) {
+    .roomcard {
+        display: flex;
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    .roomcard__header {
+        width: 100%;
+    }
+
+    .roomcard__header span:first-of-type {
+        max-height: 2rem;
+    }
+
+    .roomcard__img-wrapper {
+        max-width: 45vw;
+        min-width: 45vw;
+        min-height: 55vh;
+        overflow: hidden;
+    }
+
+    .roomcard .roomcard__description {
+        min-width: 52vw;
+        max-width: 52vw;
+        padding-top: 0;
+    }
+
+    .roomcard__members {
+        position: absolute;
+        width: 54vw;
+        top: calc(1.464rem * 8 + 54px);
+        right: 0;
+    }
+}
+
+@media only screen and (min-width: 768px) {
+    .roomcard {
+        max-width: calc(50% - 10px);
+    }
+
+    .roomcard .roomcard__description {
+        font-size: 1rem;
+        line-height: 1.375rem;
+    }
+    
+    .roomcard__collpse-content { 
+        position: absolute;
+        top: 64px;
+        animation-name: roll-room-events;
+        animation-duration: 1s;
+        animation-fill-mode: forwards;
+        animation-timing-function: ease-in-out;
+        z-index: 2;
+    }
+
+    .roomcard__header span:first-of-type {
+        max-height: calc(2rem * 5);
+    }
+
+    .swiper-slide .roomcard__collpse-content {
+        max-width: 100%;
+    }
+
+    .swiper-slide.swiper-slide-next .roomcard__collpse-content,
+    .swiper-slide.swiper-slide-prev .roomcard__collpse-content {
+        display: none;
+    }
+     
+    .roomcard__events-wrapper {
+        position: relative;
+        left: calc(50% + 10px);
+        min-width: calc(50% - 10px);
+        max-width: calc(50% - 10px);
+        max-height: 70vh;
+        overflow-y: scroll;
+    }
+
+    .roomcard__members {
+        position: absolute;
+        min-width: calc(50% - 10px);
+        max-width: calc(50% - 10px);
+        top: 0;
+        right: 0;
+        min-height: 64px;
+        max-height: 64px;
+        justify-content: center;
+        overflow: auto;
+    }
+
+    .roomcard .roomcard__group-members {
+        display: none;
+    }
+
+    .roomcard__events-btn {
+        pointer-events: none;
+    }
+
+    #root .roomcard .roomcard__events-btn {
+        transform: rotate(0);
+        background-color: transparent;
+        font-size: 1.571rem;
+        line-height: 2rem;
+        font-weight: 100;
+        text-transform: capitalize;
+        letter-spacing: 1px;
+
+        & svg {
+            display: none;
+        }
+
+        & span:first-child::after {
+            content: ' coming soon:';
+            white-space: pre;
+            text-transform: lowercase;
+        }
+    }
+
+    #root .roomcard .roomcard__events-wrapper {
+        border-top-color: transparent;
+    }
+
+    // Anti-BEM here will be best option;
+    #root .roomcard .roomcard__events-wrapper
+    .event-card__img-wrapper > div {
+        transform: none;
+    }
+}
+
+// Desktops;
+@media only screen and (min-width: 1024px) {
+    .roomcard {
+        position: relative;
+        margin: 0 auto;
+        display: flex;
+        flex-wrap: wrap;
+        max-width: 80vw;
+        margin-top: 1rem;
+        border: 1px solid lighten($secondaryBlack, 92%);
+        border-top-color: lighten($secondaryBlack, 98%);
+    }
+
+    .roomcard__header {
+        width: 100%; 
+    }
+
+    .roomcard__header span:first-of-type {
+        -webkit-line-clamp: 1;
+        max-height: 2rem;
+    }
+
+    .roomcard__img-wrapper {
+        min-width: 40%;
+        max-width: 40%;
+        min-height: 24vh;
+    }
+
+    .roomcard .roomcard__description {
+        min-width: 55%;
+        max-width: 55%;
+    }
+
+    #root .roomcard .roomcard__events-btn {
+        font-size: 1rem;
+
+    }
+
+    #root .roomcard .roomcard__events-btn span {
+        white-space: nowrap;
+        text-transform: lowercase;
+
+        &::after {
+            display: none;
+        }
+    }
+
+    .roomcard .roomcard__group-members {
+        display: flex;
+    }
+
+    .roomcard .roomcard__members {
+        position: absolute;
+        top: calc(1.286rem * 12);
+        left: 0;
+        min-width: 100%;
+        padding-left: 40%;
+    }
+
+    #root .roomcard .roomcard__events-wrapper {
+        position: static;
+        display: flex;
+        max-width: 100%;
+        justify-content: space-between;
+        padding-top: 10px;
+        border: 0;
+        overflow: visible;
+    }
+
+    .roomcard .roomcard__collpse-content {
+        position: static;
+    }
+
+    #root .roomcard .roomcard__events-btn {
+        background-color: transparent;
+        border: 0;
+        color: $primary;
+        pointer-events: none;
+
+        &::after {
+            content: 'coming soon: ';
+            margin-left: 5px;
+            white-space: nowrap;
+            text-transform: lowercase;            
+        }
+
+        & svg {
+            margin-right: 3px;
+        }
+    }
+
+    .roomcard__events-wrapper > div {
+        max-width: 32%;
+        border:  0;
+    }
+
+    // Seems anti-BEM here best option;
+    .roomcard__events-wrapper .event-card__img-wrapper {
+        min-height: 160px;
+        background-position: 0 0;
+    }
+
+    .roomcard__events-wrapper .event-card__header
+    span:first-of-type {
+        max-height: 2rem;
+    }
+
+    .roomcard__events-wrapper .event-card__description p {
+        max-height: calc(1.286rem * 5);
+        overflow: hidden;
+    }
+
+    .roomcard .roomcard__events-wrapper > div {
+        margin-bottom: 0;
+    }
+
+    .swiper-slide.swiper-slide-next .roomcard__collpse-content,
+    .swiper-slide.swiper-slide-prev .roomcard__collpse-content {
+        display: block;
+    }
+}
+
+// Animatable el should be relative or absolute;
+@keyframes roll-room-events {
+    from {
+        right: -100%;
+    } to {
+        right: 0;
+    }
+}

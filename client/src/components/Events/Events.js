@@ -40,6 +40,7 @@ class Events extends Component {
     axios
       .get(api, type)
       .then(res => {
+        console.log('res.data.events', res.data.events)
         this.setState({ eventsDB: res.data.events, isLoading: false });
       })
       .catch(err => console.log(err));
@@ -170,7 +171,6 @@ class Events extends Component {
                 avatar={event.creator.avatar}
                 description={event.description}
                 limit={event.members_limit}
-                // rating={event.rating}
                 members={event.members}
                 background={event.cover}
                 clicked={() => this.selectedEventHandler(event.id)}

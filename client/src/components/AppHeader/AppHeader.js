@@ -1,22 +1,27 @@
 import React from 'react';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 
 import logo from '../../assets/images/logo.png';
 import face from '../../assets/images/face.png';
+import setAuthToken from '../../setAuthToken';
 
 import { AppBar, Toolbar, IconButton, InputBase, Link, BottomNavigation, BottomNavigationAction } from '@material-ui/core';
 //You can find icon names here: https://jxnblk.com/rmdi/
-import { EventAvailable, SupervisorAccount, PersonAdd, Person, ExitToApp, MoreVert, Search } from '@material-ui/icons';
+import { EventAvailable, SupervisorAccount, PersonAdd, Person, MoreVert, Search } from '@material-ui/icons';
 import { Link as RouterLink, withRouter } from 'react-router-dom';
 
 class AppHeader extends React.Component {
     state = {
         mobileMenuOpened: false,
         activePage: window.location.pathname,
+        anchorEl: null,
     };
     handleLogout = () => {
+        this.setState({ anchorEl: null });
         this.props.userHasAuthenticated(false);
         localStorage.removeItem("authorization");
-        this.props.setAuthToken(null);
+        setAuthToken(null);
     }
     componentWillMount() {
         this.unlisten = this.props.history.listen(location => {
@@ -40,21 +45,48 @@ class AppHeader extends React.Component {
     };
 
     handleUserProfile = () => {
+        this.setState({ anchorEl: null });
         this.props.history.push({ pathname: "/profile/" + this.props.user.id });
     }
 
+    handleClick = event => {
+        this.setState({ anchorEl: event.currentTarget });
+    };
+
+    handleClose = () => {
+        this.setState({ anchorEl: null });
+    };
+
     render() {
         const { user, isAuthenticated } = this.props;
-        const { mobileMenuOpened, activePage } = this.state;
+        const { mobileMenuOpened, activePage, anchorEl } = this.state;
         const avatarURL = user && user.avatar ? 
             <img src={user.avatar} alt={user.email}/> 
             : <img src={face} alt ="" />;
+        const avatar = [
+            <BottomNavigationAction 
+                className="icon-details" 
+                label="Profile"
+                aria-owns={anchorEl ? 'simple-menu' : undefined}
+                aria-haspopup="true"
+                onClick={this.handleClick}
+                icon={avatarURL} 
+                key="1"
+            />,
+            <Menu
+                id="simple-menu"
+                className="profile-menu"
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={this.handleClose}
+                key="2"
+            >
+                <MenuItem onClick={this.handleUserProfile}>Profile</MenuItem>
+                <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
+            </Menu>];
         const authField = isAuthenticated && user
         ?   <BottomNavigation value={activePage} onChange={this.handleChangeActivePage} className="navigation-buttons">
-                <BottomNavigationAction className="icon-details" label="avatar"
-                 onClick={this.handleUserProfile}
-                  icon={avatarURL} />
-                <BottomNavigationAction className="icon-details" label="Sign Out" onClick={this.handleLogout} icon={<ExitToApp />} />
+                {avatar}
             </BottomNavigation>
         :   <BottomNavigation value={activePage} onChange={this.handleChangeActivePage} className="navigation-buttons">
                 <BottomNavigationAction className="icon-details" label="Sign In" value="/sign-in" icon={<Person />} />
@@ -62,16 +94,11 @@ class AppHeader extends React.Component {
             </BottomNavigation>;
 
         const authFieldForMobile = isAuthenticated && user
-        ?   <>
-                <BottomNavigation value={activePage} onChange={this.handleChangeActivePage} className="navigation-buttons">
-                    <BottomNavigationAction className="icon-details" label="Events" value="/events" icon={<EventAvailable />} />
-                    <BottomNavigationAction className="icon-details" label="Rooms" value="/rooms" icon={<SupervisorAccount />} />
-                    <BottomNavigationAction className="icon-details" label="avatar" 
-                    onClick={this.handleUserProfile} 
-                    icon={avatarURL} />
-                    <BottomNavigationAction className="icon-details" label="Sign Out" onClick={this.handleLogout} icon={<ExitToApp />} />
-                </BottomNavigation>
-            </>
+    ?       <BottomNavigation value={activePage} onChange={this.handleChangeActivePage} className="navigation-buttons">
+                <BottomNavigationAction className="icon-details" label="Events" value="/events" icon={<EventAvailable />} />
+                <BottomNavigationAction className="icon-details" label="Spaces" value="/rooms" icon={<SupervisorAccount />} />
+                {avatar}
+            </BottomNavigation>
         :   <BottomNavigation value={activePage} onChange={this.handleChangeActivePage} className="navigation-buttons">
                 <BottomNavigationAction className="icon-details" label="Events" value="/events" icon={<EventAvailable />} />
                 <BottomNavigationAction className="icon-details" label="Rooms" value="/rooms" icon={<SupervisorAccount />} />

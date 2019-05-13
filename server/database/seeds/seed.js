@@ -106,7 +106,7 @@ const users = [
     last_name: `${faker.name.lastName()}`,
     email: faker.internet.email(),
     password: 1,
-    avatar: 'no-image.png',
+    avatar: faker.image.avatar(),
     carma: 123,
     role: 2,
     is_banned: false,
@@ -118,7 +118,7 @@ const users = [
     last_name: `${faker.name.lastName()}`,
     email: faker.internet.email(),
     password: 1,
-    avatar: 'no-image.png',
+    avatar: faker.image.avatar(),
     carma: 123,
     role: 2,
     is_banned: false,
@@ -130,7 +130,7 @@ const users = [
     last_name: `${faker.name.lastName()}`,
     email: faker.internet.email(),
     password: 1,
-    avatar: 'no-image.png',
+    avatar: faker.image.avatar(),
     carma: 123,
     role: 2,
     is_banned: false,
@@ -142,7 +142,7 @@ const users = [
     last_name: `${faker.name.lastName()}`,
     email: faker.internet.email(),
     password: 1,
-    avatar: 'no-image.png',
+    avatar: faker.image.avatar(),
     carma: 123,
     role: 2,
     is_banned: false,
@@ -158,6 +158,8 @@ const rooms = [
     cover: "https://picsum.photos/200/300/?random",
     permission: 1,
     members_limit: 25,
+    members: faker.random.number({min:1,max:15}),
+    roomRating: faker.random.number({min:1,max:5}),
     is_banned: 0
   },
   {
@@ -169,6 +171,8 @@ const rooms = [
     cover: "https://picsum.photos/200/300/?random",
     permission: 1,
     members_limit: 25,
+    members: faker.random.number({min:1,max:15}),
+    roomRating: faker.random.number({min:1,max:5}),
     is_banned: 0
   },
   {
@@ -179,6 +183,8 @@ const rooms = [
     description: faker.company.catchPhraseDescriptor(),
     cover: "https://picsum.photos/200/300/?random",
     members_limit: 25,
+    members: faker.random.number({min:1,max:15}),
+    roomRating: faker.random.number({min:1,max:5}),
     is_banned: 0
   },
   {
@@ -190,6 +196,8 @@ const rooms = [
     cover: "https://picsum.photos/200/300/?random",
     permission: 1,
     members_limit: 25,
+    members: faker.random.number({min:1,max:15}),
+    roomRating: faker.random.number({min:1,max:5}),
     is_banned: 0
   },
 ];
@@ -205,6 +213,8 @@ const events = [
     permission: 1,
     start_date: faker.date.future(),
     members_limit: 25,
+    members: faker.random.number({min:1,max:15}),
+    eventRating: faker.random.number({min:1,max:5}),
     is_banned: 0
   },
   {
@@ -218,6 +228,8 @@ const events = [
     permission: 1,
     start_date: faker.date.future(),
     members_limit: 25,
+    members: faker.random.number({min:1,max:15}),
+    eventRating: faker.random.number({min:1,max:5}),
     is_banned: 0
   },
   {
@@ -231,6 +243,8 @@ const events = [
     permission: 1,
     start_date: faker.date.future(),
     members_limit: 25,
+    members: faker.random.number({min:1,max:15}),
+    eventRating: faker.random.number({min:1,max:5}),
     is_banned: 0
   },
   {
@@ -244,6 +258,8 @@ const events = [
     permission: 1,
     start_date: faker.date.future(),
     members_limit: 25,
+    members: faker.random.number({min:1,max:15}),
+    eventRating: faker.random.number({min:1,max:5}),
     is_banned: 0
   },
 ];

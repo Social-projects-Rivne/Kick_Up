@@ -13,7 +13,8 @@ $link-color: $black;
 //header
 $header-bg: $black;
 $icon-color: $primary;
-$header-height: 86px;
+$header-height: 80px;
+$header-height-tablet: 86px;
 
 //footer
 $footer-height: 51px;
@@ -23,5 +24,11 @@ $maxEventSwiperHeight: 30vh;
 $footerHeight: 19px;
 $maxEventSwiperHeight: 30vh;
 
+// Spacings;
+$normalSpacing: 16px;
+
 // Event page;
 $maxEventGallerySlidesPerView: 10;
+
+// Home page;
+$maxLoadPostsAmount: 10;
