@@ -7,7 +7,7 @@ exports.up = async knex => {
     t.integer('category_id').unsigned();
     t.string('description',500).nullable();
     t.string('cover').nullable();
-    t.integer('permission').nullable();
+    t.integer('permission').nullable().defaultTo(0);
     t.integer('members_limit').nullable();
     t.integer('members').nullable().defaultTo(1);
     t.float('roomRating').nullable().defaultTo(0);

@@ -16,6 +16,10 @@ const categories = [
   {
     id: 4,
     title: 'Dancing'
+  },
+  {
+    id: 5,
+    title: 'Others'
   }
 ];
 const tags = [
@@ -152,7 +156,6 @@ const rooms = [
     category_id: 1,
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ac tincidunt nisl. Fusce viverra lacus est, vitae ultricies nulla porttitor non. Proin eleifend, orci eu pulvinar finibus, sapien mi scelerisque massa, feugiat tincidunt leo lectus ac arcu. Etiam feugiat vulputate mi. Sed leo mauris, rhoncus sit amet eleifend nec, volutpat id neque. Pellentesque iaculis hendrerit mollis. Aliquam eros turpis, vehicula rhoncus faucibus ac, porttitor quis sem. Sed neque mi, aliquet et ipsum et.',
     cover: "https://picsum.photos/200/300/?random",
-    permission: 1,
     members_limit: 25,
     members: faker.random.number({min:1,max:15}),
     roomRating: faker.random.number({min:1,max:5}),
@@ -165,7 +168,6 @@ const rooms = [
     category_id: 1,
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ac tincidunt nisl. Fusce viverra lacus est, vitae ultricies nulla porttitor non. Proin eleifend, orci eu pulvinar finibus, sapien mi scelerisque massa, feugiat tincidunt leo lectus ac arcu. Etiam feugiat vulputate mi. Sed leo mauris, rhoncus sit amet eleifend nec, volutpat id neque. Pellentesque iaculis hendrerit mollis. Aliquam eros turpis, vehicula rhoncus faucibus ac, porttitor quis sem. Sed neque mi, aliquet et ipsum et.',
     cover: "https://picsum.photos/200/300/?random",
-    permission: 1,
     members_limit: 25,
     members: faker.random.number({min:1,max:15}),
     roomRating: faker.random.number({min:1,max:5}),
@@ -257,7 +259,6 @@ const events = [
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ac tincidunt nisl. Fusce viverra lacus est, vitae ultricies nulla porttitor non. Proin eleifend, orci eu pulvinar finibus, sapien mi scelerisque massa, feugiat tincidunt leo lectus ac arcu. Etiam feugiat vulputate mi. Sed leo mauris, rhoncus sit amet eleifend nec, volutpat id neque. Pellentesque iaculis hendrerit mollis. Aliquam eros turpis, vehicula rhoncus faucibus ac, porttitor quis sem. Sed neque mi, aliquet et ipsum et.',
     cover: faker.image.nature(),
     location: faker.random.locale(),
-    permission: 1,
     start_date: faker.date.future(),
     members_limit: 25,
     members: faker.random.number({min:1,max:15}),

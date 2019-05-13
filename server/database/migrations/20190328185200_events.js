@@ -9,7 +9,7 @@ exports.up = async knex => {
     t.string('description',500).nullable();
     t.string('cover').nullable();
     t.string('location').nullable();
-    t.integer('permission').nullable();
+    t.integer('permission').nullable().defaultTo(0);
     t.integer('members_limit').nullable();
     t.integer('members').nullable().defaultTo(1);
     t.float('eventRating').nullable().defaultTo(0);

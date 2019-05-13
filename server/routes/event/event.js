@@ -8,9 +8,9 @@ const handler = {
   async eventList(ctx) {
     await validate(ctx.query, {
       page: 'numeric|min:1'
-    })
+    });
   const { page } = ctx.query;
-  const events = await Event.fetchPage({page, pageSize: constants.pageSize, withRelated: ['creator','category','rating','members']})
+  const events = await Event.where({permission: false}).fetchPage({page, pageSize: constants.pageSize, withRelated: ['creator','category','rating','members']})
   ctx.body = {
     events,
     eventCount: events.pagination.rowCount,
