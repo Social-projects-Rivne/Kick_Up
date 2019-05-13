@@ -10,9 +10,11 @@ const handler = {
   async roomList(ctx) {
     await validate(ctx.query, {
       page: 'numeric|min:1'
-    })
+    });
     const { page } = ctx.query;
-    const rooms = await Room.fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating']});
+    const rooms = await Room
+        .where({permission: false})
+        .fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating']});
     const members = faker.random.number(30);
     const newList  = rooms.map(i => i.set({members}));
     ctx.body = {
