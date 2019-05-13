@@ -10,6 +10,7 @@ const eventCard = props => {
   };
   if(!isToggle) setTimeout(() => ToggleHandler(!isToggle), 500);
   const dateToArr = props.startDate.slice(0, 10).split("-");
+  const time = props.startDate.slice(11, 16);
   const menuContent = 
     <ul className={`menu-content ${isToggle}`}>
       <li>
@@ -26,6 +27,7 @@ const eventCard = props => {
         <div className="wrapper-header">
           <div className="date">
             <div className="day"><span>{dateToArr[2]}</span>.{dateToArr[1]}.{dateToArr[0]}</div>
+            <div className="time">{time}</div>
           </div>
           <div className="location">
             <LocationOn />
@@ -36,7 +38,7 @@ const eventCard = props => {
           <div className="content">
             <span className="category">{props.category}</span>
             <h1 className="title">{props.title}</h1>
-            <p className="text">{props.description}</p>
+            <p className="text">{props.description}afqefbqbqrb wrbtwrgbwrbw ynyunyunyu yunuynyunyu ynuynyunuyn yntntyntyn tbwrbwrtb rtbrtbrtb wrbrtb afqef bqbqrb wrbtw rgbwr bwrtbw rbwrtb rtbrtbr tbwrbrtbafq efbqbqrb wrbtwrgb wrbwrtbwrbwrtb rtbrtbrtbwrbrtb</p>
           </div>
           {menuContent}
         </div>
