@@ -1,5 +1,7 @@
 header.root {
     width: 100%;
+    position: relative;
+    z-index: 2;
 
     .grow {
         flex-grow: 1;
