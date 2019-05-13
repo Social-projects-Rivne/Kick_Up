@@ -9,14 +9,62 @@
   min-height: calc(100vh - 86px - 51px);
 
   .add-room-page-container {
-    max-width: 900px;
+    max-width: 1000px;
     margin-right: auto;
     margin-left: auto;
+
+    .add-room-stepper {
+      background-color: transparent;
+    }
+
+    @include media-breakpoint-down(sm) {
+      select[class*=MuiNativeSelect-select] {
+        width: calc(100% - 60px);
+      }
+    }
+
+    .created-room-info {
+      display: flex;
+      flex-direction: column;
+      padding: 24px 24px 24px 48px;
+      border-radius: 50px;
+      margin: 24px 0;
+      width: 50%;
+
+      @include media-breakpoint-down(lg) {
+        width: 100%;
+        padding: 16px;
+        margin: 0;
+      }
+
+      .created-room-info-label-info {
+        text-align: center;
+        font-size: 1.5rem;
+        padding-bottom: 8px;
+      }
+
+      .created-room-info-label {
+        font-size: 1rem;
+        line-height: 1.5rem;
+        font-weight: 100;
+        padding-bottom: 8px;
+      }
+    }
+
+    svg[class*=MuiStepIcon-active], svg[class*=MuiStepIcon-completed] {
+      color: $primary;
+    }
+
+    text[class*=MuiStepIcon-text] {
+      fill: $black;
+      font-size: 0.9rem;
+    }
 
     .add-room-header {
       font-size: 2rem;
       display: flex;
       padding-bottom: 24px;
+      justify-content: center;
     }
 
     .add-room-text-field {
@@ -28,13 +76,20 @@
     }
 
     .formControl {
-      min-width: 120px;
+      width: 210px;
       padding-bottom: 24px;
+      display: flex;
+
+      @include media-breakpoint-down(sm) {
+        width: 100%;
+      }
     }
 
-    .add-room-button, .add-room-button:hover, .add-room-button-upload, .add-room-button-upload:hover {
-      background-color: $primary;
+    .add-room-button-upload, .add-room-button-upload:hover,
+    .add-room-button-create, .add-room-button-create:hover{
+      background-color: $secondaryBlack;
       border-radius: 50px;
+      color: $white;
 
       input[type="file"] {
         cursor: pointer;
@@ -46,6 +101,15 @@
         width: 100%;
         opacity: 0;
       }
+    }
+
+    .add-room-button-update-cover, .add-room-button-update-cover:hover{
+      background-color: $primary;
+      border-radius: 50px;
+      color: $black;
+
+      margin-top: 48px;
+      width: 100%;
     }
 
     .add-room-select option {
@@ -70,32 +134,22 @@
       }
     }
 
-    .add-room-create-button {
-      display: flex;
-      justify-content: flex-end;
-    }
-
     .add-room-button, .add-room-create-button {
       @include media-breakpoint-down(lg) {
         width: 100%;
       }
     }
 
-    div[class*=MuiInput-underline]:after {
+    div[class*=MuiInput-underline]:not([class*=-error-]):after {
       border-bottom: 2px solid $primary;
     }
 
-    label[class*=MuiFormLabel] {
+    label[class*=MuiFormLabel], legend[class*=MuiFormLabel] {
       color: $black;
-    }
 
-    label, legend[class*=MuiFormLabel-focused] {
-      color: $black;
-      width: fit-content;
-    }
-
-    legend[class*=MuiFormLabel] {
-      color: $black;
+      &[class*=-error-] {
+        color: #f44336;
+      }
     }
 
     span[class*=MuiSwitch-bar] {
