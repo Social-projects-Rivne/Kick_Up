@@ -20,10 +20,9 @@
     display: flex;
     flex-direction: column;
     padding: 24px 24px 24px 48px;
-    background-color: transparent;
     border-radius: 50px;
-    margin: 24px auto;
-    box-shadow: 1px 1px 2px 1px #facd3d;
+    margin: 24px 0;
+    width: 50%;
 
     @include media-breakpoint-down(lg) {
       width: 100%;
@@ -52,6 +51,12 @@
   text[class*=MuiStepIcon-text] {
     fill: $black;
     font-size: 0.9rem;
+  }
+
+  @include media-breakpoint-down(sm) {
+    select[class*=MuiNativeSelect-select] {
+      width: calc(100% - 60px);
+    }
   }
 
   .add-event-invite-members {
@@ -84,6 +89,7 @@
       font-size: 2rem;
       display: flex;
       padding-bottom: 24px;
+      justify-content: center;
     }
 
     .add-event-stepper {
