@@ -17,7 +17,7 @@ const messageType = {
 class AddRoom extends React.Component {
     state = {
         activeStep: 0,
-        roomId: 1,
+        roomId: 0,
         userId: 0,
         loading: true,
         tagId: 0,
