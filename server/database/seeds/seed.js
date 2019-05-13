@@ -16,6 +16,10 @@ const categories = [
   {
     id: 4,
     title: 'Dancing'
+  },
+  {
+    id: 5,
+    title: 'Others'
   }
 ];
 const tags = [
