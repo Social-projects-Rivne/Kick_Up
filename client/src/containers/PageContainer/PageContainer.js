@@ -12,7 +12,6 @@ const pageContainer = props => {
                 <AppHeader 
                     isAuthenticated={props.isAuthenticated} 
                     userHasAuthenticated={props.userHasAuthenticated}
-                    setAuthToken={props.setAuthToken}
                     user={props.user}
                 />
                 <main id="content">{props.children}</main>
