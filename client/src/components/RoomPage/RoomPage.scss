@@ -9,6 +9,28 @@
     margin-right: auto;
   }
 
+  .room-details-add-event-button {
+    display: flex;
+    justify-content: flex-end;
+
+    .room-details-add-event-link {
+      text-decoration: none;
+
+      .room-details-add-event, .room-details-add-event:hover {
+        background-color: $primary;
+        margin-bottom: 18px;
+        box-shadow: $secondaryBlack;
+        border-radius: 50px;
+        padding: 0;
+
+        @include media-breakpoint-down(lg) {
+          font-size: 11pt;
+          margin-top: 0;
+        }
+      }
+    }
+  }
+
   .room-details-page-photo-fab {
     border: none;
     box-shadow: none;

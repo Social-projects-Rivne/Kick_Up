@@ -11,6 +11,7 @@ import SignIn from './components/SignIn/SignIn';
 import AppliedRoute from './hoc/AppliedRoute/AppliedRoute';
 import RoomPage from './components/RoomPage/RoomPage';
 import EditProfile from './components/EditProfile/EditProfile';
+import AddEvent from "./components/AddEvent/AddEvent";
 import PrivacyPolicy from "./components/PrivacyPolicy/PrivacyPolicy";
 import UserProfile from './components/UserProfile/UserProfile';
 
@@ -21,6 +22,7 @@ const router = ({ childProps }) => {
             <Route path="/sign-up" component={Register} />
             <AppliedRoute path="/sign-in" exact component={SignIn} props={childProps} />
             <Route path="/events" exact component={Events} />
+            <Route path="/event/add" exact component={AddEvent} />
             <Route path="/event/:id" component={EventPage} />
             <Route path="/rooms" exact component={Rooms} />
             <Route path="/room/add" exact component={AddRoom} />
