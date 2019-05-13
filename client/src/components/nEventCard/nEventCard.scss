@@ -14,6 +14,8 @@
     letter-spacing: 1px;
     color: $black;
     font-weight: 100;
+    max-height: calc(2rem * 2);
+    overflow: hidden;
 }
 
 #root .event-card .event-card__main-content {
@@ -160,6 +162,10 @@
         width: 100%;
     }
 
+    .event-card__header span:first-of-type {
+        max-height: 2rem;
+    }
+
     .event-card__img-wrapper {
         max-width: 45vw;
         min-width: 45vw;
@@ -182,6 +188,9 @@
 
 // Tablets;
 @media only screen and (min-width: 768px) {
+    .event-card__header span:first-of-type {
+        max-height: calc(2rem * 5);
+    }
 
     // Anti-BEM here will be best option;
     .home__events-swiper .swiper-slide-next .event-card__date,
@@ -211,6 +220,10 @@
     .event-card {
         max-width: 407px;
         border: 1px solid lighten($secondaryBlack, 92%);
+    }
+
+    .event-card__header span:first-of-type {
+        max-height: calc(2rem * 3);
     }
 
     // Anti-BEM here will be best option;

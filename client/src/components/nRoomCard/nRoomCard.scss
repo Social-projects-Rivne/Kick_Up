@@ -17,6 +17,8 @@
     letter-spacing: 1px;
     color: $black;
     font-weight: 100;
+    max-height: calc(2rem * 3);
+    overflow: hidden;
 }
 
 #root .roomcard .roomcard__main-content {
@@ -191,6 +193,10 @@
         width: 100%;
     }
 
+    .roomcard__header span:first-of-type {
+        max-height: 2rem;
+    }
+
     .roomcard__img-wrapper {
         max-width: 45vw;
         min-width: 45vw;
@@ -206,7 +212,7 @@
 
     .roomcard__members {
         position: absolute;
-        width: 52vw;
+        width: 54vw;
         top: calc(1.464rem * 8 + 54px);
         right: 0;
     }
@@ -230,6 +236,10 @@
         animation-fill-mode: forwards;
         animation-timing-function: ease-in-out;
         z-index: 2;
+    }
+
+    .roomcard__header span:first-of-type {
+        max-height: calc(2rem * 5);
     }
 
     .swiper-slide .roomcard__collpse-content {
@@ -318,6 +328,11 @@
         width: 100%; 
     }
 
+    .roomcard__header span:first-of-type {
+        -webkit-line-clamp: 1;
+        max-height: 2rem;
+    }
+
     .roomcard__img-wrapper {
         min-width: 40%;
         max-width: 40%;
@@ -396,6 +411,11 @@
     .roomcard__events-wrapper .event-card__img-wrapper {
         min-height: 160px;
         background-position: 0 0;
+    }
+
+    .roomcard__events-wrapper .event-card__header
+    span:first-of-type {
+        max-height: 2rem;
     }
 
     .roomcard__events-wrapper .event-card__description p {
