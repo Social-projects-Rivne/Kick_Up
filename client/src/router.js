@@ -26,7 +26,7 @@ const router = ({ childProps }) => {
             <Route path="/room/add" exact component={AddRoom} />
             <Route path="/room/:id" component={RoomPage} />
             <Route path="/profile/:id" exact component={UserProfile} />
-            <Route path="/profile/edit" component={EditProfile} />
+            <Route path="/profile/:id/edit" component={EditProfile} />
             <Route path="/privacy-policy" component={PrivacyPolicy} />
             <Route render={() => (<div style={{color: "red", textAlign: "center", fontSize: "2rem"}}>Page not found </div>)} />
         </Switch>
