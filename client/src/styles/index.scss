@@ -82,6 +82,12 @@ code {
   max-height: 36px;
 }
 
+// Related to events and rooms cards;
+#root [data-wrapper-link] {
+  text-decoration: none;
+  width: 100%;
+}
+
 @import '../containers/PageContainer/PageContainer.scss';
 @import '../components/AppHeader/AppHeader.scss';
 @import '../components/Footer/Footer.scss';

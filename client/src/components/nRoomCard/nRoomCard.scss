@@ -328,6 +328,10 @@
         width: 100%; 
     }
 
+    .roomcard .roomcard__collpse-content {
+        width: 100%;
+    }
+
     .roomcard__header span:first-of-type {
         -webkit-line-clamp: 1;
         max-height: 2rem;
@@ -373,11 +377,16 @@
     #root .roomcard .roomcard__events-wrapper {
         position: static;
         display: flex;
+        width: 100%;
         max-width: 100%;
         justify-content: space-between;
         padding-top: 10px;
         border: 0;
         overflow: visible;
+    }
+
+    #root .roomcard .roomcard__events-wrapper > a {
+        width: unset;
     }
 
     .roomcard .roomcard__collpse-content {

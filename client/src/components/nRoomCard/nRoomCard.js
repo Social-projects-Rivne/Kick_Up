@@ -19,6 +19,47 @@ import StarRating from "../UI/StarRating/StarRating";
 
 import NeventCard from '../nEventCard/nEventCard';
 
+import defaultAvatar from '../../assets/images/face.png';
+
+// Helper functions. 
+const convertTime = (str) => {
+    // Define manually date;
+    const months = {
+        '01': 'January',
+        '02': 'February',
+        '03': 'March',
+        '04': 'April',
+        '05': 'May',
+        '06': 'June',
+        '07': 'July',
+        '08': 'August',
+        '09': 'September',
+        '10': 'October',
+        '11': 'November',
+        '12': 'December'
+    };
+
+    if (str && typeof str === 'string') {
+        try{
+            let [, month, date] = [...str.split('-')];
+            let [hour, min] = [...date.split('T').pop().split(':')];
+            
+            date = date.slice(0, 2);
+
+            return {
+                date: `${date[0] == '0' ? date.slice(1) : date} ${months[month]}`,
+                time: `${hour}:${min}` 
+            }
+        } catch(err) {
+            console.log('ERR', err);
+            return {
+                date: '',
+                time: ''
+            }
+        }
+    }
+};
+
 class NroomCard extends Component {
     constructor(props) {
         super(props);
@@ -29,42 +70,43 @@ class NroomCard extends Component {
     };
     render = () => (
         <Card className="roomcard">
-            <CardHeader
-            className="roomcard__header"
-            title="Food lovers in Rivne"
-            subheader={
-                <div className="roomcard__header-info">
-                    <Link component={RouterLink} to="/" className="roomcard__avatar-wrapper">
-                        <Avatar 
-                            className="roomcard__avatar" 
-                            src="https://material-ui.com/static/images/avatar/1.jpg" 
-                            aria-label="Recipe">
-                            W
-                        </Avatar>
-                        <span>@daniel</span>
-                    </Link>
-                    <StarRating rating="10" />
-                </div>
-            }
-        >
-        </CardHeader>
+            <Link 
+                component={RouterLink} 
+                to={`/rooms/${this.props.id}`} 
+                title="Click to view room details"
+                data-wrapper-link
+            >
+                <CardHeader
+                    className="roomcard__header"
+                    title={this.props.title}
+                    subheader={
+                        <div className="roomcard__header-info">
+                            <div className="roomcard__avatar-wrapper">
+                                <Avatar 
+                                    className="roomcard__avatar" 
+                                    src={this.props.authorAvatar ? this.props.authorAvatar : defaultAvatar}
+                                >
+                                </Avatar>
+                                <span>{`${this.props.authorName} ${this.props.authorLastName}`}</span>
+                            </div>
+                            <StarRating rating={this.props.eventRating} />
+                        </div>
+                    }
+                >
+            </CardHeader>
+            </Link>
             <CardMedia
                 className="roomcard__img-wrapper"
-                image="https://material-ui.com/static/images/cards/paella.jpg"
-                title="Paella dish"
+                image={this.props.cover}
             >
                 <div className="roomcard__label">
                     <Loyalty />
-                    <b>Food</b>
+                    <b>{this.props.category}</b>
                 </div>
             </CardMedia>
             <CardContent className="roomcard__description">
                 <Typography component="p">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing 
-                    elit. Duis lacinia efficitur ligula, vitae vehicula 
-                    nunc viverra et. Praesent erat tellus, dictum ac eleifend 
-                    a, egestas nec nisl. Donec id tempor nulla. Fusce pretium 
-                    urna non odio ullamcorper lacinia.
+                    {this.props.description}
                 </Typography>
             </CardContent>
             <CardActions 
@@ -86,11 +128,13 @@ class NroomCard extends Component {
                     }}
                 >
                     <ExpandMore />
-                    3 events
+                    {this.props.events.length} events
                 </Fab>
                 <IconButton className="roomcard__group-members">
                     <Group />
-                    <span className="roomcard__members-amount">13 of 55 allowed</span>
+                    <span className="roomcard__members-amount">
+                        {`${this.props.members} members of ${this.props.membersLimit} allowed`}
+                    </span>
                 </IconButton>
             </CardActions>
             <Collapse 
@@ -100,9 +144,26 @@ class NroomCard extends Component {
                 unmountOnExit
             >
                 <CardContent className="roomcard__events-wrapper">
-                    <NeventCard />
-                    <NeventCard />
-                    <NeventCard />
+                    {
+                        this.props.events.map(event => {
+                            return <NeventCard 
+                                id={event.id}
+                                title={event.title}
+                                rating={event.eventRating}
+                                authorId={event.creator.id}
+                                authorName={event.creator.first_name}
+                                authorLastName={event.creator.last_name}
+                                authorAvatar={event.creator.avatar}
+                                cover={event.cover}
+                                description={event.description}
+                                eventLocation={event.location}
+                                eventDate={convertTime(event.start_date).date}
+                                eventTime={convertTime(event.start_date).time}
+                                members={event.members}
+                                membersLimit={event.members_limit}
+                            />
+                        })
+                    }
                 </CardContent>
             </Collapse>
         </Card>
