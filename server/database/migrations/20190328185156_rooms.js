@@ -9,12 +9,15 @@ exports.up = async knex => {
     t.string('cover').nullable();
     t.integer('permission').nullable();
     t.integer('members_limit').nullable();
+    t.integer('members').nullable().defaultTo(1);
+    t.float('roomRating').nullable().defaultTo(0);
     t.boolean('is_banned').defaultTo(false);
     t.dateTime('created_at').notNullable().defaultTo(knex.raw('now()'));
     t.dateTime('updated_at').nullable().defaultTo(knex.raw('now()'));
     t.foreign('creator_id')
       .references('users.id')
       .onDelete('CASCADE');
+    t.collate('utf8_general_ci');
   });
 };
 

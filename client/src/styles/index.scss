@@ -1,8 +1,9 @@
-@import 'variables.scss';
-@import 'mixins.scss';
 @import 'functions.scss';
+@import 'mixins.scss';
+@import 'variables.scss';
 
 body {
+  box-sizing: border-box;
   min-height: 100vh;
   margin: 0;
   padding: 0;
@@ -21,7 +22,8 @@ body {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  overflow-x: hidden;
+  //overflow-x: hidden;
+  overflow: hidden;
 }
 
 code {
@@ -133,5 +135,7 @@ code {
 @import "../components//Events/Events.scss";
 @import "../components//Events/EventCard/EventCard.scss";
 @import '../components/AddEvent/AddEvent.scss';
+@import "../components/nRoomCard/nRoomCard.scss";
+@import "../components/nEventCard/nEventCard.scss";
 @import "../components/PrivacyPolicy/privacypolicy.scss";
 

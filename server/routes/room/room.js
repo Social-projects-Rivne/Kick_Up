@@ -1,4 +1,5 @@
 const Router = require('koa-router');
+const constants = require('./../../config/constants');
 // const Room = require("./../mongoDB/models/modelRoom");
 const { Room } =require('../../models');
 const validate = require('../../services/Validator');
@@ -7,25 +8,28 @@ const faker = require('faker');
 
 const handler = {
   async roomList(ctx) {
-
-    const list = await Room.fetchAll({withRelated: ['creator','category']});
+    await validate(ctx.query, {
+      page: 'numeric|min:1'
+    })
+    const { page } = ctx.query;
+    const rooms = await Room.fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating']});
     const members = faker.random.number(30);
-    const rating = faker.random.number(5);
-
-    const newList  = list.map(i => i.set({members,rating}));
-
-    // data from DB
-    ctx.body = newList;
+    const newList  = rooms.map(i => i.set({members}));
+    ctx.body = {
+      rooms: newList,
+      roomCount: rooms.pagination.rowCount,
+      pageCount: rooms.pagination.pageCount
+    }
 
     // data from mock
     // ctx.body = testRooms;
   },
   async createRoom(ctx){
     await validate(ctx.request.body, {
-        title:'required|string|min:3',
+        title:'required|string|min:3|max:100',
         creator_id:'required|numeric|min:1',
         category_id:'required|numeric|min:1',
-        description:'required|string|min:6',
+        description:'required|string|min:6|max:300',
         cover:'string|min:3',
         permission:'required|numeric|min:0',
         members_limit:'numeric|min:1',
@@ -39,8 +43,8 @@ const handler = {
         permission,
         members_limit
     } = ctx.request.body;
-    await new Room(newRoom).save();
-    ctx.body = '';
+    const room = await new Room(newRoom).save();
+    ctx.body = room;
   },
   async getRoomById(ctx) {
     const { id } = ctx.params;

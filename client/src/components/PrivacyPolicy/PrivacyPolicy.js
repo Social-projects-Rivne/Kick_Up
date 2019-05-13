@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom"
 import "./privacypolicy.scss";
 
 const privacypolicy = props => {
@@ -27,9 +28,9 @@ const privacypolicy = props => {
           registered users materially, we will send you a notice by email, push
           notification or text. If you have any questions or concerns about our
           privacy policies, please contact us:{" "}
-          <a href="">
+          <Link href="/">
             <ins>kickup@gmal.com</ins>
-          </a>
+          </Link>
         </p>
       </div>
     </div>

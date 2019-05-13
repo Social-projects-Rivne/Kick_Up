@@ -40,7 +40,8 @@ class Events extends Component {
     axios
       .get(api, type)
       .then(res => {
-        this.setState({ eventsDB: res.data, isLoading: false });
+        console.log('res.data.events', res.data.events)
+        this.setState({ eventsDB: res.data.events, isLoading: false });
       })
       .catch(err => console.log(err));
   };
@@ -156,6 +157,7 @@ class Events extends Component {
           date={this.state.date}
           showDate={true}
           changeDate={this.changeDate}
+          addLink="/add-event"
         />
         <Grid container spacing={16} justify="center" className="events-page-cards">
           {eventsDB.map(event => {
@@ -169,7 +171,6 @@ class Events extends Component {
                 avatar={event.creator.avatar}
                 description={event.description}
                 limit={event.members_limit}
-                // rating={event.rating}
                 members={event.members}
                 background={event.cover}
                 clicked={() => this.selectedEventHandler(event.id)}

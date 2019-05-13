@@ -40,6 +40,64 @@ const tags = [
     title: 'Beer'
   }
 ];
+const ratings = [
+  {
+    id: 1,
+    user_id: 1,
+    entity_type: 'room',
+    rating: faker.random.number({min:1,max:5}),
+    entity_id: 1
+  },
+  {
+    id: 2,
+    user_id: 2,
+    entity_type: 'room',
+    rating: faker.random.number({min:1,max:5}),
+    entity_id: 2
+  },
+  {
+    id: 3,
+    user_id: 3,
+    entity_type: 'room',
+    rating: faker.random.number({min:1,max:5}),
+    entity_id: 3
+  },
+  {
+    id: 4,
+    user_id: 4,
+    entity_type: 'room',
+    rating: faker.random.number({min:1,max:5}),
+    entity_id: 4
+  },
+  {
+    id: 5,
+    user_id: 1,
+    entity_type: 'event',
+    rating: faker.random.number({min:1,max:5}),
+    entity_id: 1
+  },
+  {
+    id: 6,
+    user_id: 2,
+    entity_type: 'event',
+    rating: faker.random.number({min:1,max:5}),
+    entity_id: 2
+  },
+  {
+    id: 7,
+    user_id: 3,
+    entity_type: 'event',
+    rating: faker.random.number({min:1,max:5}),
+    entity_id: 3
+  },
+  {
+    id: 8,
+    user_id: 4,
+    entity_type: 'event',
+    rating: faker.random.number({min:1,max:5}),
+    entity_id: 4
+  }
+];
 const users = [
   {
     id: 1,
@@ -48,7 +106,7 @@ const users = [
     last_name: `${faker.name.lastName()}`,
     email: faker.internet.email(),
     password: 1,
-    avatar: 'no-image.png',
+    avatar: faker.image.avatar(),
     carma: 123,
     role: 2,
     is_banned: false,
@@ -60,7 +118,7 @@ const users = [
     last_name: `${faker.name.lastName()}`,
     email: faker.internet.email(),
     password: 1,
-    avatar: 'no-image.png',
+    avatar: faker.image.avatar(),
     carma: 123,
     role: 2,
     is_banned: false,
@@ -72,7 +130,7 @@ const users = [
     last_name: `${faker.name.lastName()}`,
     email: faker.internet.email(),
     password: 1,
-    avatar: 'no-image.png',
+    avatar: faker.image.avatar(),
     carma: 123,
     role: 2,
     is_banned: false,
@@ -84,7 +142,7 @@ const users = [
     last_name: `${faker.name.lastName()}`,
     email: faker.internet.email(),
     password: 1,
-    avatar: 'no-image.png',
+    avatar: faker.image.avatar(),
     carma: 123,
     role: 2,
     is_banned: false,
@@ -100,6 +158,8 @@ const rooms = [
     cover: "https://picsum.photos/200/300/?random",
     permission: 1,
     members_limit: 25,
+    members: faker.random.number({min:1,max:15}),
+    roomRating: faker.random.number({min:1,max:5}),
     is_banned: 0
   },
   {
@@ -111,6 +171,8 @@ const rooms = [
     cover: "https://picsum.photos/200/300/?random",
     permission: 1,
     members_limit: 25,
+    members: faker.random.number({min:1,max:15}),
+    roomRating: faker.random.number({min:1,max:5}),
     is_banned: 0
   },
   {
@@ -121,6 +183,8 @@ const rooms = [
     description: faker.company.catchPhraseDescriptor(),
     cover: "https://picsum.photos/200/300/?random",
     members_limit: 25,
+    members: faker.random.number({min:1,max:15}),
+    roomRating: faker.random.number({min:1,max:5}),
     is_banned: 0
   },
   {
@@ -132,6 +196,8 @@ const rooms = [
     cover: "https://picsum.photos/200/300/?random",
     permission: 1,
     members_limit: 25,
+    members: faker.random.number({min:1,max:15}),
+    roomRating: faker.random.number({min:1,max:5}),
     is_banned: 0
   },
 ];
@@ -147,6 +213,8 @@ const events = [
     permission: 1,
     start_date: faker.date.future(),
     members_limit: 25,
+    members: faker.random.number({min:1,max:15}),
+    eventRating: faker.random.number({min:1,max:5}),
     is_banned: 0
   },
   {
@@ -160,6 +228,8 @@ const events = [
     permission: 1,
     start_date: faker.date.future(),
     members_limit: 25,
+    members: faker.random.number({min:1,max:15}),
+    eventRating: faker.random.number({min:1,max:5}),
     is_banned: 0
   },
   {
@@ -173,6 +243,8 @@ const events = [
     permission: 1,
     start_date: faker.date.future(),
     members_limit: 25,
+    members: faker.random.number({min:1,max:15}),
+    eventRating: faker.random.number({min:1,max:5}),
     is_banned: 0
   },
   {
@@ -186,6 +258,8 @@ const events = [
     permission: 1,
     start_date: faker.date.future(),
     members_limit: 25,
+    members: faker.random.number({min:1,max:15}),
+    eventRating: faker.random.number({min:1,max:5}),
     is_banned: 0
   },
 ];
@@ -198,6 +272,7 @@ exports.seed = async knex => {
   await knex('rooms').insert(rooms);
   await knex('events').insert(events);
   await knex('tags').insert(tags);
+  await knex('ratings').insert(ratings);
 };
 
 exports.seedData = {
@@ -205,5 +280,6 @@ exports.seedData = {
   categories,
   rooms,
   events,
-  tags
+  tags,
+  ratings
 };

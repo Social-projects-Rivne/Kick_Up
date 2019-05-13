@@ -13,7 +13,7 @@ import {
   IconButton
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
-import {CalendarToday, Close, KeyboardArrowDownRounded, FilterList} from "@material-ui/icons";
+import {CalendarToday, Cancel, KeyboardArrowDownRounded, FilterList} from "@material-ui/icons";
 import Calendar from "react-calendar";
 import Drawer from '@material-ui/core/Drawer';
 
@@ -41,19 +41,30 @@ class Toolbar extends Component {
   }
 
   render() {
-    const { filters, buttons } = this.props;
+    const { filters, buttons, addLink } = this.props;
 
     let ToolbarButtons = null;
     if (buttons) {
-      ToolbarButtons = this.props.buttons.map(e => {
-        return (
-          <Grid item key={e.name}>
-            <Button variant="outlined" onClick={e.method} className="toolbar-sort">
-              {e.name}
-            </Button>
+      ToolbarButtons = (
+        <>
+          <Grid item>
+            <Link to={addLink}>
+              <Fab size="small" aria-label="Add" className="toolbar-add">
+                <AddIcon />
+              </Fab>
+            </Link>
           </Grid>
-        );
-      })
+          {this.props.buttons.map(e => {
+            return (
+              <Grid item key={e.name}>
+                <Button variant="outlined" onClick={e.method} className="toolbar-sort">
+                  {e.name}
+                </Button>
+              </Grid>
+            )})
+          }
+        </>
+      )
     }
 
     let ToolbarFilters = null;
@@ -110,7 +121,7 @@ class Toolbar extends Component {
 
     const calendar = this.state.isToggleOn ? (
       <Grid className="toolbar-filter-calendar">
-        <Close
+        <Cancel
           cursor="pointer"
           className="toolbar-filter-calendar-close"
           onClick={this.calendarToggleHandle}  
@@ -127,13 +138,6 @@ class Toolbar extends Component {
     return (
       <>
         <Grid container justify="center" alignItems="center" spacing={8} className="toolbar toolbar-desktop">
-            <Grid item>
-              <Link to="/add-room">
-                <Fab size="small" aria-label="Add" className="toolbar-add">
-                  <AddIcon />
-                </Fab>
-              </Link>
-            </Grid>
             {ToolbarButtons}
             {ToolbarFilters}
             <Grid item>
@@ -159,21 +163,14 @@ class Toolbar extends Component {
             role="button"
             onKeyDown={this.toggleDrawer}
           >
-          <Grid container justify="center" alignItems="center" spacing={8} className="toolbar toolbar-mobile">
-            <Grid item>
-              <Link to="/add-room">
-                <Fab size="small" aria-label="Add">
-                  <AddIcon />
-                </Fab>
-              </Link>
+            <Grid container justify="center" alignItems="center" spacing={8} className="toolbar toolbar-mobile">
+              {ToolbarButtons}
+              {ToolbarFilters}
+              <Grid item>
+                {date}
+                {calendar}
+              </Grid>
             </Grid>
-            {ToolbarButtons}
-            {ToolbarFilters}
-            <Grid item>
-              {date}
-              {calendar}
-            </Grid>
-          </Grid>
           </div>
         </Drawer>
       </>

@@ -1,18 +1,21 @@
 const Router = require('koa-router');
-
+const constants = require('./../../config/constants');
 const router = new Router({prefix: '/api/event'});
 const { Event } = require('../../models');
 const validate = require('../../services/Validator');
-const faker = require('faker')
-
-
 const handler = {
 
   async eventList(ctx) {
-  
-  const list = await Event.fetchAll({withRelated: ['creator','category']})
-
-  ctx.body = list;
+    await validate(ctx.query, {
+      page: 'numeric|min:1'
+    })
+  const { page } = ctx.query;
+  const events = await Event.fetchPage({page, pageSize: constants.pageSize, withRelated: ['creator','category','rating']})
+  ctx.body = {
+    events,
+    eventCount: events.pagination.rowCount,
+    pageCount: events.pagination.pageCount
+  };
   },
 
   async sort(ctx) {
@@ -95,7 +98,7 @@ const handler = {
   },
   async createEvent(ctx){
     await validate(ctx.request.body, {
-        title:'required|string|min:3',
+        title:'required|string|min:3|max:100',
         creator_id:'required|numeric|min:1',
         category_id:'required|numeric|min:1',
         room_id:'required|numeric|min:1',

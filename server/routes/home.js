@@ -1,9 +1,27 @@
 const Router = require('koa-router');
 const router = new Router({ prefix: '/api' });
+const { Event, Room } = require('./../models');
 const handler = {
 
   async home(ctx) {
-    ctx.body = 'home';
+  const events = await Event
+  .where({is_banned: false})
+  .orderBy('start_date','desc')
+  .orderBy('members','desc')
+  .fetchPage({page: 1, pageSize: 10, withRelated: ['creator','category','rating']});
+   
+    const rooms = await Room
+    .where({is_banned: false})
+    .orderBy('roomRating','desc')
+    .orderBy('members','desc')
+    .fetchPage({page: 1, pageSize: 10, withRelated: ['creator','category','rating']});
+   
+    ctx.body = {
+      events,
+      eventCount: events.pagination.rowCount,
+      rooms,
+      roomCount: rooms.pagination.rowCount
+    };
   }
   
 };

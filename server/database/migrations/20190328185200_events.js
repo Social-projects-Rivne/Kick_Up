@@ -11,6 +11,8 @@ exports.up = async knex => {
     t.string('location').nullable();
     t.integer('permission').nullable();
     t.integer('members_limit').nullable();
+    t.integer('members').nullable().defaultTo(1);
+    t.float('eventRating').nullable().defaultTo(0);
     t.boolean('is_banned').defaultTo(false);
     t.dateTime('start_date').notNull();
     t.dateTime('created_at').notNullable().defaultTo(knex.raw('now()'));
@@ -24,6 +26,7 @@ exports.up = async knex => {
     t.foreign('category_id')
       .references('categories.id')
       .onDelete('CASCADE');
+    t.collate('utf8_general_ci');
   });
 };
 

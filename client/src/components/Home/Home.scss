@@ -11,3 +11,440 @@
         }
     }
 }
+
+.home {
+    flex-direction: column;
+    box-sizing: border-box;
+    padding: 0;
+
+    & * {
+        box-sizing: border-box;
+    }
+
+    & > * {
+        opacity: 0;
+        animation-name: fade-in;
+        animation-duration: 0.3s;
+        animation-fill-mode: forwards;
+    }
+}
+
+.home__main-swiper > .swiper-wrapper {
+    transform: none !important;
+} 
+
+// Related to pagination;
+.home [data-main-slide]:nth-of-type(2),
+.home [data-main-slide]:nth-of-type(3) {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.home [data-main-slide]:nth-of-type(3) {
+    min-height: calc(100vh - #{$footer-height});
+    overflow: hidden;
+}
+
+.home [data-main-slide] .swiper-pagination-bullets {
+    margin-top: 5px;
+    text-align: center;
+
+    & span {
+        background-color: $secondaryBlack;
+    }
+
+    & span.swiper-pagination-bullet-active {
+        background-color: $primary;
+    }
+}
+
+// Related to intro slide;
+.home__intro {
+    position: relative;
+}
+
+.home__intro-slide {
+    width: 100%;
+    position: relative;
+    max-height: calc(100vh - #{$header-height});
+    min-height: calc(100vh - #{$header-height});
+    overflow: hidden;
+    text-align: center;
+    background-color: rgba(250, 205, 61, 0.1);
+}
+
+.home__intro .home__intro-pagination {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    z-index: 1;
+}
+
+.home__intro-slide img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 100%;
+    object-fit: cover;
+
+    &:first-of-type {
+        opacity: 0;
+        transition: opacity 10s;
+    }
+
+    &:last-of-type {
+        opacity: 0;
+        animation-name: fade-in;
+        animation-duration: 10s;
+        animation-fill-mode: forwards;
+    }
+}
+
+.home__intro-title-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 3vh;
+    padding: 0 1rem;
+}
+
+.home .home__intro-title {
+    position: relative;
+    // Fallback for old browsers;
+    color: darken($primary, 14%);
+    font-weight: 100;
+    opacity: 0;
+    transition: opacity 0.3s;
+    transition-delay: 0.5s;
+    font-weight: 800;
+    font-size: 3rem;
+    line-height: 3.571rem;
+    z-index: 1;
+}
+
+@for $i from 1 through 3 {
+    .home .home__intro-slide:nth-of-type(#{$i}) .home__intro-title {
+        background: url('../assets/images/text-bg-#{$i}.jpg') repeat 60% 50%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+}
+
+.home .home__intro-slide:first-of-type
+.home__intro-title {
+    margin-top: 6vh;
+}
+
+.home .home__intro-btn {
+    margin-top: 10px;
+    font-size: 16px;
+    color: $primary;
+    letter-spacing: 0.5px;
+    border: 0;
+    background-color: rgba(17, 17, 17, 0.75);
+    z-index: 1;
+    border-radius: 50px;
+    transform: scale(0);
+    
+    &:hover,
+    &:active {
+        background-color: rgba(17, 17, 17, 0.8);
+    }
+}
+
+.home .home__intro-btn svg {
+    &:first-of-type {
+        margin-right: 8px;
+    }
+
+    &:last-of-type {
+        margin-left: 8px;
+    }
+}
+
+// Related to cards slide;
+.home__cards-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 10px;
+    background-color: rgba(17, 17, 17, 0.9);
+    color: $primary;
+    text-decoration: none;
+    z-index: 1;
+}
+
+.home .home__cards-slide-title {
+    font-size: 18px;
+    line-height: 1.286rem;
+    color: $primary;
+    text-transform: uppercase;
+    font-weight: 100;
+    letter-spacing: 2px;
+}
+
+.home__badge {
+    padding-right: 44px;
+}
+
+.home__badge span {
+    right: 20px;
+    border: 1px solid $primary;
+}
+
+// Related to rooms;
+.home__rooms-wrapper {
+    padding-top: 10px;
+}
+
+// Related to events;
+.home .home__rooms-swiper,
+.home .home__events-swiper {
+    margin-top: auto;
+    // To make it centered, add padding of title;
+    padding-top: 45px;
+    margin-bottom: auto;
+    opacity: 0;
+    animation-name: fade-in;
+    animation-duration: 2s;
+    animation-fill-mode: forwards;
+}
+
+// Related to modificators;
+.home .home__intro-slide.home__intro-slide_loading {
+    & img:first-of-type {
+        opacity: 1;
+    }
+
+    & img:last-of-type {
+        display: none;
+    }
+}
+
+// Related to active slide changes;
+.home .swiper-slide-active {
+    
+    & .home__intro-title {
+        opacity: 1;
+        transition: opacity 0.3s;
+    }
+
+    & .home__intro-btn {
+        animation-name: scale-in;
+        animation-delay: 1s;
+        animation-duration: 0.5s;
+        animation-fill-mode: forwards;
+    }
+}
+
+// Buttons wrapper;
+.home__intro-btns-wrapper {
+    display: none;
+}
+
+// Landscape mode;
+@media only screen and (max-width: 767px) and (orientation: landscape) {
+    .home .home__intro-title {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        margin: auto;
+        padding-left: 2rem;
+        padding-right: 2rem;
+        font-size: 2rem;
+        line-height: 2.571rem;
+    }
+
+    .home .home__intro-slide:nth-of-type(3) .home__intro-title,
+    .home .home__intro-slide:first-of-type .home__intro-title {
+        margin-top: 16px;
+    }
+
+    .home .home__intro-title + a {
+        position: absolute;
+        bottom: 2rem;
+        left: 0;
+        right: 0;
+        margin: auto;
+    }
+
+    .home__intro-slide img {
+        height: 100%;
+    }
+}
+
+// Tablets, omit iphone X and Pixel XL;
+@media only screen and (min-width: 768px) {
+    .home .home__intro-slide img {
+        height: 100%;
+    }
+
+    .home [data-main-slide]:nth-of-type(3) {
+        border-top: 1px solid lighten($secondaryBlack, 90%);
+    }
+
+    .home__cards-slide {
+        position: static;
+        background-color: transparent;
+        justify-content: center;
+    }
+
+    .home__cards-slide svg {
+        display: none;
+    }
+
+    .home .home__cards-slide h4 {
+        padding-top: 3rem;
+        font-size: 3rem;
+        font-weight: 600;
+        line-height: 3.429rem;
+        text-transform: capitalize;
+        background-color: $primary;
+        color: transparent;
+        text-shadow: 2px 2px 3px rgba(255, 255, 255, 0.3);
+        -webkit-background-clip: text;
+            -moz-background-clip: text;
+                background-clip: text;
+    }
+
+    .home .home__cards-slide h4 + span {
+        top: 3rem;
+    }
+
+    .home__cards-slide .home__badge span {
+        padding: 12px;
+        font-size: 1rem;
+        line-height: 1.125rem;
+    }
+
+    .home .home__intro-slide:nth-of-type(2) .home__intro-title,
+    .home .home__intro-slide:nth-of-type(3) .home__intro-title {
+        margin-top: 6vh;
+    }
+
+    .home .home__intro-slide .home__intro-title + 
+    a .home__intro-btn {
+        margin-top: 70px;
+        
+        & span {
+            font-size: 24px;
+            line-height: 50px;
+        }
+    }
+}
+
+// Related to desktops;
+@media only screen and (min-width: 1024px) {
+    .home [data-main-slide]:nth-of-type(3) {
+        border-top-color: lighten($secondaryBlack, 92%);
+    }
+
+    .home .home__intro-slide .home__intro-title {
+        font-size: 3.5rem;
+        line-height: 4.5rem;
+        max-width: 75vw;
+    }
+
+    .home .home__intro-slide:first-of-type .home__intro-title {
+        margin-top: 3vh;
+    }
+
+    .home .home__intro-slide .home__intro-title + a {
+        position: absolute;
+        bottom: 10vh;
+
+        & .home__intro-btn {
+            font-size: 32px;
+        }
+
+        & .home__intro-btn svg:first-of-type {
+            display: none;
+        }
+    }
+
+    .home [data-main-slide] .swiper-pagination-bullets {
+        margin-top: 24px;
+        bottom: 30px;
+        top: unset;
+
+        & .swiper-pagination-bullet {
+            width: 16px;
+            height: 16px;
+            margin: 0 8px;
+        }
+    }
+
+    .home__cards-slide {
+        max-width: 50vw;
+        margin-left: auto;
+        margin-right: auto;
+        position: static;
+        background-color: transparent;
+        justify-content: center;
+    }
+
+    .home__cards-slide svg {
+        display: none;
+    }
+
+    .home .home__cards-slide h4 {
+        padding-top: 3rem;
+        font-size: 3rem;
+        font-weight: 600;
+        line-height: 3.429rem;
+        text-transform: capitalize;
+        background-color: $primary;
+        color: transparent;
+        text-shadow: 2px 2px 3px rgba(255, 255, 255, 0.3);
+        -webkit-background-clip: text;
+            -moz-background-clip: text;
+                background-clip: text;
+    }
+
+    [data-main-slide="3"] .home__cards-slide h4 {
+        padding-top: 0;
+    }
+
+    .home .home__cards-slide h4 + span {
+        top: 3rem;
+    }
+
+    [data-main-slide="3"] .home__cards-slide h4 + span {
+        top: 12px;
+    }
+
+    .home__cards-slide .home__badge span {
+        padding: 12px;
+        font-size: 1rem;
+        line-height: 1.125rem;
+    }
+
+    .home .home__rooms-swiper {
+        padding-top: 0;
+        margin: 0;
+    }
+
+    .home [data-main-slide="3"] .swiper-pagination-bullets {
+        max-width: 80vw;
+        left: 0;
+        right: 0;
+        top: 0;
+        margin-left: auto;
+        margin-right: auto;
+        text-align: right;
+        bottom: unset;
+        z-index: 9999;
+    }
+}

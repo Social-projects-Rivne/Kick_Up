@@ -7,6 +7,7 @@ exports.up = async knex => {
     t.integer('status').nullable();
     t.dateTime('created_at').notNull();
     t.dateTime('updated_at').nullable();
+    t.collate('utf8_general_ci');
   });
 };
 
