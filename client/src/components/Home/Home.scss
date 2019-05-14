@@ -45,7 +45,8 @@
 
 .home [data-main-slide]:nth-of-type(3) {
     min-height: calc(100vh - #{$footer-height});
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .home [data-main-slide] .swiper-pagination-bullets {
@@ -293,6 +294,7 @@
 
     .home [data-main-slide]:nth-of-type(3) {
         border-top: 1px solid lighten($secondaryBlack, 90%);
+        overflow: hidden;
     }
 
     .home__cards-slide {
@@ -384,6 +386,12 @@
             height: 16px;
             margin: 0 8px;
         }
+    }
+
+    .home .home__events-swiper {
+        max-width: 1168px;
+        margin-left: auto;
+        margin-right: auto;
     }
 
     .home__cards-slide {

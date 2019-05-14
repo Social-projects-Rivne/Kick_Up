@@ -152,6 +152,8 @@
 .roomcard .roomcard__description p {
     font-size: 1.071rem;
     line-height: 1.286rem;
+    max-height: calc(1.286rem * 6 - 5px);
+    overflow: auto;
     font-weight: 100;
 }
 
@@ -209,12 +211,20 @@
         max-width: 52vw;
         padding-top: 0;
     }
+    
+    .roomcard .roomcard__description p {
+        max-height: calc(1.286rem * 6 - 5px);
+    }
 
     .roomcard__members {
         position: absolute;
         width: 54vw;
         top: calc(1.464rem * 8 + 54px);
         right: 0;
+    }
+
+    .roomcard .roomcard__events-wrapper .event-card {
+        position: relative;
     }
 }
 
@@ -226,6 +236,10 @@
     .roomcard .roomcard__description {
         font-size: 1rem;
         line-height: 1.375rem;
+    }
+
+    .roomcard .roomcard__description p {
+        max-height: calc(1.286rem * 12 - 5px);
     }
     
     .roomcard__collpse-content { 
@@ -328,6 +342,10 @@
         width: 100%; 
     }
 
+    .roomcard .roomcard__collpse-content {
+        width: 100%;
+    }
+
     .roomcard__header span:first-of-type {
         -webkit-line-clamp: 1;
         max-height: 2rem;
@@ -342,6 +360,11 @@
     .roomcard .roomcard__description {
         min-width: 55%;
         max-width: 55%;
+    }
+
+    .roomcard .roomcard__description p {
+        max-height: calc(1.286rem * 6 - 5px);
+        overflow: hidden;
     }
 
     #root .roomcard .roomcard__events-btn {
@@ -364,7 +387,7 @@
 
     .roomcard .roomcard__members {
         position: absolute;
-        top: calc(1.286rem * 12);
+        top: calc(1.286rem * 11);
         left: 0;
         min-width: 100%;
         padding-left: 40%;
@@ -373,11 +396,25 @@
     #root .roomcard .roomcard__events-wrapper {
         position: static;
         display: flex;
+        width: 100%;
         max-width: 100%;
         justify-content: space-between;
         padding-top: 10px;
         border: 0;
         overflow: visible;
+    }
+
+    .roomcard .roomcard__events-wrapper .event-card {
+        max-width: 26vw;
+    }
+
+    #root .roomcard .roomcard__events-wrapper .event-card
+    .event-card__main-content {
+        max-height: calc(1.286rem * 6);
+    }
+
+    #root .roomcard .roomcard__events-wrapper > a {
+        width: unset;
     }
 
     .roomcard .roomcard__collpse-content {

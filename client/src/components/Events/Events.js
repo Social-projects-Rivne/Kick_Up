@@ -157,10 +157,11 @@ class Events extends Component {
           date={this.state.date}
           showDate={true}
           changeDate={this.changeDate}
-          addLink="/add-event"
+          addLink="/event/add"
         />
         <Grid container spacing={16} justify="center" className="events-page-cards">
           {eventsDB.map(event => {
+            const membersCount = event.members.lenght;
             return (
               <EventCard
                 key={event.id}
@@ -171,7 +172,7 @@ class Events extends Component {
                 avatar={event.creator.avatar}
                 description={event.description}
                 limit={event.members_limit}
-                members={event.members}
+                members={membersCount}
                 background={event.cover}
                 clicked={() => this.selectedEventHandler(event.id)}
               />

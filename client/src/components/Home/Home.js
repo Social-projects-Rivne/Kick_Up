@@ -38,10 +38,6 @@ import bg3_mob_vert_placeholder from '../../assets/images/intro-slider/bg-3-mob-
 import bg3_mob_hor from '../../assets/images/intro-slider/bg-3-mob-hor.png';
 import bg3_mob_hor_placeholder from '../../assets/images/intro-slider/bg-3-mob-hor.svg';
 
-const API = {
-    getRooms: '/api/room/',
-    getEvents: '/api/event/'
-};
 const _desktopWidth = 1024;
 const messageType = {
     SUCCESS: 'success',
@@ -90,7 +86,43 @@ let mainSwiper, roomsSwiper;
 let eventsSwipers = [];
 
 // Helper functions. 
-// @todo convert ones that possible to methods;
+const convertTime = (str) => {
+    // Define manually date;
+    const months = {
+        '01': 'January',
+        '02': 'February',
+        '03': 'March',
+        '04': 'April',
+        '05': 'May',
+        '06': 'June',
+        '07': 'July',
+        '08': 'August',
+        '09': 'September',
+        '10': 'October',
+        '11': 'November',
+        '12': 'December'
+    };
+
+    if (str && typeof str === 'string') {
+        try{
+            let [, month, date] = [...str.split('-')];
+            let [hour, min] = [...date.split('T').pop().split(':')];
+            
+            date = date.slice(0, 2);
+
+            return {
+                date: `${date[0] == '0' ? date.slice(1) : date} ${months[month]}`,
+                time: `${hour}:${min}` 
+            }
+        } catch(err) {
+            console.log('ERR', err);
+            return {
+                date: '',
+                time: ''
+            }
+        }
+    }
+};
 const setMainSwiper = instance => {
     mainSwiper = instance;
 };
@@ -228,10 +260,12 @@ class Home extends Component {
     state = {
         events: [],
         rooms: [],
+        roomCount: 0,
+        eventCount: 0,
         offset: 0,
         currentSlide: 1,
         scrollInProgress: false,
-        renderEventsSlider: true
+        renderEventsSlider: false
     };
     showToast = (message, variant) => {
         this.props.enqueueSnackbar(message, {
@@ -243,19 +277,15 @@ class Home extends Component {
         });
     }
     selectedRoomHandler = id => {
-        this.props.history.push({ pathname: "/rooms/" + id });
-    }
+        this.props.history.push({ pathname: "/room/" + id });
+    };
     loadData = (callback) => {
         // @todo add load data from new route;
         async function getUser() {
             try {
-                const rooms = await axios.get(API.getRooms);
-                const events = await axios.get(API.getEvents);
+                const res = await axios.get('/api');
                 
-                return {
-                    events: events.data.events,
-                    rooms: rooms.data.rooms
-                }
+                if (res && typeof callback === 'function') return callback(res.data);
             } catch (err) {
                 this.handleServerErrors(err.response.data.error.errors);
             }
@@ -317,35 +347,31 @@ class Home extends Component {
                     }
             }
         };
-
+    
         // Add each type;
         for (let i = 0, length = Object.keys(Type).length; i < length; i++) {
             eventsSwipers.push((
                     <Swiper {...{...eventsSliderParams, ...defineUniqueParams(i)}} >
-                        <div key={1} className="swiper-slide">
-                            <NeventCard />
-                        </div>
-                        <div key={2} className="swiper-slide">
-                            <NeventCard />
-                        </div>
-                        <div key={3} className="swiper-slide">
-                            <NeventCard />
-                        </div>
-                        <div key={4} className="swiper-slide">
-                            <NeventCard />
-                        </div>
-                        <div key={5} className="swiper-slide">
-                            <NeventCard />
-                        </div>
-                         <div key={5} className="swiper-slide">
-                            <NeventCard />
-                        </div>
-                        <div key={6} className="swiper-slide">
-                            <NeventCard />
-                        </div>
-                        <div key={7} className="swiper-slide">
-                            <NeventCard />
-                        </div>
+                        {this.state.events.map((event, idx) => {
+                            return <div key={idx} className="swiper-slide">
+                                <NeventCard 
+                                    id={event.id}
+                                    title={event.title}
+                                    rating={event.eventRating}
+                                    authorId={event.creator.id}
+                                    authorName={event.creator.first_name}
+                                    authorLastName={event.creator.last_name}
+                                    authorAvatar={event.creator.avatar}
+                                    cover={event.cover}
+                                    description={event.description}
+                                    eventLocation={event.location}
+                                    eventDate={convertTime(event.start_date).date}
+                                    eventTime={convertTime(event.start_date).time}
+                                    members={event.members}
+                                    membersLimit={event.members_limit}
+                                />
+                            </div>
+                        })}
                     </Swiper>
                 )
             );
@@ -483,10 +509,20 @@ class Home extends Component {
     componentDidMount = () => {
         // Retrieve items;
         this.loadData(res => {
+
             if (res) {
+                // @temp, remove after Alex will add room events;
+                res.rooms.forEach(room => {
+                    room.events = res.events;
+                    if (room.events.length > 3) room.events.length = 3;
+                });
+
                 this.setState({
+                    renderEventsSlider: true,
                     events: res.events,
-                    rooms: res.rooms
+                    rooms: res.rooms,
+                    eventCount: res.eventCount,
+                    roomCount: res.roomCount
                 });
             }
         });
@@ -580,11 +616,17 @@ class Home extends Component {
                     <Element name="main-swiper-slide-2"></Element>
                     <DomLink to={'events'} className="home__cards-slide">
                         <EventAvailable fontSize="large" />
-                        <Badge className="home__badge" badgeContent={328}>
-                            <Typography title="Click to view all events" className="home__cards-slide-title" variant="h4">
+                        {
+                            this.state.eventCount > 0
+                            ? <Badge className="home__badge" badgeContent={this.state.eventCount}>
+                                <Typography title="Click to view all events" className="home__cards-slide-title" variant="h4">
+                                    Events      
+                                </Typography>
+                            </Badge>
+                            : <Typography title="Click to view all events" className="home__cards-slide-title" variant="h4">
                                 Events      
                             </Typography>
-                        </Badge>
+                        }
                     </DomLink>
                     {this.state.renderEventsSlider && this.setEventsSwiper()}
                 </div>
@@ -592,23 +634,44 @@ class Home extends Component {
                     <Element name="main-swiper-slide-3"></Element>
                     <DomLink to={'rooms'} className="home__cards-slide">
                         <SupervisorAccount fontSize="large" />
-                        <Badge className="home__badge" badgeContent={328}>
-                            <Typography title="Click to view all rooms" className="home__cards-slide-title" variant="h4">
+                        {
+                            this.state.roomCount > 0
+                            ? <Badge className="home__badge" badgeContent={this.state.roomCount}>
+                                <Typography title="Click to view all rooms" className="home__cards-slide-title" variant="h4">
+                                    rooms      
+                                </Typography>
+                            </Badge>
+                            : <Typography title="Click to view all rooms" className="home__cards-slide-title" variant="h4">
                                 rooms      
                             </Typography>
-                        </Badge>
+                        }
                     </DomLink>
-                    <Swiper {...roomsSliderParams} getSwiper={setRoomsSwiper}>
-                        <div key={1} className="swiper-slide">
-                            <NroomCard btnClickHandler={updateSwipersHeight} />
-                        </div>
-                        <div key={2} className="swiper-slide">
-                            <NroomCard btnClickHandler={updateSwipersHeight} />
-                        </div>
-                        <div key={3} className="swiper-slide">
-                            <NroomCard btnClickHandler={updateSwipersHeight} />
-                        </div>
-                    </Swiper>
+                    {
+                        this.state.renderEventsSlider &&
+                        <Swiper {...roomsSliderParams} getSwiper={setRoomsSwiper}>
+                            {
+                                this.state.rooms.map((room, idx) => {
+                                    return <div key={idx} className="swiper-slide">
+                                        <NroomCard 
+                                            id={room.id}
+                                            title={room.title}
+                                            rating={room.eventRating}
+                                            authorId={room.creator.id}
+                                            authorName={room.creator.first_name}
+                                            authorLastName={room.creator.last_name}
+                                            authorAvatar={room.creator.avatar}
+                                            cover={room.cover}
+                                            description={room.description}
+                                            members={room.members}
+                                            membersLimit={room.members_limit}
+                                            category={room.category.title}
+                                            events={room.events}
+                                        />
+                                    </div>
+                                })
+                            }
+                        </Swiper>    
+                    }
                 </div>
             </div>
         </Swiper>        

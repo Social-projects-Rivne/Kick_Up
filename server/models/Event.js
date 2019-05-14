@@ -13,7 +13,12 @@ const Event = bookshelf.Model.extend({
         return this.hasMany('Rating','entity_id','id').query(qb => {
             qb.where('entity_type',constants.rating.entity_types.event);
         });
-    }
+    },
+    members() {
+        return this.belongsToMany('User', 'members', 'entity_id', 'user_id').query(qb => {
+          qb.where('members.entity_type','event');
+        });
+      },
   });
 
 module.exports = bookshelf.model('Event', Event);

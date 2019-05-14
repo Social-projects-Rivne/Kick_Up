@@ -39,6 +39,7 @@ class Rooms extends Component {
     axios
       .get(api, type)
       .then(res => {
+        console.log('res.data.rooms',res.data.rooms)
         this.setState({ roomsDB: res.data.rooms, isLoading: false });
       })
       .catch(err => console.log(err));
@@ -108,7 +109,7 @@ class Rooms extends Component {
   };
 
   selectedRoomHandler = id => {
-    this.props.history.push({ pathname: "/rooms/" + id });
+    this.props.history.push({ pathname: "/room/" + id });
   };
 
   render() {
@@ -150,10 +151,11 @@ class Rooms extends Component {
           showDate={true}
           date={this.state.date}
           changeDate={this.changeDate}
-          addLink="/add-room"
+          addLink="/room/add"
         />
         <Grid container spacing={8} justify="center" className="rooms-page-cards">
           {roomsDB.map(room => {
+            const membersCount = room.members.lenght;
             return (
               <RoomCard
                 key={room.id}
@@ -163,7 +165,7 @@ class Rooms extends Component {
                 description={room.description}
                 limit={room.members_limit}
                 rating={room.roomRating}
-                members={room.members}
+                members={membersCount}
                 background={room.cover}
                 clicked={() => this.selectedRoomHandler(room.id)}
               />

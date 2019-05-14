@@ -101,7 +101,7 @@ class AppHeader extends React.Component {
             </BottomNavigation>
         :   <BottomNavigation value={activePage} onChange={this.handleChangeActivePage} className="navigation-buttons">
                 <BottomNavigationAction className="icon-details" label="Events" value="/events" icon={<EventAvailable />} />
-                <BottomNavigationAction className="icon-details" label="Spaces" value="/rooms" icon={<SupervisorAccount />} />
+                <BottomNavigationAction className="icon-details" label="Rooms" value="/rooms" icon={<SupervisorAccount />} />
                 <BottomNavigationAction className="icon-details" label="Sign In" value="/sign-in" icon={<Person />} />
                 <BottomNavigationAction className="icon-details" label="Sign Up" value="/sign-up" icon={<PersonAdd />} />
             </BottomNavigation>
@@ -131,7 +131,7 @@ class AppHeader extends React.Component {
                         <div className="section-desktop">
                             <BottomNavigation value={activePage} onChange={this.handleChangeActivePage} className="navigation-buttons">
                                 <BottomNavigationAction className="icon-details" label="Events" value="/events" icon={<EventAvailable />} />
-                                <BottomNavigationAction className="icon-details" label="Spaces" value="/rooms" icon={<SupervisorAccount />} />
+                                <BottomNavigationAction className="icon-details" label="Rooms" value="/rooms" icon={<SupervisorAccount />} />
                             </BottomNavigation>
                         </div>
                         <div className="grow" />

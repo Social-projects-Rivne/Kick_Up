@@ -9,6 +9,14 @@ const Room = bookshelf.Model.extend({
     category() {
         return this.belongsTo('Category', 'category_id');
     },
+    event() {
+        return this.hasMany('Event');
+    },
+    members() {
+      return this.belongsToMany('User', 'members', 'entity_id', 'user_id').query(qb => {
+        qb.where('members.entity_type','room');
+      });
+    },
     rating(){
       return this.hasMany('Rating','entity_id','id').query(qb => {
         qb.where('entity_type',constants.rating.entity_types.room);

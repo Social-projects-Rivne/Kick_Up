@@ -1,16 +1,16 @@
 const Router = require('koa-router');
 const constants = require('./../../config/constants');
 const router = new Router({prefix: '/api/event'});
-const { Event, Category } = require('../../models');
+const { Event, Category, Member } = require('../../models');
 const validate = require('../../services/Validator');
 const handler = {
 
   async eventList(ctx) {
     await validate(ctx.query, {
       page: 'numeric|min:1'
-    })
+    });
   const { page } = ctx.query;
-  const events = await Event.fetchPage({page, pageSize: constants.pageSize, withRelated: ['creator','category','rating']});
+  const events = await Event.where({permission: false}).fetchPage({page, pageSize: constants.pageSize, withRelated: ['creator','category','rating','members']})
   ctx.body = {
     events,
     eventCount: events.pagination.rowCount,
@@ -28,13 +28,16 @@ const handler = {
 
     switch(sort) {
       case 'rate':
-        events = await Event.query(qb => qb.orderBy('roomRating','DESC')).fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating']});
+        events = await Event.query(qb => qb.orderBy('roomRating','DESC'))
+        .fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating','members']});
         break;
       case 'members':
-        events = await Event.query(qb => qb.orderBy('members','DESC')).fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating']});
+        events = await Event.query(qb => qb.orderBy('members','DESC'))
+        .fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating','members']});
         break;
       case 'start':
-        events = await Event.query(qb => qb.orderBy('start_date')).fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating']});
+        events = await Event.query(qb => qb.orderBy('start_date'))
+        .fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating','members']});
         break;
     }
     ctx.body = {
@@ -58,23 +61,23 @@ const handler = {
       const subquery = await Category.where({title: filter.category}).fetch();
       filterEvents = await Event.query(qb => qb.whereBetween('start_date', [initialDate, finalDate]))
         .where({ category_id: subquery.id, location: filter.location })
-        .fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating']});
+        .fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating','members']});
     } else if (!filter.date && filter.category && filter.location) {
       console.log('2')
       const subquery = await Category.where({title: filter.category}).fetch();
         filterEvents = await Event.where({ category_id: subquery.id, location: filter.location })
-          .fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating']});
+          .fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating','members']});
     } else if (filter.date && !filter.category && filter.location){
       console.log('3')
       const initialDate = filter.date.slice(0, 10) + 'T00:00:00.000Z';
       const finalDate = filter.date.slice(0, 10) + 'T23:59:59.000Z';
       filterEvents = await Event.query(qb => qb.whereBetween('start_date', [initialDate, finalDate]))
         .where({ location: filter.location })
-        .fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating']});
+        .fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating','members']});
     } else if (!filter.date && !filter.category && filter.location){
       console.log('4')
       filterEvents = await Event.where({ location: filter.location })
-        .fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating']});
+        .fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating','members']});
     } else if (filter.date && filter.category && !filter.location){
       console.log('5')
       const subquery = await Category.where({title: filter.category}).fetch();
@@ -82,20 +85,20 @@ const handler = {
       const finalDate = filter.date.slice(0, 10) + 'T23:59:59.000Z';
       filterEvents = await Event.query(qb => qb.whereBetween('start_date', [initialDate, finalDate]))
         .where({ category_id: subquery.id })
-        .fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating']});
+        .fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating','members']});
     } else if (!filter.date && filter.category && !filter.location){
       console.log('6')
       const subquery = await Category.where({title: filter.category}).fetch();
       filterEvents = await Event.where({ category_id: subquery.id })
-        .fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating']});
+        .fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating','members']});
     } else if (filter.date && !filter.category && !filter.location){
       console.log('7')
       const initialDate = filter.date.slice(0, 10) + 'T00:00:00.000Z';
       const finalDate = filter.date.slice(0, 10) + 'T23:59:59.000Z';
       filterEvents = await Event.query(qb => qb.whereBetween('start_date', [initialDate, finalDate]))
-        .fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating']});
+        .fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating','members']});
     } else {
-    filterEvents = await Event.fetchPage({page, pageSize: constants.pageSize, withRelated: ['creator','category','rating']});
+    filterEvents = await Event.fetchPage({page, pageSize: constants.pageSize, withRelated: ['creator','category','rating','members']});
     }
     ctx.body = {
       events: filterEvents,
@@ -125,11 +128,12 @@ const handler = {
         members_limit
     } = ctx.request.body;
     const event = await new Event(newEvent).save();
+    await new Member({user_id:creator_id,entity_type:constants.rating.entity_types.event,entity_id:event.id}).save();
     ctx.body = event;
   },
   async getEventById(ctx) {
     const { id } = ctx.params;
-    const room = await Event.where({ id }).fetch({withRelated:['creator','category'],require:true})
+    const room = await Event.where({ id }).fetch({withRelated:['creator','category','members'],require:true})
     ctx.body = room;
   },
   async updateEventById(ctx) {

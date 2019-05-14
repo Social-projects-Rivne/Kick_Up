@@ -104,7 +104,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    padding: 2rem;
+    padding-top: 1rem;
     -webkit-box-sizing: border-box;
             box-sizing: border-box;
     outline: 1px solid transparent;
@@ -187,4 +187,8 @@
     width: 100%;
     margin: 0 0 2rem 0;
   }
+}
+
+.back .inner p {
+  @include multiLineEllipsis($lineHeight: 1.4em, $lineCount: 5, $bgColor: $white);
 }
