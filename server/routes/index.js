@@ -9,6 +9,7 @@ const profileRouter = require('./profile/profile');
 const tagRouter = require('./tag/tag');
 const categoryRouter = require('./category/category');
 const ratingRouter = require('./rating/rating');
+const memberRouter = require('./member/member');
 // const exceptionHandler = require('../services/error/ExceptionHandler.js.js');
 module.exports = app => {
   // global middlewares
@@ -34,6 +35,7 @@ module.exports = app => {
   app.use(categoryRouter);
   //rating
   app.use(ratingRouter);
-
+  //members
+  app.use(memberRouter);
 
 };

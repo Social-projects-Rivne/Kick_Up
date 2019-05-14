@@ -154,9 +154,8 @@ const rooms = [
     title: faker.company.companyName(),
     creator_id: 1,
     category_id: 1,
-    description: faker.company.catchPhraseDescriptor(),
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ac tincidunt nisl. Fusce viverra lacus est, vitae ultricies nulla porttitor non. Proin eleifend, orci eu pulvinar finibus, sapien mi scelerisque massa, feugiat tincidunt leo lectus ac arcu. Etiam feugiat vulputate mi. Sed leo mauris, rhoncus sit amet eleifend nec, volutpat id neque. Pellentesque iaculis hendrerit mollis. Aliquam eros turpis, vehicula rhoncus faucibus ac, porttitor quis sem. Sed neque mi, aliquet et ipsum et.',
     cover: "https://picsum.photos/200/300/?random",
-    permission: 1,
     members_limit: 25,
     members: faker.random.number({min:1,max:15}),
     roomRating: faker.random.number({min:1,max:5}),
@@ -167,9 +166,8 @@ const rooms = [
     title: faker.company.companyName(),
     creator_id: 1,
     category_id: 1,
-    description: faker.company.catchPhraseDescriptor(),
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ac tincidunt nisl. Fusce viverra lacus est, vitae ultricies nulla porttitor non. Proin eleifend, orci eu pulvinar finibus, sapien mi scelerisque massa, feugiat tincidunt leo lectus ac arcu. Etiam feugiat vulputate mi. Sed leo mauris, rhoncus sit amet eleifend nec, volutpat id neque. Pellentesque iaculis hendrerit mollis. Aliquam eros turpis, vehicula rhoncus faucibus ac, porttitor quis sem. Sed neque mi, aliquet et ipsum et.',
     cover: "https://picsum.photos/200/300/?random",
-    permission: 1,
     members_limit: 25,
     members: faker.random.number({min:1,max:15}),
     roomRating: faker.random.number({min:1,max:5}),
@@ -180,7 +178,7 @@ const rooms = [
     title: faker.company.companyName(),
     creator_id: 1,
     category_id: 1,
-    description: faker.company.catchPhraseDescriptor(),
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ac tincidunt nisl. Fusce viverra lacus est, vitae ultricies nulla porttitor non. Proin eleifend, orci eu pulvinar finibus, sapien mi scelerisque massa, feugiat tincidunt leo lectus ac arcu. Etiam feugiat vulputate mi. Sed leo mauris, rhoncus sit amet eleifend nec, volutpat id neque. Pellentesque iaculis hendrerit mollis. Aliquam eros turpis, vehicula rhoncus faucibus ac, porttitor quis sem. Sed neque mi, aliquet et ipsum et.',
     cover: "https://picsum.photos/200/300/?random",
     members_limit: 25,
     members: faker.random.number({min:1,max:15}),
@@ -192,7 +190,7 @@ const rooms = [
     title: faker.company.companyName(),
     creator_id: 1,
     category_id: 1,
-    description: faker.company.catchPhraseDescriptor(),
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ac tincidunt nisl. Fusce viverra lacus est, vitae ultricies nulla porttitor non. Proin eleifend, orci eu pulvinar finibus, sapien mi scelerisque massa, feugiat tincidunt leo lectus ac arcu. Etiam feugiat vulputate mi. Sed leo mauris, rhoncus sit amet eleifend nec, volutpat id neque. Pellentesque iaculis hendrerit mollis. Aliquam eros turpis, vehicula rhoncus faucibus ac, porttitor quis sem. Sed neque mi, aliquet et ipsum et.',
     cover: "https://picsum.photos/200/300/?random",
     permission: 1,
     members_limit: 25,
@@ -201,16 +199,66 @@ const rooms = [
     is_banned: 0
   },
 ];
+const members = [
+  {
+    id:1,
+    user_id: 1,
+    entity_type: 'room',
+    entity_id: 1
+  },
+  {
+    id:2,
+    user_id: 2,
+    entity_type: 'room',
+    entity_id: 1
+  },
+  {
+    id:3,
+    user_id: 3,
+    entity_type: 'room',
+    entity_id: 2
+  },
+  {
+    id:4,
+    user_id: 4,
+    entity_type: 'room',
+    entity_id: 2
+  },
+  {
+    id:5,
+    user_id: 1,
+    entity_type: 'event',
+    entity_id: 1
+  },
+  {
+    id:6,
+    user_id: 2,
+    entity_type: 'event',
+    entity_id: 1
+  },
+  {
+    id:7,
+    user_id: 3,
+    entity_type: 'event',
+    entity_id: 2
+  },
+  {
+    id:8,
+    user_id: 4,
+    entity_type: 'event',
+    entity_id: 2
+  }
+]
 const events = [
   {
     id: 1,
     title: faker.company.companyName(),
     creator_id: 1,
     category_id: 1,
-    description: faker.company.catchPhraseDescriptor(),
+    room_id: 1,
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ac tincidunt nisl. Fusce viverra lacus est, vitae ultricies nulla porttitor non. Proin eleifend, orci eu pulvinar finibus, sapien mi scelerisque massa, feugiat tincidunt leo lectus ac arcu. Etiam feugiat vulputate mi. Sed leo mauris, rhoncus sit amet eleifend nec, volutpat id neque. Pellentesque iaculis hendrerit mollis. Aliquam eros turpis, vehicula rhoncus faucibus ac, porttitor quis sem. Sed neque mi, aliquet et ipsum et.',
     cover: faker.image.nature(),
     location: faker.random.locale(),
-    permission: 1,
     start_date: faker.date.future(),
     members_limit: 25,
     members: faker.random.number({min:1,max:15}),
@@ -222,7 +270,8 @@ const events = [
     title: faker.company.companyName(),
     creator_id: 1,
     category_id: 1,
-    description: faker.company.catchPhraseDescriptor(),
+    room_id: 2,
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ac tincidunt nisl. Fusce viverra lacus est, vitae ultricies nulla porttitor non. Proin eleifend, orci eu pulvinar finibus, sapien mi scelerisque massa, feugiat tincidunt leo lectus ac arcu. Etiam feugiat vulputate mi. Sed leo mauris, rhoncus sit amet eleifend nec, volutpat id neque. Pellentesque iaculis hendrerit mollis. Aliquam eros turpis, vehicula rhoncus faucibus ac, porttitor quis sem. Sed neque mi, aliquet et ipsum et.',
     cover: faker.image.nature(),
     location: faker.random.locale(),
     permission: 1,
@@ -237,7 +286,8 @@ const events = [
     title: faker.company.companyName(),
     creator_id: 1,
     category_id: 1,
-    description: faker.company.catchPhraseDescriptor(),
+    room_id: 1,
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ac tincidunt nisl. Fusce viverra lacus est, vitae ultricies nulla porttitor non. Proin eleifend, orci eu pulvinar finibus, sapien mi scelerisque massa, feugiat tincidunt leo lectus ac arcu. Etiam feugiat vulputate mi. Sed leo mauris, rhoncus sit amet eleifend nec, volutpat id neque. Pellentesque iaculis hendrerit mollis. Aliquam eros turpis, vehicula rhoncus faucibus ac, porttitor quis sem. Sed neque mi, aliquet et ipsum et.',
     cover: faker.image.nature(),
     location: faker.random.locale(),
     permission: 1,
@@ -252,7 +302,7 @@ const events = [
     title: faker.company.companyName(),
     creator_id: 1,
     category_id: 1,
-    description: faker.company.catchPhraseDescriptor(),
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ac tincidunt nisl. Fusce viverra lacus est, vitae ultricies nulla porttitor non. Proin eleifend, orci eu pulvinar finibus, sapien mi scelerisque massa, feugiat tincidunt leo lectus ac arcu. Etiam feugiat vulputate mi. Sed leo mauris, rhoncus sit amet eleifend nec, volutpat id neque. Pellentesque iaculis hendrerit mollis. Aliquam eros turpis, vehicula rhoncus faucibus ac, porttitor quis sem. Sed neque mi, aliquet et ipsum et.',
     cover: faker.image.nature(),
     location: faker.random.locale(),
     permission: 1,
@@ -261,7 +311,7 @@ const events = [
     members: faker.random.number({min:1,max:15}),
     eventRating: faker.random.number({min:1,max:5}),
     is_banned: 0
-  },
+  }
 ];
 
 
@@ -273,6 +323,7 @@ exports.seed = async knex => {
   await knex('events').insert(events);
   await knex('tags').insert(tags);
   await knex('ratings').insert(ratings);
+  await knex('members').insert(members);
 };
 
 exports.seedData = {
@@ -281,5 +332,6 @@ exports.seedData = {
   rooms,
   events,
   tags,
-  ratings
+  ratings,
+  members
 };

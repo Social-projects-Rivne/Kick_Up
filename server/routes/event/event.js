@@ -1,7 +1,7 @@
 const Router = require('koa-router');
 const constants = require('./../../config/constants');
 const router = new Router({prefix: '/api/event'});
-const { Event } = require('../../models');
+const { Event, Member } = require('../../models');
 const validate = require('../../services/Validator');
 const handler = {
 
@@ -10,9 +10,7 @@ const handler = {
       page: 'numeric|min:1'
     });
   const { page } = ctx.query;
-  const events = await Event
-      .where({permission: false})
-      .fetchPage({page, pageSize: constants.pageSize, withRelated: ['creator','category','rating']});
+  const events = await Event.where({permission: false}).fetchPage({page, pageSize: constants.pageSize, withRelated: ['creator','category','rating','members']})
   ctx.body = {
     events,
     eventCount: events.pagination.rowCount,
@@ -120,11 +118,12 @@ const handler = {
         members_limit
     } = ctx.request.body;
     const event = await new Event(newEvent).save();
+    await new Member({user_id:creator_id,entity_type:constants.rating.entity_types.event,entity_id:event.id}).save();
     ctx.body = event;
   },
   async getEventById(ctx) {
     const { id } = ctx.params;
-    const room = await Event.where({ id }).fetch({withRelated:['creator','category'],require:true})
+    const room = await Event.where({ id }).fetch({withRelated:['creator','category','members'],require:true})
     ctx.body = room;
   },
   async updateEventById(ctx) {
