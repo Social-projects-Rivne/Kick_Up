@@ -1,7 +1,7 @@
 const Router = require('koa-router');
 const constants = require('./../../config/constants');
 // const Room = require("./../mongoDB/models/modelRoom");
-const { Room } =require('../../models');
+const { Room, Member } =require('../../models');
 const validate = require('../../services/Validator');
 const router = new Router({ prefix: '/api/room'});
 const faker = require('faker');
@@ -10,9 +10,9 @@ const handler = {
   async roomList(ctx) {
     await validate(ctx.query, {
       page: 'numeric|min:1'
-    })
+    });
     const { page } = ctx.query;
-    const rooms = await Room.fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating']});
+    const rooms = await Room.where({permission: false}).fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating','event','members']});
     const members = faker.random.number(30);
     const newList  = rooms.map(i => i.set({members}));
     ctx.body = {
@@ -43,7 +43,9 @@ const handler = {
         permission,
         members_limit
     } = ctx.request.body;
+
     const room = await new Room(newRoom).save();
+    await new Member({user_id:creator_id,entity_type:constants.rating.entity_types.room,entity_id:room.id}).save();
     ctx.body = room;
   },
   async getRoomById(ctx) {
@@ -62,46 +64,6 @@ const handler = {
                 "By entering the Aperture Priority mode, you will be in control of the depth of the picture and help you click that " +
                 "perfect portrait with a blurry background.",
             cover: "http://nickjonesphoto.com/wp-content/uploads/2018/07/product-photography-best-cameras_1024x1024.png"
-        }
-    ];
-    const events = [
-        {
-            id: 1,
-            title: "Photo Booth Expo",
-            description: "This event is the largest trade show for photo booth professionals, manufacturers, and suppliers. " +
-                "At the event, new products and concepts are revealed and professionals come together for seminars, " +
-                "networking, parties, and entertainment. ",
-            cover: "https://cherrycross.com/wp-content/uploads/2016/06/Event-Photography.jpg",
-            date: "24/05/2019",
-            location: "Las Vegas, Nevada"
-        },
-        {
-            id: 2,
-            title: "Photokina",
-            description: "Photokina is an event that discovers new products and innovations in the photography field. It covers " +
-                "topics such as photographic lighting, software, publishing your work and large format printing. ",
-            cover: "https://blogmedia.evbstatic.com/wp-content/uploads/wpmulti/sites/3/2017/03/17121953/iStock-610259354.jpg",
-            date: "14/06/2019",
-            location: "Rivne, Ukraine"
-        },
-        {
-            id: 3,
-            title: "Aipad Photography Show",
-            description: "Aipad is one of the world’s longest running exhibition dedicated to photography. It showcases museum " +
-                "quality work, including contemporary, modern and 19th-century photographs as well as photo-based art, " +
-                "video and new media.",
-            cover: "https://images.dailyhive.com/20170713001209/photographer-e1500998450490.jpg",
-            date: "12/09/2019",
-            location: "Rivne, Ukraine"
-        },
-        {
-            id: 4,
-            title: "Filter Photo Festival",
-            description: "The Filter Photo Festival is a 4-day event for artists to share their work with local, national and " +
-                "international photography professionals. ",
-            cover: "https://upload.wikimedia.org/wikipedia/commons/5/5e/Neutral_density_filter_demonstration.jpg",
-            date: "19-22/09/2019",
-            location: "Kiev, Ukraine"
         }
     ];
     const gallery = [
@@ -237,8 +199,8 @@ const handler = {
             last_name: "Kohli"
         }
     ];
-    const room = await Room.where({ id }).fetch({withRelated:['creator','category'],require:true});
-    room.set({feeds,events,gallery,posts,members});
+    const room = await Room.where({ id }).fetch({withRelated:['creator','category','members','event'],require:true});
+    room.set({feeds,gallery,posts,members});
     ctx.body = room;
   },
   async updateRoomById(ctx) {

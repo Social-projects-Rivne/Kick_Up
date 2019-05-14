@@ -1,6 +1,6 @@
 
 exports.up = async knex => {
-    await knex.schema.createTable('ratings', t => {
+    await knex.schema.createTable('members', t => {
       t.increments('id').unsigned().primary();
       t.integer('user_id')
       .index()
@@ -9,8 +9,6 @@ exports.up = async knex => {
       t.string('entity_type', 36)
       .notNullable()
       .comment('event or room');
-      t.float('rating')
-      .notNullable();
       t.integer('entity_id')
       .notNullable()
       .unsigned()
@@ -25,5 +23,5 @@ exports.up = async knex => {
   };
   
   exports.down = async knex => {
-    await knex.schema.dropTable('ratings');
+    await knex.schema.dropTable('members');
   };

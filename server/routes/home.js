@@ -5,13 +5,13 @@ const handler = {
 
   async home(ctx) {
   const events = await Event
-  .where({is_banned: false})
+  .where({is_banned: false, permission: false})
   .orderBy('start_date','desc')
   .orderBy('members','desc')
   .fetchPage({page: 1, pageSize: 10, withRelated: ['creator','category','rating']});
    
     const rooms = await Room
-    .where({is_banned: false})
+    .where({is_banned: false, permission: false})
     .orderBy('roomRating','desc')
     .orderBy('members','desc')
     .fetchPage({page: 1, pageSize: 10, withRelated: ['creator','category','rating']});

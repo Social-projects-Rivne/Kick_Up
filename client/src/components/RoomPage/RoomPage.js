@@ -1,6 +1,8 @@
 import React from 'react';
 import axios from 'axios';
 
+import { Link } from "react-router-dom";
+
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 
 import { AppBar, Tabs, Tab, Typography, Grid, Avatar, Card, CardActions, CardContent, CardMedia,
@@ -145,6 +147,15 @@ class RoomPage extends React.Component {
                     </TabContainer>) || <TabContainer></TabContainer> }
 
                     { (value === 2 && <TabContainer>
+                        <Grid container className="room-details-add-event-button">
+                            <Grid item>
+                                <Link to="/event/add" className="room-details-add-event-link">
+                                    <Fab variant="extended" className="room-details-add-event">
+                                        <Add />
+                                    </Fab>
+                                </Link>
+                            </Grid>
+                        </Grid>
                         <Grid container spacing={24} className="room-details-card">
                             {roomPageDB.events.map((event) =>
                                 <Grid item md={6} xs={12} className="room-details-card-grid">
