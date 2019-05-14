@@ -509,6 +509,7 @@ class Home extends Component {
     componentDidMount = () => {
         // Retrieve items;
         this.loadData(res => {
+            console.log(res);
 
             if (res) {
                 // @temp, remove after Alex will add room events;

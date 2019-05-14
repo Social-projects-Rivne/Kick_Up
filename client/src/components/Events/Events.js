@@ -161,7 +161,7 @@ class Events extends Component {
         />
         <Grid container spacing={16} justify="center" className="events-page-cards">
           {eventsDB.map(event => {
-            const membersCount = event.members.lenght;
+            const membersCount = event.members.length;
             return (
               <EventCard
                 key={event.id}

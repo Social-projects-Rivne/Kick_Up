@@ -155,7 +155,7 @@ class Rooms extends Component {
         />
         <Grid container spacing={8} justify="center" className="rooms-page-cards">
           {roomsDB.map(room => {
-            const membersCount = room.members.lenght;
+            const membersCount = room.members.length;
             return (
               <RoomCard
                 key={room.id}

@@ -29,7 +29,7 @@ const roomCard = props => {
         <div className="back">
           <div className="inner">
             <p>{props.description}</p>
-            <Grid container justify="space-evenly">
+            <Grid container justify="space-evenly" className="back-btn-wrapper">
               <span>Members: {props.members} / {props.limit}</span>
               <Button>view more</Button>
             </Grid>
