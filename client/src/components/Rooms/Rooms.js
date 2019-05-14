@@ -19,12 +19,8 @@ class Rooms extends Component {
     roomsDB: null,
     FilteredRooms: null,
     isLoading: true,
-    filters: {
-      category: "",
-      date: null
-    },
     category: "",
-    date: new Date().toISOString(),
+    date: null,
     showDate: true
   };
   componentDidMount() {
@@ -54,7 +50,7 @@ class Rooms extends Component {
       .get(api, filter)
       .then(console.log("Data filtered by", api))
       .then(res => {
-        this.setState({ roomsDB: res.data, isLoading: false });
+        this.setState({ roomsDB: res.data.rooms, isLoading: false });
       })
       .catch(err => console.log(err));
   };
@@ -97,7 +93,8 @@ class Rooms extends Component {
   resetFiltersHandle = () => {
     this.getSortDataFromDB(API.getRooms);
     this.setState({
-      category: ""
+      category: "",
+      date: null
     });
   };
 
@@ -106,6 +103,7 @@ class Rooms extends Component {
   };
 
   changeDate = date => {
+    console.log('date', date)
     this.setState({ date });
   };
 
@@ -115,6 +113,7 @@ class Rooms extends Component {
 
   render() {
     const { roomsDB, isLoading } = this.state;
+    console.log('roomsDB', roomsDB)
     const toolbarButtons = [
       { name: "Top Rate", method: this.sortRateHandle },
       { name: "Top Members", method: this.sortMembersHandle },
@@ -163,7 +162,7 @@ class Rooms extends Component {
                 avatar={room.creator.avatar}
                 description={room.description}
                 limit={room.members_limit}
-                rating={room.rating}
+                rating={room.roomRating}
                 members={room.members}
                 background={room.cover}
                 clicked={() => this.selectedRoomHandler(room.id)}

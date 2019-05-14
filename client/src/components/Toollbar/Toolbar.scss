@@ -68,14 +68,16 @@
   }
   input {
     padding: 8px;
-    background-color: $primary;
+    // background-color: $black;
     width: 137px;
   }
 
 }
 
 //filter buttons
-#root .toolbar [class*=MuiFormLabel-focused],
+#root .toolbar [class*=MuiFormLabel-focused], 
+#root .toolbar [class*=MuiFormLabel-filled],
+#root ~ div .toolbar [class*=MuiFormLabel-filled],
 #root ~ div .toolbar [class*=MuiFormLabel-focused] {
    color: $primary;
 }

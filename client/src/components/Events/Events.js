@@ -21,7 +21,7 @@ class Events extends Component {
     isLoading: true,
     category: "",
     location: "",
-    date: new Date().toISOString(),
+    date: null,
     showDate: true
   };
   componentDidMount() {
@@ -51,7 +51,7 @@ class Events extends Component {
     axios
       .get(api, filter)
       .then(res => {
-        this.setState({ eventsDB: res.data, isLoading: false });
+        this.setState({ eventsDB: res.data.events, isLoading: false });
       })
       .catch(err => console.log(err));
   };

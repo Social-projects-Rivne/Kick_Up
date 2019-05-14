@@ -16,6 +16,7 @@ import AddIcon from "@material-ui/icons/Add";
 import {CalendarToday, Cancel, KeyboardArrowDownRounded, FilterList} from "@material-ui/icons";
 import Calendar from "react-calendar";
 import Drawer from '@material-ui/core/Drawer';
+import moment from 'moment';
 
 class Toolbar extends Component {
   state = {
@@ -29,7 +30,8 @@ class Toolbar extends Component {
 
   onChange = date => {
     this.setState({ isToggleOn: false });
-    this.props.changeDate(date.toISOString());
+    const parseDate = moment(date).format();
+    this.props.changeDate(parseDate);
   };
 
   toggleFiltersHandler = () => {
@@ -118,7 +120,8 @@ class Toolbar extends Component {
           fontSize="large"
         />
       ) : null;
-
+    
+    const today = this.props.date ? this.props.date : moment().format();
     const calendar = this.state.isToggleOn ? (
       <Grid className="toolbar-filter-calendar">
         <Cancel
@@ -129,7 +132,7 @@ class Toolbar extends Component {
         <Calendar
           name="date"
           onChange={this.onChange}
-          value={new Date(this.props.date)}
+          value={new Date(today)}
           />
       </Grid>
       

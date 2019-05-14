@@ -1,7 +1,7 @@
 const Router = require('koa-router');
 const constants = require('./../../config/constants');
 const router = new Router({prefix: '/api/event'});
-const { Event } = require('../../models');
+const { Event, Category } = require('../../models');
 const validate = require('../../services/Validator');
 const handler = {
 
@@ -10,7 +10,7 @@ const handler = {
       page: 'numeric|min:1'
     })
   const { page } = ctx.query;
-  const events = await Event.fetchPage({page, pageSize: constants.pageSize, withRelated: ['creator','category','rating']})
+  const events = await Event.fetchPage({page, pageSize: constants.pageSize, withRelated: ['creator','category','rating']});
   ctx.body = {
     events,
     eventCount: events.pagination.rowCount,
@@ -19,82 +19,89 @@ const handler = {
   },
 
   async sort(ctx) {
-    let result = ctx.request.query.sort;
-    console.log('result', result)
-    let eventsArray = [...testEvents];
+    let { sort, page } = ctx.query;
+    console.log('sort', sort);
+    await validate(ctx.query, {
+      page: 'numeric|min:1'
+    });
+    let events = [];
 
-    switch(result) {
+    switch(sort) {
       case 'rate':
-        eventsArray.sort((a, b) => b.rating - a.rating);
+        events = await Event.query(qb => qb.orderBy('roomRating','DESC')).fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating']});
         break;
       case 'members':
-        eventsArray.sort((a, b) => b.members - a.members);
+        events = await Event.query(qb => qb.orderBy('members','DESC')).fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating']});
         break;
       case 'start':
-        eventsArray.sort((a, b) => a.start_date - b.start_date);
+        events = await Event.query(qb => qb.orderBy('start_date')).fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating']});
         break;
     }
-
-    ctx.body = eventsArray;
+    ctx.body = {
+      events,
+      eventCount: events.pagination.rowCount,
+      pageCount: events.pagination.pageCount
+    };
   },
 
   async filter(ctx) {
     const filter = ctx.request.query;
-    console.log('filter', filter);
-    formatDate = d => {
-      let curr_date = d.getDate();
-      let curr_month = d.getMonth() + 1;
-      const curr_year = d.getFullYear();
-      if (curr_month < 10) curr_month = "0" + curr_month;
-      if (curr_date < 10) curr_date = "0" + curr_date;
-      const date = curr_year + "-" + curr_month + "-" + curr_date;
-      return date;
-    };
-    let events = [...testEvents]
+    const { page } = ctx.query;
+    await validate(ctx.query, {
+      page: 'numeric|min:1'
+    });
+    let filterEvents = [];
     if (filter.date && filter.category && filter.location) {
       console.log('1')
-      filterEvents = events.filter(e => {
-        
-        return this.formatDate(new Date(e.created_at)) === this.formatDate(new Date(filter.date)) 
-            && e.category.title === filter.category
-            && e.location === filter.location;
-      });
+      const initialDate = filter.date.slice(0, 10) + 'T00:00:00.000Z';
+      const finalDate = filter.date.slice(0, 10) + 'T23:59:59.000Z';
+      const subquery = await Category.where({title: filter.category}).fetch();
+      filterEvents = await Event.query(qb => qb.whereBetween('start_date', [initialDate, finalDate]))
+        .where({ category_id: subquery.id, location: filter.location })
+        .fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating']});
     } else if (!filter.date && filter.category && filter.location) {
       console.log('2')
-      filterEvents = events.filter(e => {
-        return e.category.title === filter.category && e.location === filter.location;
-      });
+      const subquery = await Category.where({title: filter.category}).fetch();
+        filterEvents = await Event.where({ category_id: subquery.id, location: filter.location })
+          .fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating']});
     } else if (filter.date && !filter.category && filter.location){
       console.log('3')
-      filterEvents = events.filter(e => {
-        return this.formatDate(new Date(e.created_at)) === this.formatDate(new Date(filter.date))
-            && e.location === filter.location;
-      });
+      const initialDate = filter.date.slice(0, 10) + 'T00:00:00.000Z';
+      const finalDate = filter.date.slice(0, 10) + 'T23:59:59.000Z';
+      filterEvents = await Event.query(qb => qb.whereBetween('start_date', [initialDate, finalDate]))
+        .where({ location: filter.location })
+        .fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating']});
     } else if (!filter.date && !filter.category && filter.location){
-        console.log('4')
-        filterEvents = events.filter(e => {
-          return e.location === filter.location;
-        });
-      } else if (filter.date && filter.category && !filter.location){
-        console.log('5')
-        filterEvents = events.filter(e => {
-            return this.formatDate(new Date(e.created_at)) === this.formatDate(new Date(filter.date)) 
-                && e.category.title === filter.category;
-        });
-      } else if (!filter.date && filter.category && !filter.location){
-        console.log('6')
-        filterEvents = events.filter(e => {
-            return e.category.title === filter.category;
-        });
-      } else if (filter.date && !filter.category && !filter.location){
-        console.log('7')
-        filterEvents = events.filter(e => {
-            return this.formatDate(new Date(e.created_at)) === this.formatDate(new Date(filter.date));
-        });
-      } else {
-      filterEvents = events;
+      console.log('4')
+      filterEvents = await Event.where({ location: filter.location })
+        .fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating']});
+    } else if (filter.date && filter.category && !filter.location){
+      console.log('5')
+      const subquery = await Category.where({title: filter.category}).fetch();
+      const initialDate = filter.date.slice(0, 10) + 'T00:00:00.000Z';
+      const finalDate = filter.date.slice(0, 10) + 'T23:59:59.000Z';
+      filterEvents = await Event.query(qb => qb.whereBetween('start_date', [initialDate, finalDate]))
+        .where({ category_id: subquery.id })
+        .fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating']});
+    } else if (!filter.date && filter.category && !filter.location){
+      console.log('6')
+      const subquery = await Category.where({title: filter.category}).fetch();
+      filterEvents = await Event.where({ category_id: subquery.id })
+        .fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating']});
+    } else if (filter.date && !filter.category && !filter.location){
+      console.log('7')
+      const initialDate = filter.date.slice(0, 10) + 'T00:00:00.000Z';
+      const finalDate = filter.date.slice(0, 10) + 'T23:59:59.000Z';
+      filterEvents = await Event.query(qb => qb.whereBetween('start_date', [initialDate, finalDate]))
+        .fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating']});
+    } else {
+    filterEvents = await Event.fetchPage({page, pageSize: constants.pageSize, withRelated: ['creator','category','rating']});
     }
-    ctx.body = filterEvents;
+    ctx.body = {
+      events: filterEvents,
+      eventCount: filterEvents.pagination.rowCount,
+      pageCount: filterEvents.pagination.pageCount
+    };
   },
   async createEvent(ctx){
     await validate(ctx.request.body, {
