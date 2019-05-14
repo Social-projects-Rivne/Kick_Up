@@ -21,6 +21,8 @@
 #root .event-card .event-card__main-content {
     font-size: 1.071rem;
     line-height: 1.286rem;
+    max-height: calc(1.286rem * 8 - 5px);
+    overflow: auto;
     font-weight: 100;
 }
 
@@ -173,6 +175,10 @@
         overflow: hidden;
     }
 
+    #root .event-card .event-card__main-content {   
+        max-height: calc(1.286rem * 6 - 5px);
+    }
+
     .event-card .event-card__description {
         min-width: 52vw;
         max-width: 52vw;
@@ -190,6 +196,10 @@
 @media only screen and (min-width: 768px) {
     .event-card__header span:first-of-type {
         max-height: calc(2rem * 5);
+    }
+
+    #root .event-card .event-card__main-content {   
+        max-height: calc(1.286rem * 12 - 5px);
     }
 
     // Anti-BEM here will be best option;
@@ -223,7 +233,16 @@
     }
 
     .event-card__header span:first-of-type {
-        max-height: calc(2rem * 3);
+        max-height: 2rem;
+    }
+
+    .event-card__img-wrapper {
+        min-height: 230px;
+    }
+
+    #root .event-card .event-card__main-content {   
+        max-height: calc(1.286rem * 8 - 5px);
+        overflow: hidden;
     }
 
     // Anti-BEM here will be best option;
