@@ -1,5 +1,6 @@
 .events-page {
     background-color: $white;
+    min-height: calc(100vh - #{$footer-height} - #{$header-height});
 
     &-cards {
         width: 90% !important;

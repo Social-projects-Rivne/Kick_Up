@@ -13,10 +13,10 @@ const handler = {
     });
     const { page } = ctx.query;
     const rooms = await Room.where({permission: false}).fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating','event','members']});
-    const members = faker.random.number(30);
-    const newList  = rooms.map(i => i.set({members}));
+    console.log(rooms.serialize())
+
     ctx.body = {
-      rooms: newList,
+      rooms,
       roomCount: rooms.pagination.rowCount,
       pageCount: rooms.pagination.pageCount
     }

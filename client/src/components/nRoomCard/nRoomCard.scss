@@ -332,7 +332,7 @@
         margin: 0 auto;
         display: flex;
         flex-wrap: wrap;
-        max-width: 80vw;
+        max-width: 70vw;
         margin-top: 1rem;
         border: 1px solid lighten($secondaryBlack, 92%);
         border-top-color: lighten($secondaryBlack, 98%);
@@ -352,14 +352,14 @@
     }
 
     .roomcard__img-wrapper {
-        min-width: 40%;
-        max-width: 40%;
+        min-width: 35%;
+        max-width: 35%;
         min-height: 24vh;
     }
 
     .roomcard .roomcard__description {
-        min-width: 55%;
-        max-width: 55%;
+        min-width: 65%;
+        max-width: 65%;
     }
 
     .roomcard .roomcard__description p {
@@ -390,7 +390,7 @@
         top: calc(1.286rem * 11);
         left: 0;
         min-width: 100%;
-        padding-left: 40%;
+        padding-left: 35%;
     }
 
     #root .roomcard .roomcard__events-wrapper {
@@ -405,7 +405,7 @@
     }
 
     .roomcard .roomcard__events-wrapper .event-card {
-        max-width: 26vw;
+        max-width: 23vw;
     }
 
     #root .roomcard .roomcard__events-wrapper .event-card

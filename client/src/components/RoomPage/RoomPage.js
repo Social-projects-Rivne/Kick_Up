@@ -157,7 +157,7 @@ class RoomPage extends React.Component {
                             </Grid>
                         </Grid>
                         <Grid container spacing={24} className="room-details-card">
-                            {roomPageDB.events.map((event) =>
+                            {roomPageDB.event.map((event) =>
                                 <Grid item md={6} xs={12} className="room-details-card-grid">
                                     <Card>
                                         <CardActionArea>

@@ -15,7 +15,7 @@ const eventCard = props => {
     <ul className={`menu-content ${isToggle}`}>
       <li>
         <People className="menu-content-icons" />
-        <span>{props.members}</span>
+        <span>{props.members.length}</span>
       </li>
       <li>
         <img src={props.avatar} alt={props.avatar}/>
