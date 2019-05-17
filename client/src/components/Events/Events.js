@@ -40,7 +40,6 @@ class Events extends Component {
     axios
       .get(api, type)
       .then(res => {
-        console.log('res.data.events', res.data.events)
         this.setState({ eventsDB: res.data.events, isLoading: false });
       })
       .catch(err => console.log(err));

@@ -20,7 +20,6 @@ const handler = {
 
   async sort(ctx) {
     let { sort, page } = ctx.query;
-    console.log('sort', sort);
     await validate(ctx.query, {
       page: 'numeric|min:1'
     });
@@ -55,7 +54,6 @@ const handler = {
     });
     let filterEvents = [];
     if (filter.date && filter.category && filter.location) {
-      console.log('1')
       const initialDate = filter.date.slice(0, 10) + 'T00:00:00.000Z';
       const finalDate = filter.date.slice(0, 10) + 'T23:59:59.000Z';
       const subquery = await Category.where({title: filter.category}).fetch();
@@ -63,23 +61,19 @@ const handler = {
         .where({ category_id: subquery.id, location: filter.location })
         .fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating','members']});
     } else if (!filter.date && filter.category && filter.location) {
-      console.log('2')
       const subquery = await Category.where({title: filter.category}).fetch();
         filterEvents = await Event.where({ category_id: subquery.id, location: filter.location })
           .fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating','members']});
     } else if (filter.date && !filter.category && filter.location){
-      console.log('3')
       const initialDate = filter.date.slice(0, 10) + 'T00:00:00.000Z';
       const finalDate = filter.date.slice(0, 10) + 'T23:59:59.000Z';
       filterEvents = await Event.query(qb => qb.whereBetween('start_date', [initialDate, finalDate]))
         .where({ location: filter.location })
         .fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating','members']});
     } else if (!filter.date && !filter.category && filter.location){
-      console.log('4')
       filterEvents = await Event.where({ location: filter.location })
         .fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating','members']});
     } else if (filter.date && filter.category && !filter.location){
-      console.log('5')
       const subquery = await Category.where({title: filter.category}).fetch();
       const initialDate = filter.date.slice(0, 10) + 'T00:00:00.000Z';
       const finalDate = filter.date.slice(0, 10) + 'T23:59:59.000Z';
@@ -87,12 +81,10 @@ const handler = {
         .where({ category_id: subquery.id })
         .fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating','members']});
     } else if (!filter.date && filter.category && !filter.location){
-      console.log('6')
       const subquery = await Category.where({title: filter.category}).fetch();
       filterEvents = await Event.where({ category_id: subquery.id })
         .fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating','members']});
     } else if (filter.date && !filter.category && !filter.location){
-      console.log('7')
       const initialDate = filter.date.slice(0, 10) + 'T00:00:00.000Z';
       const finalDate = filter.date.slice(0, 10) + 'T23:59:59.000Z';
       filterEvents = await Event.query(qb => qb.whereBetween('start_date', [initialDate, finalDate]))

@@ -13,16 +13,12 @@ const handler = {
     });
     const { page } = ctx.query;
     const rooms = await Room.where({permission: false}).fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating','event','members']});
-    console.log(rooms.serialize())
 
     ctx.body = {
       rooms,
       roomCount: rooms.pagination.rowCount,
       pageCount: rooms.pagination.pageCount
     }
-
-    // data from mock
-    // ctx.body = testRooms;
   },
   async createRoom(ctx){
     await validate(ctx.request.body, {
@@ -214,7 +210,6 @@ const handler = {
 
   async sort(ctx) {
     let { sort, page } = ctx.query;
-    console.log('sort', sort);
     await validate(ctx.query, {
       page: 'numeric|min:1'
     });
@@ -228,12 +223,10 @@ const handler = {
       case 'members':
         rooms = await Room.query(qb => qb.orderBy('members','DESC'))
         .fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating','members']});
-        console.log('rooms', rooms.toJSON())
         break;
       case 'create':
         rooms = await Room.query(qb => qb.orderBy('created_at','DESC'))
         .fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating','members']});
-        console.log('rooms', rooms.toJSON())
         break;
     }
     ctx.body = {

@@ -39,7 +39,6 @@ class Rooms extends Component {
     axios
       .get(api, type)
       .then(res => {
-        console.log('res.data.rooms',res.data.rooms)
         this.setState({ roomsDB: res.data.rooms, isLoading: false });
       })
       .catch(err => console.log(err));
@@ -49,7 +48,6 @@ class Rooms extends Component {
     this.setState({ isLoading: true });
     axios
       .get(api, filter)
-      .then(console.log("Data filtered by", api))
       .then(res => {
         this.setState({ roomsDB: res.data.rooms, isLoading: false });
       })
@@ -104,7 +102,6 @@ class Rooms extends Component {
   };
 
   changeDate = date => {
-    console.log('date', date)
     this.setState({ date });
   };
 
@@ -114,7 +111,6 @@ class Rooms extends Component {
 
   render() {
     const { roomsDB, isLoading } = this.state;
-    console.log('roomsDB', roomsDB)
     const toolbarButtons = [
       { name: "Top Rate", method: this.sortRateHandle },
       { name: "Top Members", method: this.sortMembersHandle },
@@ -155,7 +151,6 @@ class Rooms extends Component {
         />
         <Grid container spacing={8} justify="center" className="rooms-page-cards">
           {roomsDB.map(room => {
-            const membersCount = room.members.length;
             return (
               <RoomCard
                 key={room.id}
@@ -165,7 +160,7 @@ class Rooms extends Component {
                 description={room.description}
                 limit={room.members_limit}
                 rating={room.roomRating}
-                members={membersCount}
+                members={room.members.length}
                 background={room.cover}
                 clicked={() => this.selectedRoomHandler(room.id)}
               />
