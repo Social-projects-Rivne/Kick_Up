@@ -349,8 +349,11 @@
 
 // Related to desktops;
 @media only screen and (min-width: 1024px) {
-    .home [data-main-slide]:nth-of-type(3) {
-        border-top-color: lighten($secondaryBlack, 92%);
+    #root .home [data-main-slide] {
+
+        &:nth-of-type(3) {
+            border-top-color: lighten($secondaryBlack, 92%);
+        }
     }
 
     .home .home__intro-slide .home__intro-title {
@@ -389,7 +392,8 @@
     }
 
     .home .home__events-swiper {
-        max-width: 1168px;
+        min-width: 1024px;
+        max-width: 1024px;
         margin-left: auto;
         margin-right: auto;
     }
@@ -445,7 +449,7 @@
     }
 
     .home [data-main-slide="3"] .swiper-pagination-bullets {
-        max-width: 80vw;
+        max-width: 928px;
         left: 0;
         right: 0;
         top: 0;
@@ -453,6 +457,13 @@
         margin-right: auto;
         text-align: right;
         bottom: unset;
-        z-index: 9999;
+        z-index: 2;
+    }
+}
+
+@media only screen and (min-width: 1168px) {
+    .home .home__events-swiper {
+        min-width: 1168px;
+        max-width: 1168px;
     }
 }

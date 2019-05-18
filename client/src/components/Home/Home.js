@@ -137,7 +137,8 @@ const updateSwipersHeight = () => {
         window.setTimeout(() => {
             mainSwiper.updateAutoHeight(300);
         }, 300);
-    } catch(err) {}
+        console.log('UPDATED');
+    } catch(err) {console.log('ERR');}
 };
 // Need this as swiper here, cannot bind it, as swiper is initialized aync; 
 const applySVGImage = function() {    
@@ -507,10 +508,10 @@ class Home extends Component {
         }, _awaitTime);
     }
     componentDidMount = () => {
+        const _awaitTime = 100;
+
         // Retrieve items;
         this.loadData(res => {
-            console.log(res);
-
             if (res) {
                 // @temp, remove after Alex will add room events;
                 res.rooms.forEach(room => {
@@ -528,6 +529,9 @@ class Home extends Component {
             }
         });
 
+        // Update swipers height;
+        updateSwipersHeight();
+
         // Add event listeners;
         document.addEventListener('scroll', this.handleScroll);
         window.addEventListener('resize', this.handleResize);
@@ -538,6 +542,18 @@ class Home extends Component {
                 offset: this.getScrollPos()
             })
         });
+
+        // After we accomplished init of all swipers, update height;
+        let awaitSwipersInitDone = window.setInterval(() => {
+            if (
+                mainSwiper &&
+                roomsSwiper &&
+                eventsSwipers.length > 0
+            ) {
+                updateSwipersHeight();
+                window.clearInterval(awaitSwipersInitDone);
+            }
+        }, _awaitTime);
     }
     componentWillUnmount = () => {
         document.removeEventListener('scroll', this.handleScroll);
@@ -652,8 +668,8 @@ class Home extends Component {
                         <Swiper {...roomsSliderParams} getSwiper={setRoomsSwiper}>
                             {
                                 this.state.rooms.map((room, idx) => {
-                                    return <div key={idx} className="swiper-slide">
-                                        <NroomCard 
+                                    return <div key={room.id} className="swiper-slide">
+                                        <NroomCard
                                             id={room.id}
                                             title={room.title}
                                             rating={room.eventRating}

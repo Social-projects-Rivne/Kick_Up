@@ -128,7 +128,8 @@ class NroomCard extends Component {
                     }}
                 >
                     <ExpandMore />
-                    {this.props.events.length} events
+                    {this.props.events.length}
+                    {` ${this.props.events.length > 1 ? 'events' : 'event'}`}
                 </Fab>
                 <IconButton className="roomcard__group-members">
                     <Group />
@@ -147,6 +148,7 @@ class NroomCard extends Component {
                     {
                         this.props.events.map(event => {
                             return <NeventCard 
+                                key={event.id}
                                 id={event.id}
                                 title={event.title}
                                 rating={event.eventRating}
