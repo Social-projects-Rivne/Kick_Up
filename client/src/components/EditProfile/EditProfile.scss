@@ -9,7 +9,7 @@
     min-height: calc(100vh - #{$footer-height} - #{$header-height});
     @include svg-settings-bg('#{$secondaryBlack}');
     background-color: white;
-    overflow: hidden;
+    overflow: visible;
 
     & * {
         box-sizing: border-box;
@@ -21,6 +21,10 @@
     width: 100%;
     justify-content: center;
     align-items: center;
+}
+
+.edit-profile__form-wrapper .edit-profile__submit-btn {
+    display: none;
 }
 
 .edit-profile__form-wrapper .swiper-container {
@@ -257,6 +261,25 @@ input[type=date]::-webkit-inner-spin-button {
     display: none;
 }
 
+.edit-profile .edit-profile__submit-btn {
+    position: fixed;
+    min-height: 44px;
+    z-index: 1;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    color: $white;
+    line-height: 44px;
+    background-color: $secondaryBlack;
+    border-radius: 0;
+
+    &:hover,
+    &:active {
+        background-color: $secondaryBlack;
+    }
+}
+
 @media only screen and (max-width: 768px) and (orientation: landscape) {
     .edit-profile .edit-profile__form-inner {
         display: flex;
@@ -453,5 +476,31 @@ input[type=date]::-webkit-inner-spin-button {
     .edit-profile__field-wrapper.edit-profile__field-wrapper_avatar {
         justify-content: flex-start;
         margin-top: 20px;
+    }
+
+    .edit-profile > .edit-profile__submit-btn {
+        display: none;
+    }
+
+    .edit-profile__form-wrapper .edit-profile__submit-btn {
+        display: block;
+        position: static;
+        margin-right: auto;
+        // 51px is half of btn, at moment best solution in order not to use !important;
+        transform: translate3d(calc(700px / 2 - 51px), 0, 0);
+        width: unset;
+        min-height: unset;
+        padding-top: 0;
+        padding-bottom: 0;
+        line-height: 36px;
+        border-radius: 50px;
+        background-color: $secondaryBlack;
+        border-color: $secondaryBlack;
+        overflow: hidden;
+    
+        &:hover,
+        &:active {
+            background-color: $secondaryBlack;
+        }
     }
 }
