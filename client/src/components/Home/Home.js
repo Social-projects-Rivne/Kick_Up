@@ -111,7 +111,7 @@ const convertTime = (str) => {
             date = date.slice(0, 2);
 
             return {
-                date: `${date[0] == '0' ? date.slice(1) : date} ${months[month]}`,
+                date: `${date[0] === '0' ? date.slice(1) : date} ${months[month]}`,
                 time: `${hour}:${min}` 
             }
         } catch(err) {
