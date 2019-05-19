@@ -86,6 +86,11 @@
    border-color: $primary;
 }
 
+#root .toolbar [class*=MuiFormLabel-filled],
+#root ~ div .toolbar [class*=MuiFormLabel-filled] {
+  background-color: $black;
+}
+
 @media (max-width: 768px) {
   #root .toolbar-desktop {
     display: none;
