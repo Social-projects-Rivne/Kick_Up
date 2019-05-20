@@ -96,6 +96,7 @@ class RoomPage extends React.Component {
 
     render() {
         const { value, roomPageDB } = this.state;
+        const { isAuthenticated } = this.props;
 
         if (!roomPageDB) {
             return (<Spinner className="rooms-page"/>);
@@ -188,13 +189,13 @@ class RoomPage extends React.Component {
 
                     { (value === 2 && <TabContainer>
                         <Grid container className="room-details-add-event-button">
-                            <Grid item>
+                            {isAuthenticated && (<Grid item>
                                 <Link to={this.props.location.pathname + "/add-event"} className="room-details-add-event-link">
                                     <Fab variant="extended" className="room-details-add-event">
                                         <Add />
                                     </Fab>
                                 </Link>
-                            </Grid>
+                            </Grid>)}
                         </Grid>
                         <Grid container spacing={24}>
                             {console.log(roomPageDB)}

@@ -1,8 +1,8 @@
-.room-details-page-typography-padding {
+#root .room-details-page-typography-padding {
   padding: 24px;
 }
 
-.room-page-details {
+#root .room-page-details {
   .feed-card, .post-card {
     max-width: 700px;
     margin-left: auto;
@@ -256,11 +256,6 @@
     justify-content: center;
   }
 
-  .event-card {
-    max-width: none;
-    width: 100%;
-  }
-
   .avatar-center {
     display: flex;
     justify-content: center;
@@ -276,5 +271,11 @@
       content: "";
       clear: both;
     }
+  }
+
+  .event-card {
+    max-width: none;
+    width: 100%;
+    max-height: none;
   }
 }
