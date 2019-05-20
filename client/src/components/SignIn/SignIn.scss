@@ -79,6 +79,7 @@
     display: flex;
     align-items: baseline;
     color: rgba(255, 255, 255, 0.8);
+    
 }
 
 .sign-in__field-wrapper + .sign-in__field-wrapper 
@@ -94,6 +95,21 @@
 .sign-in__btn-wrapper {
     margin-top: 30px;
     text-align: center;
+    .forgot_Password_link{
+        display: block;
+        margin-top: 10px;
+        color: #f7f4e9;
+        text-transform: capitalize;
+        &:hover{
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+        }
+    }
+    .mailMessage{
+        color: #f7f4e9;
+        margin: 0 0 0 50px;
+    }
+    
 }
 #root {
     .sign-in__submit-btn {

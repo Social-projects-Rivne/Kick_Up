@@ -19,12 +19,8 @@ class Rooms extends Component {
     roomsDB: null,
     FilteredRooms: null,
     isLoading: true,
-    filters: {
-      category: "",
-      date: null
-    },
     category: "",
-    date: new Date().toISOString(),
+    date: null,
     showDate: true
   };
   componentDidMount() {
@@ -52,9 +48,8 @@ class Rooms extends Component {
     this.setState({ isLoading: true });
     axios
       .get(api, filter)
-      .then(console.log("Data filtered by", api))
       .then(res => {
-        this.setState({ roomsDB: res.data, isLoading: false });
+        this.setState({ roomsDB: res.data.rooms, isLoading: false });
       })
       .catch(err => console.log(err));
   };
@@ -97,7 +92,8 @@ class Rooms extends Component {
   resetFiltersHandle = () => {
     this.getSortDataFromDB(API.getRooms);
     this.setState({
-      category: ""
+      category: "",
+      date: null
     });
   };
 
@@ -164,8 +160,8 @@ class Rooms extends Component {
                 avatar={room.creator.avatar}
                 description={room.description}
                 limit={room.members_limit}
-                rating={room.rating}
-                members={room.members}
+                rating={room.roomRating}
+                members={room.members.length}
                 background={room.cover}
                 clicked={() => this.selectedRoomHandler(room.id)}
               />

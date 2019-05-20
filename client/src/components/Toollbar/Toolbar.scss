@@ -68,20 +68,27 @@
   }
   input {
     padding: 8px;
-    background-color: $primary;
+    // background-color: $black;
     width: 137px;
   }
 
 }
 
 //filter buttons
-#root .toolbar [class*=MuiFormLabel-focused],
+#root .toolbar [class*=MuiFormLabel-focused], 
+#root .toolbar [class*=MuiFormLabel-filled],
+#root ~ div .toolbar [class*=MuiFormLabel-filled],
 #root ~ div .toolbar [class*=MuiFormLabel-focused] {
    color: $primary;
 }
 #root .toolbar [class*=MuiOutlinedInput],
 #root ~ div .toolbar [class*=MuiOutlinedInput] {
    border-color: $primary;
+}
+
+#root .toolbar [class*=MuiFormLabel-filled],
+#root ~ div .toolbar [class*=MuiFormLabel-filled] {
+  background-color: $black;
 }
 
 @media (max-width: 768px) {

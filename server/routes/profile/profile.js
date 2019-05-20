@@ -22,10 +22,10 @@ const handler = {
             nick:'string|min:3',
             first_name:'string|min:3',
             last_name:'string|min:3',
-            gender:'required|numeric|min:1'
+            gender:'numeric|min:1'
         });
         const { user_id } = ctx.state; 
-        const { nick, first_name, last_name, gender, birth_date } = ctx.request.body;
+        const { nick, first_name, last_name, gender, birth_date, avatar } = ctx.request.body;
         const updateUser = {
             nick, first_name, last_name, gender, birth_date
         }

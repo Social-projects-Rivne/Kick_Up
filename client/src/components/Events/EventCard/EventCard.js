@@ -15,7 +15,7 @@ const eventCard = props => {
     <ul className={`menu-content ${isToggle}`}>
       <li>
         <People className="menu-content-icons" />
-        <span>{props.members.length}</span>
+        <span>{props.members}</span>
       </li>
       <li>
         <img src={props.avatar} alt={props.avatar}/>
@@ -38,7 +38,7 @@ const eventCard = props => {
           <div className="content">
             <span className="category">{props.category}</span>
             <h1 className="title">{props.title}</h1>
-            <p className="text">{props.description}afqefbqbqrb wrbtwrgbwrbw ynyunyunyu yunuynyunyu ynuynyunuyn yntntyntyn tbwrbwrtb rtbrtbrtb wrbrtb afqef bqbqrb wrbtw rgbwr bwrtbw rbwrtb rtbrtbr tbwrbrtbafq efbqbqrb wrbtwrgb wrbwrtbwrbwrtb rtbrtbrtbwrbrtb</p>
+            <p className="text">{props.description}</p>
           </div>
           {menuContent}
         </div>

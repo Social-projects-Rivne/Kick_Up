@@ -198,3 +198,7 @@
     margin: 0 0 2rem 0;
   }
 }
+
+.back .inner p {
+  @include multiLineEllipsis($lineHeight: 1.4em, $lineCount: 5, $bgColor: $white);
+}
