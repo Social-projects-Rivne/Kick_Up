@@ -309,6 +309,7 @@ class EditProfile extends Component {
 
         axios.put('/api/profile/update', data)
         .then(() => {
+            
             fireCallback(true)
         })
         .catch(() => { fireCallback(false) });

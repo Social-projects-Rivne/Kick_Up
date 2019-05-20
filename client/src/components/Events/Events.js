@@ -21,7 +21,7 @@ class Events extends Component {
     isLoading: true,
     category: "",
     location: "",
-    date: new Date().toISOString(),
+    date: null,
     showDate: true
   };
   componentDidMount() {
@@ -40,7 +40,6 @@ class Events extends Component {
     axios
       .get(api, type)
       .then(res => {
-        console.log('res.data.events', res.data.events)
         this.setState({ eventsDB: res.data.events, isLoading: false });
       })
       .catch(err => console.log(err));
@@ -51,7 +50,7 @@ class Events extends Component {
     axios
       .get(api, filter)
       .then(res => {
-        this.setState({ eventsDB: res.data, isLoading: false });
+        this.setState({ eventsDB: res.data.events, isLoading: false });
       })
       .catch(err => console.log(err));
   };
@@ -161,6 +160,7 @@ class Events extends Component {
         />
         <Grid container spacing={16} justify="center" className="events-page-cards">
           {eventsDB.map(event => {
+            const membersCount = event.members.length;
             return (
               <EventCard
                 key={event.id}
@@ -171,7 +171,7 @@ class Events extends Component {
                 avatar={event.creator.avatar}
                 description={event.description}
                 limit={event.members_limit}
-                members={event.members}
+                members={membersCount}
                 background={event.cover}
                 clicked={() => this.selectedEventHandler(event.id)}
               />

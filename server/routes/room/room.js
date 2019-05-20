@@ -1,7 +1,7 @@
 const Router = require('koa-router');
 const constants = require('./../../config/constants');
 // const Room = require("./../mongoDB/models/modelRoom");
-const { Room, Member } =require('../../models');
+const { Room, Category, Member } =require('../../models');
 const validate = require('../../services/Validator');
 const router = new Router({ prefix: '/api/room'});
 const faker = require('faker');
@@ -13,16 +13,12 @@ const handler = {
     });
     const { page } = ctx.query;
     const rooms = await Room.where({permission: false}).fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating','event','members']});
-    console.log(rooms.serialize())
 
     ctx.body = {
       rooms,
       roomCount: rooms.pagination.rowCount,
       pageCount: rooms.pagination.pageCount
     }
-
-    // data from mock
-    // ctx.body = testRooms;
   },
   async createRoom(ctx){
     await validate(ctx.request.body, {
@@ -213,78 +209,62 @@ const handler = {
   },
 
   async sort(ctx) {
-    let result = ctx.request.query.sort;
-    console.log('result', result);
-    let roomsAray = [...testRooms];
+    let { sort, page } = ctx.query;
+    await validate(ctx.query, {
+      page: 'numeric|min:1'
+    });
+    let rooms = [];
 
-    switch(result) {
+    switch(sort) {
       case 'rate':
-        roomsAray.sort((a, b) => b.rating - a.rating);
+        rooms = await Room.query(qb => qb.orderBy('roomRating','DESC'))
+        .fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating','members']});
         break;
       case 'members':
-        roomsAray.sort((a, b) => b.members - a.members);
+        rooms = await Room.query(qb => qb.orderBy('members','DESC'))
+        .fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating','members']});
         break;
       case 'create':
-        roomsAray.sort((a, b) => a.created_at - b.created_at);
+        rooms = await Room.query(qb => qb.orderBy('created_at','DESC'))
+        .fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating','members']});
         break;
     }
-    ctx.body = roomsAray;
-
-    // const room = await Room.forge().orderBy('created_at', 'ASC').fetchAll();
-    // console.log('room', room)
-    // ctx.body = room;
+    ctx.body = {
+      rooms,
+      roomCount: rooms.pagination.rowCount,
+      pageCount: rooms.pagination.pageCount
+    };
   },
 
   async filter(ctx) {
-    const filter = ctx.request.body;
-    console.log('filter', filter);
-    formatDate = d => {
-      let curr_date = d.getDate();
-      let curr_month = d.getMonth() + 1;
-      const curr_year = d.getFullYear();
-      if (curr_month < 10) curr_month = "0" + curr_month;
-      if (curr_date < 10) curr_date = "0" + curr_date;
-      const date = curr_year + "-" + curr_month + "-" + curr_date;
-      return date;
-    };
-    let rooms = [...testRooms];
-    if (filter.date && filter.category) {
-      console.log('1');
-      filterRooms = rooms.filter(e => {
-        
-        return this.formatDate(new Date(e.created_at)) === this.formatDate(new Date(filter.date)) && e.category.title === filter.category;
-      });
-    } else if (!filter.date && filter.category) {
-      console.log('2');
-      filterRooms = rooms.filter(e => {
-        return e.category.title === filter.category;
-      });
-    } else if (filter.date && !filter.category){
-      console.log('3');
-      filterRooms = rooms.filter(e => {
-        return this.formatDate(new Date(e.created_at)) === this.formatDate(new Date(filter.date));
-      });
-    } else {
-      filterRooms = rooms;
-    }
-    ctx.body = filterRooms;
-  },
-
-  async filterByDate(ctx) {
-    const {filter} = ctx.request.body;
-    formatDate = d => {
-      let curr_date = d.getDate();
-      let curr_month = d.getMonth() + 1;
-      const curr_year = d.getFullYear();
-      if (curr_month < 10) curr_month = "0" + curr_month;
-      if (curr_date < 10) curr_date = "0" + curr_date;
-      const date = curr_year + "-" + curr_month + "-" + curr_date;
-      return date;
-    };
-    const filterRoomsByDate = [...testRooms].filter(e => {
-      return this.formatDate(new Date(e.created_at)) === filter;
+    const filter = ctx.query;
+    const { page } = ctx.query;
+    await validate(ctx.query, {
+      page: 'numeric|min:1'
     });
-    ctx.body = filterRoomsByDate;
+    let filterRooms = [];
+    if(filter.date && filter.category) {
+      const subquery = await Category.where({title: filter.category}).fetch();
+      const initialDate = filter.date.slice(0, 10) + 'T00:00:00.000Z';
+      const finalDate = filter.date.slice(0, 10) + 'T23:59:59.000Z';
+      filterRooms = await Room.query(qb => qb.whereBetween('created_at', [initialDate, finalDate])).where({ category_id: subquery.id })
+                            .fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating','members']});
+    } else if (!filter.date && filter.category) {
+        const subquery = await Category.where({title: filter.category}).fetch();
+        filterRooms = await Room.where({ category_id: subquery.id }).fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating','members']});
+      } else if (filter.date && !filter.category){
+          const initialDate = filter.date.slice(0, 10) + 'T00:00:00.000Z';
+          const finalDate = filter.date.slice(0, 10) + 'T23:59:59.000Z';
+          filterRooms = await Room.query(qb => qb.whereBetween('created_at', [initialDate, finalDate]))
+            .fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating','members']});
+        } else {
+            filterRooms = await Room.fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating','members']});
+          }
+    ctx.body = {
+      rooms: filterRooms,
+      roomCount: filterRooms.pagination.rowCount,
+      pageCount: filterRooms.pagination.pageCount
+    };
   },
 
 };
@@ -338,7 +318,7 @@ const handler = {
 
 router.get('/', handler.roomList);
 router.get('/sort', handler.sort);
-router.post('/filter', handler.filter);
+router.get('/filter', handler.filter);
 router.get('/:id', handler.getRoomById);
 router.post('/', handler.createRoom);
 router.put('/:id', handler.updateRoomById);
