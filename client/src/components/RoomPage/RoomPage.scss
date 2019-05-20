@@ -9,6 +9,11 @@
     margin-right: auto;
   }
 
+  div[class*=MuiCardMedia-root] .event-card__date,
+  div[class*=MuiCardMedia-root] .event-card__location {
+    transform: none;
+  }
+
   .room-details-add-event-button {
     display: flex;
     justify-content: flex-end;
@@ -245,29 +250,15 @@
     }
   }
 
-  .room-details-card {
+
+  .room-details-card-grid a{
     display: flex;
     justify-content: center;
+  }
 
-
-    @include media-breakpoint-down(md) {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .room-details-card-grid {
-      display: flex;
-      justify-content: center;
-
-      @include media-breakpoint-down(lg) {
-        display: flex;
-        flex-direction: column;
-      }
-    }
-
-    .card-media {
-      height: 300px;
-    }
+  .event-card {
+    max-width: none;
+    width: 100%;
   }
 
   .avatar-center {

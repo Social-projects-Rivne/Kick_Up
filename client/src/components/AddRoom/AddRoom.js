@@ -291,13 +291,13 @@ class AddRoom extends React.Component {
                                         <InputLabel className="created-room-info-label">
                                             Category:&nbsp;
                                             {addRoomDB.categories.map((category) =>
-                                                (category.id == this.state.roomData.category) ? (category.title) : null
+                                                (category.id === this.state.roomData.category) ? (category.title) : null
                                             )}
                                         </InputLabel>
                                         <InputLabel className="created-room-info-label">
                                             Tags:&nbsp;
                                             {addRoomDB.tags.map((tag) =>
-                                                (tag.id == this.state.roomData.tags) ? (tag.title) : null
+                                                (tag.id === this.state.roomData.tags) ? (tag.title) : null
                                             )}
                                         </InputLabel>
                                         <InputLabel className="created-room-info-label">

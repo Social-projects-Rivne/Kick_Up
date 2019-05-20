@@ -21,11 +21,12 @@ const router = ({ childProps }) => {
             <Route path="/" exact component={Home} />
             <Route path="/sign-up" component={Register} />
             <AppliedRoute path="/sign-in" exact component={SignIn} props={childProps} />
-            <Route path="/events" exact component={Events} />
+            <AppliedRoute path="/events" exact component={Events} props={childProps} />
             <Route path="/event/add" exact component={AddEvent} />
             <Route path="/event/:id" component={EventPage} />
-            <Route path="/rooms" exact component={Rooms} />
+            <AppliedRoute path="/rooms" exact component={Rooms} props={childProps}/>
             <Route path="/room/add" exact component={AddRoom} />
+            <Route path="/room/:id/add-event" component={AddEvent} />
             <Route path="/room/:id" component={RoomPage} />
             <Route path="/profile/:id" exact component={UserProfile} />
             <Route path="/profile/:id/edit" component={EditProfile} />

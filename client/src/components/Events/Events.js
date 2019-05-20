@@ -148,6 +148,7 @@ class Events extends Component {
     ) : (
       <div className="events-page">
         <Toolbar
+          isAuthenticated={this.props.isAuthenticated}
           datafromBase={this.state.eventsDB}
           buttons={toolbarButtons}
           filters={toolbarFilters}

@@ -11,6 +11,46 @@ import { Comment, Collections, Face, NewReleases, EventAvailable, Add, Info } fr
 import Gallery from 'react-grid-gallery';
 import SwipeableViews from 'react-swipeable-views';
 import Spinner from './../UI/Spinner/Spinner';
+import NeventCard from '../nEventCard/nEventCard';
+
+
+const convertTime = (str) => {
+    // Define manually date;
+    const months = {
+        '01': 'January',
+        '02': 'February',
+        '03': 'March',
+        '04': 'April',
+        '05': 'May',
+        '06': 'June',
+        '07': 'July',
+        '08': 'August',
+        '09': 'September',
+        '10': 'October',
+        '11': 'November',
+        '12': 'December'
+    };
+
+    if (str && typeof str === 'string') {
+        try{
+            let [, month, date] = [...str.split('-')];
+            let [hour, min] = [...date.split('T').pop().split(':')];
+
+            date = date.slice(0, 2);
+
+            return {
+                date: `${date[0] === '0' ? date.slice(1) : date} ${months[month]}`,
+                time: `${hour}:${min}`
+            }
+        } catch(err) {
+            console.log('ERR', err);
+            return {
+                date: '',
+                time: ''
+            }
+        }
+    }
+};
 
 function TabContainer(props) {
     return (
@@ -149,38 +189,35 @@ class RoomPage extends React.Component {
                     { (value === 2 && <TabContainer>
                         <Grid container className="room-details-add-event-button">
                             <Grid item>
-                                <Link to="/event/add" className="room-details-add-event-link">
+                                <Link to={this.props.location.pathname + "/add-event"} className="room-details-add-event-link">
                                     <Fab variant="extended" className="room-details-add-event">
                                         <Add />
                                     </Fab>
                                 </Link>
                             </Grid>
                         </Grid>
-                        <Grid container spacing={24} className="room-details-card">
+                        <Grid container spacing={24}>
+                            {console.log(roomPageDB)}
                             {roomPageDB.event.map((event) =>
-                                <Grid item md={6} xs={12} className="room-details-card-grid">
-                                    <Card>
-                                        <CardActionArea>
-                                            <CardMedia
-                                                className="card-media"
-                                                image={event.cover}
-                                                title={event.title}
-                                            />
-                                            <CardContent>
-                                                <Typography gutterBottom variant="h5" component="h2">
-                                                    {event.title}
-                                                </Typography>
-                                                <Typography component="p">
-                                                    {event.description}
-                                                </Typography>
-                                            </CardContent>
-                                        </CardActionArea>
-                                        <CardActions>
-                                            <Button>
-                                                {event.date + "/" + event.location}
-                                            </Button>
-                                        </CardActions>
-                                    </Card>
+                                <Grid item lg={4} md={6} xs={12} className="room-details-card-grid">
+                                    <NeventCard
+                                        id={event.id}
+                                        room_id={event.room_id}
+                                        title={event.title}
+                                        rating={event.eventRating}
+                                        authorId={event.creator_id}
+                                        //TODO
+                                        // authorName={event.creator.first_name}
+                                        // authorLastName={event.creator.last_name}
+                                        // authorAvatar={event.creator.avatar}
+                                        cover={event.cover}
+                                        description={event.description}
+                                        eventLocation={(event.location).split(',')[0]}
+                                        eventDate={convertTime(event.start_date).date}
+                                        eventTime={convertTime(event.start_date).time}
+                                        members={event.members}
+                                        membersLimit={event.members_limit}
+                                    />
                                 </Grid>
                             )}
                         </Grid>

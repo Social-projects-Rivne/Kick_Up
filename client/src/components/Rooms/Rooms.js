@@ -142,6 +142,7 @@ class Rooms extends Component {
     ) : (
       <div className="rooms-page">
         <Toolbar
+          isAuthenticated={this.props.isAuthenticated}
           datafromBase={this.state.roomsDB}
           buttons={toolbarButtons}
           filters={toolbarFilters}
