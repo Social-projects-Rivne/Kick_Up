@@ -282,7 +282,7 @@ class EditProfile extends Component {
         // Validate email;
         if (this.state.email.data && !is.email(this.state.email.data)) {
             this.showToast(
-                `Your new email address is not valid, so we didn't save it`,
+                `Your new email address is invalid, and won't be saved. Please correct it`,
                 messageType.ERR,
                 5000
             );
@@ -314,8 +314,31 @@ class EditProfile extends Component {
         })
         .catch(() => { fireCallback(false) });
     }
+    saveData = () => {
+        const data = {};
+
+        // Update user info, send ONLY CHANGED items;
+        Object.keys(this.state).forEach((key) => {
+            if (this.state[key] && this.state[key].wasChanged) {
+                data[key] = this.state[key].data;
+            }
+        });
+
+        // If needed, remove email;
+        if (data.email && !is.email(data.email)) delete data.email;
+
+        if (Object.keys(data).length) {
+            // Send data;
+            this.sendUserData(data, (res) => {
+                this.showToast(
+                    res ? `All your changed were saved` : `We are sorry, we couldn't save your profile changes :(`,
+                    res ? messageType.SUCCESS : messageType.ERR,
+                    5000
+                );
+            });
+        }
+    }
     componentDidMount = () => {
-        const messageAwaitTime = 5000;
         const _this = this;
 
         // Get user data;
@@ -344,17 +367,12 @@ class EditProfile extends Component {
                         wasChanged: false
                     },
                     gender: {
-                        data: res.birth_date ? res.birth_date : '',
+                        data: res.gender ? res.gender : 3,
                         wasChanged: false
                     },                    
                 });
             }
         });
-
-        // Show info message
-        window.setTimeout(() => {
-            this.showToast('Just fill in fields you\'d like to, all changes will be saved automatically', messageType.INFO);
-        }, messageAwaitTime);
 
         // Handle animations for desktop;
         this.handleSvg();
@@ -363,29 +381,8 @@ class EditProfile extends Component {
         window.addEventListener('resize', this.handleWindowResize);
     }
     componentWillUnmount = () => {
-        const _this = this;
-        const data = {};
-
-        // Update user info, send ONLY CHANGED items;
-        Object.keys(this.state).forEach((key) => {
-            if (_this.state[key] && _this.state[key].wasChanged) {
-                data[key] = _this.state[key].data;
-            }
-        });
-
-        // If needed, remove email;
-        if (data.email && !is.email(data.email)) delete data.email;
-
-        if (Object.keys(data).length)
-
-        // Send data;
-        this.sendUserData(data, (res) => {
-            this.showToast(
-                res ? `All your changed were saved` : `We are sorry, we couldn't save your profile changes :(`,
-                res ? messageType.SUCCESS : messageType.ERR,
-                5000
-            );
-        });
+        // Save data;
+        this.saveData();
 
         // Remove EL;
         window.removeEventListener('resize', this.handleWindowResize);
@@ -408,6 +405,13 @@ class EditProfile extends Component {
     render() {
         return (
             <div className="edit-profile">
+                <Button
+                    className="edit-profile__submit-btn"
+                    variant="outlined"
+                    onClick={this.saveData}
+                >
+                    Save changes
+                </Button>
                 <form className="edit-profile__form-wrapper">
                     {
                         this.state.windowWidth  >= 0 &&
@@ -523,14 +527,14 @@ class EditProfile extends Component {
                                     >
                                         <FormControlLabel
                                             control={<Radio />}
-                                            value="female"
-                                            label="Female"
+                                            value="1"
+                                            label="Male"
                                             labelPlacement="end"
                                         />
                                         <FormControlLabel
                                             control={<Radio />}
-                                            value="male"
-                                            label="Male"
+                                            value="2"
+                                            label="Female"
                                             labelPlacement="end"
                                         />
                                     </RadioGroup>
@@ -603,6 +607,13 @@ class EditProfile extends Component {
                                 </div>
                             </Grid>
                         </div>
+                        <Button
+                            className="edit-profile__submit-btn"
+                            variant="outlined"
+                            onClick={this.saveData}
+                        >
+                            Save changes
+                        </Button>
                     </Swiper>
                     }
                 </form>

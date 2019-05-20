@@ -103,7 +103,7 @@ const handler = {
         title:'required|string|min:3|max:100',
         creator_id:'required|numeric|min:1',
         category_id:'required|numeric|min:1',
-        room_id:'required|numeric|min:1',
+        room_id:'numeric|min:1',
         description:'required|string|min:6|max:300',
         location:'required|string|min:3',
         permission:'required|numeric|min:0',
