@@ -11,6 +11,7 @@ import { MuiPickersUtilsProvider, InlineDateTimePicker } from 'material-ui-picke
 import Geosuggest from 'react-geosuggest';
 import Spinner from "../UI/Spinner/Spinner";
 import {withSnackbar} from "notistack";
+import ImageUploader from "../ImageUploader/ImageUploader";
 
 const messageType = {
     SUCCESS: "success",
@@ -192,6 +193,7 @@ class AddEvent extends React.Component {
 
         return (
             <div className="add-event-page">
+                <ImageUploader/>
                 <form className="add-event-page-container">
                     <label className="add-event-header">Please fill in all fields to create event</label>
                     <Stepper activeStep={activeStep} orientation="vertical" className="add-event-stepper">
