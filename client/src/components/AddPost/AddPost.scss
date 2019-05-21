@@ -1,0 +1,45 @@
+/* Available modificators;
+* add-post__slide_data-entry;
+* add-post__slide_data-preview'
+*/
+
+
+.add-post {
+    border: 3px solid red;
+}
+
+.add-post__swiper {
+    position: relative;
+}
+
+.add-post__pagination {
+    border: 3px solid green;
+    z-index: 2;
+}
+
+.add-post .add-post__submit-btn {
+    position: fixed;
+    min-height: 44px;
+    z-index: 1;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    color: $white;
+    line-height: 44px;
+    background-color: $secondaryBlack;
+    border-radius: 0;
+
+    &:hover,
+    &:active {
+        background-color: $secondaryBlack;
+    }
+}
+
+.add-post .add-post__editor {
+    & [title*="Indent"],
+    & [title*="Outdent"],
+    & .rdw-option-disabled {
+        display: none;
+    }
+}
