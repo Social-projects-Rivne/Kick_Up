@@ -1,12 +1,17 @@
-.room-details-page-typography-padding {
+#root .room-details-page-typography-padding {
   padding: 24px;
 }
 
-.room-page-details {
+#root .room-page-details {
   .feed-card, .post-card {
     max-width: 700px;
     margin-left: auto;
     margin-right: auto;
+  }
+
+  div[class*=MuiCardMedia-root] .event-card__date,
+  div[class*=MuiCardMedia-root] .event-card__location {
+    transform: none;
   }
 
   .room-details-add-event-button {
@@ -245,29 +250,10 @@
     }
   }
 
-  .room-details-card {
+
+  .room-details-card-grid a{
     display: flex;
     justify-content: center;
-
-
-    @include media-breakpoint-down(md) {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .room-details-card-grid {
-      display: flex;
-      justify-content: center;
-
-      @include media-breakpoint-down(lg) {
-        display: flex;
-        flex-direction: column;
-      }
-    }
-
-    .card-media {
-      height: 300px;
-    }
   }
 
   .avatar-center {
@@ -285,5 +271,11 @@
       content: "";
       clear: both;
     }
+  }
+
+  .event-card {
+    max-width: none;
+    width: 100%;
+    max-height: none;
   }
 }

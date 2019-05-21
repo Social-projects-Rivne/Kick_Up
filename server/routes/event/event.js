@@ -10,7 +10,12 @@ const handler = {
       page: 'numeric|min:1'
     });
   const { page } = ctx.query;
-  const events = await Event.where({permission: false}).fetchPage({page, pageSize: constants.pageSize, withRelated: ['creator','category','rating','members']})
+
+  const events = await Event.query(db =>
+      db.leftJoin('rooms', 'rooms.id', 'events.room_id')
+      .where( perm => perm.where({ 'room_id': null, 'events.permission': false }))
+      .orWhere( perm => perm.where({ 'rooms.permission': false, 'events.permission': false}))
+      ).fetchPage({page, pageSize: constants.pageSize, withRelated: ['creator','category','rating','members']});
   ctx.body = {
     events,
     eventCount: events.pagination.rowCount,
