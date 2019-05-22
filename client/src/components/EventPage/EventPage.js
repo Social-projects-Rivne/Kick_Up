@@ -142,6 +142,16 @@ class EventPage extends Component {
             }
         });
     }
+    inviteInRoom = () => {
+        const eventId = this.props.match.params.id;
+        axios.post('http://localhost:3000/api/member/event/join', { entity_id:eventId })
+        .then((res) => {
+            console.log('====')
+          })
+          .catch(err => {
+            
+          });
+    }
     componentDidMount = () => {
         const timeOptions = {
             hour12: false,
@@ -191,6 +201,7 @@ class EventPage extends Component {
         });
     }
     render() {
+        console.log(this.props.user)
         return (
             <div className={!this.state.title ? 'event-page  event-page_loading' : 'event-page'}>
                 <AppBar position="fixed" className="tab-bar">
@@ -247,7 +258,7 @@ class EventPage extends Component {
                             </Paper>
                         </div>
                     }
-                    <Fab className="event-page__fab" variant="extended" color="primary">
+                    <Fab className="event-page__fab" variant="extended" color="primary" onClick={this.inviteInRoom}>
                         <Add />
                         <span className="event-page__fab-text">Join now</span>
                     </Fab>
