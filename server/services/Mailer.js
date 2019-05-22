@@ -2,7 +2,7 @@ const sgMail = require('@sendgrid/mail');
 const { User } = require('../models');
 
 const { REDIRECT_DOMAIN } = process.env;
-sgMail.setApiKey('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');
+sgMail.setApiKey('');
 
 module.exports = {
   
