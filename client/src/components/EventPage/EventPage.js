@@ -35,6 +35,7 @@ import Gallery from 'react-grid-gallery';
 import "react-id-swiper/src/styles/scss/swiper.scss";
 import axios from 'axios';
 import { withSnackbar } from 'notistack';
+import ImageUploader from "../ImageUploader/ImageUploader";
 
 // @temp, we need add get data from MongoDB;
 import mock from '../../mocks/eventPage';
@@ -115,7 +116,8 @@ class EventPage extends Component {
             users: [],
             swiper: null,
             activeSlide: 0,
-            gallery: []
+            gallery: [],
+            showUpload: false
         };
     }
     saveSwiper = (instance) => {
@@ -190,9 +192,23 @@ class EventPage extends Component {
             }
         });
     }
+
+    showUploadComponent = () => {
+        this.setState({showUpload: true})
+    }
+
+    closeUploadComponent = () => {
+        this.setState({showUpload: false})
+    }
+
     render() {
         return (
             <div className={!this.state.title ? 'event-page  event-page_loading' : 'event-page'}>
+                <ImageUploader 
+                    show={this.state.showUpload}
+                    closeUploadComponent={this.closeUploadComponent} 
+                    entityURL={this.props.match.url} 
+                />
                 <AppBar position="fixed" className="tab-bar">
                     <Tabs
                         value={this.state.activeSlide}
@@ -339,16 +355,21 @@ class EventPage extends Component {
                             Gallery
                         </Typography>
                         <Fab className="event-page__fab  event-page__fab_upload" variant="extended" color="primary">
-                            <input
+                            {/* <input
                                 accept="image/*"
                                 id="event-page-upload-images"
                                 multiple
                                 type="file"
-                            />
-                            <label htmlFor="event-page-upload-images">
+                            /> */}
+                            {/* <label htmlFor="event-page-upload-images"> */}
                                 <Add />
-                                <span className="event-page__fab-text">Upload</span>
-                            </label>
+                                <span 
+                                    className="event-page__fab-text" 
+                                    onClick={this.showUploadComponent}
+                                >
+                                    Upload
+                                </span>
+                            {/* </label> */}
                         </Fab>
                         <Gallery images={this.state.gallery} backdropClosesModal={true} />
                     </Grid>

@@ -12,6 +12,7 @@ const rule = {
 }
 const handler = {
     async upload(ctx){
+        console.log('ctx', ctx)
         await validate({ ...ctx.params, ...ctx.request.files.file },rule)
         const { user_id } = ctx.state;
         const { entityType,entity_id } = ctx.params;
@@ -23,7 +24,7 @@ const handler = {
             await new Media({user_id,key:filePath,type:entityType,entity_id}).save();
         });
         }else {
-            await validate(item,{ type: `required|in:${allowExtensions.join()}`})
+            await validate(file,{ type: `required|in:${allowExtensions.join()}`})
             const filePath = await uploader.uploadGallery(file,entityType);
             await new Media({user_id,key:filePath,type:entityType,entity_id}).save()
         }
