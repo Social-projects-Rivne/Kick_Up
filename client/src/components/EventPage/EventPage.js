@@ -115,7 +115,9 @@ class EventPage extends Component {
             users: [],
             swiper: null,
             activeSlide: 0,
-            gallery: []
+            gallery: [],
+            authUser:  false,
+            userCount: 0
         };
     }
     saveSwiper = (instance) => {
@@ -142,6 +144,39 @@ class EventPage extends Component {
             }
         });
     }
+    join = () => {
+        const eventId = this.props.match.params.id;
+        axios.post(`http://localhost:3001/api/member/event/join`, { entity_id:eventId })
+        .then((res) => {
+            this.roomMembers()
+            this.setState({ authUser :!this.state.authUser, userCount:res.data });
+          })
+          .catch(err => {
+            console.log(err);
+          });
+    };
+    leave = () => {
+        console.log(this.state.authUser)
+        const eventId = this.props.match.params.id;
+        axios.delete(`http://localhost:3001/api/member/event/${eventId}`)
+        .then((res) => {
+            this.roomMembers();
+            this.setState({ authUser :!this.state.authUser, userCount:res.data });
+          })
+          .catch(err => {
+            console.log(err);
+          });
+    }
+    roomMembers = () => {
+        const { id } = this.props.match.params;
+        axios
+        .get(`/api/member/event/${id}/members`)
+        .then((res) => {
+            
+            const users = res.data.map( i => i.users[0])
+            this.setState( {users})
+        })
+    }
     componentDidMount = () => {
         const timeOptions = {
             hour12: false,
@@ -152,13 +187,23 @@ class EventPage extends Component {
             minute: '2-digit',
         };
         const { id } = this.props.match.params;
-
+        //check invite
+        axios
+        .get(`/api/member/event/${id}`)
+        .then((res) => {
+            if(res.data.invite){
+                this.setState({authUser:  true})
+              }
+              this.setState({userCount: res.data.count})
+              this.roomMembers();
+        }).catch(()=>{
+            this.setState({authUser:  false})
+        })
         // Get data of  event;
         axios
         .get('/api/event/' + id)
         .then(res => {
             res = res.data;
-            res.users = mock.users;
             res.gallery = mock.gallery;
 
             this.setState({
@@ -167,7 +212,6 @@ class EventPage extends Component {
                 location: res.location,
                 date: new Date(res.start_date).toLocaleString('en-US', timeOptions),
                 description: res.description,
-                users: mock.users,
                 gallery: mock.gallery
             });
         })
@@ -191,6 +235,27 @@ class EventPage extends Component {
         });
     }
     render() {
+        const stateUser = this.props.user; 
+        const eventId = this.props.match.params.id;
+
+        if(stateUser){
+            const checkInvite = stateUser.invited.find(event => event.entity_type === 'event' && event.entity_id === +eventId);
+            //TO DO
+        }
+
+        const joinBtn = (
+            <Fab className="event-page__fab" variant="extended" color="primary" onClick={this.join}>
+                        <Add />
+                        <span className="event-page__fab-text">Join now</span>
+           </Fab>
+        );
+        const leaveBtn = (
+            <Fab className="event-page__fab" variant="extended" color="primary" onClick={this.leave}>
+                        <Add />
+                        <span className="event-page__fab-text">Leave now</span>
+           </Fab>
+        );
+        const renderBtn = this.state.authUser ? leaveBtn : joinBtn;
         return (
             <div className={!this.state.title ? 'event-page  event-page_loading' : 'event-page'}>
                 <AppBar position="fixed" className="tab-bar">
@@ -247,10 +312,7 @@ class EventPage extends Component {
                             </Paper>
                         </div>
                     }
-                    <Fab className="event-page__fab" variant="extended" color="primary">
-                        <Add />
-                        <span className="event-page__fab-text">Join now</span>
-                    </Fab>
+                    {renderBtn}
                     {
                         this.state.cover &&
                         <div style={{ backgroundImage: `url(${this.state.cover})` }} className="event-page__img-wrapper"></div>
@@ -368,8 +430,7 @@ class EventPage extends Component {
                                             </Avatar>
                                         </ListItemAvatar>
                                         <ListItemText
-                                            primary={user.name}
-                                            secondary={user.joined}
+                                            primary={user.nick || `${user.first_name} ${user.last_name}`}
                                         />
                                     </ListItem>
                                 )}
