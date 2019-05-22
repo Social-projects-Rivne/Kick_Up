@@ -1,15 +1,15 @@
 import React, {Component} from 'react';
 
 import {
-    Button
+    Button,
+    Fab
 } from '@material-ui/core';
+import { Visibility } from '@material-ui/icons';
 import Swiper from 'react-id-swiper/lib/ReactIdSwiper.full';
 import { Pagination } from 'swiper/dist/js/swiper.esm';
 import { Editor } from 'react-draft-wysiwyg';
 
-
 import '../../styles/libs/react-draft-wysiwyg.css';
-
 
 const addPostSwiperParams = {
     modules: [Pagination],
@@ -63,6 +63,11 @@ class AddPost extends Component {
                     Here we will have data-preview;
                 </section>
             </Swiper>
+            <Fab
+                className="add-post__fab"
+            >
+                <Visibility />
+            </Fab>
         </div>
     )
 }

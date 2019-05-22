@@ -5,7 +5,7 @@
 
 
 .add-post {
-    border: 3px solid red;
+    border: 1px solid red;
 }
 
 .add-post__swiper {
@@ -13,13 +13,15 @@
 }
 
 .add-post__pagination {
-    border: 3px solid green;
     z-index: 2;
 }
 
 .add-post .add-post__submit-btn {
     position: fixed;
     min-height: 44px;
+    max-height: 44px;
+    padding-top: 0;
+    padding-bottom: 0;
     z-index: 1;
     bottom: 0;
     left: 0;
@@ -42,4 +44,15 @@
     & .rdw-option-disabled {
         display: none;
     }
+}
+
+#root .add-post .add-post__fab {
+    position: fixed;
+    right: 10px;
+    // 44px is height of fixed btn;
+    bottom: calc(44px + 10px);
+}
+
+.add-post .add-post__pagination span {
+    background-color: $primary;
 }
