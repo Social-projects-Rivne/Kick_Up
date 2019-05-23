@@ -14,21 +14,15 @@ import {
 } from '@material-ui/core';
 import { Visibility } from '@material-ui/icons';
 import Swiper from 'react-id-swiper/lib/ReactIdSwiper.full';
-import { Pagination } from 'swiper/dist/js/swiper.esm';
 import { Editor } from 'react-draft-wysiwyg';
 
 import '../../styles/libs/react-draft-wysiwyg.css';
 
 const addPostSwiperParams = {
-    modules: [Pagination],
     containerClass: 'add-post__swiper',
     slidesPerView: 1,
     simulateTouch: true,
     autoHeight: true,
-    pagination: {
-        el: ".add-post__pagination",
-        type: 'progressbar'
-    },
     speed: 800
 }
 
@@ -43,7 +37,16 @@ const addPostSwiperParams = {
 class AddPost extends Component {
     state = {
         activeStep: 0,
-        title: ''
+        title: '',
+        details: '',
+        pinPost: false
+    }
+    setPostPinned = () => {
+        this.setState(prevState => {
+            return {
+                pinPost: !prevState.pinPost
+            }
+        });
     }
     saveData = () => {
         alert('Here we will save data');
@@ -62,70 +65,80 @@ class AddPost extends Component {
             </Button>
             <Swiper {...addPostSwiperParams} >
                 <section className="add-post__slide  add-post__slide_data-entry">
-                
-
-
-                <form className="add-post__form" noValidate autoComplete="off">
-                <Stepper nonLinear orientation="vertical" className="add-post__stepper">
-                        <Step key={0} active={true} >
-                            <StepLabel>Title of your post</StepLabel>
-                            <StepContent>
-                                <div>
-                                    <TextField
-                                        required
-                                        className="add-room-text-field"
-                                        label="Title"
-                                        name="title"
-                                        placeholder="Min 3 symbols, Max 100 symbols"
-                                        //onChange={event => this.handleUpdateData(event)}
-                                        value='aaaaa'
-                                        fullWidth
-                                        autoComplete="off"
-                                        inputProps={{ maxLength: 100 }}
-                                        //error='aaaaa'
-                                    />
-                                </div>
-                            </StepContent>
-                        </Step>
-                        <Step key={1} active={true}>
-                            <StepLabel>Add your post details</StepLabel>
-                            <StepContent>
-                                <Editor
-                                    toolbar={{
-                                        options: ['blockType', 'list', 'link', 'embedded', 'emoji', 'image'],
-                                        blockType: {
-                                            options: ['Normal', 'H1', 'H2', 'H3', 'H4', 'Code'],
-                                        },
-                                        fontFamily: {
-                                            options: ['Roboto', 'Helvetica', 'Arial', 'sans-serif'],
-                                        }
-                                    }}
-                                    wrapperClassName="add-post__editor"
-                                    editorClassName="editor-class"
-                                    toolbarClassName="add-post__toolbar"
-                                />
-                            </StepContent>
-                        </Step>
-                        <Step key={2} active={true}>
-                            <StepLabel>Pin post?</StepLabel>
-                            <StepContent>
-                                <FormGroup className="add-room-text-field">
-                                    <FormControlLabel
-                                        label="Private room"
-                                        control={
-                                            <Switch
-                                                name="permission"
+                    <form className="add-post__form" noValidate autoComplete="off">
+                        <label className="add-post__title">To add new post, fill in fields below:</label>
+                            <Stepper nonLinear orientation="vertical" className="add-post__stepper">
+                                <Step 
+                                    className={this.state.title ? 'add-post__step  add-post__step_filled' : 'add-post__step'} 
+                                    key={0} 
+                                    active={true}
+                                >
+                                    <StepLabel>Title of your post</StepLabel>
+                                    <StepContent>
+                                        <div>
+                                            <TextField
+                                                required
+                                                className="add-post__text-field"
+                                                name="title"
+                                                placeholder="Min 3 symbols, Max 100 symbols"
                                                 //onChange={event => this.handleUpdateData(event)}
-                                                checked={true}
-                                                //error={this.state.errors.permission}
+                                                value=''
+                                                fullWidth
+                                                autoComplete="off"
+                                                inputProps={{ maxLength: 100 }}
+                                                //error='aaaaa'
                                             />
-                                        }
-                                    />
-                                </FormGroup>
-                            </StepContent>
-                        </Step>
-                    </Stepper>
-                </form>
+                                        </div>
+                                    </StepContent>
+                                </Step>
+                                <Step 
+                                    className={this.state.details ? 'add-post__step  add-post__step_filled' : 'add-post__step'}
+                                    key={1} 
+                                    active={true} >
+                                    <StepLabel>Add your post details</StepLabel>
+                                    <StepContent>
+                                        <Editor
+                                            toolbar={{
+                                                options: ['blockType', 'list', 'link', 'embedded', 'emoji', 'image'],
+                                                blockType: {
+                                                    options: ['Normal', 'H1', 'H2', 'H3', 'H4', 'Code'],
+                                                },
+                                                fontFamily: {
+                                                    options: ['Roboto', 'Helvetica', 'Arial', 'sans-serif'],
+                                                }
+                                            }}
+                                            wrapperClassName="add-post__editor"
+                                            editorClassName="editor-class"
+                                            toolbarClassName="add-post__toolbar"
+                                        />
+                                    </StepContent>
+                                </Step>
+                                <Step 
+                                    className={this.state.title && this.state.details ? 'add-post__step  add-post__step_filled' : 'add-post__step'}
+                                    key={2} 
+                                    active={true}>
+                                    <StepLabel>Pin post?</StepLabel>
+                                    <StepContent>
+                                        <FormGroup className="add-post__text-field">
+                                            <FormControlLabel
+                                                label={this.state.pinPost
+                                                    ? 'Pinned post will be shown in both "Feed" and "Pinned posts" sections'
+                                                    : 'Unpinned post will be shown in "Feed" section only'
+                                                }
+                                                control={
+                                                    <Switch
+                                                        name="pinPost"
+                                                        onChange={this.setPostPinned}
+                                                        checked={this.state.pinPost}
+                                                        //error={this.state.errors.permission}
+                                                    />
+                                                }
+                                            />
+                                        </FormGroup>
+                                    </StepContent>
+                                </Step>
+                        </Stepper>
+                    </form>
                 </section>
                 <section className="add-post__slide  add-post__slide_data-preview">
                     Here we will have data-preview;

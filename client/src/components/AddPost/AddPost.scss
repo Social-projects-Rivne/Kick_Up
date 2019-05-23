@@ -1,6 +1,7 @@
 /* Available modificators;
 * add-post__slide_data-entry;
 * add-post__slide_data-preview'
+* add-post__step_filled;
 */
 
 
@@ -8,12 +9,18 @@
     
 }
 
-.add-post__swiper {
-    position: relative;
+.add-post__title {
+    display: block;
+    margin-top: 16px;
+    padding: 0 16px;
+    font-size: 2rem;
+    line-height: 2.571rem;
+    font-weight: 100;
+    color: $secondaryBlack;
 }
 
-.add-post__pagination {
-    z-index: 2;
+.add-post__swiper {
+    position: relative;
 }
 
 .add-post .add-post__submit-btn {
@@ -77,10 +84,66 @@
     bottom: calc(44px + 10px);
 }
 
-.add-post .add-post__pagination span {
+.add-post .add-post__stepper {
+    padding: 24px 16px 16px;
+}
+
+.add-post .add-post__step svg {
+    fill: rgba(0, 0, 0, 0.38);
+}
+
+.add-post .add-post__stepper > div {
+    opacity: 0;
+    animation-name: fade-in;
+    animation-duration: 1s;
+    animation-timing-function: ease-in-out;
+    animation-fill-mode: forwards;
+}
+
+.add-post .add-post__stepper [class*=MuiStepContent],
+.add-post .add-post__stepper [class*=MuiStepConnector-line] {
+    border-color: transparent;
+    animation-name: set-border;
+    animation-duration: 0.3s;
+    animation-delay: 2.8s;
+    animation-fill-mode: forwards;
+}
+
+// We have 3 steps, and 3 separators, total will be 6;
+@for $i from 1 through 6 {
+    @if ($i % 2 != 0) {
+        .add-post .add-post__stepper > div:nth-of-type(#{$i}) {
+            animation-delay: 0.5s * $i;
+        }
+    }
+    
+}
+
+// Related to stepper;
+.add-post .add-post__stepper span[class*=MuiSwitch-bar] {
+    background-color: darken($white, 10%);
+    opacity: 0.6;
+  }
+
+.add-post .add-post__stepper span[class*=MuiSwitch-checked] {
+    color: $primary;
+  }
+
+#root .add-post [class*=MuiSwitch-checked] + span {
     background-color: $primary;
 }
 
-.add-post .add-post__stepper {
-    padding: 24px 16px 16px;
+// Related to modificators;
+.add-post__step.add-post__step_filled svg {
+    fill: $primary;
+}
+
+// Related to animations;
+@keyframes set-border {
+    from {
+        border-color: transparent;
+    } 
+    to {
+        border-color: rgba(0, 0, 0, 0.1);
+    }
 }
