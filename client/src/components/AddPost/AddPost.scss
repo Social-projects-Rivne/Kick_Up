@@ -5,7 +5,7 @@
 
 
 .add-post {
-    border: 1px solid red;
+    
 }
 
 .add-post__swiper {
@@ -22,7 +22,6 @@
     max-height: 44px;
     padding-top: 0;
     padding-bottom: 0;
-    z-index: 1;
     bottom: 0;
     left: 0;
     right: 0;
@@ -31,6 +30,7 @@
     line-height: 44px;
     background-color: $secondaryBlack;
     border-radius: 0;
+    z-index: 2;
 
     &:hover,
     &:active {
@@ -46,6 +46,30 @@
     }
 }
 
+.add-post .add-post__editor .rdw-option-wrapper {
+    margin: 0;
+}
+
+.add-post .add-post__editor .rdw-option-wrapper {
+    border: 0;
+
+    &:hover,
+    &:active {
+        box-shadow: none;
+    }
+}
+
+.add-post .add-post__editor
+.rdw-block-dropdown {
+    max-width: 80px;
+    border: 0;
+}
+
+.add-post .add-post__toolbar {
+    padding: 0;
+    border: 0;
+}
+
 #root .add-post .add-post__fab {
     position: fixed;
     right: 10px;
@@ -55,4 +79,8 @@
 
 .add-post .add-post__pagination span {
     background-color: $primary;
+}
+
+.add-post .add-post__stepper {
+    padding: 24px 16px 16px;
 }
