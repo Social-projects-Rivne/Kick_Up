@@ -9,7 +9,7 @@ const router = new Router({prefix:'/api/profile'});
 const handler = {
     async getSelfProfile(ctx){
         const { user_id } = ctx.state; 
-        const user = await User.where({id:user_id}).fetch();
+        const user = await User.where({id:user_id}).fetch({withRelated:['invited']});
         ctx.body = user;
     },
     async getUserProfileById(ctx){
