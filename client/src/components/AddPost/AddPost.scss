@@ -82,10 +82,19 @@
     right: 10px;
     // 44px is height of fixed btn;
     bottom: calc(44px + 10px);
+    z-index: 1;
 }
 
 .add-post .add-post__stepper {
     padding: 24px 16px 16px;
+}
+
+.add-post .add-post__step {
+    z-index: 1;
+
+    &:nth-of-type(3) {
+        z-index: 2;
+    }
 }
 
 .add-post .add-post__step svg {
@@ -131,6 +140,14 @@
 
 #root .add-post [class*=MuiSwitch-checked] + span {
     background-color: $primary;
+}
+
+.add-post .MuiInput-underline-189::after {
+   border-color: $primary;
+}
+
+.add-post .add-post__step-label {
+    
 }
 
 // Related to modificators;

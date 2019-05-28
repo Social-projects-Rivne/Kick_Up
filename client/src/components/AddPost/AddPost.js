@@ -73,7 +73,7 @@ class AddPost extends Component {
                                     key={0} 
                                     active={true}
                                 >
-                                    <StepLabel>Title of your post</StepLabel>
+                                    <StepLabel className="add-post__step-label">Title of your post</StepLabel>
                                     <StepContent>
                                         <div>
                                             <TextField
@@ -95,7 +95,7 @@ class AddPost extends Component {
                                     className={this.state.details ? 'add-post__step  add-post__step_filled' : 'add-post__step'}
                                     key={1} 
                                     active={true} >
-                                    <StepLabel>Add your post details</StepLabel>
+                                    <StepLabel className="add-post__step-label">Add your post details</StepLabel>
                                     <StepContent>
                                         <Editor
                                             toolbar={{
@@ -117,7 +117,7 @@ class AddPost extends Component {
                                     className={this.state.title && this.state.details ? 'add-post__step  add-post__step_filled' : 'add-post__step'}
                                     key={2} 
                                     active={true}>
-                                    <StepLabel>Pin post?</StepLabel>
+                                    <StepLabel className="add-post__step-label">Pin post?</StepLabel>
                                     <StepContent>
                                         <FormGroup className="add-post__text-field">
                                             <FormControlLabel
