@@ -1,13 +1,9 @@
 /* Available modificators;
+* add-post__submit-btn_disabled;
 * add-post__slide_data-entry;
 * add-post__slide_data-preview'
 * add-post__step_filled;
 */
-
-
-.add-post {
-    
-}
 
 .add-post__title {
     display: block;
@@ -23,7 +19,7 @@
     position: relative;
 }
 
-.add-post .add-post__submit-btn {
+#root .add-post .add-post__submit-btn {
     position: fixed;
     min-height: 44px;
     max-height: 44px;
@@ -37,11 +33,20 @@
     line-height: 44px;
     background-color: $secondaryBlack;
     border-radius: 0;
-    z-index: 2;
+    z-index: 999;
+    transition: all 1.5s;
 
     &:hover,
     &:active {
         background-color: $secondaryBlack;
+    }
+
+    &.add-post__submit-btn_disabled {
+        // We will use it once only here;
+        background-color: #9e9e9e;
+        opacity: 1;
+        border-color: #9e9e9e;
+        pointer-events: all;
     }
 }
 
@@ -83,6 +88,11 @@
     // 44px is height of fixed btn;
     bottom: calc(44px + 10px);
     z-index: 1;
+    opacity: 0;
+    animation-name: fade-in;
+    animation-duration: 0.3s;
+    animation-delay: 0.5s;
+    animation-fill-mode: forwards;
 }
 
 .add-post .add-post__stepper {

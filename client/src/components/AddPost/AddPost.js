@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
 import {
     Button,
@@ -14,10 +14,8 @@ import {
 } from '@material-ui/core';
 import { Visibility } from '@material-ui/icons';
 import Swiper from 'react-id-swiper/lib/ReactIdSwiper.full';
-import { Editor } from 'react-draft-wysiwyg';
-//import { EditorState } from 'draft-js';
-
-import '../../styles/libs/react-draft-wysiwyg.css';
+import { withSnackbar } from 'notistack';
+import WYSWYGeditor from '../WYSWYGeditor/WYSWYGeditor';
 
 const addPostSwiperParams = {
     containerClass: 'add-post__swiper',
@@ -25,6 +23,12 @@ const addPostSwiperParams = {
     simulateTouch: true,
     autoHeight: true,
     speed: 800
+};
+
+const messageType = {
+    SUCCESS: 'success',
+    INFO: 'info',
+    ERR: 'error'
 };
 
 /**
@@ -40,7 +44,10 @@ class AddPost extends Component {
         activeStep: 0,
         title: '',
         details: '',
-        pinPost: false
+        pinPost: false,
+        editorData: {
+            blocks: []
+        }
     }
     setPostPinned = () => {
         this.setState(prevState => {
@@ -55,18 +62,69 @@ class AddPost extends Component {
     saveData = () => {
         alert('Here we will save data');
     }
-    // a = (EditorState) => {
-    //     console.log( EditorState );
-    // }
+    setEditorData = (data) => {
+        if (data.blocks[0].text.length > 0) 
+            this.setState({editorData: data});
+        else this.resetEditorData();
+    }
+    resetEditorData = () => {
+        this.setState({ editorData: { blocks: [] }});
+    }
+    checkAllFilled = () => {
+        let res = false;
+
+        if (
+            this.state.title && 
+            this.state.title.length > 3 &&
+            this.state.editorData.blocks.length > 0
+        ) {
+            res = true;
+        }
+
+        return res;
+    }
+    handleSubmitBtnClick = () => {
+        let errMessages = [];
+        const _delayTime = 200;
+
+        // In case not all data are filled, show ERR messages to user;
+        if (!this.checkAllFilled()) {
+            // Define messages to be shown;
+            if (!this.state.title) {
+                errMessages.push('Give your post a nice title');
+            }
+            if (this.state.editorData.blocks.length <= 0) {
+                errMessages.push('Give your post a great description');
+            }
+
+            // Enque all err messages;
+            errMessages.forEach((msg, itr) => {
+                window.setTimeout(() => {
+                    this.showToast(msg, messageType.ERR);
+                }, _delayTime * itr);
+            });
+            
+        } else {
+            this.showToast('Saving post...', messageType.INFO);
+        }
+    }
+    showToast = (message, variant) => {
+        this.props.enqueueSnackbar(message, {
+            variant: variant ? variant : 'default',
+        });
+    }
     render() {
-        const { activeStep } = state;
+        const { activeStep, editorState } = this.state;
 
         return (
             <div className="add-post">
             <Button
-                className="add-post__submit-btn"
+                className={!this.checkAllFilled() 
+                    ? 'add-post__submit-btn add-post__submit-btn_disabled' 
+                    : 'add-post__submit-btn'}
                 variant="outlined"
                 onClick={this.saveData}
+                onClick={this.handleSubmitBtnClick}
             >
                 Add new post
             </Button>
@@ -98,13 +156,17 @@ class AddPost extends Component {
                                     </StepContent>
                                 </Step>
                                 <Step 
-                                    className={this.state.details ? 'add-post__step  add-post__step_filled' : 'add-post__step'}
+                                    className={this.state.editorData.blocks.length > 0 
+                                        ? 'add-post__step  add-post__step_filled' 
+                                        : 'add-post__step'
+                                    }
                                     key={1} 
                                     active={true} >
                                     <StepLabel className="add-post__step-label">Add your post details</StepLabel>
                                     <StepContent>
-                                        <Editor
-                                            toolbar={{
+                                        <WYSWYGeditor editorSettings={{
+                                            dataUpdateCallback: this.setEditorData,
+                                            toolbar: {
                                                 options: ['blockType', 'list', 'link', 'embedded', 'emoji', 'image'],
                                                 blockType: {
                                                     options: ['Normal', 'H1', 'H2', 'H3', 'H4', 'Code'],
@@ -112,18 +174,21 @@ class AddPost extends Component {
                                                 fontFamily: {
                                                     options: ['Roboto', 'Helvetica', 'Arial', 'sans-serif'],
                                                 }
-                                            }}
-                                            //onEditorStateChange={this.a}
-                                            wrapperClassName="add-post__editor"
-                                            editorClassName="editor-class"
-                                            toolbarClassName="add-post__toolbar"
-                                        />
+                                            },
+                                            wrapperClassName:"add-post__editor",
+                                            editorClassName:"editor-class",
+                                            toolbarClassName:"add-post__toolbar"
+                                        }}/>
                                     </StepContent>
                                 </Step>
                                 <Step 
-                                    className={this.state.title && this.state.details ? 'add-post__step  add-post__step_filled' : 'add-post__step'}
                                     key={2} 
-                                    active={true}>
+                                    active={true}
+                                    className={
+                                        this.checkAllFilled()
+                                        ? 'add-post__step  add-post__step_filled' 
+                                        : 'add-post__step'}
+                                    >
                                     <StepLabel className="add-post__step-label">Pin post?</StepLabel>
                                     <StepContent>
                                         <FormGroup className="add-post__text-field">
@@ -137,7 +202,6 @@ class AddPost extends Component {
                                                         name="pinPost"
                                                         onChange={this.setPostPinned}
                                                         checked={this.state.pinPost}
-                                                        //error={this.state.errors.permission}
                                                     />
                                                 }
                                             />
@@ -151,18 +215,18 @@ class AddPost extends Component {
                     Here we will have data-preview;
                 </section>
             </Swiper>
-            <Fab
-                className="add-post__fab"
-            >
-                <Visibility />
-            </Fab>
+            {
+                this.checkAllFilled() &&
+                <Fab
+                    className="add-post__fab"
+                >
+                    <Visibility />
+                </Fab>
+            }
         </div>
         )
-    }
-        
-
-        
+    }        
     
 }
 
-export default AddPost;
+export default withSnackbar(AddPost);
