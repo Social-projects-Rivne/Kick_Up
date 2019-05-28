@@ -146,8 +146,22 @@
    border-color: $primary;
 }
 
-.add-post .add-post__step-label {
-    
+// Related to editor;
+.add-post .rdw-image-modal,
+.add-post .rdw-emoji-modal,
+.add-post .rdw-embedded-modal,
+.add-post .rdw-link-modal {
+    position: fixed;
+    max-height: 200px;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+
+.add-post .rdw-editor-main h1 {
+    margin: 16px 0;
 }
 
 // Related to modificators;

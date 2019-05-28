@@ -15,6 +15,7 @@ import {
 import { Visibility } from '@material-ui/icons';
 import Swiper from 'react-id-swiper/lib/ReactIdSwiper.full';
 import { Editor } from 'react-draft-wysiwyg';
+//import { EditorState } from 'draft-js';
 
 import '../../styles/libs/react-draft-wysiwyg.css';
 
@@ -24,7 +25,7 @@ const addPostSwiperParams = {
     simulateTouch: true,
     autoHeight: true,
     speed: 800
-}
+};
 
 /**
  * post title;
@@ -48,11 +49,17 @@ class AddPost extends Component {
             }
         });
     }
+    updateInputValue = (evt) => {
+        this.setState({ title: evt.target.value });
+    }
     saveData = () => {
         alert('Here we will save data');
     }
+    // a = (EditorState) => {
+    //     console.log( EditorState );
+    // }
     render() {
-        const { activeStep } = this.state;
+        const { activeStep } = state;
 
         return (
             <div className="add-post">
@@ -69,7 +76,7 @@ class AddPost extends Component {
                         <label className="add-post__title">To add new post, fill in fields below:</label>
                             <Stepper nonLinear orientation="vertical" className="add-post__stepper">
                                 <Step 
-                                    className={this.state.title ? 'add-post__step  add-post__step_filled' : 'add-post__step'} 
+                                    className={this.state.title && this.state.title.length > 3 ? 'add-post__step  add-post__step_filled' : 'add-post__step'} 
                                     key={0} 
                                     active={true}
                                 >
@@ -81,12 +88,11 @@ class AddPost extends Component {
                                                 className="add-post__text-field"
                                                 name="title"
                                                 placeholder="Min 3 symbols, Max 100 symbols"
-                                                //onChange={event => this.handleUpdateData(event)}
-                                                value=''
+                                                onChange={this.updateInputValue}
+                                                value={this.state.title}
                                                 fullWidth
                                                 autoComplete="off"
-                                                inputProps={{ maxLength: 100 }}
-                                                //error='aaaaa'
+                                                inputProps={{ minLength: 3 }}
                                             />
                                         </div>
                                     </StepContent>
@@ -107,6 +113,7 @@ class AddPost extends Component {
                                                     options: ['Roboto', 'Helvetica', 'Arial', 'sans-serif'],
                                                 }
                                             }}
+                                            //onEditorStateChange={this.a}
                                             wrapperClassName="add-post__editor"
                                             editorClassName="editor-class"
                                             toolbarClassName="add-post__toolbar"
