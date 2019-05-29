@@ -25,12 +25,12 @@ const addPostSwiperParams = {
     autoHeight: true,
     speed: 800
 };
-
 const messageType = {
     SUCCESS: 'success',
     INFO: 'info',
     ERR: 'error'
 };
+const _roomPostRoute = '/api/room/new-post';
 
 /**
  * post title;
@@ -42,6 +42,7 @@ const messageType = {
 
 class AddPost extends Component {
     state = {
+        roomId: this.props.match.params.id || 5,
         activeStep: 0,
         title: '',
         details: '',
@@ -60,22 +61,17 @@ class AddPost extends Component {
     updateInputValue = (evt) => {
         this.setState({ title: evt.target.value });
     }
-    saveData = () => {
-        console.log('SAVE');
-        axios
-            .get('/api/room/new-post', {
-                params: {
-                    test: 1
-                }
-            })
-            .then(res => {
-                console.log(res);
-                debugger;
-             })
-            .catch((err) => {
-                console.log(err);
-                debugger;
-            })
+    sendData = () => {
+        let {roomId, editorData: text, title, pinPost: isPinned} = this.state;
+        text =  text.blocks;
+
+        axios.post(_roomPostRoute, { roomId, text, title, isPinned })
+        .then((res) => {
+            console.log(res);
+         })
+        .catch((err) => {
+            console.log('ERR', err);
+        })
     }
     setEditorData = (data) => {
         if (data.blocks[0].text.length > 0) 
@@ -121,7 +117,7 @@ class AddPost extends Component {
             
         } else {
             this.showToast('Saving post...', messageType.INFO);
-            this.saveData();
+            this.sendData();
         }
     }
     showToast = (message, variant) => {

@@ -4,17 +4,29 @@ const Schema = mongoose.Schema;
 const roomsSchema = new Schema (
     {
         room_id: Number,
-        comments: [
+        posts: [
             {
                 author_id: Number,
-                text: String,
+                title: String,
+                text: Array,
                 created_at: {
                     type: Date,
                     default: Date.now,
                 },
                 updated_at: Date,
-                is_banned: Boolean,
-                child_comments: Array,
+                comments: [
+                    {
+                        author_id: Number,
+                        text: String,
+                        created_at: {
+                            type: Date,
+                            default: Date.now,
+                        },
+                        updated_at: Date,
+                        is_banned: Boolean,
+                        child_comments: Array,
+                    }
+                ]
             }
         ],
         moderators_list: Array,
@@ -42,4 +54,4 @@ const roomsSchema = new Schema (
     }
 );
 
-module.exports = mongoose.model('Rooms', roomsSchema);
+module.exports = mongoose.model('MongoDbRoom', roomsSchema);

@@ -1,7 +1,7 @@
 const Router = require('koa-router');
 const constants = require('./../../config/constants');
-// const Room = require("./../mongoDB/models/modelRoom");
-const { Room, Category, Member } =require('../../models');
+const MongoDbRoom = require('../../mongoDB/models/modelRoom');
+const { Room, Category, Member } = require('../../models');
 const validate = require('../../services/Validator');
 const router = new Router({ prefix: '/api/room'});
 const faker = require('faker');
@@ -207,7 +207,6 @@ const handler = {
     await room.save( obj, { patch:true });
     ctx.body = '';
   },
-
   async sort(ctx) {
     let { sort, page } = ctx.query;
     await validate(ctx.query, {
@@ -235,7 +234,6 @@ const handler = {
       pageCount: rooms.pagination.pageCount
     };
   },
-
   async filter(ctx) {
     const filter = ctx.query;
     const { page } = ctx.query;
@@ -267,11 +265,63 @@ const handler = {
     };
   },
   async addPost(ctx) {
-    console.log('UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU');
+    const { roomId, text, title, isPinned } = ctx.request.body;
     
-    ctx.body = {
-      test: 'Hello'
-    }
+    // Validate input;
+    await validate(ctx.request.body, {
+      roomId: 'numeric|min:1',
+      text: 'array',
+      title: 'min:1',
+      isPinned: 'boolean'
+    });
+
+    // In case we have room, just push new post to it;
+    MongoDbRoom.findOne({room_id: roomId}, (err, res) => {
+      if (res) {
+        res.posts.push({
+          // @todo add author id;
+          author_id: 1,
+          title: title,
+          text: text,    
+          comments: []
+        });
+
+        res.save((err, doc) => {
+          //ctx.body = 111;
+        });
+
+      } else {
+        // Create new room, push post to it;
+        const newMongoRoom = new MongoDbRoom(
+          {
+            room_id: roomId,
+            posts: [
+              {
+                // @todo add author id;
+                author_id: 1,
+                title: title,
+                text: text,    
+                comments: []
+              }
+            ],
+            moderators_list: [],
+            gallery: [],
+            tags: [],
+            members: [],
+            //@todo ask we need it?
+            room_information: '',
+            ratings: []
+          }
+        );
+
+        newMongoRoom.save((err, doc) => {
+          //ctx.body = 222;
+        });
+      }
+    });
+
+    // @temp, we need return OK ctx body;
+    ctx.body = 'OK';
   }
 };
 
@@ -325,9 +375,9 @@ const handler = {
 router.get('/', handler.roomList);
 router.get('/sort', handler.sort);
 router.get('/filter', handler.filter);
+router.post('/new-post', handler.addPost);
 router.get('/:id', handler.getRoomById);
 router.post('/', handler.createRoom);
 router.put('/:id', handler.updateRoomById);
-router.get('/new-post', handler.addPost);
 
 module.exports = router.routes();
