@@ -16,6 +16,7 @@ import { Visibility } from '@material-ui/icons';
 import Swiper from 'react-id-swiper/lib/ReactIdSwiper.full';
 import { withSnackbar } from 'notistack';
 import WYSWYGeditor from '../WYSWYGeditor/WYSWYGeditor';
+import axios from 'axios';
 
 const addPostSwiperParams = {
     containerClass: 'add-post__swiper',
@@ -60,7 +61,21 @@ class AddPost extends Component {
         this.setState({ title: evt.target.value });
     }
     saveData = () => {
-        alert('Here we will save data');
+        console.log('SAVE');
+        axios
+            .get('/api/room/new-post', {
+                params: {
+                    test: 1
+                }
+            })
+            .then(res => {
+                console.log(res);
+                debugger;
+             })
+            .catch((err) => {
+                console.log(err);
+                debugger;
+            })
     }
     setEditorData = (data) => {
         if (data.blocks[0].text.length > 0) 
@@ -106,6 +121,7 @@ class AddPost extends Component {
             
         } else {
             this.showToast('Saving post...', messageType.INFO);
+            this.saveData();
         }
     }
     showToast = (message, variant) => {
@@ -123,7 +139,6 @@ class AddPost extends Component {
                     ? 'add-post__submit-btn add-post__submit-btn_disabled' 
                     : 'add-post__submit-btn'}
                 variant="outlined"
-                onClick={this.saveData}
                 onClick={this.handleSubmitBtnClick}
             >
                 Add new post

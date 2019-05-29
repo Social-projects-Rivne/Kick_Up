@@ -266,10 +266,16 @@ const handler = {
       pageCount: filterRooms.pagination.pageCount
     };
   },
-
+  async addPost(ctx) {
+    console.log('UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU');
+    
+    ctx.body = {
+      test: 'Hello'
+    }
+  }
 };
 
-// router.post("/save-room", (ctx) => {
+// router.post("/add-post", (ctx) => {
 //   const {
 //     room_id,
 //     moderators_list,
@@ -322,5 +328,6 @@ router.get('/filter', handler.filter);
 router.get('/:id', handler.getRoomById);
 router.post('/', handler.createRoom);
 router.put('/:id', handler.updateRoomById);
+router.get('/new-post', handler.addPost);
 
 module.exports = router.routes();
