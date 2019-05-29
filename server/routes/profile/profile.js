@@ -1,21 +1,33 @@
 const Router = require('koa-router');
 const { authenticated } = require('../../middlewares');
-const { User } = require('../../models');
+const { User, Event, Room } = require('../../models');
 const validate = require('../../services/Validator');
 const { uploader } = require('../../services');
 
 const router = new Router({prefix:'/api/profile'});
 
 const handler = {
+
     async getSelfProfile(ctx){
         const { user_id } = ctx.state; 
-        const user = await User.where({id:user_id}).fetch();
+        const user = await User.where({id:user_id}).fetch({withRelated:['rooms', 'events']});
+
         ctx.body = user;
     },
     async getUserProfileById(ctx){
+        const { user_id } = ctx.state;
         const { id } = ctx.params;
-        const user = await User.where({id}).fetch({require: true});
-        ctx.body = user;        
+        if ( +id === user_id ) {
+            const user = await User.where({id:user_id}).fetch({withRelated:['rooms', 'events']});
+            ctx.body = user;
+        } else {
+            let user = (await User.where({id}).fetch({require: true, withRelated:['publicRooms', 'publicEvents']})).toJSON();
+            user.rooms = user.publicRooms;
+            delete user.publicRooms;
+            user.events = user.publicEvents;
+            delete user.publicEvents;
+            ctx.body = user;
+        }
     },
     async updateUser(ctx){
         await validate(ctx.request.body, {

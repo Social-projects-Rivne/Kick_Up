@@ -19,6 +19,22 @@ const User = bookshelf.Model.extend({
       model.set('password', hash);
       model.set('created_at', moment().format('YYYY-MM-DD h:mm:ss'));
     },
+    rooms() {
+        return this.hasMany('Room', 'creator_id', 'id');
+    },
+    events() {
+        return this.hasMany('Event', 'creator_id', 'id');
+    },
+    publicRooms() {
+        return this.hasMany('Room', 'creator_id', 'id').query(qb => {
+            qb.where({permission: false});
+        });
+    },
+    publicEvents() {
+        return this.hasMany('Event', 'creator_id', 'id').query(qb => {
+            qb.where({permission: false});
+        });
+    }
   });
 
 module.exports = bookshelf.model('User', User);

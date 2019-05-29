@@ -30,13 +30,15 @@ const NeventCard = props => (
                 title={props.title}
                 subheader={
                     <div className="event-card__header-info">
-                        <div className="event-card__avatar-wrapper">
-                            <Avatar 
-                                className="event-card__avatar" 
-                                src={props.authorAvatar ? props.authorAvatar : defaultAvatar}>
-                            </Avatar>
-                            <span>{`${props.authorName} ${props.authorLastName}`}</span>
-                        </div>
+                        <Link component={RouterLink} to={`/profile/${props.id}`} className="event-card__creator-link">
+                            <div className="event-card__avatar-wrapper">
+                                <Avatar
+                                    className="event-card__avatar"
+                                    src={props.authorAvatar ? props.authorAvatar : defaultAvatar}>
+                                </Avatar>
+                                <span>{`${props.authorName} ${props.authorLastName}`}</span>
+                            </div>
+                        </Link>
                         <StarRating rating={props.eventRating} />
                     </div>
                 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 
-import { Link } from "react-router-dom";
+import {Link as RouterLink, Link} from "react-router-dom";
 
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 
@@ -12,7 +12,6 @@ import Gallery from 'react-grid-gallery';
 import SwipeableViews from 'react-swipeable-views';
 import Spinner from './../UI/Spinner/Spinner';
 import NeventCard from '../nEventCard/nEventCard';
-
 
 const convertTime = (str) => {
     // Define manually date;
@@ -198,7 +197,6 @@ class RoomPage extends React.Component {
                             </Grid>)}
                         </Grid>
                         <Grid container spacing={24}>
-                            {console.log(roomPageDB)}
                             {roomPageDB.event.map((event) =>
                                 <Grid item lg={4} md={6} xs={12} className="room-details-card-grid">
                                     <NeventCard
@@ -207,10 +205,9 @@ class RoomPage extends React.Component {
                                         title={event.title}
                                         rating={event.eventRating}
                                         authorId={event.creator_id}
-                                        //TODO
-                                        // authorName={event.creator.first_name}
-                                        // authorLastName={event.creator.last_name}
-                                        // authorAvatar={event.creator.avatar}
+                                        authorName={this.state.roomPageDB.creator.first_name}
+                                        authorLastName={this.state.roomPageDB.creator.last_name}
+                                        authorAvatar={this.state.roomPageDB.creator.avatar}
                                         cover={event.cover}
                                         description={event.description}
                                         eventLocation={(event.location).split(',')[0]}
@@ -267,14 +264,16 @@ class RoomPage extends React.Component {
                         <Grid container spacing={24}>
                             {roomPageDB.members.map((member) =>
                                 <Grid item lg={3} md={4} sm={6} xs={12}>
-                                    <ListItem className="avatar-center">
-                                        <ListItemAvatar>
-                                            <Avatar>
-                                                <Avatar alt="" src={member.avatar} />
-                                            </Avatar>
-                                        </ListItemAvatar>
-                                        <ListItemText primary={member.first_name + " " + member.last_name} className="avatar-flex" />
-                                    </ListItem>
+                                    <Link component={RouterLink} to={`/profile/` + member.id} className="room-page-member-link">
+                                        <ListItem className="avatar-center">
+                                            <ListItemAvatar>
+                                                <Avatar>
+                                                    <Avatar alt="" src={member.avatar} />
+                                                </Avatar>
+                                            </ListItemAvatar>
+                                            <ListItemText primary={member.first_name + " " + member.last_name} className="avatar-flex" />
+                                        </ListItem>
+                                    </Link>
                                 </Grid>
                             )}
                         </Grid>
