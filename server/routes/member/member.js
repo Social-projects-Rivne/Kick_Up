@@ -1,6 +1,6 @@
 const Router = require('koa-router');
-const { authenticated } = require('./../../middlewares');
-const { User, Member } = require('./../../models');
+const { authenticated, checkLimit } = require('./../../middlewares');
+const { Member, Room, Event } = require('./../../models');
 const { validate } = require('./../../services');
 const constants = require('./../../config/constants');
 const entity_types = Object.values(constants.rating.entity_types);
@@ -13,7 +13,7 @@ const handler = {
             entity_id: 'required|numeric|min:1',
         })
        const { type } = ctx.params;
-       const { user_id } = ctx.state;
+        const { user_id } = ctx.state;
        const { entity_id } = ctx.request.body;
        const member = await Member.where({user_id,entity_type:type,entity_id}).fetch()
         if(member){
@@ -24,25 +24,67 @@ const handler = {
         } else {
             await new Member({user_id,entity_type:constants.rating.entity_types.event,entity_id}).save();
         }
-       
-       ctx.body = '';
+        const count = await Member.where({entity_type:type,entity_id}).count();
+       ctx.body = count;
     },
     async leave(ctx){
+        await validate({...ctx.params},{
+            type: `required|string|in:${entity_types.join()}`,
+            entity_id: 'required|numeric|min:1',
+        })
+       const { type,entity_id } = ctx.params;
+       const { user_id } = ctx.state;
+       const member = await Member.where({user_id,entity_type:type,entity_id}).fetch({require: true});
+       await member.destroy();
+       const count = await Member.where({entity_type:type,entity_id}).count();
+       ctx.body = count;
+    },
+    async checkInvite(ctx){
+        await validate({...ctx.params},{
+            type: `required|string|in:${entity_types.join()}`,
+            entity_id: 'required|numeric|min:1',
+        })
+       const { type,entity_id } = ctx.params;
+       const { user_id } = ctx.state;
+        const invite = await Member.where({user_id,entity_type:type,entity_id}).fetch({withRelated:['users']},{require: true});
+        const count = await Member.where({entity_type:type,entity_id}).count();
+        ctx.body = {
+            invite,
+            count
+        };
+    },
+    async members(ctx){
+        await validate({...ctx.params},{
+            type: `required|string|in:${entity_types.join()}`,
+            entity_id: 'required|numeric|min:1',
+        })
+        
+        const { type,entity_id } = ctx.params;
+        const members = await Member.where({entity_type:type,entity_id}).fetchAll({withRelated:['users']},{require: true});
+        ctx.body = members;
+    },
+    async checkMemberLimit(ctx){
         await validate({...ctx.params, ...ctx.request.body},{
             type: `required|string|in:${entity_types.join()}`,
             entity_id: 'required|numeric|min:1',
         })
-       const { type } = ctx.params;
-       const { user_id } = ctx.state;
-       const { entity_id } = ctx.request.body;
-       const member = await Member.where({user_id,entity_type:type,entity_id}).fetch({require: true});
-       await member.destroy();
-       
-       ctx.body = '';
+        const { type,entity_id } = ctx.params;
+        const model = type === 'room' ? Room : Event; 
+        const checkTable = await model.where({id:entity_id}).fetch({require:true});
+        const memberCtn = await Member.where({entity_type: type, entity_id}).count();
+
+        
+        if(memberCtn >= checkTable.get('members_limit')){
+            ctx.throwSingle('Exceeded user limit', 400);
+        }
+        ctx.body = '';
     }
 }
 router.use(authenticated)
 router.post('/:type/join', handler.join);
-router.delete('/:type/leave', handler.leave);
+router.delete('/:type/:entity_id', handler.leave);
+router.get('/:type/:entity_id', handler.checkInvite);
+router.get('/:type/:entity_id/members', handler.members);
+router.get('/:type/:entity_id/members_limit', handler.checkMemberLimit);
 
 module.exports = router.routes();

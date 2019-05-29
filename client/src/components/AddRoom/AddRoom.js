@@ -120,7 +120,7 @@ class AddRoom extends React.Component {
                     })
                     .catch(err => {
                         let errors = err.response.data.error.errors;
-                        for (const key in errors) {
+                        for (const key  in errors) {
                             this.showToast(errors[key][0], messageType.ERR);
                             errors[key] = true;
                         }
