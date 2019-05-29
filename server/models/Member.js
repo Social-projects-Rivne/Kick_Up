@@ -7,7 +7,10 @@ const Member = bookshelf.Model.extend(
     },
     async setCreatedAt() {
       this.set('created_at', new Date());
-    }
+    },
+    users() {
+      return this.hasMany('User','id','user_id');
+  },
   }
 );
 
