@@ -275,53 +275,42 @@ const handler = {
       isPinned: 'boolean'
     });
 
-    // In case we have room, just push new post to it;
-    MongoDbRoom.findOne({room_id: roomId}, (err, res) => {
-      if (res) {
-        res.posts.push({
-          // @todo add author id;
-          author_id: 1,
-          title: title,
-          text: text,    
-          comments: []
-        });
+    let room = await MongoDbRoom.findOne({room_id: roomId});
+    
+    if (room) {
+      room.posts.push({
+        // @todo add author id;
+        author_id: 1,
+        title: title,
+        text: text,    
+        comments: []
+      });
+    } else {
+      room = new MongoDbRoom(
+        {
+          room_id: roomId,
+          posts: [
+            {
+              // @todo add author id;
+              author_id: 1,
+              title: title,
+              text: text,
+              comments: []
+            }
+          ],
+          moderators_list: [],
+          gallery: [],
+          tags: [],
+          members: [],
+          //@todo ask we need it?
+          room_information: '',
+          ratings: []
+        }
+      );
+    }
 
-        res.save((err, doc) => {
-          //ctx.body = 111;
-        });
-
-      } else {
-        // Create new room, push post to it;
-        const newMongoRoom = new MongoDbRoom(
-          {
-            room_id: roomId,
-            posts: [
-              {
-                // @todo add author id;
-                author_id: 1,
-                title: title,
-                text: text,    
-                comments: []
-              }
-            ],
-            moderators_list: [],
-            gallery: [],
-            tags: [],
-            members: [],
-            //@todo ask we need it?
-            room_information: '',
-            ratings: []
-          }
-        );
-
-        newMongoRoom.save((err, doc) => {
-          //ctx.body = 222;
-        });
-      }
-    });
-
-    // @temp, we need return OK ctx body;
-    ctx.body = 'OK';
+    const res = await room.save();
+    ctx.body = res;
   }
 };
 

@@ -13,7 +13,10 @@ const roomsSchema = new Schema (
                     type: Date,
                     default: Date.now,
                 },
-                updated_at: Date,
+                updated_at: {
+                    type: Date,
+                    default: Date.now,
+                },
                 comments: [
                     {
                         author_id: Number,
@@ -22,7 +25,10 @@ const roomsSchema = new Schema (
                             type: Date,
                             default: Date.now,
                         },
-                        updated_at: Date,
+                        updated_at: {
+                            type: Date,
+                            default: Date.now,
+                        },
                         is_banned: Boolean,
                         child_comments: Array,
                     }
@@ -44,7 +50,6 @@ const roomsSchema = new Schema (
         ],
         tags: Array,
         members: Array,
-        room_information: String,
         ratings: [
             {
                 user_id: Number,
