@@ -12,6 +12,7 @@ import Gallery from 'react-grid-gallery';
 import SwipeableViews from 'react-swipeable-views';
 import Spinner from './../UI/Spinner/Spinner';
 import NeventCard from '../nEventCard/nEventCard';
+import PostCard from '../PostCard/PostCard';
 
 
 const convertTime = (str) => {
@@ -234,30 +235,9 @@ class RoomPage extends React.Component {
 
                     { (value === 4 && <TabContainer>
                         <Grid container spacing={24} className="room-details-card">
-                            {roomPageDB.posts.map((post) =>
-                                <Grid item xs={12} className="room-details-card-grid">
-                                    <Card className="post-card">
-                                        <CardActionArea>
-                                            <CardMedia
-                                                className="card-media"
-                                                image={post.cover}
-                                                title={post.title}
-                                            />
-                                            <CardContent>
-                                                <Typography gutterBottom variant="h5" component="h2">
-                                                    {post.title}
-                                                </Typography>
-                                                <Typography component="p">
-                                                    {post.description}
-                                                </Typography>
-                                            </CardContent>
-                                        </CardActionArea>
-                                        <CardActions>
-                                            <Button>
-                                                comment
-                                            </Button>
-                                        </CardActions>
-                                    </Card>
+                            {roomPageDB.posts.map((post, itr) =>
+                                <Grid key={itr} item xs={12} className="room-details-card-grid">
+                                    <PostCard />
                                 </Grid>
                             )}
                         </Grid>
