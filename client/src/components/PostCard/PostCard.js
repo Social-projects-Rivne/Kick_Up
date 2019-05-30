@@ -14,7 +14,6 @@ import {
     Collapse
 } from '@material-ui/core';
 import { Group, Loyalty, ExpandMore } from '@material-ui/icons';
-import StarRating from "../UI/StarRating/StarRating";
 
 import defaultAvatar from '../../assets/images/face.png';
 
@@ -67,29 +66,39 @@ class PostCard extends Component {
     }
     render = () => (
 <Card className="roomcard">
-        <Link 
-            data-wrapper-link
-        >
+        <Link data-wrapper-link>
             <CardHeader
                 className="roomcard__header"
-                title={this.props.title}
+                title={this.props.data.title}
                 subheader={
                     <div className="roomcard__header-info">
                         <div className="roomcard__avatar-wrapper">
                             <Avatar 
                                 className="roomcard__avatar" 
-                                src={this.props.authorAvatar ? this.props.authorAvatar : defaultAvatar}
+                                src={
+                                    this.props.data.author_details.avatar 
+                                    ? this.props.data.author_details.avatar 
+                                    : defaultAvatar
+                                }
                             >
                             </Avatar>
-                            <span>{`${this.props.authorName} ${this.props.authorLastName}`}</span>
+                            <span>{`${
+                                this.props.data.author_details.firstName
+                                ? this.props.data.author_details.firstName
+                                : ''
+                            } ${
+                                this.props.data.author_details.lastName
+                                ? this.props.data.author_details.lastName
+                                : ''
+                                }`}</span>
                         </div>
-                        <StarRating rating={this.props.eventRating} />
                     </div>
                 }
             >
         </CardHeader>
         </Link>
-        <CardMedia
+        {/* @temp We may need it to add covers done by Igor */}
+        {/* <CardMedia
             className="roomcard__img-wrapper"
             image={this.props.cover}
         >
@@ -97,10 +106,10 @@ class PostCard extends Component {
                 <Loyalty />
                 <b>{this.props.category}</b>
             </div>
-        </CardMedia>
+        </CardMedia> */}
         <CardContent className="roomcard__description">
             <Typography component="p">
-                {this.props.description}
+                Yay
             </Typography>
         </CardContent>
         <CardActions 

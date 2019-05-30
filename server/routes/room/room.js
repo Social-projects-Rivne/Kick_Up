@@ -1,7 +1,7 @@
 const Router = require('koa-router');
 const constants = require('./../../config/constants');
 const MongoDbRoom = require('../../mongoDB/models/modelRoom');
-const { Room, Category, Member } = require('../../models');
+const { Room, Category, Member, User } = require('../../models');
 const validate = require('../../services/Validator');
 const router = new Router({ prefix: '/api/room'});
 const faker = require('faker');
@@ -311,6 +311,67 @@ const handler = {
 
     const res = await room.save();
     ctx.body = res;
+  },
+  async getRoomPostsById(ctx) {    
+    const getUserData = async function(id) {
+      let res = null;
+      id = parseInt(id);
+
+      // Get data;
+      if (id) res = await User.where({id: id}).fetch();
+      if (res) {
+        res = {
+          id,
+          firstName: res.attributes.first_name,
+          lastName: res.attributes.last_name,
+          avatar: res.attributes.avatar
+        }
+      }
+
+      return res;
+    };
+    const processUserDataRequests = async function(ids) {
+      let data = [];
+      const promises = ids.map(getUserData);
+
+      return await Promise.all(promises);
+    };
+    
+    let { id:roomId } = ctx.params;
+    roomId = parseInt(roomId);
+
+    await validate({roomId}, {
+      roomId: 'numeric|min:1',
+    });
+
+    // Retrieve posts;
+    let roomPosts = await MongoDbRoom.findOne({room_id: roomId});
+    
+    // Fuck yeah, get user data for each post;
+    if (roomPosts) {
+
+      // Convert mongoose array to array;
+      roomPosts = roomPosts.posts.map(post => post.toObject());
+
+      // Query MySQL for users details;
+      let ids = roomPosts.map(post => post.author_id);
+      let usersData = await processUserDataRequests(ids);
+
+      if (usersData) {
+        //Add received data to MongoDB data;
+        roomPosts.forEach((post)  => {
+          let filteredUserData = usersData.find(item => item.id === post.author_id);
+          
+          if (filteredUserData) {
+            delete filteredUserData['id'];
+            post.author_details = filteredUserData;
+          }
+        });
+      }
+    }
+
+    // Return posts;
+    ctx.body = roomPosts ? roomPosts : []; 
   }
 };
 
@@ -366,6 +427,7 @@ router.get('/sort', handler.sort);
 router.get('/filter', handler.filter);
 router.post('/new-post', handler.addPost);
 router.get('/:id', handler.getRoomById);
+router.get('/:id/posts', handler.getRoomPostsById);
 router.post('/', handler.createRoom);
 router.put('/:id', handler.updateRoomById);
 

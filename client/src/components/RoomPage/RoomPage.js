@@ -65,16 +65,30 @@ class RoomPage extends React.Component {
 
     state = {
         value: 0,
-        roomPageDB: null
+        roomPageDB: null,
+        roomPagePosts: []
     };
 
     componentDidMount() {
         const { id } = this.props.match.params;
+
+        // Load MySQL DB room data;
         axios.get("/api/room/" + id)
             .then(res => {
                 this.setState({ roomPageDB: res.data });
             })
             .catch(err => console.log(err));
+        
+        // Retrieve MondoDB posts with comments;
+        axios
+            .get(`/api/room/${id}/posts`)
+            .then(res => {
+                if (Array.isArray(res.data)) {
+                    this.setState({roomPagePosts: res.data});
+                }
+            })
+            // In case of error, we are OK;
+            .catch(err => {});
     };
 
     refReadMore = (element) => {
@@ -96,8 +110,9 @@ class RoomPage extends React.Component {
     };
 
     render() {
-        const { value, roomPageDB } = this.state;
+        const { value, roomPageDB, roomPagePosts } = this.state;
         const { isAuthenticated } = this.props;
+        console.log('roomPagePosts', roomPagePosts);
 
         if (!roomPageDB) {
             return (<Spinner className="rooms-page"/>);
@@ -199,7 +214,6 @@ class RoomPage extends React.Component {
                             </Grid>)}
                         </Grid>
                         <Grid container spacing={24}>
-                            {console.log(roomPageDB)}
                             {roomPageDB.event.map((event) =>
                                 <Grid item lg={4} md={6} xs={12} className="room-details-card-grid">
                                     <NeventCard
@@ -235,10 +249,11 @@ class RoomPage extends React.Component {
 
                     { (value === 4 && <TabContainer>
                         <Grid container spacing={24} className="room-details-card">
-                            {roomPageDB.posts.map((post, itr) =>
-                                <Grid key={itr} item xs={12} className="room-details-card-grid">
-                                    <PostCard />
-                                </Grid>
+                            {
+                                roomPagePosts.map((post, itr) => 
+                                    <Grid key={itr} item xs={12} className="room-details-card-grid">
+                                        <PostCard data={post} />
+                                    </Grid>
                             )}
                         </Grid>
                     </TabContainer>) || <TabContainer></TabContainer> }
