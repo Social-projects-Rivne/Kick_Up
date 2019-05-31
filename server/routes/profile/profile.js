@@ -1,6 +1,6 @@
 const Router = require('koa-router');
 const { authenticated } = require('../../middlewares');
-const { User, Event, Room } = require('../../models');
+const { User } = require('../../models');
 const validate = require('../../services/Validator');
 const { uploader } = require('../../services');
 

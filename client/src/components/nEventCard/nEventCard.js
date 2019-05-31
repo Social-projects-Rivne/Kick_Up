@@ -30,7 +30,7 @@ const NeventCard = props => (
                 title={props.title}
                 subheader={
                     <div className="event-card__header-info">
-                        <Link component={RouterLink} to={`/profile/${props.id}`} className="event-card__creator-link">
+                        <Link component={RouterLink} to={`/profile/${props.authorId}`} className="event-card__creator-link">
                             <div className="event-card__avatar-wrapper">
                                 <Avatar
                                     className="event-card__avatar"
@@ -55,7 +55,7 @@ const NeventCard = props => (
                 </div>
                 <div className="event-card__location">
                     <LocationOn />
-                    <b>{`${props.eventLocation}`}</b>
+                    <b>{`${(props.eventLocation).split(',')[0]}`}</b>
                 </div>
             </CardMedia>
             <CardContent className="event-card__description">

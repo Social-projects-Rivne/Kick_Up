@@ -72,7 +72,7 @@ class NroomCard extends Component {
         <Card className="roomcard">
             <Link 
                 component={RouterLink} 
-                to={`/rooms/${this.props.id}`} 
+                to={`/room/${this.props.id}`}
                 title="Click to view room details"
                 data-wrapper-link
             >

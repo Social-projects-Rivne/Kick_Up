@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import {Tabs, Tab, AppBar, Typography, Avatar, Grid, Paper, List, ListItem, Card, Divider, InputLabel,
+import {Tabs, Tab, AppBar, Typography, Avatar, Grid, Paper, List, ListItem, Card, InputLabel,
     CardActionArea, CardContent, CardMedia } from '@material-ui/core';
 import { Group, AssignmentTurnedIn, PhotoLibrary, Edit } from '@material-ui/icons';
 import SwipeableViews from "react-swipeable-views";
@@ -236,14 +236,14 @@ class UserProfile extends React.Component {
                                                         />
                                                     </CardActionArea>
                                                 </Link>
-                                                <Link to={'/profile/' + userProfileData.id} className="user-profile-room-card-link">
+                                                <Link to={'/profile/' + room.creator_id} className="user-profile-room-card-link">
                                                     <div className="user-profile-room-card-header">
                                                         <Avatar
-                                                            src={userProfileData.avatar ? userProfileData.avatar : defaultAvatar}
+                                                            src={room.avatar ? room.avatar : defaultAvatar}
                                                         >
                                                         </Avatar>
                                                         <span className="user-profile-room-card-header-creator">
-                                                            {`by ${userProfileData.first_name} ${userProfileData.last_name}`}
+                                                            {`by ${room.first_name} ${room.last_name}`}
                                                         </span>
                                                     </div>
                                                 </Link>
@@ -263,8 +263,8 @@ class UserProfile extends React.Component {
                                                 title={event.title}
                                                 rating={event.eventRating}
                                                 authorId={event.creator_id}
-                                                authorName={userProfileData.first_name}
-                                                authorLastName={userProfileData.last_name}
+                                                authorName={event.first_name}
+                                                authorLastName={event.last_name}
                                                 authorAvatar={event.avatar}
                                                 cover={event.cover}
                                                 description={event.description}

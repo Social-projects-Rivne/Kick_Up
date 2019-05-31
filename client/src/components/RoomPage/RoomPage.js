@@ -12,6 +12,7 @@ import Gallery from 'react-grid-gallery';
 import SwipeableViews from 'react-swipeable-views';
 import Spinner from './../UI/Spinner/Spinner';
 import NeventCard from '../nEventCard/nEventCard';
+import defaultAvatar from "../../assets/images/face.png";
 
 const convertTime = (str) => {
     // Define manually date;
@@ -280,7 +281,7 @@ class RoomPage extends React.Component {
                                         authorAvatar={this.state.roomPageDB.creator.avatar}
                                         cover={event.cover}
                                         description={event.description}
-                                        eventLocation={(event.location).split(',')[0]}
+                                        eventLocation={event.location}
                                         eventDate={convertTime(event.start_date).date}
                                         eventTime={convertTime(event.start_date).time}
                                         members={event.members}
@@ -338,7 +339,7 @@ class RoomPage extends React.Component {
                                         <ListItem className="avatar-center">
                                             <ListItemAvatar>
                                                 <Avatar>
-                                                    <Avatar alt="" src={member.avatar} />
+                                                    <Avatar alt="" src={member.avatar ? member.avatar : defaultAvatar} />
                                                 </Avatar>
                                             </ListItemAvatar>
                                             <ListItemText primary={member.first_name + " " + member.last_name} className="avatar-flex" />

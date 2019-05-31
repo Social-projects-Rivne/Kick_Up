@@ -20,6 +20,13 @@
         animation-fill-mode: forwards;
     }
 
+    .event-page__member_link,
+    .event-page__member_link:hover,
+    .event-page__member_link:active,
+    .event-page__member_link:visited {
+        text-decoration: none;
+    }
+
     // Hide on load, for better UX;
     &.event-page_loading {
         max-height: 0;
