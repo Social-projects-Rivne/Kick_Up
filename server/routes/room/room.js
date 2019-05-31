@@ -313,28 +313,28 @@ const handler = {
     ctx.body = res;
   },
   async getRoomPostsById(ctx) {    
-    const getUserData = async function(id) {
+    const getUserData = async function(ids) {
       let res = null;
-      id = parseInt(id);
-
+      
       // Get data;
-      if (id) res = await User.where({id: id}).fetch();
-      if (res) {
-        res = {
-          id,
-          firstName: res.attributes.first_name,
-          lastName: res.attributes.last_name,
-          avatar: res.attributes.avatar
+      if (Array.isArray(ids) && ids.length > 0) {
+        res = await User.where(qb => {
+          qb.whereIn('id', ids);
+        }).fetchAll({required:true});
+
+        if (res) {
+          res = res.serialize().map(el => {
+            return {
+              id: el.id,
+              firstName: el.first_name,
+              lastName: el.last_name,
+              avatar: el.avatar
+            }
+          });
         }
       }
 
       return res;
-    };
-    const processUserDataRequests = async function(ids) {
-      let data = [];
-      const promises = ids.map(getUserData);
-
-      return await Promise.all(promises);
     };
     
     let { id:roomId } = ctx.params;
@@ -347,7 +347,7 @@ const handler = {
     // Retrieve posts;
     let roomPosts = await MongoDbRoom.findOne({room_id: roomId});
     
-    // Fuck yeah, get user data for each post;
+    // Get user data for each post;
     if (roomPosts) {
 
       // Convert mongoose array to array;
@@ -355,7 +355,7 @@ const handler = {
 
       // Query MySQL for users details;
       let ids = roomPosts.map(post => post.author_id);
-      let usersData = await processUserDataRequests(ids);
+      let usersData = await getUserData(ids);
 
       if (usersData) {
         //Add received data to MongoDB data;
