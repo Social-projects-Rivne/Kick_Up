@@ -207,7 +207,8 @@ class EventPage extends Component {
                 <ImageUploader 
                     show={this.state.showUpload}
                     closeUploadComponent={this.closeUploadComponent} 
-                    entityURL={this.props.match.url} 
+                    entityURL={this.props.match.url}
+                    isAuthenticated={this.props.isAuthenticated}
                 />
                 <AppBar position="fixed" className="tab-bar">
                     <Tabs

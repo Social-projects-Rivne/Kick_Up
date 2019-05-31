@@ -12,7 +12,6 @@ const rule = {
 }
 const handler = {
     async upload(ctx){
-        console.log('ctx', ctx)
         await validate({ ...ctx.params, ...ctx.request.files.file },rule)
         const { user_id } = ctx.state;
         const { entityType,entity_id } = ctx.params;

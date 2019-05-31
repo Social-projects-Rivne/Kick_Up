@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom"
 import axios from 'axios';
 
 import Dropzone from "./DropZone/DropZone";
@@ -10,23 +11,43 @@ class ImageUploader extends Component {
 
   state = {
     files: [],
+    rejectedFiles: [],
     deleteFile: false,
     uploading: false,
     uploadProgress: {},
     limitFiles: false,
-    successfullUploaded: false
+    successfullUploaded: false,
+    error: null
   };
 
   onFilesAdded = (files) => {
-    console.log(files);
-    const addedFiles = [...this.state.files].concat(files);
-    if (addedFiles.length < 10) {
+    const maxSize = 1048576;
+    const maxFiles = 5;
+    let validatedFiles = [];
+    let rejectedFiles = [];
+    const currentFiles = [...this.state.files, ...this.state.rejectedFiles];
+    const filteredFiles = files.filter(e => {
+      return !currentFiles.find(file => file.name === e.name)
+    })
+    filteredFiles.map(e => {
+      if (e.size < maxSize) {
+        validatedFiles.push(e)
+      } else {
+        rejectedFiles.push(e)
+      }
+    })
+    const addedFiles = [...this.state.files].concat(validatedFiles);
+    const addedRejectedFiles = [...this.state.rejectedFiles].concat(rejectedFiles);
+    if (addedFiles.length <= maxFiles) {
       this.setState({
         files: addedFiles,
         limitFiles: false
       });
     } else {
       this.setState({limitFiles: true})
+    }
+    if (addedRejectedFiles.length <= maxFiles) {
+      this.setState({ rejectedFiles: addedRejectedFiles });
     }
   }
 
@@ -36,14 +57,6 @@ class ImageUploader extends Component {
     this.state.files.forEach((file, index) => {
         promises.push(setTimeout(() => this.sendRequest(file), 500 * index));
     });
-    // try {
-    //   Promise.all(promises);
-
-    //   this.setState({ successfullUploaded: true, uploading: false });
-    // } catch (e) {
-    //   // Not Production ready! Do some error handling here instead...
-    //   this.setState({ successfullUploaded: true, uploading: false });
-    // }
   }
 
   sendRequest = (file) => {
@@ -51,27 +64,23 @@ class ImageUploader extends Component {
     formData.append("file", file, file.name);
     axios.post('/api/upload' + this.props.entityURL, formData, {
         onUploadProgress: progressEvent => {
-            console.log("pending")
             const copy = { ...this.state.uploadProgress };
             copy[file.name] = {
                 state: "pending",
                 percentage: (progressEvent.loaded / progressEvent.total) * 100
             };
             this.setState({ uploadProgress: copy });
-            console.log('progressEvent', progressEvent);
         }
     })
         .then(res => {
-            console.log("done")
             const copy = { ...this.state.uploadProgress };
             copy[file.name] = { state: "done", percentage: 100 };
             this.setState({ uploadProgress: copy, successfullUploaded: true });
             setTimeout(() => this.setState({ uploading: false }), 1000);
-            console.log(res)
         })
         .catch(error => {
            console.log(error);
-           this.setState({ successfullUploaded: true, uploading: false });
+           this.setState({ error: "Ooops! Something were wrong!", successfullUploaded: true, uploading: false });
         })
   }
 
@@ -81,6 +90,14 @@ class ImageUploader extends Component {
       return e.name !== file.name
     });
     this.setState({files});
+  }
+
+  deleteSizeFile = (file) => () => {
+    let CopyFiles = [ ...this.state.rejectedFiles ];
+    const rejectedFiles = CopyFiles.filter(e => {
+      return e.name !== file.name
+    });
+    this.setState({rejectedFiles});
   }
 
   renderProgress = (file) => {
@@ -117,7 +134,7 @@ class ImageUploader extends Component {
         <Button
             variant="outlined"
             onClick={() =>
-            this.setState({ files: [], successfullUploaded: false, limitFiles: false })
+            this.setState({ files: [], rejectedFiles: [], successfullUploaded: false, limitFiles: false })
           }
         >
           Clear
@@ -135,7 +152,17 @@ class ImageUploader extends Component {
       );
     }
   }
+
   render() {
+    const renderSignIn = 
+      <div className="upload-card">
+          <p>Please SignUp or SignIn!</p>
+          <div className="upload-card-links">
+            <Link to={"/sign-up"} className="upload-card-link" >SignUp</Link>
+            <Link to={"/sign-in"} className="upload-card-link" >SignIn</Link>
+          </div>
+      </div>;
+
     const uploadCard = 
       <div className="upload-card" onClick={(event) => event.stopPropagation()} >
         <Close className="upload-card-close" onClick={this.props.closeUploadComponent} />
@@ -149,31 +176,40 @@ class ImageUploader extends Component {
               />
             </div>
             <div className="Files">
+              {this.state.limitFiles && <div className="row row-limit"><span className="limit-files">You can upload max 5 files at once!</span></div>}
               {this.state.files.map(file => {
                 return (
                   !file.deletedFile && 
-                  <div key={file.name} className="Row">
+                  <div key={file.name} className="row">
                     <span className="Filename">{file.name}</span>
                     {!this.renderProgress(file) && <DeleteForeverOutlined className="delete-icon" onClick={this.deleteFile(file)} />}
                     {this.renderProgress(file)}
                   </div>
                 );
               })}
-              {this.state.limitFiles && <div className="Row"><span className="limit-files">You can upload less than 10 files in one time!</span></div>}
+              {this.state.rejectedFiles.map(file => {
+                return (
+                  <div key={file.name} className="row">
+                    <span className="Filename file-size">{file.name}</span>
+                    <DeleteForeverOutlined className="delete-icon" onClick={this.deleteSizeFile(file)} />
+                    <div className="limit-files">Max size 1mb!</div>
+                  </div>
+                );
+              })}
             </div>
           </div>
+          {this.state.error && <p className="upload-error">{this.state.error}</p>}
           <div className="Actions">{this.renderActions()}</div>
         </div>
       </div>
 
     return (
       <>
-        <Button />
         {this.props.show ? 
         <div className="upload-wrapper" 
           onClick={this.props.closeUploadComponent}
           >
-            {uploadCard}
+            {this.props.isAuthenticated ? uploadCard : renderSignIn}
         </div> :
         null}
       </>

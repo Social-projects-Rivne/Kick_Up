@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 
-import "./DropZone.scss";
 import uploadImage from "../../../assets/images/upload-cloud.svg";
 
 class Dropzone extends Component {
@@ -19,13 +18,12 @@ class Dropzone extends Component {
     }
 
     onFilesAdded = (evt) => {
-        console.log('onFilesAdded evt', evt.target)
         if (this.props.disabled) return;
         const files = evt.target.files;
         if (this.props.onFilesAdded) {
-            const array = this.fileListToArray(files);
-            this.props.onFilesAdded(array);
+            this.props.onFilesAdded(Object.values(files));
         }
+        evt.target.value = null;
     }
 
     onDragOver = (event) => {
@@ -43,21 +41,9 @@ class Dropzone extends Component {
         if (this.props.disabled) return;
         const files = event.dataTransfer.files;
         if (this.props.onFilesAdded) {
-            const array = this.fileListToArray(files);
-            this.props.onFilesAdded(array);
+            this.props.onFilesAdded(Object.values(files));
         }
         this.setState({ hightlight: false });
-    }
-
-    fileListToArray = (list) => {
-        const array = [];
-        for (var i = 0; i < list.length; i++) {
-            array.push(list.item(i));
-        }
-        return array;
-    }
-    componentDidMount() {
-        console.log('component did mount');
     }
 
     render() {
@@ -69,14 +55,11 @@ class Dropzone extends Component {
                 onDrop={this.onDrop}
                 style={{ cursor: this.props.disabled ? "default" : "pointer" }}
             >
-                <label htmlFor="test">test</label>
                 <input
                     ref={this.fileInputRef}
-                    id="test"
                     className="FileInput"
                     type="file"
-                    accept="image/png, image/gif, image/jpg"
-                    maxSize={5242880}
+                    accept="image/png, image/gif, image/jpg, image/jpeg"
                     multiple
                     onChange={this.onFilesAdded}
                 />
