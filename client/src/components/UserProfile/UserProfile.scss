@@ -1,0 +1,179 @@
+#root .user-profile-page {
+  background-color: $white;
+
+  a:-webkit-any-link {
+    color: $black;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .user-profile-page-container {
+    padding: 24px;
+    min-height: calc(100vh - 86px - 51px);
+    max-width: 1500px;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 1rem;
+    line-height: 1.5rem;
+    font-weight: 100;
+
+    @include media-breakpoint-down(lg) {
+      padding: 24px 0 24px;
+
+      .user-profile-page-avatar-grid {
+        margin-right: 24px;
+      }
+    }
+
+    @include media-breakpoint-down(md) {
+      .user-profile-page-avatar-grid {
+        margin-right: 0;
+      }
+    }
+
+    .user-profile-page-gallery {
+      padding: 12px;
+    }
+
+    div[class*=MuiGrid-spacing] {
+      margin: 0;
+      width: auto;
+    }
+
+    div[class*=MuiCardMedia-root] .event-card__date,
+    div[class*=MuiCardMedia-root] .event-card__location {
+      transform: none;
+    }
+
+    .event-card {
+      background: white;
+      padding-bottom: 12px;
+      overflow-y: hidden;
+      border-radius: 15px;
+
+      .event-card__description {
+        padding: 16px;
+      }
+    }
+
+    .star-rating, .event-card__members {
+      display: none;
+    }
+
+    span[class*=MuiCardHeader-title] {
+      display: flex;
+      justify-content: center;
+    }
+
+    .user-profile-room-card-align {
+      display: flex;
+      justify-content: center;
+
+      .user-profile-room-card {
+        width: 100%;
+        font-size: 1rem;
+        line-height: 1.5rem;
+        font-weight: 100;
+        border-radius: 15px;
+
+        .user-profile-room-card-link,
+        .user-profile-room-card-link:hover,
+        .user-profile-room-card-link:active,
+        .user-profile-room-card-link:visited {
+          text-decoration: none;
+          background-color: transparent;
+          color: $black;
+        }
+
+        .user-profile-room-card-header {
+          display: flex;
+          padding: 12px;
+
+          .user-profile-room-card-header-creator {
+            max-height: 2rem;
+            display: flex;
+            align-items: center;
+            padding: 6px;
+          }
+        }
+
+        .user-profile-room-card-media {
+          min-height: 200px;
+        }
+      }
+    }
+
+    .user-profile-tabs {
+      box-shadow: none;
+      background-color: transparent;
+      color: $secondaryBlack;
+      align-items: center;
+
+      .user-profile-tabs-menu {
+        @include media-breakpoint-down(lg) {
+          position: fixed;
+          bottom: 0;
+          z-index: 1;
+          width: 100%;
+          background-color: $primary;
+
+          span[class*=colorSecondary] {
+            background-color: $black;
+          }
+
+          div[class*=flexContainer] {
+            justify-content: center;
+          }
+        }
+      }
+    }
+
+    span[class*=colorSecondary] {
+      background-color: $primary;
+    }
+
+    .user-profile-page-avatar-align {
+      align-items: start;
+      display: flex;
+
+      div[class*=item], div[class*=container] {
+        display: flex;
+        justify-content: center;
+      }
+
+      .user-profile-page-paper-user-info {
+        padding: 12px;
+        box-shadow: none;
+
+        .user-profile-page-deliver {
+          min-height: 1.1px;
+        }
+      }
+
+      .user-profile-page-avatar {
+        margin-bottom: 12px;
+        width: 260px;
+        height: 260px;
+        display: flex;
+        justify-content: center;
+
+        @include media-breakpoint-down(sm) {
+          width: 200px;
+          height: 200px;
+        }
+      }
+    }
+
+    .user-profile-media {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      overflow: hidden;
+
+      .user-profile-gridList {
+        width: 500px;
+        height: 450px;
+      }
+    }
+  }
+}

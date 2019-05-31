@@ -1,6 +1,7 @@
 import React, { Component } from "react";
+import { Link } from 'react-router-dom';
 
-import { 
+import {
    AppBar,
    Tabs,
    Tab,
@@ -39,6 +40,7 @@ import ImageUploader from "../ImageUploader/ImageUploader";
 
 // @temp, we need add get data from MongoDB;
 import mock from '../../mocks/eventPage';
+import defaultAvatar from "../../assets/images/face.png";
 
 // Swipers params for event page;
 const userParams = {
@@ -243,13 +245,13 @@ class EventPage extends Component {
     }
 
     render() {
-        const stateUser = this.props.user; 
-        const eventId = this.props.match.params.id;
-
-        if(stateUser){
-            const checkInvite = stateUser.invited.find(event => event.entity_type === 'event' && event.entity_id === +eventId);
-            //TO DO
-        }
+        // const stateUser = this.props.user;
+        // const eventId = this.props.match.params.id;
+        //
+        // if(stateUser){
+        //     const checkInvite = stateUser.invited.find(event => event.entity_type === 'event' && event.entity_id === +eventId);
+        //     //TO DO
+        // }
 
         const joinBtn = (
             <Fab className="event-page__fab" variant="extended" color="primary" onClick={this.join}>
@@ -439,18 +441,19 @@ class EventPage extends Component {
                         {
                             this.state.users.length > 0 &&
                             <Swiper {...userParams}>
-                                {this.state.users.map((user, idx) => 
-                                    <ListItem key={idx} className="event-page__users-list-item">
-                                        <ListItemAvatar>
-                                            <Avatar>
-                                                {/* @todo take data from db */}
-                                                <Avatar alt="" src={user.image} />
-                                            </Avatar>
-                                        </ListItemAvatar>
-                                        <ListItemText
-                                            primary={user.nick || `${user.first_name} ${user.last_name}`}
-                                        />
-                                    </ListItem>
+                                {this.state.users.map((user, idx) =>
+                                    <Link to={'/profile/' + user.id} className="event-page__member_link">
+                                        <ListItem key={idx} className="event-page__users-list-item">
+                                            <ListItemAvatar>
+                                                <Avatar>
+                                                    <Avatar alt="" src={user.avatar ? user.avatar : defaultAvatar} />
+                                                </Avatar>
+                                            </ListItemAvatar>
+                                            <ListItemText
+                                                primary={user.nick || `${user.first_name} ${user.last_name}`}
+                                            />
+                                        </ListItem>
+                                    </Link>
                                 )}
                             </Swiper>
                         }

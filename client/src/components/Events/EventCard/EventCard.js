@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 import { Grid } from "@material-ui/core";
 import { LocationOn, People } from "@material-ui/icons";
+import defaultAvatar from "../../../assets/images/face.png";
 
 const eventCard = props => {
   const [isToggle, ToggleHandler] = useState(false);
@@ -18,7 +19,7 @@ const eventCard = props => {
         <span>{props.members}</span>
       </li>
       <li>
-        <img src={props.avatar} alt={props.avatar}/>
+        <img src={props.avatar ? props.avatar : defaultAvatar} alt={props.avatar}/>
       </li>
     </ul>;
   return (
@@ -31,7 +32,7 @@ const eventCard = props => {
           </div>
           <div className="location">
             <LocationOn />
-            <span>{props.location}</span>
+            <span>{(props.location).split(',')[0]}</span>
           </div>
         </div>
         <div className="data" onClick={props.clicked}>
