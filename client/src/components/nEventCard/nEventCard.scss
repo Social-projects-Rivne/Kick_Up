@@ -227,9 +227,10 @@
 
 // Desktops;
 @media only screen and (min-width: 1024px) {
-    .event-card {
-        max-width: 407px;
+    #root .event-card {
         border: 1px solid lighten($secondaryBlack, 92%);
+        max-height: calc(100vh - 3.429rem - 3rem - 120px);
+        overflow-y: auto;
     }
 
     .event-card__header span:first-of-type {
@@ -246,6 +247,7 @@
     }
 
     // Anti-BEM here will be best option;
+    .home__events-swiper .swiper-slide.swiper-slide-active .event-card__date,
     .home__events-swiper .swiper-slide-next .event-card__date,
     .home__events-swiper .swiper-slide-next + .swiper-slide .event-card__date,
     .home__events-swiper .swiper-slide-prev .event-card__date {
@@ -254,6 +256,8 @@
             set-label-bg-left 0.7s ease-in 3s;
         animation-fill-mode: forwards;
     }
+
+    .home__events-swiper .swiper-slide-active .event-card__location,
     .home__events-swiper .swiper-slide-next .event-card__location,
     .home__events-swiper .swiper-slide-next + .swiper-slide .event-card__location,
     .home__events-swiper .swiper-slide-prev .event-card__location {

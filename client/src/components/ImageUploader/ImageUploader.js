@@ -156,11 +156,7 @@ class ImageUploader extends Component {
   render() {
     const renderSignIn = 
       <div className="upload-card">
-          <p>Please SignUp or SignIn!</p>
-          <div className="upload-card-links">
-            <Link to={"/sign-up"} className="upload-card-link" >SignUp</Link>
-            <Link to={"/sign-in"} className="upload-card-link" >SignIn</Link>
-          </div>
+          <p>Only members can upload images!</p>
       </div>;
 
     const uploadCard = 
@@ -209,7 +205,7 @@ class ImageUploader extends Component {
         <div className="upload-wrapper" 
           onClick={this.props.closeUploadComponent}
           >
-            {this.props.isAuthenticated ? uploadCard : renderSignIn}
+            {this.props.authUser ? uploadCard : renderSignIn}
         </div> :
         null}
       </>

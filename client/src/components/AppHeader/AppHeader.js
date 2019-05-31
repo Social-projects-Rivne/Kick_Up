@@ -96,7 +96,7 @@ class AppHeader extends React.Component {
         const authFieldForMobile = isAuthenticated && user
     ?       <BottomNavigation value={activePage} onChange={this.handleChangeActivePage} className="navigation-buttons">
                 <BottomNavigationAction className="icon-details" label="Events" value="/events" icon={<EventAvailable />} />
-                <BottomNavigationAction className="icon-details" label="Spaces" value="/rooms" icon={<SupervisorAccount />} />
+                <BottomNavigationAction className="icon-details" label="Rooms" value="/rooms" icon={<SupervisorAccount />} />
                 {avatar}
             </BottomNavigation>
         :   <BottomNavigation value={activePage} onChange={this.handleChangeActivePage} className="navigation-buttons">

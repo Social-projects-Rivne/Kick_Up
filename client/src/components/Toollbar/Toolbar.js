@@ -43,19 +43,19 @@ class Toolbar extends Component {
   }
 
   render() {
-    const { filters, buttons, addLink } = this.props;
+    const { filters, buttons, addLink, isAuthenticated } = this.props;
 
     let ToolbarButtons = null;
     if (buttons) {
       ToolbarButtons = (
         <>
-          <Grid item>
+          {isAuthenticated && (<Grid item>
             <Link to={addLink}>
               <Fab size="small" aria-label="Add" className="toolbar-add">
                 <AddIcon />
               </Fab>
             </Link>
-          </Grid>
+          </Grid>)}
           {this.props.buttons.map(e => {
             return (
               <Grid item key={e.name}>

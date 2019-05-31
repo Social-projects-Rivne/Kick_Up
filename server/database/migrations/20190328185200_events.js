@@ -5,7 +5,7 @@ exports.up = async knex => {
     t.string('title').nullable();
     t.integer('creator_id').unsigned();
     t.integer('category_id').unsigned();
-    t.integer('room_id').unsigned();
+    t.integer('room_id').nullable().unsigned();
     t.string('description',500).nullable();
     t.string('cover').nullable();
     t.string('location').nullable();

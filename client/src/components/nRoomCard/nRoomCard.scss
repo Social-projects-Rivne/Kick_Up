@@ -327,15 +327,17 @@
 
 // Desktops;
 @media only screen and (min-width: 1024px) {
-    .roomcard {
+    #root .roomcard {
         position: relative;
         margin: 0 auto;
         display: flex;
         flex-wrap: wrap;
-        max-width: 70vw;
+        max-width: 928px;
+        max-height: calc(100vh - 3.429rem - 2.9rem);
         margin-top: 1rem;
         border: 1px solid lighten($secondaryBlack, 92%);
         border-top-color: lighten($secondaryBlack, 98%);
+        overflow-y: auto;
     }
 
     .roomcard__header {
@@ -404,8 +406,9 @@
         overflow: visible;
     }
 
-    .roomcard .roomcard__events-wrapper .event-card {
+    #root .roomcard .roomcard__events-wrapper .event-card {
         max-width: 23vw;
+        max-height: unset;
     }
 
     #root .roomcard .roomcard__events-wrapper .event-card

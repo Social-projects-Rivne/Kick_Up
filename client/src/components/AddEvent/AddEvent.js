@@ -3,7 +3,7 @@ import React from 'react';
 import axios from 'axios';
 
 import { TextField, Input, FormControlLabel, FormGroup, Button, NativeSelect, Paper,
-    InputLabel, FormControl, Grid, Stepper, Step, StepLabel, StepContent, Switch, InputAdornment } from '@material-ui/core';
+    InputLabel, FormControl, Stepper, Step, StepLabel, StepContent, Switch, InputAdornment } from '@material-ui/core';
 import { CloudUpload, Link } from '@material-ui/icons';
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
@@ -23,7 +23,7 @@ class AddEvent extends React.Component {
         activeStep: 0,
         eventId: 1,
         userId: 0,
-        roomId: 1,
+        roomId: null,
         loading: true,
         tagId: 0,
         eventData: {
@@ -61,6 +61,11 @@ class AddEvent extends React.Component {
     };
 
     componentDidMount() {
+        const { id } = this.props.match.params;
+        if (id) {
+            this.setState({roomId: id});
+        }
+
         axios.get("/api/category")
             .then(res => {
                 this.setState({
@@ -164,7 +169,7 @@ class AddEvent extends React.Component {
                         });
                     })
                     .catch(err => {
-                        let errors = err.response.data.error.errors;
+                        let errors = err.response.data.error ? err.response.data.error.errors : [];
                         for (const key in errors) {
                             this.showToast(errors[key][0], messageType.ERR);
                             errors[key] = true;
@@ -375,13 +380,13 @@ class AddEvent extends React.Component {
                                     <InputLabel className="created-event-info-label">
                                         Category:&nbsp;
                                         {addEventDB.categories.map((category) =>
-                                            (category.id == this.state.eventData.category) ? (category.title) : null
+                                            (category.id === this.state.eventData.category) ? (category.title) : null
                                         )}
                                     </InputLabel>
                                     <InputLabel className="created-event-info-label">
                                         Tags:&nbsp;
                                         {addEventDB.tags.map((tag) =>
-                                            (tag.id == this.state.eventData.tags) ? (tag.title) : null
+                                            (tag.id === this.state.eventData.tags) ? (tag.title) : null
                                         )}
                                     </InputLabel>
                                     <InputLabel className="created-event-info-label">

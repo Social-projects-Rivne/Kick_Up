@@ -11,6 +11,46 @@ import { Comment, Collections, Face, NewReleases, EventAvailable, Add, Info } fr
 import Gallery from 'react-grid-gallery';
 import SwipeableViews from 'react-swipeable-views';
 import Spinner from './../UI/Spinner/Spinner';
+import NeventCard from '../nEventCard/nEventCard';
+
+
+const convertTime = (str) => {
+    // Define manually date;
+    const months = {
+        '01': 'January',
+        '02': 'February',
+        '03': 'March',
+        '04': 'April',
+        '05': 'May',
+        '06': 'June',
+        '07': 'July',
+        '08': 'August',
+        '09': 'September',
+        '10': 'October',
+        '11': 'November',
+        '12': 'December'
+    };
+
+    if (str && typeof str === 'string') {
+        try{
+            let [, month, date] = [...str.split('-')];
+            let [hour, min] = [...date.split('T').pop().split(':')];
+
+            date = date.slice(0, 2);
+
+            return {
+                date: `${date[0] === '0' ? date.slice(1) : date} ${months[month]}`,
+                time: `${hour}:${min}`
+            }
+        } catch(err) {
+            console.log('ERR', err);
+            return {
+                date: '',
+                time: ''
+            }
+        }
+    }
+};
 
 function TabContainer(props) {
     return (
@@ -24,7 +64,11 @@ class RoomPage extends React.Component {
 
     state = {
         value: 0,
-        roomPageDB: null
+        roomPageDB: null,
+        authUser: false,
+        userCount: 0,
+        members: '',
+        disabledBtn: false
     };
 
     componentDidMount() {
@@ -34,8 +78,10 @@ class RoomPage extends React.Component {
                 this.setState({ roomPageDB: res.data });
             })
             .catch(err => console.log(err));
+        this.checkMembersLimit();
+        this.invitedMembers();
+        this.roomMembers();
     };
-
     refReadMore = (element) => {
         if (!element)
             return;
@@ -45,6 +91,39 @@ class RoomPage extends React.Component {
             document.getElementById("read-more-button").style.display = "none";
         }
     };
+    checkMembersLimit = () => {
+        const { id } = this.props.match.params;
+        axios
+        .get(`/api/member/room/${id}/members_limit`)
+        .then((res) => {
+            this.setState({disabledBtn:false})
+        }).catch(()=>{
+            this.setState({disabledBtn:true})
+        })
+    }
+    invitedMembers = () => {
+        const { id } = this.props.match.params;
+        axios
+        .get(`/api/member/room/${id}`)
+        .then((res) => {
+            if(res.data.invite){
+              this.setState({authUser:  true})
+            }
+            this.setState({userCount: res.data.count})
+        }).catch(()=>{
+            this.setState({authUser:  false, userCount: 0})
+        })
+    }
+    roomMembers = () => {
+        const { id } = this.props.match.params;
+        axios
+        .get(`/api/member/room/${id}/members`)
+        .then((res) => {
+            
+            const users = res.data.map( i => i.users[0])
+            this.setState( {members: users})
+        })
+    }
 
     handleChange = (event, value) => {
         this.setState({ value });
@@ -53,14 +132,53 @@ class RoomPage extends React.Component {
     handleChangeIndex = index => {
         this.setState({ value: index });
     };
+    join = () => {
+        const eventId = this.props.match.params.id;
+        axios.post(`http://localhost:3001/api/member/room/join`, { entity_id:eventId })
+        .then((res) => {
+            this.roomMembers();
+            this.setState({ authUser :!this.state.authUser, userCount: res.data });
+          })
+          .catch(err => {
+           console.log(err);
+          });
+    };
+    leave = () => {
+        console.log(this.state.authUser)
+        const eventId = this.props.match.params.id;
+        axios.delete(`http://localhost:3001/api/member/room/${eventId}`)
+        .then((res) => {
+            this.roomMembers();
+            this.setState({ authUser :!this.state.authUser, userCount: res.data });
+          })
+          .catch(err => {
+           console.log(err);
+          });
+    }
 
     render() {
         const { value, roomPageDB } = this.state;
+        const { isAuthenticated } = this.props;
 
         if (!roomPageDB) {
             return (<Spinner className="rooms-page"/>);
         }
-
+        const joinBtn = (
+        <Fab variant="extended" className="room-details-page-fab" onClick={this.join}>
+            <span className="room-details-page-join">Join now</span>
+        </Fab>
+        )
+        const leaveBtn = (
+        <Fab variant="extended" className="room-details-page-fab" onClick={this.leave}>
+            <span className="room-details-page-join">Leave now</span>
+        </Fab>
+        )
+        const renderBtn = this.state.authUser ? leaveBtn : joinBtn;
+        const renderMemberTab = (
+            <Badge className="badge-room-margin" badgeContent={this.state.userCount}>
+                                <Face /> <p className="badge-members">Members</p>
+                            </Badge>
+        )
         return (
             <div className="room-page-details">
                 <AppBar position="static" className="tab-bar">
@@ -76,11 +194,7 @@ class RoomPage extends React.Component {
                         <Tab label="Events" icon={<EventAvailable />} />
                         <Tab label="Gallery" icon={<Collections />} />
                         <Tab label="Posts" icon={<NewReleases />} />
-                        <Tab label={
-                            <Badge className="badge-room-margin" badgeContent={roomPageDB.members.length}>
-                                <Face /> <p className="badge-members">Members</p>
-                            </Badge>
-                        }
+                        <Tab label={renderMemberTab}
                         />
                     </Tabs>
                 </AppBar>
@@ -93,10 +207,7 @@ class RoomPage extends React.Component {
                         <Grid container spacing={24} className="room-details-page-content">
                             <Grid item md={6} xs={12}>
                                 <div className="room-details-page-wrapper">
-                                    <Fab variant="extended" className="room-details-page-fab">
-                                        <Add />
-                                        <span className="room-details-page-join">Join</span>
-                                    </Fab>
+                                    {renderBtn}
                                     <Typography className="room-details-page-title">
                                         {roomPageDB.title}
                                     </Typography>
@@ -148,39 +259,36 @@ class RoomPage extends React.Component {
 
                     { (value === 2 && <TabContainer>
                         <Grid container className="room-details-add-event-button">
-                            <Grid item>
-                                <Link to="/event/add" className="room-details-add-event-link">
+                            {isAuthenticated && (<Grid item>
+                                <Link to={this.props.location.pathname + "/add-event"} className="room-details-add-event-link">
                                     <Fab variant="extended" className="room-details-add-event">
                                         <Add />
                                     </Fab>
                                 </Link>
-                            </Grid>
+                            </Grid>)}
                         </Grid>
-                        <Grid container spacing={24} className="room-details-card">
+                        <Grid container spacing={24}>
+                            {console.log(roomPageDB)}
                             {roomPageDB.event.map((event) =>
-                                <Grid item md={6} xs={12} className="room-details-card-grid">
-                                    <Card>
-                                        <CardActionArea>
-                                            <CardMedia
-                                                className="card-media"
-                                                image={event.cover}
-                                                title={event.title}
-                                            />
-                                            <CardContent>
-                                                <Typography gutterBottom variant="h5" component="h2">
-                                                    {event.title}
-                                                </Typography>
-                                                <Typography component="p">
-                                                    {event.description}
-                                                </Typography>
-                                            </CardContent>
-                                        </CardActionArea>
-                                        <CardActions>
-                                            <Button>
-                                                {event.date + "/" + event.location}
-                                            </Button>
-                                        </CardActions>
-                                    </Card>
+                                <Grid item lg={4} md={6} xs={12} className="room-details-card-grid">
+                                    <NeventCard
+                                        id={event.id}
+                                        room_id={event.room_id}
+                                        title={event.title}
+                                        rating={event.eventRating}
+                                        authorId={event.creator_id}
+                                        //TODO
+                                        // authorName={event.creator.first_name}
+                                        // authorLastName={event.creator.last_name}
+                                        // authorAvatar={event.creator.avatar}
+                                        cover={event.cover}
+                                        description={event.description}
+                                        eventLocation={(event.location).split(',')[0]}
+                                        eventDate={convertTime(event.start_date).date}
+                                        eventTime={convertTime(event.start_date).time}
+                                        members={event.members}
+                                        membersLimit={event.members_limit}
+                                    />
                                 </Grid>
                             )}
                         </Grid>
@@ -227,7 +335,7 @@ class RoomPage extends React.Component {
 
                     { (value === 5 && <TabContainer>
                         <Grid container spacing={24}>
-                            {roomPageDB.members.map((member) =>
+                            {this.state.members.map((member) =>
                                 <Grid item lg={3} md={4} sm={6} xs={12}>
                                     <ListItem className="avatar-center">
                                         <ListItemAvatar>

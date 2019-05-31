@@ -4,7 +4,7 @@ const { User } = require('../../models');
 
 const router = new Router({ prefix: '/api' });
 
-const heandler = {
+const handler = {
   async sign_up(ctx) {
     await validate(ctx.request.body, {
       email: 'required|email',
@@ -28,5 +28,5 @@ const heandler = {
   }
 };
 
-router.post('/signup', heandler.sign_up);
+router.post('/signup', handler.sign_up);
 module.exports = router.routes();

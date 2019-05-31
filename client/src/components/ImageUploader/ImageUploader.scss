@@ -21,23 +21,10 @@
     box-shadow: 0 15px 30px 0 rgba(0, 0, 0, 0.11), 0 5px 15px 0 rgba(0, 0, 0, 0.08);
     box-sizing: border-box;
 
-    &-links {
-      height: 100%;
-      width: 50%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-around;
+    p {
+      text-align: center;
+      width: 100%;
     }
-
-    &-link {
-      text-decoration: none;
-      color: $black;
-      &:hover {
-        color: $primary;
-      }
-    }
-
     .upload-card-close {
         position: absolute;
         right: 5px;

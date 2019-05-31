@@ -9,6 +9,9 @@ const User = bookshelf.Model.extend({
     hidden: [
       'password'
     ],
+    invited() {
+      return this.hasMany('Member')
+    },
     comparePassword(plainPassword) {
       return comparePassword(plainPassword, this.get('password'));
     },

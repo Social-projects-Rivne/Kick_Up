@@ -9,7 +9,7 @@ const router = new Router({prefix:'/api/profile'});
 const handler = {
     async getSelfProfile(ctx){
         const { user_id } = ctx.state; 
-        const user = await User.where({id:user_id}).fetch();
+        const user = await User.where({id:user_id}).fetch({withRelated:['invited']});
         ctx.body = user;
     },
     async getUserProfileById(ctx){
@@ -22,10 +22,10 @@ const handler = {
             nick:'string|min:3',
             first_name:'string|min:3',
             last_name:'string|min:3',
-            gender:'required|numeric|min:1'
+            gender:'numeric|min:1'
         });
         const { user_id } = ctx.state; 
-        const { nick, first_name, last_name, gender, birth_date } = ctx.request.body;
+        const { nick, first_name, last_name, gender, birth_date, avatar } = ctx.request.body;
         const updateUser = {
             nick, first_name, last_name, gender, birth_date
         }
