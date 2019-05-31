@@ -25,6 +25,24 @@
       text-align: center;
       width: 100%;
     }
+    
+    &-links {
+      height: 100%;
+      width: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-around;
+    }
+
+    &-link {
+      text-decoration: none;
+      color: $black;
+      &:hover {
+        color: $primary;
+      }
+    }
+
     .upload-card-close {
         position: absolute;
         right: 5px;
