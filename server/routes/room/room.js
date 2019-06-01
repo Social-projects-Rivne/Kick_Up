@@ -270,7 +270,7 @@ const handler = {
     // Validate input;
     await validate(ctx.request.body, {
       roomId: 'numeric|min:1',
-      text: 'array',
+      text: 'required',
       title: 'min:1',
       isPinned: 'boolean'
     });
@@ -281,8 +281,8 @@ const handler = {
       room.posts.push({
         // @todo add author id;
         author_id: 1,
-        title: title,
-        text: text,    
+        title,
+        text,    
         comments: []
       });
     } else {
@@ -293,8 +293,8 @@ const handler = {
             {
               // @todo add author id;
               author_id: 1,
-              title: title,
-              text: text,
+              title,
+              text,
               comments: []
             }
           ],

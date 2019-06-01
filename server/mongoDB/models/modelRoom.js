@@ -8,7 +8,7 @@ const roomsSchema = new Schema (
             {
                 author_id: Number,
                 title: String,
-                text: Array,
+                text: Object,
                 created_at: {
                     type: Date,
                     default: Date.now,

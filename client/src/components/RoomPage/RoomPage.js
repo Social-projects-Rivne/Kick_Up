@@ -145,6 +145,7 @@ class RoomPage extends React.Component {
                 <SwipeableViews
                     index={value}
                     onChangeIndex={this.handleChangeIndex}
+                    className="room__tabs-wrapper"
                 >
                     { (value === 0 && <TabContainer>
                         <Grid container spacing={24} className="room-details-page-content">

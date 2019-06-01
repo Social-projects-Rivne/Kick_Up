@@ -1,4 +1,7 @@
-import React, {Component} from "react";
+import React, {Component, Fragment} from "react";
+import { convertFromRaw } from 'draft-js';
+import {stateToHTML} from 'draft-js-export-html';
+import { Markup } from 'interweave';
 
 import {
     Card, 
@@ -55,6 +58,7 @@ const convertTime = (str) => {
         }
     }
 };
+const _maxAllowedPostChars = 500; 
 
 class PostCard extends Component {
     constructor(props) {
@@ -64,17 +68,21 @@ class PostCard extends Component {
     handleExpandClick = () => {
         this.setState({ expanded: !this.state.expanded });
     }
+    definePostShouldBeCut = () => {
+        const html = stateToHTML(convertFromRaw(JSON.parse(this.props.data.text)));
+        return html.length >= _maxAllowedPostChars;
+    }
     render = () => (
-<Card className="roomcard">
+<Card className="postcard">
         <Link data-wrapper-link>
             <CardHeader
-                className="roomcard__header"
+                className="postcard__header"
                 title={this.props.data.title}
                 subheader={
-                    <div className="roomcard__header-info">
-                        <div className="roomcard__avatar-wrapper">
+                    <div className="postcard__header-info">
+                        <div className="postcard__avatar-wrapper">
                             <Avatar 
-                                className="roomcard__avatar" 
+                                className="postcard__avatar" 
                                 src={
                                     this.props.data.author_details.avatar 
                                     ? this.props.data.author_details.avatar 
@@ -99,55 +107,48 @@ class PostCard extends Component {
         </Link>
         {/* @temp We may need it to add covers done by Igor */}
         {/* <CardMedia
-            className="roomcard__img-wrapper"
+            className="postcard__img-wrapper"
             image={this.props.cover}
         >
-            <div className="roomcard__label">
+            <div className="postcard__label">
                 <Loyalty />
                 <b>{this.props.category}</b>
             </div>
         </CardMedia> */}
-        <CardContent className="roomcard__description">
-            <Typography component="p">
-                Yay
-            </Typography>
+        <CardContent className=
+            {
+                this.definePostShouldBeCut() 
+                ? this.state.expanded 
+                    ? 'postcard__description  postcard__description_cut_expanded' 
+                    : 'postcard__description  postcard__description_cut' 
+                : 'postcard__description'
+            }
+        >
+            <Markup content={stateToHTML(convertFromRaw(JSON.parse(this.props.data.text)))} />
         </CardContent>
         <CardActions 
             disableActionSpacing
-            className="roomcard__members"
+            className="postcard__read-more"
         >
             <Fab
-                className={this.state.expanded ? 'roomcard__events-btn  roomcard__events-btn_expanded' : 'roomcard__events-btn'}
+                className={this.state.expanded ? 'postcard__expand-btn  postcard__expand-btn_expanded' : 'postcard__expand-btn'}
                 variant="extended"
                 size="medium"
                 color="primary"
                 aria-label="Extend"
-                onClick={() => {
-                    const doUpd = this.props.btnClickHandler;
-                    this.handleExpandClick();
-                    
-                    // We need delay while collapse opens;
-                    if (doUpd) window.setTimeout(doUpd, 400);
-                }}
+
+                onClick={ this.handleExpandClick }
             >
                 <ExpandMore />
+                {this.state.expanded ? 'Read less' : 'Read more'}
             </Fab>
-            <IconButton className="roomcard__group-members">
-                <Group />
-                <span className="roomcard__members-amount">
-                    {`${this.props.members} members of ${this.props.membersLimit} allowed`}
-                </span>
-            </IconButton>
         </CardActions>
         <Collapse 
-            className="roomcard__collpse-content" 
+            className="postcard__collpse-content" 
             in={window.innerWidth >= 768 ? true : this.state.expanded}
             timeout="auto" 
             unmountOnExit
         >
-            <CardContent className="roomcard__events-wrapper">
-                <h1>Here will go comments</h1>
-            </CardContent>
         </Collapse>
     </Card>
 );

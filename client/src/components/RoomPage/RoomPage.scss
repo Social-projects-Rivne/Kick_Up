@@ -2,6 +2,14 @@
   padding: 24px;
 }
 
+#root .room__tabs-wrapper > div:first-child > div:nth-child(2)
+.room-details-page-typography-padding,
+#root .room__tabs-wrapper > div:first-child > div:nth-child(5) 
+.room-details-page-typography-padding {
+  padding-left: 0;
+  padding-right: 0;
+}
+
 #root .room-page-details {
   .feed-card, .post-card {
     max-width: 700px;
@@ -250,6 +258,14 @@
     }
   }
 
+  .room-details-card {
+    max-width: 100vw;
+    margin: 0;
+  }
+
+  .room-details-card-grid {
+    padding: 0;
+  }
 
   .room-details-card-grid a{
     display: flex;

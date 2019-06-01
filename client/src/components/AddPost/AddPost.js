@@ -42,14 +42,12 @@ const _roomPostRoute = '/api/room/new-post';
 
 class AddPost extends Component {
     state = {
-        roomId: this.props.match.params.id || 5,
+        roomId: this.props.match.params.id,
         activeStep: 0,
         title: '',
         details: '',
         pinPost: false,
-        editorData: {
-            blocks: []
-        }
+        editorData: null
     }
     setPostPinned = () => {
         this.setState(prevState => {
@@ -63,7 +61,7 @@ class AddPost extends Component {
     }
     sendData = () => {
         let {roomId, editorData: text, title, pinPost: isPinned} = this.state;
-        text =  text.blocks;
+        text = JSON.stringify(text, undefined, 2);
 
         axios.post(_roomPostRoute, { roomId, text, title, isPinned })
         .then((res) => {
@@ -79,7 +77,7 @@ class AddPost extends Component {
         else this.resetEditorData();
     }
     resetEditorData = () => {
-        this.setState({ editorData: { blocks: [] }});
+        this.setState({editorData: null});
     }
     checkAllFilled = () => {
         let res = false;
@@ -87,6 +85,7 @@ class AddPost extends Component {
         if (
             this.state.title && 
             this.state.title.length > 3 &&
+            this.state.editorData &&
             this.state.editorData.blocks.length > 0
         ) {
             res = true;
@@ -104,7 +103,10 @@ class AddPost extends Component {
             if (!this.state.title) {
                 errMessages.push('Give your post a nice title');
             }
-            if (this.state.editorData.blocks.length <= 0) {
+            if (
+                this.state.editorData &&
+                this.state.editorData.blocks.length <= 0
+            ) {
                 errMessages.push('Give your post a great description');
             }
 
@@ -167,9 +169,11 @@ class AddPost extends Component {
                                     </StepContent>
                                 </Step>
                                 <Step 
-                                    className={this.state.editorData.blocks.length > 0 
-                                        ? 'add-post__step  add-post__step_filled' 
-                                        : 'add-post__step'
+                                    className={
+                                        this.state.editorData &&
+                                        this.state.editorData.blocks.length > 0 
+                                            ? 'add-post__step  add-post__step_filled' 
+                                            : 'add-post__step'
                                     }
                                     key={1} 
                                     active={true} >

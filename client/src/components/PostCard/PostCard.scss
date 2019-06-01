@@ -1,16 +1,27 @@
 /* Available modificators:
-* roomcard__events-btn_expanded;
+* postcard__expand-btn_expanded;
 */
 
-#root .roomcard {
+#root .postcard {
+    position: relative;
+    margin: 0 0 16px;
+    box-sizing: border-box;
+    border-radius: 0;
+    border-bottom: 1px solid lighten($secondaryBlack, 90%);
     box-shadow: none;
+    overflow: visible;
+
+    & * {
+        box-sizing: border-box;
+    }
 }
 
-.roomcard .roomcard__header {
+.postcard .postcard__header {
+    width: 100%;
     padding: 10px;
 }
 
-.roomcard__header span:first-of-type {
+.postcard__header span:first-of-type {
     padding-bottom: 3px;
     font-size: 1.571rem;
     line-height: 2rem;
@@ -21,13 +32,13 @@
     overflow: hidden;
 }
 
-#root .roomcard .roomcard__main-content {
+#root .postcard .postcard__main-content {
     font-size: 1.071rem;
     line-height: 1.286rem;
     font-weight: 100;
 }
 
-.roomcard__header-info {
+.postcard__header-info {
     display: flex;
     width: 100%;
     justify-content: space-between;
@@ -35,7 +46,7 @@
     margin-top: 5px;
 }
 
-.roomcard .roomcard__avatar-wrapper {
+.postcard .postcard__avatar-wrapper {
     display: flex;
     align-items: center;
 
@@ -46,12 +57,12 @@
     }
 }
 
-.roomcard .roomcard__avatar {
+.postcard .postcard__avatar {
     width: 28px;
     height: 28px;
 }
 
-.roomcard .roomcard__avatar-wrapper span {
+.postcard .postcard__avatar-wrapper span {
     margin-left: 10px;
     font-size: 15px;
     line-height: 18px;
@@ -65,45 +76,27 @@
     }
 }
 
-.roomcard__img-wrapper {
-    position: relative;
-    min-height: 35vh;
-}
-
-.roomcard__img-wrapper {
-    min-height: 35vh;
-}
-
-.roomcard .roomcard__group-members {
-    margin-left: auto;
-    pointer-events: none;
-
-    & [class*=MuiTouchRipple] {
-        display: none;
-    }
-}
-
-.roomcard .roomcard__header {
+.postcard .postcard__header {
     padding: 10px;
 }
 
-.roomcard__header > div:first-child {
+.postcard__header > div:first-child {
     align-self: flex-start;
     margin-top: 6px;
 }
 
-.roomcard__header > div:first-child > div {
+.postcard__header > div:first-child > div {
     width: 50px;
     height: 50px;
 }
 
-#root .roomcard .roomcard__events-btn {
+#root .postcard .postcard__expand-btn {
     padding-right: 22px; 
     background-color: $primary;
     color: $black;
     box-shadow: none;
 
-    &.roomcard__events-btn_expanded svg {
+    &.postcard__expand-btn_expanded svg {
         transform: rotate(180deg);
     }
 
@@ -113,168 +106,124 @@
     }
 }
 
-.roomcard .roomcard__label {
-    position: absolute;
-    min-height: 53px;
-    display: flex;
-    align-items: center;
-    bottom: 0;
-    left: 0;
-    padding: 5px 10px;
-    padding-right: 40px;
-    color: $primary;
-    background-color: transparent;
-    transform: translate3d(-100%, 0, 0);
-    z-index: 1;
-}
-
-.roomcard .roomcard__label b {
-    font-size: 20px;
-    line-height: 24px;
-}
-
-.roomcard .roomcard__label svg {
-    opacity: 0.7;
-    margin-right: 3px;
-}
-
-.roomcard__members-amount {
-    margin-left: 5px;
-    font-size: 0.8571rem;
-    line-height: 1rem;
-    color: lighten($secondaryBlack, 50%);
-}
-
-.roomcard .roomcard__description {
-    padding-bottom: 6px;
-}
-
-.roomcard .roomcard__description p {
-    font-size: 1.071rem;
-    line-height: 1.286rem;
-    max-height: calc(1.286rem * 6 - 5px);
-    overflow: auto;
-    font-weight: 100;
-}
-
-#root .roomcard .roomcard__events-wrapper {
-    border-top: 1px solid lighten($secondaryBlack, 90%);
-    padding: 0;
-}
-
-.roomcard__events-wrapper > div {
+.postcard .postcard__description {
     position: relative;
-    margin-bottom: 20px;
+    overflow-x: hidden;
+    overflow-y: visible;
+    // Need max-height to perform max-height animation;
+    max-height: 1800px;
+    transition: max-height 1.3s;
 
-    &:last-of-type {
-        margin-bottom: $footer-height;
+    &::before {
+        display: none;
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(to bottom, transparent 75%, #fff);
+        z-index: 1;
     }
 }
 
-// Anti-BEM will be best option here;
-.swiper-slide:not(.swiper-slide-active) .roomcard__collpse-content {
-   display: none;
+.postcard .postcard__description p {
+    font-size: 1.071rem;
+    line-height: 1.286rem;
+    font-weight: 100;
 }
 
-.swiper-slide.swiper-slide-active > .roomcard .roomcard__label {
-    animation:
-        roll-in-left 0.7s ease-in-out 1.5s,
-        set-label-bg-left 0.7s ease-in 3s;
-    animation-fill-mode: forwards;  
+.postcard .postcard__description figure {
+    margin-left: 0;
+    margin-right: 0;
+    text-align: center;
+}
+
+.postcard .postcard__read-more {
+    display: none;
+    position: absolute;
+    min-width: 165px;
+    max-width: 165px;
+    left: 0;
+    right: 0;
+    bottom: -28px;
+    margin: auto;
+    z-index: 2;
+}
+
+// Related to modifivators;
+.postcard__description.postcard__description_cut {
+    max-height: 33vh;
+    overflow: hidden;
+}
+
+.postcard__description.postcard__description_cut::before {
+    display: block;
+}
+
+.postcard__description.postcard__description_cut 
++ .postcard__read-more {
+    display: flex;
+}
+
+.postcard__description.postcard__description_cut_expanded
++ .postcard__read-more {
+    display: flex;
 }
 
 // Landscape mode;
 @media only screen and (max-width: 767px) and (orientation: landscape) {
-    .roomcard {
+    .postcard {
         display: flex;
         width: 100%;
         flex-wrap: wrap;
     }
 
-    .roomcard__header {
+    .postcard__header {
         width: 100%;
     }
 
-    .roomcard__header span:first-of-type {
+    .postcard__header span:first-of-type {
         max-height: 2rem;
     }
 
-    .roomcard__img-wrapper {
-        max-width: 45vw;
-        min-width: 45vw;
-        min-height: 55vh;
-        overflow: hidden;
-    }
-
-    .roomcard .roomcard__description {
+    .postcard .postcard__description {
         min-width: 52vw;
         max-width: 52vw;
         padding-top: 0;
     }
     
-    .roomcard .roomcard__description p {
+    .postcard .postcard__description p {
         max-height: calc(1.286rem * 6 - 5px);
     }
 
-    .roomcard__members {
+    .postcard__read-more {
         position: absolute;
         width: 54vw;
         top: calc(1.464rem * 8 + 54px);
         right: 0;
     }
-
-    .roomcard .roomcard__events-wrapper .event-card {
-        position: relative;
-    }
 }
 
 @media only screen and (min-width: 768px) {
-    .roomcard {
+    .postcard {
         max-width: calc(50% - 10px);
     }
 
-    .roomcard .roomcard__description {
+    .postcard .postcard__description {
         font-size: 1rem;
         line-height: 1.375rem;
     }
 
-    .roomcard .roomcard__description p {
+    .postcard .postcard__description p {
         max-height: calc(1.286rem * 12 - 5px);
     }
-    
-    .roomcard__collpse-content { 
-        position: absolute;
-        top: 64px;
-        animation-name: roll-room-events;
-        animation-duration: 1s;
-        animation-fill-mode: forwards;
-        animation-timing-function: ease-in-out;
-        z-index: 2;
-    }
 
-    .roomcard__header span:first-of-type {
+    .postcard__header span:first-of-type {
         max-height: calc(2rem * 5);
     }
 
-    .swiper-slide .roomcard__collpse-content {
-        max-width: 100%;
-    }
-
-    .swiper-slide.swiper-slide-next .roomcard__collpse-content,
-    .swiper-slide.swiper-slide-prev .roomcard__collpse-content {
-        display: none;
-    }
-     
-    .roomcard__events-wrapper {
-        position: relative;
-        left: calc(50% + 10px);
-        min-width: calc(50% - 10px);
-        max-width: calc(50% - 10px);
-        max-height: 70vh;
-        overflow-y: scroll;
-    }
-
-    .roomcard__members {
+    .postcard__read-more {
         position: absolute;
         min-width: calc(50% - 10px);
         max-width: calc(50% - 10px);
@@ -286,15 +235,11 @@
         overflow: auto;
     }
 
-    .roomcard .roomcard__group-members {
-        display: none;
-    }
-
-    .roomcard__events-btn {
+    .postcard__expand-btn {
         pointer-events: none;
     }
 
-    #root .roomcard .roomcard__events-btn {
+    #root .postcard .postcard__expand-btn {
         transform: rotate(0);
         background-color: transparent;
         font-size: 1.571rem;
@@ -306,28 +251,12 @@
         & svg {
             display: none;
         }
-
-        & span:first-child::after {
-            content: ' coming soon:';
-            white-space: pre;
-            text-transform: lowercase;
-        }
-    }
-
-    #root .roomcard .roomcard__events-wrapper {
-        border-top-color: transparent;
-    }
-
-    // Anti-BEM here will be best option;
-    #root .roomcard .roomcard__events-wrapper
-    .event-card__img-wrapper > div {
-        transform: none;
     }
 }
 
 // Desktops;
 @media only screen and (min-width: 1024px) {
-    #root .roomcard {
+    #root .postcard {
         position: relative;
         margin: 0 auto;
         display: flex;
@@ -340,41 +269,31 @@
         overflow-y: auto;
     }
 
-    .roomcard__header {
+    .postcard__header {
         width: 100%; 
     }
 
-    .roomcard .roomcard__collpse-content {
-        width: 100%;
-    }
-
-    .roomcard__header span:first-of-type {
+    .postcard__header span:first-of-type {
         -webkit-line-clamp: 1;
         max-height: 2rem;
     }
 
-    .roomcard__img-wrapper {
-        min-width: 35%;
-        max-width: 35%;
-        min-height: 24vh;
-    }
-
-    .roomcard .roomcard__description {
+    .postcard .postcard__description {
         min-width: 65%;
         max-width: 65%;
     }
 
-    .roomcard .roomcard__description p {
+    .postcard .postcard__description p {
         max-height: calc(1.286rem * 6 - 5px);
         overflow: hidden;
     }
 
-    #root .roomcard .roomcard__events-btn {
+    #root .postcard .postcard__expand-btn {
         font-size: 1rem;
 
     }
 
-    #root .roomcard .roomcard__events-btn span {
+    #root .postcard .postcard__expand-btn span {
         white-space: nowrap;
         text-transform: lowercase;
 
@@ -383,93 +302,12 @@
         }
     }
 
-    .roomcard .roomcard__group-members {
-        display: flex;
-    }
-
-    .roomcard .roomcard__members {
+    .postcard .postcard__read-more {
         position: absolute;
         top: calc(1.286rem * 11);
         left: 0;
         min-width: 100%;
         padding-left: 35%;
-    }
-
-    #root .roomcard .roomcard__events-wrapper {
-        position: static;
-        display: flex;
-        width: 100%;
-        max-width: 100%;
-        justify-content: space-between;
-        padding-top: 10px;
-        border: 0;
-        overflow: visible;
-    }
-
-    #root .roomcard .roomcard__events-wrapper .event-card {
-        max-width: 23vw;
-        max-height: unset;
-    }
-
-    #root .roomcard .roomcard__events-wrapper .event-card
-    .event-card__main-content {
-        max-height: calc(1.286rem * 6);
-    }
-
-    #root .roomcard .roomcard__events-wrapper > a {
-        width: unset;
-    }
-
-    .roomcard .roomcard__collpse-content {
-        position: static;
-    }
-
-    #root .roomcard .roomcard__events-btn {
-        background-color: transparent;
-        border: 0;
-        color: $primary;
-        pointer-events: none;
-
-        &::after {
-            content: 'coming soon: ';
-            margin-left: 5px;
-            white-space: nowrap;
-            text-transform: lowercase;            
-        }
-
-        & svg {
-            margin-right: 3px;
-        }
-    }
-
-    .roomcard__events-wrapper > div {
-        max-width: 32%;
-        border:  0;
-    }
-
-    // Seems anti-BEM here best option;
-    .roomcard__events-wrapper .event-card__img-wrapper {
-        min-height: 160px;
-        background-position: 0 0;
-    }
-
-    .roomcard__events-wrapper .event-card__header
-    span:first-of-type {
-        max-height: 2rem;
-    }
-
-    .roomcard__events-wrapper .event-card__description p {
-        max-height: calc(1.286rem * 5);
-        overflow: hidden;
-    }
-
-    .roomcard .roomcard__events-wrapper > div {
-        margin-bottom: 0;
-    }
-
-    .swiper-slide.swiper-slide-next .roomcard__collpse-content,
-    .swiper-slide.swiper-slide-prev .roomcard__collpse-content {
-        display: block;
     }
 }
 
