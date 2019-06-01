@@ -427,7 +427,7 @@ class EventPage extends Component {
                                                 </Avatar>
                                             </ListItemAvatar>
                                             <ListItemText
-                                                primary={user.nick || `${user.first_name} ${user.last_name}`}
+                                                primary={`${user.first_name || ""} ${user.last_name || ""}`}
                                             />
                                         </ListItem>
                                     </Link>

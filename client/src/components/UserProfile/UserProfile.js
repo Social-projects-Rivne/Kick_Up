@@ -159,7 +159,7 @@ class UserProfile extends React.Component {
 
                                             <ListItem >
                                                 <InputLabel>
-                                                    Name:&nbsp;{userProfileData.first_name + " " + userProfileData.last_name}
+                                                    Name:&nbsp;{(userProfileData.first_name || "") + " " + (userProfileData.last_name || "")}
                                                 </InputLabel>
                                             </ListItem>
 
@@ -243,7 +243,7 @@ class UserProfile extends React.Component {
                                                         >
                                                         </Avatar>
                                                         <span className="user-profile-room-card-header-creator">
-                                                            {`by ${room.first_name} ${room.last_name}`}
+                                                            {`by ${room.first_name || ""} ${room.last_name || ""}`}
                                                         </span>
                                                     </div>
                                                 </Link>
