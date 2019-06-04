@@ -94,6 +94,10 @@
 
     .add-event-stepper {
       background-color: transparent;
+
+      @include media-breakpoint-down(md) {
+        padding: 0;
+      }
     }
 
     .add-event-text-field {

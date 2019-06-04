@@ -15,6 +15,10 @@
 
     .add-room-stepper {
       background-color: transparent;
+
+      @include media-breakpoint-down(md) {
+        padding: 0;
+      }
     }
 
     @include media-breakpoint-down(sm) {

@@ -1,5 +1,10 @@
 #root .room-details-page-typography-padding {
   padding: 24px;
+
+  @include media-breakpoint-down(lg) {
+    padding-left: 0;
+    padding-right: 0;
+  }
 }
 
 #root .room-page-details {
@@ -14,24 +19,27 @@
     transform: none;
   }
 
-  .room-details-add-event-button {
-    display: flex;
-    justify-content: flex-end;
+  .room-details-add-event-link {
+    text-decoration: none;
+    position: fixed;
+    bottom: 30px;
+    z-index: 100;
+    right: 15px;
 
-    .room-details-add-event-link {
-      text-decoration: none;
+    @include media-breakpoint-down(lg) {
+      bottom: 65px;
+    }
 
-      .room-details-add-event, .room-details-add-event:hover {
-        background-color: $primary;
-        margin-bottom: 18px;
-        box-shadow: $secondaryBlack;
-        border-radius: 50px;
-        padding: 0;
+    .room-details-add-event, .room-details-add-event:hover {
+      background-color: $primary;
+      margin-bottom: 18px;
+      box-shadow: $secondaryBlack;
+      border-radius: 50px;
+      padding: 0;
 
-        @include media-breakpoint-down(lg) {
-          font-size: 11pt;
-          margin-top: 0;
-        }
+      @include media-breakpoint-down(lg) {
+        font-size: 11pt;
+        margin-top: 0;
       }
     }
   }
