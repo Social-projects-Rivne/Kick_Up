@@ -1,6 +1,13 @@
 #root .event-card {
     background: linear-gradient(to bottom, #FFFFFF, #ECE9E6);
     box-shadow: none;
+
+    .event-card__creator-link,
+    .event-card__creator-link:hover,
+    .event-card__creator-link:active,
+    .event-card__creator-link:visited {
+        text-decoration: none;
+    }
 }
 
 .event-card .event-card__header {

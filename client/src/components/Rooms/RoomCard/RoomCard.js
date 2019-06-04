@@ -2,6 +2,7 @@ import React, {useState} from "react";
 
 import { Grid, Button } from "@material-ui/core";
 import StarRating from "./../../UI/StarRating/StarRating";
+import defaultAvatar from "../../../assets/images/face.png";
 
 const roomCard = props => {
   const backgroundImage = {
@@ -16,7 +17,7 @@ const roomCard = props => {
           style={backgroundImage}
         >
           <div className="inner">
-          <img src={props.avatar} 
+          <img src={props.avatar ? props.avatar : defaultAvatar}
           alt={props.avatar}
           />
             <p>{props.title}</p>

@@ -195,7 +195,7 @@ const handler = {
             last_name: "Kohli"
         }
     ];
-    const room = await Room.where({ id }).fetch({withRelated:['creator','category','members','event'],require:true});
+    const room = await Room.where({ id }).fetch({withRelated:['creator','category','members','event', 'media'],require:true});
     room.set({feeds,gallery,posts,members});
     ctx.body = room;
   },

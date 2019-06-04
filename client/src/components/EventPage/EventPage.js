@@ -1,6 +1,7 @@
 import React, { Component } from "react";
+import { Link } from 'react-router-dom';
 
-import { 
+import {
    AppBar,
    Tabs,
    Tab,
@@ -35,9 +36,11 @@ import Gallery from 'react-grid-gallery';
 import "react-id-swiper/src/styles/scss/swiper.scss";
 import axios from 'axios';
 import { withSnackbar } from 'notistack';
+import ImageUploader from "../ImageUploader/ImageUploader";
 
 // @temp, we need add get data from MongoDB;
 import mock from '../../mocks/eventPage';
+import defaultAvatar from "../../assets/images/face.png";
 
 // Swipers params for event page;
 const userParams = {
@@ -117,7 +120,8 @@ class EventPage extends Component {
             activeSlide: 0,
             gallery: [],
             authUser:  false,
-            userCount: 0
+            userCount: 0,
+            showUpload: false,
         };
     }
     saveSwiper = (instance) => {
@@ -201,7 +205,10 @@ class EventPage extends Component {
         .get('/api/event/' + id)
         .then(res => {
             res = res.data;
-            res.gallery = mock.gallery;
+            let gallery = [];
+            [...res.media].map(e => {
+                gallery.push({src:e.key.slice(6), thumbnail:e.key.slice(6)})
+            });
 
             this.setState({
                 title: res.title,
@@ -209,7 +216,7 @@ class EventPage extends Component {
                 location: res.location,
                 date: new Date(res.start_date).toLocaleString('en-US', timeOptions),
                 description: res.description,
-                gallery: mock.gallery
+                gallery,
             });
         })
         .catch((err) => {
@@ -231,14 +238,28 @@ class EventPage extends Component {
             }
         });
     }
-    render() {
-        const stateUser = this.props.user; 
-        const eventId = this.props.match.params.id;
 
-        if(stateUser){
-            const checkInvite = stateUser.invited.find(event => event.entity_type === 'event' && event.entity_id === +eventId);
-            //TO DO
-        }
+    showUploadComponent = () => {
+        this.setState({showUpload: true})
+    }
+
+    closeUploadComponent = () => {
+        this.setState({showUpload: false})
+    }
+
+    getImagesSRC = (src) => {
+        const gallery = [...this.state.gallery].concat(src);
+        this.setState({gallery});
+    }
+
+    render() {
+        // const stateUser = this.props.user;
+        // const eventId = this.props.match.params.id;
+        //
+        // if(stateUser){
+        //     const checkInvite = stateUser.invited.find(event => event.entity_type === 'event' && event.entity_id === +eventId);
+        //     //TO DO
+        // }
 
         const joinBtn = (
             <Fab className="event-page__fab" variant="extended" color="primary" onClick={this.join}>
@@ -253,6 +274,14 @@ class EventPage extends Component {
         const renderBtn = this.state.authUser ? leaveBtn : joinBtn;
         return (
             <div className={!this.state.title ? 'event-page  event-page_loading' : 'event-page'}>
+                <ImageUploader 
+                    show={this.state.showUpload}
+                    closeUploadComponent={this.closeUploadComponent} 
+                    entityURL={this.props.match.url}
+                    authUser={this.state.authUser}
+                    isAuthenticated={this.props.isAuthenticated}
+                    getImagesSRC={this.getImagesSRC}
+                />
                 <AppBar position="fixed" className="tab-bar">
                     <Tabs
                         value={this.state.activeSlide}
@@ -396,16 +425,13 @@ class EventPage extends Component {
                             Gallery
                         </Typography>
                         <Fab className="event-page__fab  event-page__fab_upload" variant="extended" color="primary">
-                            <input
-                                accept="image/*"
-                                id="event-page-upload-images"
-                                multiple
-                                type="file"
-                            />
-                            <label htmlFor="event-page-upload-images">
-                                <Add />
-                                <span className="event-page__fab-text">Upload</span>
-                            </label>
+                            <Add />
+                            <span 
+                                className="event-page__fab-text" 
+                                onClick={this.showUploadComponent}
+                            >
+                                Upload
+                            </span>
                         </Fab>
                         <Gallery images={this.state.gallery} backdropClosesModal={true} />
                     </Grid>
@@ -416,18 +442,19 @@ class EventPage extends Component {
                         {
                             this.state.users.length > 0 &&
                             <Swiper {...userParams}>
-                                {this.state.users.map((user, idx) => 
-                                    <ListItem key={idx} className="event-page__users-list-item">
-                                        <ListItemAvatar>
-                                            <Avatar>
-                                                {/* @todo take data from db */}
-                                                <Avatar alt="" src={user.image} />
-                                            </Avatar>
-                                        </ListItemAvatar>
-                                        <ListItemText
-                                            primary={user.nick || `${user.first_name} ${user.last_name}`}
-                                        />
-                                    </ListItem>
+                                {this.state.users.map((user, idx) =>
+                                    <Link to={'/profile/' + user.id} className="event-page__member_link">
+                                        <ListItem key={idx} className="event-page__users-list-item">
+                                            <ListItemAvatar>
+                                                <Avatar>
+                                                    <Avatar alt="" src={user.avatar ? user.avatar : defaultAvatar} />
+                                                </Avatar>
+                                            </ListItemAvatar>
+                                            <ListItemText
+                                                primary={`${user.first_name || ""} ${user.last_name || ""}`}
+                                            />
+                                        </ListItem>
+                                    </Link>
                                 )}
                             </Swiper>
                         }

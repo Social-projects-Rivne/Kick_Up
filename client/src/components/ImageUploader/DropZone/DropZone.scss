@@ -1,0 +1,69 @@
+.Dropzone {
+  height: 160px;
+  width: 160px;
+  background-color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  font-size: 16px;
+
+  .icon-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    .icon {
+      opacity: 0.3;
+      height: 64px;
+      width: 64px;
+    }
+  }
+  
+  .FileInput {
+    display: none;
+  }
+
+  //circle dropZone
+  @keyframes lds-eclipse {
+    0% {
+      transform: rotate(0deg);
+    }
+    50% {
+      transform: rotate(180deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  .lds-eclipse {
+    position: relative;
+  }
+  .lds-eclipse div {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+  }
+  .lds-eclipse div:not(.icon-wrapper)  {
+    -webkit-animation: lds-eclipse 1s linear infinite;
+    animation: lds-eclipse 1s linear infinite;
+    box-shadow: 0 4px 0 0 black;
+    -webkit-transform-origin: 80px 82px;
+    transform-origin: 80px 82px;
+  }
+  .lds-eclipse {
+    width: 160px !important;
+    height: 160px !important;
+    -webkit-transform: translate(-100px, -100px) scale(1) translate(100px, 100px);
+    transform: translate(-100px, -100px) scale(1) translate(100px, 100px);
+  }
+}
+  
+  .Highlight {
+    background-color: rgb(156, 238, 109);
+  }
+  
+  

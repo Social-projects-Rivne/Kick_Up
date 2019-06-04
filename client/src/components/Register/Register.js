@@ -6,6 +6,7 @@ import is from 'is_js';
 import { withSnackbar } from 'notistack';
 import { Grid, TextField, Button, Typography } from '@material-ui/core';
 import { Person, Send, Email, Lock } from '@material-ui/icons';
+import setAuthToken from "../../setAuthToken";
 
 const USER_ROUTE = 'http://localhost:3001/api/signup';
 const PASSWORD_LENGTH = 6;
@@ -66,6 +67,9 @@ class Register extends Component {
                 })
              })
             .catch((err) => {
+                if (!err.response)
+                    return;
+
                 const data = err.response.data.error.errors;
                 let res = [];
 
@@ -126,7 +130,36 @@ class Register extends Component {
         this.sendFormData(function (res) {
             // Show message based on response;
             if (res && res.status) {
-                _this.showToast('Welcome to RoomKa', messageType.SUCCESS);
+                const { email, password } = _this.state;
+                const user = {
+                    email,
+                    password
+                };
+                axios.post("/api/signin", user)
+                    .then(res => {
+                        const { token } = res.data;
+                        _this.props.userHasAuthenticated(true);
+                        setAuthToken(token);
+                        localStorage.setItem("authorization", token);
+                        return axios.get('api/profile')
+                    })
+                    .then((res) => {
+                        //TODO decide with team if this action is necessary
+                        if (res.data && res.data.email) {
+                            return  res.data;
+                        }
+                        throw new Error('There is no user.');
+                    })
+                    .then(user => {
+                        _this.showToast('Welcome to RoomKa', messageType.SUCCESS);
+                        _this.props.setUser(user);
+                        _this.props.history.push({
+                            pathname: "/profile/" + user.id +"/edit",
+                        });
+                    })
+                    .catch(() => {
+                        _this.showToast('Incorrect username or password!', messageType.ERR);
+                    });
             } else {
                 try {
                     res.details.forEach(msg => {

@@ -21,7 +21,12 @@ const Room = bookshelf.Model.extend({
       return this.hasMany('Rating','entity_id','id').query(qb => {
         qb.where('entity_type',constants.rating.entity_types.room);
       });
-    }
+    },
+    media() {
+      return this.hasMany('Media', 'entity_id').query(qb => {
+        qb.where('media.type','room');
+      });
+    },
   });
 
 module.exports = bookshelf.model('Room', Room);

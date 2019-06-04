@@ -18,7 +18,12 @@ const Event = bookshelf.Model.extend({
         return this.belongsToMany('User', 'members', 'entity_id', 'user_id').query(qb => {
           qb.where('members.entity_type','event');
         });
-      },
+    },
+    media() {
+        return this.hasMany('Media', 'entity_id').query(qb => {
+          qb.where('media.type','event');
+        });
+    },
   });
 
 module.exports = bookshelf.model('Event', Event);

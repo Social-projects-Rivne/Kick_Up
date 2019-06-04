@@ -14,7 +14,19 @@ const handler = {
     .where({is_banned: false, permission: false})
     .orderBy('roomRating','desc')
     .orderBy('members','desc')
-    .fetchPage({page: 1, pageSize: 10, withRelated: ['creator','category','rating']});
+    .fetchPage({
+      page: 1,
+      pageSize: 10,
+      withRelated: [
+        'creator',
+        'category',
+        'rating',
+        {
+          'event': qb => {
+            qb.where({permission: false});
+          }
+        }
+      ]});
    
     ctx.body = {
       events,
