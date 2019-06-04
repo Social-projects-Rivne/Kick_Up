@@ -4,6 +4,13 @@
 
 #root .roomcard {
     box-shadow: none;
+
+    .roomcard__user-link,
+    .roomcard__user-link:active,
+    .roomcard__user-link:hover,
+    .roomcard__user-link:visited {
+        text-decoration: none;
+    }
 }
 
 .roomcard .roomcard__header {
