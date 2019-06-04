@@ -11,31 +11,31 @@ class Dropzone extends Component {
         this.fileInputRef = React.createRef();
     }
 
-    openFileDialog = (event) => {
+    openFileDialog = event => {
         if (this.props.disabled) return;
         this.fileInputRef.current.click();
     }
 
-    onFilesAdded = (evt) => {
+    onFilesAdded = event => {
         if (this.props.disabled) return;
-        const files = evt.target.files;
+        const files = event.target.files;
         if (this.props.onFilesAdded) {
             this.props.onFilesAdded(Object.values(files));
         }
-        evt.target.value = null;
+        event.target.value = null;
     }
 
-    onDragOver = (event) => {
+    onDragOver = event => {
         event.preventDefault();
         if (this.props.disabled) return;
         this.setState({ hightlight: true });
     }
 
-    onDragLeave = (event) => {
+    onDragLeave = event => {
         this.setState({ hightlight: false });
     }
 
-    onDrop = (event) => {
+    onDrop = event => {
         event.preventDefault();
         if (this.props.disabled) return;
         const files = event.dataTransfer.files;

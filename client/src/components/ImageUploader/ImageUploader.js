@@ -21,7 +21,7 @@ class ImageUploader extends Component {
     imagesSRC: []
   };
 
-  onFilesAdded = (files) => {
+  onFilesAdded = files => {
     const maxSize = 1048576;
     const maxFiles = 5;
     let validatedFiles = [];
@@ -52,7 +52,7 @@ class ImageUploader extends Component {
     }
   }
 
-  uploadFiles = (event) => {
+  uploadFiles = event => {
     this.setState({ uploadProgress: {}, uploading: true });
     const promises = [];
     this.state.files.forEach((file, index) => {
@@ -60,7 +60,7 @@ class ImageUploader extends Component {
     });
   }
 
-  sendRequest = (file) => {
+  sendRequest = file => {
     const formData = new FormData();
     formData.append("file", file, file.name);
     axios.post('/api/upload' + this.props.entityURL, formData, {
@@ -89,7 +89,7 @@ class ImageUploader extends Component {
         })
   }
 
-  deleteFile = (file) => () => {
+  deleteFile = file => () => {
     let CopyFiles = [ ...this.state.files ];
     const files = CopyFiles.filter(e => {
       return e.name !== file.name
@@ -97,7 +97,7 @@ class ImageUploader extends Component {
     this.setState({files});
   }
 
-  deleteSizeFile = (file) => () => {
+  deleteSizeFile = file => () => {
     let CopyFiles = [ ...this.state.rejectedFiles ];
     const rejectedFiles = CopyFiles.filter(e => {
       return e.name !== file.name
@@ -105,7 +105,7 @@ class ImageUploader extends Component {
     this.setState({rejectedFiles});
   }
 
-  renderProgress = (file) => {
+  renderProgress = file => {
     const uploadProgress = this.state.uploadProgress[file.name];
     const progress = uploadProgress ? uploadProgress.percentage : 0;
     const progressBar = 
@@ -183,7 +183,7 @@ class ImageUploader extends Component {
     </div>;
 
     const uploadCard = 
-      <div className="upload-card" onClick={(event) => event.stopPropagation()} >
+      <div className="upload-card" onClick={event => event.stopPropagation()} >
         <Close className="upload-card-close" onClick={this.props.closeUploadComponent} />
         <div className="upload">
           <div className="Content">
