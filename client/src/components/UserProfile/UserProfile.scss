@@ -1,10 +1,12 @@
 #root .user-profile-page {
   background-color: $white;
 
-  a:-webkit-any-link {
-    color: $black;
-    cursor: pointer;
+  .user-profile-page-link-edit,
+  .user-profile-page-link-edit:active,
+  .user-profile-page-link-edit:hover,
+  .user-profile-page-link-edit:visited {
     text-decoration: none;
+    color: $black;
   }
 
   .user-profile-page-container {

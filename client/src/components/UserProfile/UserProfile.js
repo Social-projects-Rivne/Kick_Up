@@ -143,7 +143,7 @@ class UserProfile extends React.Component {
                                 <Paper elevation={1} className="user-profile-page-paper-user-info">
                                     <Typography variant="h5" component="h3">
                                         { selfProfile && (
-                                            <Link to={this.props.location.pathname + "/edit"}>
+                                            <Link to={this.props.location.pathname + "/edit"} className="user-profile-page-link-edit">
                                                 <Edit />
                                             </Link>
                                         )}
@@ -159,7 +159,7 @@ class UserProfile extends React.Component {
 
                                             <ListItem >
                                                 <InputLabel>
-                                                    Name:&nbsp;{userProfileData.first_name + " " + userProfileData.last_name}
+                                                    Name:&nbsp;{(userProfileData.first_name || "") + " " + (userProfileData.last_name || "")}
                                                 </InputLabel>
                                             </ListItem>
 
@@ -243,7 +243,7 @@ class UserProfile extends React.Component {
                                                         >
                                                         </Avatar>
                                                         <span className="user-profile-room-card-header-creator">
-                                                            {`by ${room.first_name} ${room.last_name}`}
+                                                            {`by ${room.first_name || ""} ${room.last_name || ""}`}
                                                         </span>
                                                     </div>
                                                 </Link>
