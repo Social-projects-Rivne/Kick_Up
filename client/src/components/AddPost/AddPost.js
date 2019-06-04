@@ -10,12 +10,15 @@ import {
     TextField,
     FormControlLabel,
     FormGroup,
-    Switch
+    Switch,
+    Paper,
+    Typography
 } from '@material-ui/core';
-import { Visibility } from '@material-ui/icons';
+import { Visibility, Close, Home } from '@material-ui/icons';
 import Swiper from 'react-id-swiper/lib/ReactIdSwiper.full';
 import { withSnackbar } from 'notistack';
 import WYSWYGeditor from '../WYSWYGeditor/WYSWYGeditor';
+import PostCard from '../PostCard/PostCard';
 import axios from 'axios';
 
 const addPostSwiperParams = {
@@ -23,7 +26,8 @@ const addPostSwiperParams = {
     slidesPerView: 1,
     simulateTouch: true,
     autoHeight: true,
-    speed: 800
+    speed: 800,
+    noSwiping: true
 };
 const messageType = {
     SUCCESS: 'success',
@@ -40,14 +44,19 @@ const _roomPostRoute = '/api/room/new-post';
  * option to mark post as pinned one;
  */
 
+ let swiperInstance;
+
 class AddPost extends Component {
     state = {
         roomId: this.props.match.params.id,
-        activeStep: 0,
+        activeSlide: 0,
         title: '',
         details: '',
         pinPost: false,
         editorData: null
+    }
+    setSwiper = instance => {
+        if (instance) swiperInstance =  instance;
     }
     setPostPinned = () => {
         this.setState(prevState => {
@@ -56,14 +65,26 @@ class AddPost extends Component {
             }
         });
     }
+    togglePreview = () => {
+        const slideTo =  swiperInstance.activeIndex === 0 ? 1 : 0;
+
+        try {
+            swiperInstance.slideTo(slideTo);
+            this.setState({activeSlide: slideTo});
+        } catch(err) {}
+    }
     updateInputValue = (evt) => {
         this.setState({ title: evt.target.value });
     }
-    sendData = () => {
+    generatePostData = () => {
         let {roomId, editorData: text, title, pinPost: isPinned} = this.state;
+
         text = JSON.stringify(text, undefined, 2);
 
-        axios.post(_roomPostRoute, { roomId, text, title, isPinned })
+        return {roomId, text, title, isPinned};
+    }
+    sendData = () => {
+        axios.post(_roomPostRoute, this.generatePostData())
         .then((res) => {
             console.log(res);
          })
@@ -72,9 +93,17 @@ class AddPost extends Component {
         })
     }
     setEditorData = (data) => {
-        if (data.blocks[0].text.length > 0) 
+        if (
+            data.blocks.length > 1 ||
+            data.blocks[0].text.length > 0
+        ) {
             this.setState({editorData: data});
-        else this.resetEditorData();
+
+            // After data saved, we need update swiper;
+            swiperInstance.updateAutoHeight();
+        } else {
+            this.resetEditorData();
+        }
     }
     resetEditorData = () => {
         this.setState({editorData: null});
@@ -127,8 +156,11 @@ class AddPost extends Component {
             variant: variant ? variant : 'default',
         });
     }
+    componentDidMount = () => {
+        console.log('PROPS ADD POST', this.props);
+    }
     render() {
-        const { activeStep, editorState } = this.state;
+        const { activeSlide, editorState } = this.state;
 
         return (
             <div className="add-post">
@@ -141,7 +173,7 @@ class AddPost extends Component {
             >
                 Add new post
             </Button>
-            <Swiper {...addPostSwiperParams} >
+            <Swiper {...addPostSwiperParams} getSwiper={this.setSwiper} >
                 <section className="add-post__slide  add-post__slide_data-entry">
                     <form className="add-post__form" noValidate autoComplete="off">
                         <label className="add-post__title">To add new post, fill in fields below:</label>
@@ -227,15 +259,40 @@ class AddPost extends Component {
                     </form>
                 </section>
                 <section className="add-post__slide  add-post__slide_data-preview">
-                    Here we will have data-preview;
+                    {
+                        this.state.editorData &&
+                        <div>
+                            <Paper className="add-post__preview-info" >
+                                <div className="add-post__preview-info-wrapper">
+                                    <Home />
+                                    <div>
+                                        <Typography variant="h5" component="h3">
+                                            Post preview
+                                        </Typography>
+                                        <Typography component="p">
+                                            Your post will look exactly same as is shown below
+                                        </Typography>
+                                    </div>
+                                </div>
+                                
+                            </Paper>
+                            <PostCard data={this.generatePostData()} />
+                        </div>
+                    }
                 </section>
             </Swiper>
             {
                 this.checkAllFilled() &&
                 <Fab
                     className="add-post__fab"
+                    onClick={ this.togglePreview }
                 >
-                    <Visibility />
+                    {
+                        this.state.activeSlide === 0 
+                        ? <Visibility /> 
+                        : <Close />
+                    }
+                    
                 </Fab>
             }
         </div>

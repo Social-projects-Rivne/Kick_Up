@@ -8,6 +8,7 @@
 .room-details-page-typography-padding {
   padding-left: 0;
   padding-right: 0;
+  padding-bottom: 0;
 }
 
 #root .room-page-details {
@@ -265,6 +266,10 @@
 
   .room-details-card-grid {
     padding: 0;
+
+    &:last-of-type > div:first-child {
+      border-bottom: 0;
+    }
   }
 
   .room-details-card-grid a{

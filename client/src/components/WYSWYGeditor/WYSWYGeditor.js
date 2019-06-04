@@ -8,14 +8,17 @@ class WYSWYGeditor extends Component {
     state = {
         editorState: EditorState.createEmpty()
     }
-    onChange = editorState => {
+    onChange = (editorState) => {
         const callback = this.props.editorSettings.dataUpdateCallback;
-        
-        this.setState({editorState});      
-        
-        // Return updated row data via callback to parent;
-        if (typeof callback === 'function') {
+
+        this.setState({editorState});
+        if (JSON.stringify(convertToRaw(this.state.editorState.getCurrentContent())) !== JSON.stringify(convertToRaw(editorState.getCurrentContent()))) {
+          this.setState({editorState});
+
+          // Return updated row data via callback to parent;
+          if (typeof callback === 'function') {
             callback(convertToRaw(editorState.getCurrentContent()));
+          }
         }
     }
     render() {

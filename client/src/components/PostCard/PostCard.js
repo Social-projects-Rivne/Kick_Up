@@ -58,7 +58,7 @@ const convertTime = (str) => {
         }
     }
 };
-const _maxAllowedPostChars = 500; 
+const _maxAllowedPostChars = 400; 
 
 class PostCard extends Component {
     constructor(props) {
@@ -73,37 +73,40 @@ class PostCard extends Component {
         return html.length >= _maxAllowedPostChars;
     }
     render = () => (
-<Card className="postcard">
-        <Link data-wrapper-link>
-            <CardHeader
-                className="postcard__header"
-                title={this.props.data.title}
-                subheader={
-                    <div className="postcard__header-info">
-                        <div className="postcard__avatar-wrapper">
-                            <Avatar 
-                                className="postcard__avatar" 
-                                src={
-                                    this.props.data.author_details.avatar 
-                                    ? this.props.data.author_details.avatar 
-                                    : defaultAvatar
-                                }
-                            >
-                            </Avatar>
-                            <span>{`${
-                                this.props.data.author_details.firstName
-                                ? this.props.data.author_details.firstName
-                                : ''
-                            } ${
-                                this.props.data.author_details.lastName
-                                ? this.props.data.author_details.lastName
-                                : ''
-                                }`}</span>
+        <Card className={this.definePostShouldBeCut() ? 'postcard' : 'postcard  postcard_no-margin-bottom'}>
+            <Link data-wrapper-link>
+                <CardHeader
+                    className="postcard__header"
+                    title={this.props.data.title}
+                    subheader={
+                        <div className="postcard__header-info">
+                            <div className="postcard__avatar-wrapper">
+                                <Avatar 
+                                    className="postcard__avatar" 
+                                    src={
+                                        this.props.data.author_details &&
+                                        this.props.data.author_details.avatar 
+                                        ? this.props.data.author_details.avatar 
+                                        : defaultAvatar
+                                    }
+                                >
+                                </Avatar>
+                                <span>{`${
+                                    this.props.data.author_details &&
+                                    this.props.data.author_details.firstName
+                                    ? this.props.data.author_details.firstName
+                                    : 'Shy'
+                                } ${
+                                    this.props.data.author_details &&
+                                    this.props.data.author_details.lastName
+                                    ? this.props.data.author_details.lastName
+                                    : 'Unicorn'
+                                    }`}</span>
+                            </div>
                         </div>
-                    </div>
-                }
-            >
-        </CardHeader>
+                    }
+                >
+            </CardHeader>
         </Link>
         {/* @temp We may need it to add covers done by Igor */}
         {/* <CardMedia
@@ -151,7 +154,7 @@ class PostCard extends Component {
         >
         </Collapse>
     </Card>
-);
-            }
+    );
+}
 
 export default PostCard;

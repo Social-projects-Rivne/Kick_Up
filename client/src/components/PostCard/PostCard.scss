@@ -1,5 +1,6 @@
 /* Available modificators:
 * postcard__expand-btn_expanded;
+* postcard_no-padding-bottom
 */
 
 #root .postcard {
@@ -14,11 +15,15 @@
     & * {
         box-sizing: border-box;
     }
+
+    &.postcard_no-margin-bottom {
+        margin-bottom: 0;
+    }
 }
 
 .postcard .postcard__header {
     width: 100%;
-    padding: 10px;
+    padding: 10px 10px 0;
 }
 
 .postcard__header span:first-of-type {
@@ -28,8 +33,8 @@
     letter-spacing: 1px;
     color: $black;
     font-weight: 100;
-    max-height: calc(2rem * 3);
     overflow: hidden;
+    word-break: break-word;
 }
 
 #root .postcard .postcard__main-content {
@@ -76,10 +81,6 @@
     }
 }
 
-.postcard .postcard__header {
-    padding: 10px;
-}
-
 .postcard__header > div:first-child {
     align-self: flex-start;
     margin-top: 6px;
@@ -112,6 +113,7 @@
     overflow-y: visible;
     // Need max-height to perform max-height animation;
     max-height: 1800px;
+    padding: 0 10px;
     transition: max-height 1.3s;
 
     &::before {
@@ -128,15 +130,21 @@
 }
 
 .postcard .postcard__description p {
-    font-size: 1.071rem;
+    font-size: 0.9375rem;
     line-height: 1.286rem;
     font-weight: 100;
+    word-break: break-word;
 }
 
 .postcard .postcard__description figure {
     margin-left: 0;
     margin-right: 0;
     text-align: center;
+}
+
+.postcard .postcard__description img {
+    max-width: 100%;
+    max-height: 100%;
 }
 
 .postcard .postcard__read-more {
@@ -149,6 +157,16 @@
     bottom: -28px;
     margin: auto;
     z-index: 2;
+}
+
+.postcard .postcard__description h1,
+.postcard .postcard__description h2,
+.postcard .postcard__description h3, 
+.postcard .postcard__description h4 {
+    margin: 14px 0; 
+    font-weight: 400;
+    text-align: left;
+    word-break: break-word;
 }
 
 // Related to modifivators;
@@ -169,40 +187,6 @@
 .postcard__description.postcard__description_cut_expanded
 + .postcard__read-more {
     display: flex;
-}
-
-// Landscape mode;
-@media only screen and (max-width: 767px) and (orientation: landscape) {
-    .postcard {
-        display: flex;
-        width: 100%;
-        flex-wrap: wrap;
-    }
-
-    .postcard__header {
-        width: 100%;
-    }
-
-    .postcard__header span:first-of-type {
-        max-height: 2rem;
-    }
-
-    .postcard .postcard__description {
-        min-width: 52vw;
-        max-width: 52vw;
-        padding-top: 0;
-    }
-    
-    .postcard .postcard__description p {
-        max-height: calc(1.286rem * 6 - 5px);
-    }
-
-    .postcard__read-more {
-        position: absolute;
-        width: 54vw;
-        top: calc(1.464rem * 8 + 54px);
-        right: 0;
-    }
 }
 
 @media only screen and (min-width: 768px) {

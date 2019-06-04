@@ -363,8 +363,11 @@ const handler = {
           let filteredUserData = usersData.find(item => item.id === post.author_id);
           
           if (filteredUserData) {
-            delete filteredUserData['id'];
-            post.author_details = filteredUserData;
+            post.author_details = {
+              firstName : filteredUserData.firstName,
+              lastName : filteredUserData.lastName,
+              avatar : filteredUserData.avatar
+            };
           }
         });
       }
