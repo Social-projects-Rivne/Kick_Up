@@ -121,7 +121,7 @@ class EventPage extends Component {
             gallery: [],
             authUser:  false,
             userCount: 0,
-            showUpload: false
+            showUpload: false,
         };
     }
     saveSwiper = (instance) => {
@@ -205,7 +205,10 @@ class EventPage extends Component {
         .get('/api/event/' + id)
         .then(res => {
             res = res.data;
-            res.gallery = mock.gallery;
+            let gallery = [];
+            [...res.media].map(e => {
+                gallery.push({src:e.key.slice(6), thumbnail:e.key.slice(6)})
+            });
 
             this.setState({
                 title: res.title,
@@ -213,7 +216,7 @@ class EventPage extends Component {
                 location: res.location,
                 date: new Date(res.start_date).toLocaleString('en-US', timeOptions),
                 description: res.description,
-                gallery: mock.gallery
+                gallery,
             });
         })
         .catch((err) => {
@@ -244,6 +247,11 @@ class EventPage extends Component {
         this.setState({showUpload: false})
     }
 
+    getImagesSRC = (src) => {
+        const gallery = [...this.state.gallery].concat(src);
+        this.setState({gallery});
+    }
+
     render() {
         // const stateUser = this.props.user;
         // const eventId = this.props.match.params.id;
@@ -272,6 +280,7 @@ class EventPage extends Component {
                     entityURL={this.props.match.url}
                     authUser={this.state.authUser}
                     isAuthenticated={this.props.isAuthenticated}
+                    getImagesSRC={this.getImagesSRC}
                 />
                 <AppBar position="fixed" className="tab-bar">
                     <Tabs
@@ -416,21 +425,13 @@ class EventPage extends Component {
                             Gallery
                         </Typography>
                         <Fab className="event-page__fab  event-page__fab_upload" variant="extended" color="primary">
-                            {/* <input
-                                accept="image/*"
-                                id="event-page-upload-images"
-                                multiple
-                                type="file"
-                            /> */}
-                            {/* <label htmlFor="event-page-upload-images"> */}
-                                <Add />
-                                <span 
-                                    className="event-page__fab-text" 
-                                    onClick={this.showUploadComponent}
-                                >
-                                    Upload
-                                </span>
-                            {/* </label> */}
+                            <Add />
+                            <span 
+                                className="event-page__fab-text" 
+                                onClick={this.showUploadComponent}
+                            >
+                                Upload
+                            </span>
                         </Fab>
                         <Gallery images={this.state.gallery} backdropClosesModal={true} />
                     </Grid>

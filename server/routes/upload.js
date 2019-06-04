@@ -16,18 +16,21 @@ const handler = {
         const { user_id } = ctx.state;
         const { entityType,entity_id } = ctx.params;
         const { file } = ctx.request.files;
+        let path = null;
         if(file.length > 1){
-        file.forEach(async item => {
-            await validate(item,{ type: `required|in:${allowExtensions.join()}`})
-            const filePath = await uploader.uploadGallery(item,entityType);
-            await new Media({user_id,key:filePath,type:entityType,entity_id}).save();
-        });
-        }else {
+            file.forEach(async item => {
+                await validate(item,{ type: `required|in:${allowExtensions.join()}`})
+                filePath = await uploader.uploadGallery(item,entityType);
+                await new Media({user_id,key:filePath,type:entityType,entity_id}).save();
+            });
+        } else {
             await validate(file,{ type: `required|in:${allowExtensions.join()}`})
             const filePath = await uploader.uploadGallery(file,entityType);
-            await new Media({user_id,key:filePath,type:entityType,entity_id}).save()
+            await new Media({user_id,key:filePath,type:entityType,entity_id}).save();
+            path = filePath.slice(6);
+            console.log('path',path);
         }
-        ctx.body = '';        
+        ctx.body = path;        
     },
 }
 const multipartBodyParser = koaBody({ multipart: true });

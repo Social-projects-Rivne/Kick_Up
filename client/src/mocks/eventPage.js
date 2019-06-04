@@ -87,8 +87,8 @@ const eventPageMock = {
     ],
     gallery: [
         {
-          src: "http://en.es-static.us/upl/2018/12/meteor-geminids-venus-12-15-2018-Kota-Belud-Sabah-Emma-Zulaiha-Zulkifli-e1545048674227.jpg",
-          thumbnail: "http://en.es-static.us/upl/2018/12/meteor-geminids-venus-12-15-2018-Kota-Belud-Sabah-Emma-Zulaiha-Zulkifli-e1545048674227.jpg",
+          src: "/uploads/galleries/862436305393377.png",
+          thumbnail: "/uploads/galleries/862436305393377.png",
           thumbnailWidth: 520,
           thumbnailHeight: 274
         },

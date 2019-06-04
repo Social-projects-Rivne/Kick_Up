@@ -131,8 +131,8 @@ const handler = {
   },
   async getEventById(ctx) {
     const { id } = ctx.params;
-    const room = await Event.where({ id }).fetch({withRelated:['creator','category','members'],require:true})
-    ctx.body = room;
+    const event = await Event.where({ id }).fetch({withRelated:['creator','category','members', 'media'],require:true});
+    ctx.body = event;
   },
   async updateEventById(ctx) {
     const { id } = ctx.params;

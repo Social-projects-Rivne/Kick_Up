@@ -17,7 +17,8 @@ class ImageUploader extends Component {
     uploadProgress: {},
     limitFiles: false,
     successfullUploaded: false,
-    error: null
+    error: null,
+    imagesSRC: []
   };
 
   onFilesAdded = (files) => {
@@ -77,6 +78,10 @@ class ImageUploader extends Component {
             copy[file.name] = { state: "done", percentage: 100 };
             this.setState({ uploadProgress: copy, successfullUploaded: true });
             setTimeout(() => this.setState({ uploading: false }), 1000);
+            const imageSRC = res.data;
+            const imagesSRC = [...this.state.imagesSRC].concat({src:imageSRC, thumbnail:imageSRC});
+            this.setState({imagesSRC});
+            this.props.getImagesSRC(this.state.imagesSRC);
         })
         .catch(error => {
            console.log(error);
@@ -131,14 +136,23 @@ class ImageUploader extends Component {
   renderActions() {
     if (this.state.successfullUploaded) {
       return (
+        <>
+        <p className="actions-success">All files successful uploaded!</p>
         <Button
             variant="outlined"
             onClick={() =>
-            this.setState({ files: [], rejectedFiles: [], successfullUploaded: false, limitFiles: false })
+            this.setState({ 
+              files: [], 
+              rejectedFiles: [], 
+              imagesSRC: [],
+              successfullUploaded: false, 
+              limitFiles: false, 
+              error: null })
           }
         >
           Clear
         </Button>
+        </>
       );
     } else {
       return (
@@ -204,7 +218,7 @@ class ImageUploader extends Component {
             </div>
           </div>
           {this.state.error && <p className="upload-error">{this.state.error}</p>}
-          <div className="Actions">{this.renderActions()}</div>
+          <div className="actions">{this.renderActions()}</div>
         </div>
       </div>
 
@@ -214,7 +228,6 @@ class ImageUploader extends Component {
         <div className="upload-wrapper" 
           onClick={this.props.closeUploadComponent}
           >
-            {/* {this.props.authUser ? uploadCard : renderNotMember} */}
             {!this.props.isAuthenticated ? 
               renderSignIn : 
               (this.props.authUser ? uploadCard : renderNotMember)

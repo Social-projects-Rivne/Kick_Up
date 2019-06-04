@@ -12,7 +12,6 @@ class Dropzone extends Component {
     }
 
     openFileDialog = (event) => {
-        console.log('openFileDialog', this.props.disabled)
         if (this.props.disabled) return;
         this.fileInputRef.current.click();
     }

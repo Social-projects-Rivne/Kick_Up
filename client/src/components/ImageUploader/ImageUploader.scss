@@ -84,13 +84,23 @@
         overflow: auto;
       }
 
-      .Actions {
+      .actions {
         display: flex;
         flex: 1;
         width: 100%;
         align-items: flex-end;
         flex-direction: column;
         margin-top: 32px;
+
+        &-success {
+          position: absolute;
+          bottom: 50px;
+          background-color: #fff;
+          width: 80%;
+          box-shadow: 0 0 3px #eee;
+          align-self: center;
+          padding: 5px;
+        }
       }
 
       .Filename {
