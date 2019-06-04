@@ -196,7 +196,7 @@ const handler = {
         }
     ];
     const room = await Room.where({ id }).fetch({withRelated:['creator','category','members','event', 'media'],require:true});
-    room.set({feeds,gallery,posts,members});
+    room.set({feeds,posts});
     ctx.body = room;
   },
   async updateRoomById(ctx) {
