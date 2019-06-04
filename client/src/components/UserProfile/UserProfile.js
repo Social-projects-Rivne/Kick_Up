@@ -143,7 +143,7 @@ class UserProfile extends React.Component {
                                 <Paper elevation={1} className="user-profile-page-paper-user-info">
                                     <Typography variant="h5" component="h3">
                                         { selfProfile && (
-                                            <Link to={this.props.location.pathname + "/edit"}>
+                                            <Link to={this.props.location.pathname + "/edit"} className="user-profile-page-link-edit">
                                                 <Edit />
                                             </Link>
                                         )}
