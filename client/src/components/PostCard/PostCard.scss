@@ -35,6 +35,7 @@
     font-weight: 100;
     overflow: hidden;
     word-break: break-word;
+    text-transform: capitalize;
 }
 
 #root .postcard .postcard__main-content {
@@ -169,7 +170,39 @@
     word-break: break-word;
 }
 
-// Related to modifivators;
+.postcard__header-pin-wrapper {
+    display: none;
+    position: absolute;
+    align-items: center;
+    top: 19px;
+    right: 8px;
+}
+
+.postcard__header-pin {
+    top: 16px;
+    right: 8px;
+    color: $primary;
+    z-index: 1;
+}
+.postcard .postcard__header-pin-wrapper span {
+    padding-top: 2px;
+    font-size: 12px;
+    line-height: 16px;
+    text-transform: capitalize;
+    margin-left: 5px;
+}
+
+// Related to modificators;
+.postcard.postcard_pinned
+.postcard__header-pin-wrapper {
+    display: flex;
+}
+
+.postcard.postcard_pinned
+.postcard__header span[class*=MuiTypography-headline] {
+    padding-right: 70px;
+}
+
 .postcard__description.postcard__description_cut {
     max-height: 33vh;
     overflow: hidden;

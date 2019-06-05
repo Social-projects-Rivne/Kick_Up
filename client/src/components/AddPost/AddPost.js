@@ -18,6 +18,7 @@ import { Visibility, Close, Home } from '@material-ui/icons';
 import Swiper from 'react-id-swiper/lib/ReactIdSwiper.full';
 import { withSnackbar } from 'notistack';
 import WYSWYGeditor from '../WYSWYGeditor/WYSWYGeditor';
+import { convertFromRaw } from 'draft-js';
 import PostCard from '../PostCard/PostCard';
 import axios from 'axios';
 
@@ -48,12 +49,14 @@ const _roomPostRoute = '/api/room/new-post';
 
 class AddPost extends Component {
     state = {
+        authorId: this.props.user ? this.props.user.id : null,
         roomId: this.props.match.params.id,
         activeSlide: 0,
         title: '',
         details: '',
         pinPost: false,
-        editorData: null
+        editorData: null,
+        editMode: false
     }
     setSwiper = instance => {
         if (instance) swiperInstance =  instance;
@@ -77,20 +80,25 @@ class AddPost extends Component {
         this.setState({ title: evt.target.value });
     }
     generatePostData = () => {
-        let {roomId, editorData: text, title, pinPost: isPinned} = this.state;
+        let {authorId, roomId, editorData: text, title, pinPost: isPinned} = this.state;
 
+        authorId = authorId ? authorId : this.props.user.id;
         text = JSON.stringify(text, undefined, 2);
 
-        return {roomId, text, title, isPinned};
+        return {authorId, roomId, text, title, isPinned};
     }
     sendData = () => {
         axios.post(_roomPostRoute, this.generatePostData())
         .then((res) => {
-            console.log(res);
+            // Redirect user to room page;
+            this.props.history.push({ pathname: `/room/${this.state.roomId}` });
+
+            // Show message;
+            this.showToast('Your new post was successfully created', messageType.SUCCESS);
          })
         .catch((err) => {
-            console.log('ERR', err);
-        })
+            this.showToast('Something went wrong, please reload your page', messageType.ERR);
+        });
     }
     setEditorData = (data) => {
         if (
@@ -98,6 +106,8 @@ class AddPost extends Component {
             data.blocks[0].text.length > 0
         ) {
             this.setState({editorData: data});
+
+            if (this.state.editMode) this.setState({editMode: false});
 
             // After data saved, we need update swiper;
             swiperInstance.updateAutoHeight();
@@ -114,8 +124,7 @@ class AddPost extends Component {
         if (
             this.state.title && 
             this.state.title.length > 3 &&
-            this.state.editorData &&
-            this.state.editorData.blocks.length > 0
+            (this.state.editMode || this.state.editorData && this.state.editorData.blocks.length > 0)
         ) {
             res = true;
         }
@@ -134,7 +143,7 @@ class AddPost extends Component {
             }
             if (
                 this.state.editorData &&
-                this.state.editorData.blocks.length <= 0
+                (this.state.editMode || this.state.editorData.blocks.length <= 0)
             ) {
                 errMessages.push('Give your post a great description');
             }
@@ -147,7 +156,7 @@ class AddPost extends Component {
             });
             
         } else {
-            this.showToast('Saving post...', messageType.INFO);
+            this.showToast('Working', messageType.INFO);
             this.sendData();
         }
     }
@@ -156,8 +165,22 @@ class AddPost extends Component {
             variant: variant ? variant : 'default',
         });
     }
-    componentDidMount = () => {
+    loadEditorData = (data) => {
+        let { authorId, roomId, text:editorData, title, isPinned:pinPost } = data;
+        try {
+            editorData = convertFromRaw(JSON.parse(editorData));
+            this.setState({ authorId, roomId, editorData, title, pinPost });
+            
+        } catch(err) {}
+    }
+    componentWillMount = () => {
         console.log('PROPS ADD POST', this.props);
+
+        // Fill editor with data;
+        if (this.props.location.state && this.props.location.state.data) {
+            this.setState({editMode: true});
+            this.loadEditorData(this.props.location.state.data);
+        }
     }
     render() {
         const { activeSlide, editorState } = this.state;
@@ -203,7 +226,7 @@ class AddPost extends Component {
                                 <Step 
                                     className={
                                         this.state.editorData &&
-                                        this.state.editorData.blocks.length > 0 
+                                        (this.state.editMode || this.state.editorData.blocks.length > 0)
                                             ? 'add-post__step  add-post__step_filled' 
                                             : 'add-post__step'
                                     }
@@ -212,6 +235,7 @@ class AddPost extends Component {
                                     <StepLabel className="add-post__step-label">Add your post details</StepLabel>
                                     <StepContent>
                                         <WYSWYGeditor editorSettings={{
+                                            data: this.state.editorData ? this.state.editorData : null,
                                             dataUpdateCallback: this.setEditorData,
                                             toolbar: {
                                                 options: ['blockType', 'list', 'link', 'embedded', 'emoji', 'image'],
@@ -261,6 +285,7 @@ class AddPost extends Component {
                 <section className="add-post__slide  add-post__slide_data-preview">
                     {
                         this.state.editorData &&
+                        !this.state.editMode &&
                         <div>
                             <Paper className="add-post__preview-info" >
                                 <div className="add-post__preview-info-wrapper">
@@ -276,13 +301,24 @@ class AddPost extends Component {
                                 </div>
                                 
                             </Paper>
-                            <PostCard data={this.generatePostData()} />
+                            <PostCard data={(() => {
+                                let res = this.generatePostData();
+
+                                // Add user data;
+                                if (this.props.user) {
+                                    let { avatar, first_name : firstName, last_name : lastName } = this.props.user;
+                                    res.author_details = { avatar, firstName, lastName };
+                                }
+
+                                return res;
+                            })()} />
                         </div>
                     }
                 </section>
             </Swiper>
             {
                 this.checkAllFilled() &&
+                !this.state.editMode &&
                 <Fab
                     className="add-post__fab"
                     onClick={ this.togglePreview }

@@ -6,7 +6,7 @@ const roomsSchema = new Schema (
         room_id: Number,
         posts: [
             {
-                author_id: Number,
+                authorId: Number,
                 title: String,
                 text: Object,
                 created_at: {
@@ -16,6 +16,10 @@ const roomsSchema = new Schema (
                 updated_at: {
                     type: Date,
                     default: Date.now,
+                },
+                isPinned: {
+                    type: Boolean,
+                    default: false
                 },
                 comments: [
                     {

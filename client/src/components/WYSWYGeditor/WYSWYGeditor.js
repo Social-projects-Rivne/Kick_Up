@@ -6,7 +6,9 @@ import '../../styles/libs/react-draft-wysiwyg.css';
 
 class WYSWYGeditor extends Component {
     state = {
-        editorState: EditorState.createEmpty()
+        editorState: this.props.editorSettings.data 
+          ? EditorState.createWithContent(this.props.editorSettings.data) 
+          : EditorState.createEmpty()
     }
     onChange = (editorState) => {
         const callback = this.props.editorSettings.dataUpdateCallback;

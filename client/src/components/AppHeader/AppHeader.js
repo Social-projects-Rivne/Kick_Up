@@ -10,6 +10,7 @@ import { AppBar, Toolbar, IconButton, InputBase, Link, BottomNavigation, BottomN
 //You can find icon names here: https://jxnblk.com/rmdi/
 import { EventAvailable, SupervisorAccount, PersonAdd, Person, MoreVert, Search } from '@material-ui/icons';
 import { Link as RouterLink, withRouter } from 'react-router-dom';
+import { de } from 'date-fns/esm/locale';
 
 class AppHeader extends React.Component {
     state = {
@@ -60,6 +61,7 @@ class AppHeader extends React.Component {
 
     render() {
         const { user, isAuthenticated } = this.props;
+
         const { mobileMenuOpened, activePage, anchorEl } = this.state;
         const avatarURL = user && user.avatar ? 
             <img src={user.avatar} alt={user.email}/> 

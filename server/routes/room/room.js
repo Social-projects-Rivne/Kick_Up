@@ -265,10 +265,11 @@ const handler = {
     };
   },
   async addPost(ctx) {
-    const { roomId, text, title, isPinned } = ctx.request.body;
+    const { authorId, roomId, text, title, isPinned } = ctx.request.body;
     
     // Validate input;
     await validate(ctx.request.body, {
+      authorId: 'numeric|min:1',
       roomId: 'numeric|min:1',
       text: 'required',
       title: 'min:1',
@@ -279,11 +280,11 @@ const handler = {
     
     if (room) {
       room.posts.push({
-        // @todo add author id;
-        author_id: 1,
+        authorId,
         title,
         text,    
-        comments: []
+        comments: [],
+        isPinned
       });
     } else {
       room = new MongoDbRoom(
@@ -292,10 +293,11 @@ const handler = {
           posts: [
             {
               // @todo add author id;
-              author_id: 1,
+              authorId,
               title,
               text,
-              comments: []
+              comments: [],
+              isPinned
             }
           ],
           moderators_list: [],
@@ -354,13 +356,13 @@ const handler = {
       roomPosts = roomPosts.posts.map(post => post.toObject());
 
       // Query MySQL for users details;
-      let ids = roomPosts.map(post => post.author_id);
+      let ids = roomPosts.map(post => post.authorId);
       let usersData = await getUserData(ids);
 
       if (usersData) {
         //Add received data to MongoDB data;
         roomPosts.forEach((post)  => {
-          let filteredUserData = usersData.find(item => item.id === post.author_id);
+          let filteredUserData = usersData.find(item => item.id === post.authorId);
           
           if (filteredUserData) {
             post.author_details = {

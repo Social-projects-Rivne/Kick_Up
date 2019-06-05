@@ -89,7 +89,7 @@ class RoomPage extends React.Component {
             .get(`/api/room/${id}/posts`)
             .then(res => {
                 if (Array.isArray(res.data)) {
-                    this.setState({roomPagePosts: res.data});
+                    this.setState({roomPagePosts: res.data.reverse()});
                 }
             })
             // In case of error, we are OK;
@@ -176,7 +176,6 @@ class RoomPage extends React.Component {
     render() {
         const { value, roomPageDB, roomPagePosts } = this.state;
         const { isAuthenticated } = this.props;
-        console.log('roomPagePosts', roomPagePosts);
 
         if (!roomPageDB) {
             return (<Spinner className="rooms-page"/>);
@@ -247,31 +246,11 @@ class RoomPage extends React.Component {
 
                     { (value === 1 && <TabContainer>
                         <Grid container spacing={24} className="room-details-card">
-                            {roomPageDB.feeds.map((feed) =>
-                                <Grid item xs={12} className="room-details-card-grid">
-                                    <Card className="feed-card">
-                                        <CardActionArea>
-                                            <CardMedia
-                                                className="card-media"
-                                                image={feed.cover}
-                                                title={feed.title}
-                                            />
-                                            <CardContent>
-                                                <Typography gutterBottom variant="h5" component="h2">
-                                                    {feed.title}
-                                                </Typography>
-                                                <Typography component="p">
-                                                    {feed.description}
-                                                </Typography>
-                                            </CardContent>
-                                        </CardActionArea>
-                                        <CardActions>
-                                            <Button>
-                                                comment
-                                            </Button>
-                                        </CardActions>
-                                    </Card>
-                                </Grid>
+                            {
+                                roomPagePosts.map((post, itr) => 
+                                    <Grid key={itr} item xs={12} className="room-details-card-grid">
+                                        <PostCard data={post} />
+                                    </Grid>
                             )}
                         </Grid>
                     </TabContainer>) || <TabContainer></TabContainer> }

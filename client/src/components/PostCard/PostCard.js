@@ -1,6 +1,8 @@
-import React, {Component, Fragment} from "react";
+import React, { Component } from "react";
+import { Link as RouterLink} from 'react-router-dom';
+
 import { convertFromRaw } from 'draft-js';
-import {stateToHTML} from 'draft-js-export-html';
+import { stateToHTML } from 'draft-js-export-html';
 import { Markup } from 'interweave';
 
 import {
@@ -16,7 +18,9 @@ import {
     Fab,
     Collapse
 } from '@material-ui/core';
-import { Group, Loyalty, ExpandMore } from '@material-ui/icons';
+import { Group, Loyalty, ExpandMore, WhereToVote } from '@material-ui/icons';
+
+import AddPost from '../AddPost/AddPost';
 
 import defaultAvatar from '../../assets/images/face.png';
 
@@ -50,7 +54,6 @@ const convertTime = (str) => {
                 time: `${hour}:${min}` 
             }
         } catch(err) {
-            console.log('ERR', err);
             return {
                 date: '',
                 time: ''
@@ -73,13 +76,21 @@ class PostCard extends Component {
         return html.length >= _maxAllowedPostChars;
     }
     render = () => (
-        <Card className={this.definePostShouldBeCut() ? 'postcard' : 'postcard  postcard_no-margin-bottom'}>
+        <Card className={
+            this.definePostShouldBeCut() 
+                ? this.props.data.isPinned ? 'postcard  postcard_pinned' : 'postcard'
+                : this.props.data.isPinned ? 'postcard  postcard_pinned  postcard_no-margin-bottom' : 'postcard  postcard_no-margin-bottom'
+            }>
             <Link data-wrapper-link>
                 <CardHeader
                     className="postcard__header"
                     title={this.props.data.title}
                     subheader={
                         <div className="postcard__header-info">
+                            <div className="postcard__header-pin-wrapper">
+                                <WhereToVote className="postcard__header-pin" />
+                                <span>pinned</span>
+                            </div>
                             <div className="postcard__avatar-wrapper">
                                 <Avatar 
                                     className="postcard__avatar" 
@@ -106,7 +117,7 @@ class PostCard extends Component {
                         </div>
                     }
                 >
-            </CardHeader>
+                </CardHeader>
         </Link>
         {/* @temp We may need it to add covers done by Igor */}
         {/* <CardMedia
@@ -118,6 +129,17 @@ class PostCard extends Component {
                 <b>{this.props.category}</b>
             </div>
         </CardMedia> */}
+        {/* @temp, move link */}
+        <RouterLink
+            to={{
+                pathname: '/room/3/new-post',
+                state: {
+                    data: this.props.data
+                }
+            }}
+        >
+            <span>Edit</span>
+        </RouterLink>
         <CardContent className=
             {
                 this.definePostShouldBeCut() 
