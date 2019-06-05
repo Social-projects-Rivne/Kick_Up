@@ -189,7 +189,7 @@ class ImageUploader extends Component {
 
     const uploadCard = 
       <div className="upload-card" onClick={event => event.stopPropagation()} >
-        <Close className="upload-card-close" onClick={this.props.closeUploadComponent} />
+        <Close className="upload-card-close" onClick={this.closeUpload} />
         <div className="upload">
           <div className="Content">
             <div className="dropzone-wrapper">
