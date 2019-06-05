@@ -12,6 +12,14 @@
 }
 
 #root .room-page-details {
+  .room-page-member-link,
+  .room-page-member-link:active,
+  .room-page-member-link:visited,
+  .room-page-member-link:hover {
+    text-decoration: none;
+    color: $black;
+  }
+
   .feed-card, .post-card {
     max-width: 700px;
     margin-left: auto;
@@ -279,7 +287,7 @@
 
   .avatar-center {
     display: flex;
-    justify-content: center;
+    justify-content: left;
 
     .avatar-flex {
       flex: none;

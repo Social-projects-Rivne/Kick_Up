@@ -17,11 +17,12 @@ class AppHeader extends React.Component {
         activePage: window.location.pathname,
         anchorEl: null,
     };
-    handleLogout = () => {
+    handleSignOut = () => {
         this.setState({ anchorEl: null });
         this.props.userHasAuthenticated(false);
         localStorage.removeItem("authorization");
         setAuthToken(null);
+        this.props.history.push({ pathname: "/" });
     }
     componentWillMount() {
         this.unlisten = this.props.history.listen(location => {
@@ -82,7 +83,7 @@ class AppHeader extends React.Component {
                 key="2"
             >
                 <MenuItem onClick={this.handleUserProfile}>Profile</MenuItem>
-                <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
+                <MenuItem onClick={this.handleSignOut}>SignOut</MenuItem>
             </Menu>];
         const authField = isAuthenticated && user
         ?   <BottomNavigation value={activePage} onChange={this.handleChangeActivePage} className="navigation-buttons">

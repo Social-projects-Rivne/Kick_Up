@@ -1,6 +1,7 @@
 import React, { Component } from "react";
+import { Link } from 'react-router-dom';
 
-import { 
+import {
    AppBar,
    Tabs,
    Tab,
@@ -35,9 +36,11 @@ import Gallery from 'react-grid-gallery';
 import "react-id-swiper/src/styles/scss/swiper.scss";
 import axios from 'axios';
 import { withSnackbar } from 'notistack';
+import ImageUploader from "../ImageUploader/ImageUploader";
 
 // @temp, we need add get data from MongoDB;
 import mock from '../../mocks/eventPage';
+import defaultAvatar from "../../assets/images/face.png";
 
 // Swipers params for event page;
 const userParams = {
@@ -115,7 +118,10 @@ class EventPage extends Component {
             users: [],
             swiper: null,
             activeSlide: 0,
-            gallery: []
+            gallery: [],
+            authUser:  false,
+            userCount: 0,
+            showUpload: false,
         };
     }
     saveSwiper = (instance) => {
@@ -142,6 +148,36 @@ class EventPage extends Component {
             }
         });
     }
+    join = () => {
+        const eventId = this.props.match.params.id;
+        axios.post(`http://localhost:3001/api/member/event/join`, { entity_id:eventId })
+        .then((res) => {
+            this.roomMembers()
+            this.setState({ authUser :!this.state.authUser, userCount:res.data });
+          })
+    };
+    leave = () => {
+        console.log(this.state.authUser)
+        const eventId = this.props.match.params.id;
+        axios.delete(`http://localhost:3001/api/member/event/${eventId}`)
+        .then((res) => {
+            this.roomMembers();
+            this.setState({ authUser :!this.state.authUser, userCount:res.data });
+          })
+          .catch(err => {
+            console.log(err);
+          });
+    }
+    roomMembers = () => {
+        const { id } = this.props.match.params;
+        axios
+        .get(`/api/member/event/${id}/members`)
+        .then((res) => {
+            
+            const users = res.data.map( i => i.users[0])
+            this.setState( {users})
+        })
+    }
     componentDidMount = () => {
         const timeOptions = {
             hour12: false,
@@ -152,14 +188,27 @@ class EventPage extends Component {
             minute: '2-digit',
         };
         const { id } = this.props.match.params;
-
+        //check invite
+        axios
+        .get(`/api/member/event/${id}`)
+        .then((res) => {
+            if(res.data.invite){
+                this.setState({authUser:  true})
+              }
+              this.setState({userCount: res.data.count})
+              this.roomMembers();
+        }).catch(()=>{
+            this.setState({authUser:  false})
+        })
         // Get data of  event;
         axios
         .get('/api/event/' + id)
         .then(res => {
             res = res.data;
-            res.users = mock.users;
-            res.gallery = mock.gallery;
+            let gallery = [];
+            [...res.media].map(e => {
+                gallery.push({src:e.key.slice(6), thumbnail:e.key.slice(6)})
+            });
 
             this.setState({
                 title: res.title,
@@ -167,8 +216,7 @@ class EventPage extends Component {
                 location: res.location,
                 date: new Date(res.start_date).toLocaleString('en-US', timeOptions),
                 description: res.description,
-                users: mock.users,
-                gallery: mock.gallery
+                gallery,
             });
         })
         .catch((err) => {
@@ -190,9 +238,50 @@ class EventPage extends Component {
             }
         });
     }
+
+    showUploadComponent = () => {
+        this.setState({showUpload: true})
+    }
+
+    closeUploadComponent = () => {
+        this.setState({showUpload: false})
+    }
+
+    getImagesSRC = (src) => {
+        const gallery = [...this.state.gallery].concat(src);
+        this.setState({gallery});
+    }
+
     render() {
+        // const stateUser = this.props.user;
+        // const eventId = this.props.match.params.id;
+        //
+        // if(stateUser){
+        //     const checkInvite = stateUser.invited.find(event => event.entity_type === 'event' && event.entity_id === +eventId);
+        //     //TO DO
+        // }
+
+        const joinBtn = (
+            <Fab className="event-page__fab" variant="extended" color="primary" onClick={this.join}>
+                        <span className="event-page__fab-text">Join now</span>
+           </Fab>
+        );
+        const leaveBtn = (
+            <Fab className="event-page__fab" variant="extended" color="primary" onClick={this.leave}>
+                        <span className="event-page__fab-text">Leave now</span>
+           </Fab>
+        );
+        const renderBtn = this.state.authUser ? leaveBtn : joinBtn;
         return (
             <div className={!this.state.title ? 'event-page  event-page_loading' : 'event-page'}>
+                <ImageUploader 
+                    show={this.state.showUpload}
+                    closeUploadComponent={this.closeUploadComponent} 
+                    entityURL={this.props.match.url}
+                    authUser={this.state.authUser}
+                    isAuthenticated={this.props.isAuthenticated}
+                    getImagesSRC={this.getImagesSRC}
+                />
                 <AppBar position="fixed" className="tab-bar">
                     <Tabs
                         value={this.state.activeSlide}
@@ -247,10 +336,7 @@ class EventPage extends Component {
                             </Paper>
                         </div>
                     }
-                    <Fab className="event-page__fab" variant="extended" color="primary">
-                        <Add />
-                        <span className="event-page__fab-text">Join now</span>
-                    </Fab>
+                    {renderBtn}
                     {
                         this.state.cover &&
                         <div style={{ backgroundImage: `url(${this.state.cover})` }} className="event-page__img-wrapper"></div>
@@ -339,16 +425,13 @@ class EventPage extends Component {
                             Gallery
                         </Typography>
                         <Fab className="event-page__fab  event-page__fab_upload" variant="extended" color="primary">
-                            <input
-                                accept="image/*"
-                                id="event-page-upload-images"
-                                multiple
-                                type="file"
-                            />
-                            <label htmlFor="event-page-upload-images">
-                                <Add />
-                                <span className="event-page__fab-text">Upload</span>
-                            </label>
+                            <Add />
+                            <span 
+                                className="event-page__fab-text" 
+                                onClick={this.showUploadComponent}
+                            >
+                                Upload
+                            </span>
                         </Fab>
                         <Gallery images={this.state.gallery} backdropClosesModal={true} />
                     </Grid>
@@ -359,19 +442,19 @@ class EventPage extends Component {
                         {
                             this.state.users.length > 0 &&
                             <Swiper {...userParams}>
-                                {this.state.users.map((user, idx) => 
-                                    <ListItem key={idx} className="event-page__users-list-item">
-                                        <ListItemAvatar>
-                                            <Avatar>
-                                                {/* @todo take data from db */}
-                                                <Avatar alt="" src={user.image} />
-                                            </Avatar>
-                                        </ListItemAvatar>
-                                        <ListItemText
-                                            primary={user.name}
-                                            secondary={user.joined}
-                                        />
-                                    </ListItem>
+                                {this.state.users.map((user, idx) =>
+                                    <Link to={'/profile/' + user.id} className="event-page__member_link">
+                                        <ListItem key={idx} className="event-page__users-list-item">
+                                            <ListItemAvatar>
+                                                <Avatar>
+                                                    <Avatar alt="" src={user.avatar ? user.avatar : defaultAvatar} />
+                                                </Avatar>
+                                            </ListItemAvatar>
+                                            <ListItemText
+                                                primary={`${user.first_name || ""} ${user.last_name || ""}`}
+                                            />
+                                        </ListItem>
+                                    </Link>
                                 )}
                             </Swiper>
                         }

@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 
-import { Link } from "react-router-dom";
+import {Link as RouterLink, Link} from "react-router-dom";
 
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 
@@ -14,6 +14,7 @@ import Spinner from './../UI/Spinner/Spinner';
 import NeventCard from '../nEventCard/nEventCard';
 import PostCard from '../PostCard/PostCard';
 
+import defaultAvatar from "../../assets/images/face.png";
 
 const convertTime = (str) => {
     // Define manually date;
@@ -66,7 +67,11 @@ class RoomPage extends React.Component {
     state = {
         value: 0,
         roomPageDB: null,
-        roomPagePosts: []
+        roomPagePosts: [],
+        authUser: false,
+        userCount: 0,
+        members: '',
+        disabledBtn: false
     };
 
     componentDidMount() {
@@ -89,8 +94,11 @@ class RoomPage extends React.Component {
             })
             // In case of error, we are OK;
             .catch(err => {});
+        
+        this.checkMembersLimit();
+        this.invitedMembers();
+        this.roomMembers();
     };
-
     refReadMore = (element) => {
         if (!element)
             return;
@@ -100,6 +108,39 @@ class RoomPage extends React.Component {
             document.getElementById("read-more-button").style.display = "none";
         }
     };
+    checkMembersLimit = () => {
+        const { id } = this.props.match.params;
+        axios
+        .get(`/api/member/room/${id}/members_limit`)
+        .then((res) => {
+            this.setState({disabledBtn:false})
+        }).catch(()=>{
+            this.setState({disabledBtn:true})
+        })
+    }
+    invitedMembers = () => {
+        const { id } = this.props.match.params;
+        axios
+        .get(`/api/member/room/${id}`)
+        .then((res) => {
+            if(res.data.invite){
+              this.setState({authUser:  true})
+            }
+            this.setState({userCount: res.data.count})
+        }).catch(()=>{
+            this.setState({authUser:  false, userCount: 0})
+        })
+    }
+    roomMembers = () => {
+        const { id } = this.props.match.params;
+        axios
+        .get(`/api/member/room/${id}/members`)
+        .then((res) => {
+            
+            const users = res.data.map( i => i.users[0])
+            this.setState( {members: users})
+        })
+    }
 
     handleChange = (event, value) => {
         this.setState({ value });
@@ -108,6 +149,29 @@ class RoomPage extends React.Component {
     handleChangeIndex = index => {
         this.setState({ value: index });
     };
+    join = () => {
+        const eventId = this.props.match.params.id;
+        axios.post(`http://localhost:3001/api/member/room/join`, { entity_id:eventId })
+        .then((res) => {
+            this.roomMembers();
+            this.setState({ authUser :!this.state.authUser, userCount: res.data });
+          })
+          .catch(err => {
+           console.log(err);
+          });
+    };
+    leave = () => {
+        console.log(this.state.authUser)
+        const eventId = this.props.match.params.id;
+        axios.delete(`http://localhost:3001/api/member/room/${eventId}`)
+        .then((res) => {
+            this.roomMembers();
+            this.setState({ authUser :!this.state.authUser, userCount: res.data });
+          })
+          .catch(err => {
+           console.log(err);
+          });
+    }
 
     render() {
         const { value, roomPageDB, roomPagePosts } = this.state;
@@ -117,7 +181,22 @@ class RoomPage extends React.Component {
         if (!roomPageDB) {
             return (<Spinner className="rooms-page"/>);
         }
-
+        const joinBtn = (
+        <Fab variant="extended" className="room-details-page-fab" onClick={this.join}>
+            <span className="room-details-page-join">Join now</span>
+        </Fab>
+        )
+        const leaveBtn = (
+        <Fab variant="extended" className="room-details-page-fab" onClick={this.leave}>
+            <span className="room-details-page-join">Leave now</span>
+        </Fab>
+        )
+        const renderBtn = this.state.authUser ? leaveBtn : joinBtn;
+        const renderMemberTab = (
+            <Badge className="badge-room-margin" badgeContent={this.state.userCount}>
+                                <Face /> <p className="badge-members">Members</p>
+                            </Badge>
+        )
         return (
             <div className="room-page-details">
                 <AppBar position="static" className="tab-bar">
@@ -133,11 +212,7 @@ class RoomPage extends React.Component {
                         <Tab label="Events" icon={<EventAvailable />} />
                         <Tab label="Gallery" icon={<Collections />} />
                         <Tab label="Posts" icon={<NewReleases />} />
-                        <Tab label={
-                            <Badge className="badge-room-margin" badgeContent={roomPageDB.members.length}>
-                                <Face /> <p className="badge-members">Members</p>
-                            </Badge>
-                        }
+                        <Tab label={renderMemberTab}
                         />
                     </Tabs>
                 </AppBar>
@@ -151,10 +226,7 @@ class RoomPage extends React.Component {
                         <Grid container spacing={24} className="room-details-page-content">
                             <Grid item md={6} xs={12}>
                                 <div className="room-details-page-wrapper">
-                                    <Fab variant="extended" className="room-details-page-fab">
-                                        <Add />
-                                        <span className="room-details-page-join">Join</span>
-                                    </Fab>
+                                    {renderBtn}
                                     <Typography className="room-details-page-title">
                                         {roomPageDB.title}
                                     </Typography>
@@ -223,13 +295,12 @@ class RoomPage extends React.Component {
                                         title={event.title}
                                         rating={event.eventRating}
                                         authorId={event.creator_id}
-                                        //TODO
-                                        // authorName={event.creator.first_name}
-                                        // authorLastName={event.creator.last_name}
-                                        // authorAvatar={event.creator.avatar}
+                                        authorName={this.state.roomPageDB.creator.first_name}
+                                        authorLastName={this.state.roomPageDB.creator.last_name}
+                                        authorAvatar={this.state.roomPageDB.creator.avatar}
                                         cover={event.cover}
                                         description={event.description}
-                                        eventLocation={(event.location).split(',')[0]}
+                                        eventLocation={event.location}
                                         eventDate={convertTime(event.start_date).date}
                                         eventTime={convertTime(event.start_date).time}
                                         members={event.members}
@@ -261,16 +332,18 @@ class RoomPage extends React.Component {
 
                     { (value === 5 && <TabContainer>
                         <Grid container spacing={24}>
-                            {roomPageDB.members.map((member) =>
+                            {this.state.members.map((member) =>
                                 <Grid item lg={3} md={4} sm={6} xs={12}>
-                                    <ListItem className="avatar-center">
-                                        <ListItemAvatar>
-                                            <Avatar>
-                                                <Avatar alt="" src={member.avatar} />
-                                            </Avatar>
-                                        </ListItemAvatar>
-                                        <ListItemText primary={member.first_name + " " + member.last_name} className="avatar-flex" />
-                                    </ListItem>
+                                    <Link component={RouterLink} to={`/profile/` + member.id} className="room-page-member-link">
+                                        <ListItem className="avatar-center">
+                                            <ListItemAvatar>
+                                                <Avatar>
+                                                    <Avatar alt="" src={member.avatar ? member.avatar : defaultAvatar} />
+                                                </Avatar>
+                                            </ListItemAvatar>
+                                            <ListItemText primary={(member.first_name || "") + " " + (member.last_name || "")} className="avatar-flex" />
+                                        </ListItem>
+                                    </Link>
                                 </Grid>
                             )}
                         </Grid>

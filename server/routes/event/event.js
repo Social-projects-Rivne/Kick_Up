@@ -3,6 +3,7 @@ const constants = require('./../../config/constants');
 const router = new Router({prefix: '/api/event'});
 const { Event, Category, Member } = require('../../models');
 const validate = require('../../services/Validator');
+const { authenticated } = require('./../../middlewares');
 const handler = {
 
   async eventList(ctx) {
@@ -130,8 +131,8 @@ const handler = {
   },
   async getEventById(ctx) {
     const { id } = ctx.params;
-    const room = await Event.where({ id }).fetch({withRelated:['creator','category','members'],require:true})
-    ctx.body = room;
+    const event = await Event.where({ id }).fetch({withRelated:['creator','category','members', 'media'],require:true});
+    ctx.body = event;
   },
   async updateEventById(ctx) {
     const { id } = ctx.params;
@@ -179,6 +180,6 @@ router.get('/', handler.eventList);
 router.get('/sort', handler.sort);
 router.get('/filter', handler.filter);
 router.get('/:id', handler.getEventById);
-router.post('/', handler.createEvent);
-router.put('/:id', handler.updateEventById);
+router.post('/', authenticated, handler.createEvent);
+router.put('/:id',authenticated, handler.updateEventById);
 module.exports = router.routes();
