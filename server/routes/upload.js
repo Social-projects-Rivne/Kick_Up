@@ -6,12 +6,13 @@ const { uploader, validate } = require('./../services');
 
 const router = new Router({prefix:'/api/upload'});
 const allowExtensions = ['image/jpeg', 'image/jpg', 'image/png' ];
+const types = Object.keys(constants.rating.entity_types);
 const rule = {
-    entityType: 'required|in:room,event',
+    entityType: `required|in:${types.join()}`,
     entity_id: 'required|numeric|min:1'
 }
 const coverRule = {
-    entityType: 'required|in:room,event',
+    entityType: `required|in:${types.join()}`,
 }
 const handler = {
     async upload(ctx){
