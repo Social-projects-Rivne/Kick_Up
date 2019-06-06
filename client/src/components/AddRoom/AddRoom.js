@@ -7,6 +7,7 @@ import { TextField, Input, FormControlLabel, Switch, FormGroup, Button, NativeSe
 import { CloudUpload, Link } from '@material-ui/icons';
 import Spinner from "../UI/Spinner/Spinner";
 import {withSnackbar} from "notistack";
+import ImageUploader from "./../ImageUploader/ImageUploader";
 
 const messageType = {
     SUCCESS: "success",
@@ -43,6 +44,9 @@ class AddRoom extends React.Component {
             members_limit: false,
             permission: false
         },
+        showUpload: false,
+        imageSRC: null,
+        authUser: false
     };
 
     showToast = (message, variant) => {
@@ -115,6 +119,7 @@ class AddRoom extends React.Component {
                         this.setState({
                             loading: false,
                             roomId: res.data.id,
+                            authUser :!this.state.authUser,
                             activeStep: activeStep + 1
                         });
                     })
@@ -128,9 +133,23 @@ class AddRoom extends React.Component {
                     });
                 break;
             case 1:
-                //ToDo upload cover and invite members
-                this.props.history.push({ pathname: "/room/" + this.state.roomId });
-                this.showToast("Congratulations! Room created!", messageType.SUCCESS);
+                //ToDo upload invite members
+                const updatedData = {
+                    cover: this.state.imageSRC
+                }
+                axios.put("/api/room/" + this.state.roomId, updatedData)
+                    .then(res => {
+                        this.props.history.push({ pathname: "/room/" + this.state.roomId });
+                        this.showToast("Congratulations! Room created!", messageType.SUCCESS);
+                    })
+                    .catch(err => {
+                        let errors = err.response.data.error.errors;
+                        for (const key  in errors) {
+                            this.showToast(errors[key][0], messageType.ERR);
+                            errors[key] = true;
+                        }
+                        this.setState({ loading: false, errors: errors });
+                    })
                 break;
             default:
                 console.log("Unknown step");
@@ -138,236 +157,252 @@ class AddRoom extends React.Component {
         }
     };
 
+    showUploadComponent = () => {
+        this.setState({showUpload: true})
+    }
+
+    closeUploadComponent = () => {
+        this.setState({showUpload: false})
+    }
+
+    getImagesSRC = (imageSRC) => {
+        this.setState({imageSRC});
+    }
+
     render() {
-        const { activeStep, addRoomDB } = this.state;
+        const { activeStep, addRoomDB, roomId } = this.state;
+        const { isAuthenticated } = this.props;
 
         if (this.state.loading) {
             return (<Spinner className="rooms-page"/>);
         }
 
         return (
-            <div className="add-room-page">
-                <form className="add-room-page-container">
-                    <label className="add-room-header">Please fill in all fields to create room</label>
-                    <Stepper activeStep={activeStep} orientation="vertical" className="add-room-stepper">
-                        <Step key={0}>
-                            <StepLabel>Room info</StepLabel>
-                            <StepContent>
-                                <div>
-                                    <TextField
-                                        required
-                                        className="add-room-text-field"
-                                        label="Title"
-                                        name="title"
-                                        placeholder="Min 3 symbols, Max 100 symbols"
-                                        onChange={event => this.handleUpdateData(event)}
-                                        value={this.state.roomData.title}
-                                        fullWidth
-                                        autoComplete="off"
-                                        inputProps={{ maxLength: 100 }}
-                                        error={this.state.errors.title}
-                                    />
-
-                                    <TextField
-                                        required
-                                        className="add-room-text-field"
-                                        label="Description"
-                                        name="description"
-                                        placeholder="Min 6 symbols, Max 300 symbols"
-                                        onChange={event => this.handleUpdateData(event)}
-                                        value={this.state.roomData.description}
-                                        fullWidth
-                                        multiline
-                                        autoComplete="off"
-                                        inputProps={{ maxLength: 300 }}
-                                        error={this.state.errors.description}
-                                    />
-
-                                    <FormControl required className="formControl">
-                                        <InputLabel shrink htmlFor="age-native-label-placeholder">
-                                            Category
-                                        </InputLabel>
-                                        <NativeSelect
-                                            value={this.state.roomData.category}
-                                            name="category"
+            <>
+                <ImageUploader 
+                    show={this.state.showUpload}
+                    closeUploadComponent={this.closeUploadComponent}
+                    uploaderType="cover"
+                    entityURL={this.props.match.url}
+                    authUser={this.state.authUser}
+                    isAuthenticated={isAuthenticated}
+                    getImagesSRC={this.getImagesSRC}
+                />
+                <div className="add-room-page">
+                    <form className="add-room-page-container">
+                        <label className="add-room-header">Please fill in all fields to create room</label>
+                        <Stepper activeStep={activeStep} orientation="vertical" className="add-room-stepper">
+                            <Step key={0}>
+                                <StepLabel>Room info</StepLabel>
+                                <StepContent>
+                                    <div>
+                                        <TextField
+                                            required
+                                            className="add-room-text-field"
+                                            label="Title"
+                                            name="title"
+                                            placeholder="Min 3 symbols, Max 100 symbols"
                                             onChange={event => this.handleUpdateData(event)}
-                                            input={<Input name="category" />}
-                                            className="add-room-select"
-                                            error={this.state.errors.category}
-                                        >
-                                            {addRoomDB.categories.map((category) =>
-                                                <option value={category.id}>{category.title}</option>
-                                            )}
-                                        </NativeSelect>
-                                    </FormControl>
+                                            value={this.state.roomData.title}
+                                            fullWidth
+                                            autoComplete="off"
+                                            inputProps={{ maxLength: 100 }}
+                                            error={this.state.errors.title}
+                                        />
 
-                                    <FormControl className="formControl">
-                                        <InputLabel shrink htmlFor="age-native-label-placeholder">
-                                            Tags
-                                        </InputLabel>
-                                        <NativeSelect
-                                            value={this.state.roomData.tags}
-                                            name="tags"
+                                        <TextField
+                                            required
+                                            className="add-room-text-field"
+                                            label="Description"
+                                            name="description"
+                                            placeholder="Min 6 symbols, Max 300 symbols"
                                             onChange={event => this.handleUpdateData(event)}
-                                            input={<Input name="tags" />}
-                                            className="add-room-select"
-                                            error={this.state.errors.tags}
+                                            value={this.state.roomData.description}
+                                            fullWidth
+                                            multiline
+                                            autoComplete="off"
+                                            inputProps={{ maxLength: 300 }}
+                                            error={this.state.errors.description}
+                                        />
+
+                                        <FormControl required className="formControl">
+                                            <InputLabel shrink htmlFor="age-native-label-placeholder">
+                                                Category
+                                            </InputLabel>
+                                            <NativeSelect
+                                                value={this.state.roomData.category}
+                                                name="category"
+                                                onChange={event => this.handleUpdateData(event)}
+                                                input={<Input name="category" />}
+                                                className="add-room-select"
+                                                error={this.state.errors.category}
+                                            >
+                                                {addRoomDB.categories.map((category) =>
+                                                    <option value={category.id}>{category.title}</option>
+                                                )}
+                                            </NativeSelect>
+                                        </FormControl>
+
+                                        <FormControl className="formControl">
+                                            <InputLabel shrink htmlFor="age-native-label-placeholder">
+                                                Tags
+                                            </InputLabel>
+                                            <NativeSelect
+                                                value={this.state.roomData.tags}
+                                                name="tags"
+                                                onChange={event => this.handleUpdateData(event)}
+                                                input={<Input name="tags" />}
+                                                className="add-room-select"
+                                                error={this.state.errors.tags}
+                                            >
+                                                <option value="">none</option>
+                                                {addRoomDB.tags.map((tag) =>
+                                                    <option value={tag.id}>{tag.title}</option>
+                                                )}
+                                            </NativeSelect>
+                                        </FormControl>
+
+                                        <FormGroup className="add-room-text-field">
+                                            <FormControlLabel
+                                                label="Private room"
+                                                control={
+                                                    <Switch
+                                                        name="permission"
+                                                        onChange={event => this.handleUpdateData(event)}
+                                                        checked={this.state.roomData.permission}
+                                                        error={this.state.errors.permission}
+                                                    />
+                                                }
+                                            />
+                                        </FormGroup>
+
+                                        <FormGroup className="add-room-invite-members">
+                                            <FormControlLabel
+                                                className="invite-members"
+                                                label="Members limits"
+                                                control={
+                                                    <Switch
+                                                        checked={this.state.roomData.members_limit_checked}
+                                                        name="members_limit_checked"
+                                                        onChange={event => this.handleUpdateData(event)}
+                                                    />
+                                                }
+                                            />
+
+                                            {this.state.roomData.members_limit_checked && <div className="invite-link">
+                                                <FormControl className="textField">
+                                                    <TextField
+                                                        className="add-room-text-field"
+                                                        label="Members limit"
+                                                        type="number"
+                                                        min="1"
+                                                        name="members_limit"
+                                                        onChange={event => this.handleUpdateData(event)}
+                                                        value={this.state.roomData.members_limit}
+                                                        fullWidth
+                                                        autoComplete="off"
+                                                        error={this.state.errors.members_limit}
+                                                    />
+                                                </FormControl>
+                                            </div>}
+                                        </FormGroup>
+                                    </div>
+                                    <div>
+                                        <Button
+                                            variant="contained"
+                                            onClick={this.handleNext}
+                                            className="add-room-button-create"
                                         >
-                                            <option value="">none</option>
-                                            {addRoomDB.tags.map((tag) =>
-                                                <option value={tag.id}>{tag.title}</option>
-                                            )}
-                                        </NativeSelect>
-                                    </FormControl>
+                                            Save and continue
+                                        </Button>
+                                    </div>
+                                </StepContent>
+                            </Step>
+                            <Step key={1}>
+                                <StepLabel>Invite members and upload cover</StepLabel>
+                                <StepContent>
+                                    <div>
+                                        <Paper elevation={1} className="created-room-info">
+                                            <InputLabel className="created-room-info-label-info">Room information</InputLabel>
+                                            <InputLabel className="created-room-info-label">
+                                                Title:&nbsp;{this.state.roomData.title}
+                                            </InputLabel>
+                                            <InputLabel className="created-room-info-label">
+                                                Description:&nbsp;{this.state.roomData.description}
+                                            </InputLabel>
+                                            <InputLabel className="created-room-info-label">
+                                                Category:&nbsp;
+                                                {addRoomDB.categories.map((category) =>
+                                                    (category.id === this.state.roomData.category) ? (category.title) : null
+                                                )}
+                                            </InputLabel>
+                                            <InputLabel className="created-room-info-label">
+                                                Tags:&nbsp;
+                                                {addRoomDB.tags.map((tag) =>
+                                                    (tag.id === this.state.roomData.tags) ? (tag.title) : null
+                                                )}
+                                            </InputLabel>
+                                            <InputLabel className="created-room-info-label">
+                                                Permission:&nbsp;{this.state.roomData.permission ? "Private room" : "Open room"}
+                                            </InputLabel>
+                                            <InputLabel className="created-room-info-label">
+                                                Members limit:&nbsp;{this.state.roomData.members_limit_checked ? this.state.roomData.members_limit : "-"}
+                                            </InputLabel>
+                                        </Paper>
 
-                                    <FormGroup className="add-room-text-field">
-                                        <FormControlLabel
-                                            label="Private room"
-                                            control={
-                                                <Switch
-                                                    name="permission"
-                                                    onChange={event => this.handleUpdateData(event)}
-                                                    checked={this.state.roomData.permission}
-                                                    error={this.state.errors.permission}
-                                                />
-                                            }
-                                        />
-                                    </FormGroup>
+                                        <FormGroup className="add-room-invite-members">
+                                            <FormControlLabel
+                                                className="invite-members"
+                                                label="Invite members"
+                                                control={
+                                                    <Switch
+                                                        checked={this.state.roomData.invite}
+                                                        name="invite"
+                                                        onChange={event => this.handleUpdateData(event)}
+                                                        value="1"
+                                                    />
+                                                }
+                                            />
+                                            {this.state.roomData.invite && <div className="invite-link">
+                                                <FormControl  className="textField">
+                                                    <TextField
+                                                        InputProps={{
+                                                            readOnly: true,
+                                                            startAdornment: (
+                                                                <InputAdornment position="start">
+                                                                    <Link /> &nbsp;{window.location.origin + '/room/' + this.state.roomId}
+                                                                </InputAdornment>
+                                                            ),
+                                                        }}
+                                                    />
+                                                </FormControl>
+                                            </div>}
+                                        </FormGroup>
 
-                                    <FormGroup className="add-room-invite-members">
-                                        <FormControlLabel
-                                            className="invite-members"
-                                            label="Members limits"
-                                            control={
-                                                <Switch
-                                                    checked={this.state.roomData.members_limit_checked}
-                                                    name="members_limit_checked"
-                                                    onChange={event => this.handleUpdateData(event)}
-                                                />
-                                            }
-                                        />
-
-                                        {this.state.roomData.members_limit_checked && <div className="invite-link">
-                                            <FormControl className="textField">
-                                                <TextField
-                                                    className="add-room-text-field"
-                                                    label="Members limit"
-                                                    type="number"
-                                                    min="1"
-                                                    name="members_limit"
-                                                    onChange={event => this.handleUpdateData(event)}
-                                                    value={this.state.roomData.members_limit}
-                                                    fullWidth
-                                                    autoComplete="off"
-                                                    error={this.state.errors.members_limit}
-                                                />
-                                            </FormControl>
-                                        </div>}
-                                    </FormGroup>
-                                </div>
-                                <div>
-                                    <Button
-                                        variant="contained"
-                                        onClick={this.handleNext}
-                                        className="add-room-button-create"
-                                    >
-                                        Save and continue
-                                    </Button>
-                                </div>
-                            </StepContent>
-                        </Step>
-                        <Step key={1}>
-                            <StepLabel>Invite members and upload cover</StepLabel>
-                            <StepContent>
-                                <div>
-                                    <Paper elevation={1} className="created-room-info">
-                                        <InputLabel className="created-room-info-label-info">Room information</InputLabel>
-                                        <InputLabel className="created-room-info-label">
-                                            Title:&nbsp;{this.state.roomData.title}
-                                        </InputLabel>
-                                        <InputLabel className="created-room-info-label">
-                                            Description:&nbsp;{this.state.roomData.description}
-                                        </InputLabel>
-                                        <InputLabel className="created-room-info-label">
-                                            Category:&nbsp;
-                                            {addRoomDB.categories.map((category) =>
-                                                (category.id === this.state.roomData.category) ? (category.title) : null
-                                            )}
-                                        </InputLabel>
-                                        <InputLabel className="created-room-info-label">
-                                            Tags:&nbsp;
-                                            {addRoomDB.tags.map((tag) =>
-                                                (tag.id === this.state.roomData.tags) ? (tag.title) : null
-                                            )}
-                                        </InputLabel>
-                                        <InputLabel className="created-room-info-label">
-                                            Permission:&nbsp;{this.state.roomData.permission ? "Private room" : "Open room"}
-                                        </InputLabel>
-                                        <InputLabel className="created-room-info-label">
-                                            Members limit:&nbsp;{this.state.roomData.members_limit_checked ? this.state.roomData.members_limit : "-"}
-                                        </InputLabel>
-                                    </Paper>
-
-                                    <FormGroup className="add-room-invite-members">
-                                        <FormControlLabel
-                                            className="invite-members"
-                                            label="Invite members"
-                                            control={
-                                                <Switch
-                                                    checked={this.state.roomData.invite}
-                                                    name="invite"
-                                                    onChange={event => this.handleUpdateData(event)}
-                                                    value="1"
-                                                />
-                                            }
-                                        />
-                                        {this.state.roomData.invite && <div className="invite-link">
-                                            <FormControl  className="textField">
-                                                <TextField
-                                                    InputProps={{
-                                                        readOnly: true,
-                                                        startAdornment: (
-                                                            <InputAdornment position="start">
-                                                                <Link /> &nbsp;{window.location.origin + '/room/' + this.state.roomId}
-                                                            </InputAdornment>
-                                                        ),
-                                                    }}
-                                                />
-                                            </FormControl>
-                                        </div>}
-                                    </FormGroup>
-
-                                    <Grid container spacing={24}>
-                                        <Grid item md={12}>
-                                            <Button variant="contained" className="add-room-button-upload">
-                                                <CloudUpload />&nbsp;&nbsp;
-                                                <span>Upload cover</span>
-                                                <input id="upload" type="file"
-                                                   onChange={(event)=> {
-                                                       if (!event.target.files.length) {
-                                                           return;
-                                                       }
-                                                       event.target.previousSibling.textContent = event.target.files[0].name;
-                                                   }}
-                                                />
-                                            </Button>
+                                        <Grid container spacing={24}>
+                                            <Grid item md={12}>
+                                                <Button variant="contained" className="add-room-button-upload" onClick={this.showUploadComponent}>
+                                                    <CloudUpload />&nbsp;&nbsp;
+                                                    <span >Upload cover</span>
+                                                </Button>
+                                            </Grid>
                                         </Grid>
-                                    </Grid>
-                                </div>
-                                <div>
-                                    <Button
-                                        variant="contained"
-                                        onClick={this.handleNext}
-                                        className="add-room-button-update-cover"
-                                    >
-                                        Create room
-                                    </Button>
-                                </div>
-                            </StepContent>
-                        </Step>
-                    </Stepper>
-                </form>
-            </div>
+                                    </div>
+                                    <div>
+                                        <Button
+                                            variant="contained"
+                                            onClick={this.handleNext}
+                                            className="add-room-button-update-cover"
+                                        >
+                                            Create room
+                                        </Button>
+                                    </div>
+                                </StepContent>
+                            </Step>
+                        </Stepper>
+                    </form>
+                </div>
+            </>
         );
     }
 }

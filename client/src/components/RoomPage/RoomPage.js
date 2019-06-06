@@ -13,6 +13,7 @@ import SwipeableViews from 'react-swipeable-views';
 import Spinner from './../UI/Spinner/Spinner';
 import NeventCard from '../nEventCard/nEventCard';
 import defaultAvatar from "../../assets/images/face.png";
+import ImageUploader from "./../ImageUploader/ImageUploader";
 
 const convertTime = (str) => {
     // Define manually date;
@@ -65,17 +66,24 @@ class RoomPage extends React.Component {
     state = {
         value: 0,
         roomPageDB: null,
+        gallery: null,
         authUser: false,
         userCount: 0,
         members: '',
-        disabledBtn: false
+        disabledBtn: false,
+        showUpload: false,
     };
 
     componentDidMount() {
         const { id } = this.props.match.params;
         axios.get("/api/room/" + id)
             .then(res => {
-                this.setState({ roomPageDB: res.data });
+                console.log('response', res.data);
+                let gallery = [];
+                [...res.data.media].map(e => {
+                    gallery.push({src:e.key.slice(6), thumbnail:e.key.slice(6)})
+                });
+                this.setState({ roomPageDB: res.data, gallery });
             })
             .catch(err => console.log(err));
         this.checkMembersLimit();
@@ -156,8 +164,21 @@ class RoomPage extends React.Component {
           });
     }
 
+    showUploadComponent = () => {
+        this.setState({showUpload: true})
+    }
+
+    closeUploadComponent = () => {
+        this.setState({showUpload: false})
+    }
+
+    getImagesSRC = (src) => {
+        const gallery = [...this.state.gallery].concat(src);
+        this.setState({gallery});
+    }
+
     render() {
-        const { value, roomPageDB } = this.state;
+        const { value, roomPageDB, gallery } = this.state;
         const { isAuthenticated, user } = this.props;
 
         if (!roomPageDB) {
@@ -198,6 +219,14 @@ class RoomPage extends React.Component {
                         />
                     </Tabs>
                 </AppBar>
+                <ImageUploader 
+                    show={this.state.showUpload}
+                    closeUploadComponent={this.closeUploadComponent} 
+                    entityURL={this.props.match.url}
+                    authUser={this.state.authUser}
+                    isAuthenticated={isAuthenticated}
+                    getImagesSRC={this.getImagesSRC}
+                />
 
                 <SwipeableViews
                     index={value}
@@ -286,9 +315,9 @@ class RoomPage extends React.Component {
                     { (value === 3 && <TabContainer>
                         <Fab variant="extended" className="room-details-page-photo-fab">
                             <Add />
-                            <span>upload photo</span>
+                            <span onClick={this.showUploadComponent}>upload photo</span>
                         </Fab>
-                        <Gallery images={roomPageDB.gallery} backdropClosesModal={true} />
+                        <Gallery images={gallery} backdropClosesModal={true} />
                     </TabContainer>) || <TabContainer></TabContainer> }
 
                     { (value === 4 && <TabContainer>

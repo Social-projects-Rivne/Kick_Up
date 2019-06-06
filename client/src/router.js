@@ -23,14 +23,14 @@ const router = ({ childProps }) => {
             <AppliedRoute path="/sign-up" component={Register} props={childProps} />
             <AppliedRoute path="/sign-in" exact component={SignIn} props={childProps} />
             <AppliedRoute path="/events" exact component={Events} props={childProps} />
-            <Route path="/event/add" exact component={AddEvent} />
+            <AppliedRoute path="/event/add" exact component={AddEvent} props={childProps} />
             <AppliedRoute path="/event/:id" component={EventPage} props={childProps}/>
             <AppliedRoute path="/rooms" exact component={Rooms} props={childProps}/>
-            <Route path="/room/add" exact component={AddRoom} />
-            <Route path="/room/:id/add-event" component={AddEvent} />
+            <AppliedRoute path="/room/add" exact component={AddRoom} props={childProps}/>
+            <AppliedRoute path="/room/:id/add-event" component={AddEvent} props={childProps} />
             <AppliedRoute path="/room/:id" exact component={RoomPage} props={childProps} />
             <Route path="/room/:id/edit" component={EditRoom} />
-            <Route path="/profile/:id" exact component={UserProfile} />
+            <AppliedRoute path="/profile/:id" exact component={UserProfile} props={childProps} />
             <Route path="/profile/:id/edit" component={EditProfile} />
             <Route path="/privacy-policy" component={PrivacyPolicy} />
             <Route render={() => (<div style={{color: "red", textAlign: "center", fontSize: "2rem"}}>Page not found </div>)} />
