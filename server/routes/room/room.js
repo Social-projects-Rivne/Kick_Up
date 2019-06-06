@@ -292,7 +292,6 @@ const handler = {
           room_id: roomId,
           posts: [
             {
-              // @todo add author id;
               authorId,
               title,
               text,
@@ -304,15 +303,13 @@ const handler = {
           gallery: [],
           tags: [],
           members: [],
-          //@todo ask we need it?
-          room_information: '',
           ratings: []
         }
       );
     }
 
     const res = await room.save();
-    ctx.body = res;
+    ctx.body = '';
   },
   async getRoomPostsById(ctx) {    
     const getUserData = async function(ids) {
@@ -377,6 +374,10 @@ const handler = {
 
     // Return posts;
     ctx.body = roomPosts ? roomPosts : []; 
+  },
+  async updatePost(ctx) {
+    console.log('YAY!');
+    ctx.body = '';
   }
 };
 
@@ -428,12 +429,13 @@ const handler = {
 
 
 router.get('/', handler.roomList);
+router.post('/', handler.createRoom);
 router.get('/sort', handler.sort);
 router.get('/filter', handler.filter);
 router.post('/new-post', handler.addPost);
 router.get('/:id', handler.getRoomById);
-router.get('/:id/posts', handler.getRoomPostsById);
-router.post('/', handler.createRoom);
 router.put('/:id', handler.updateRoomById);
+router.get('/:id/posts', handler.getRoomPostsById);
+router.put('/:id/updatePost', handler.updatePost);
 
 module.exports = router.routes();

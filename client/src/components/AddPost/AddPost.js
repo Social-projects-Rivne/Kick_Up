@@ -35,7 +35,6 @@ const messageType = {
     INFO: 'info',
     ERR: 'error'
 };
-const _roomPostRoute = '/api/room/new-post';
 
 /**
  * post title;
@@ -52,11 +51,20 @@ class AddPost extends Component {
         authorId: this.props.user ? this.props.user.id : null,
         roomId: this.props.match.params.id,
         activeSlide: 0,
-        title: '',
-        details: '',
-        pinPost: false,
-        editorData: null,
-        editMode: false
+        title: {
+            data: '',
+            wasChanged: false
+        },
+        pinPost: {
+            data: false,
+            wasChanged: false
+        },
+        editorData: {
+            data: null,
+            wasChanged: false
+        },
+        editModeLoad: false,
+        isEdit: false
     }
     setSwiper = instance => {
         if (instance) swiperInstance =  instance;
@@ -64,7 +72,10 @@ class AddPost extends Component {
     setPostPinned = () => {
         this.setState(prevState => {
             return {
-                pinPost: !prevState.pinPost
+                pinPost: {
+                    data: !prevState.pinPost.data,
+                    wasChanged: true
+                }
             }
         });
     }
@@ -77,18 +88,51 @@ class AddPost extends Component {
         } catch(err) {}
     }
     updateInputValue = (evt) => {
-        this.setState({ title: evt.target.value });
+        this.setState({ title: { 
+            data: evt.target.value,
+            wasChanged: true
+        }});
     }
     generatePostData = () => {
         let {authorId, roomId, editorData: text, title, pinPost: isPinned} = this.state;
 
+        title = title.data;
+        isPinned = isPinned.data;
+        text = text.data;
         authorId = authorId ? authorId : this.props.user.id;
         text = JSON.stringify(text, undefined, 2);
 
         return {authorId, roomId, text, title, isPinned};
     }
     sendData = () => {
-        axios.post(_roomPostRoute, this.generatePostData())
+        const routes = {
+            new: `/api/room/new-post`,
+            update: `/api/room/${
+                this.state.roomId 
+                ? this.state.roomId 
+                : this.props.match.params.id
+            }/updatePost`
+        };
+
+        // Prepare data;
+        let method = this.state.isEdit ? 'put' : 'post';
+        let route = this.state.isEdit ? routes.update : routes.new;
+        let data = {};
+
+        if (this.state.isEdit) {
+            if (this.state.title.wasChanged) 
+            data.title = this.state.title.data;
+
+            if (this.state.pinPost.wasChanged) 
+            data.isPinned = this.state.pinPost.data;
+
+            if (this.state.editorData.wasChanged) 
+            data.text = this.state.editorData.data;
+        } else {
+            data = this.generatePostData();
+        }
+        
+        axios[method](route, data)
         .then((res) => {
             // Redirect user to room page;
             this.props.history.push({ pathname: `/room/${this.state.roomId}` });
@@ -105,9 +149,12 @@ class AddPost extends Component {
             data.blocks.length > 1 ||
             data.blocks[0].text.length > 0
         ) {
-            this.setState({editorData: data});
+            this.setState({editorData: {
+                data,
+                wasChanged: true
+            }});
 
-            if (this.state.editMode) this.setState({editMode: false});
+            if (this.state.editModeLoad) this.setState({editModeLoad: false});
 
             // After data saved, we need update swiper;
             swiperInstance.updateAutoHeight();
@@ -116,15 +163,15 @@ class AddPost extends Component {
         }
     }
     resetEditorData = () => {
-        this.setState({editorData: null});
+        this.setState({editorData: { data: null }});
     }
     checkAllFilled = () => {
         let res = false;
 
         if (
-            this.state.title && 
-            this.state.title.length > 3 &&
-            (this.state.editMode || this.state.editorData && this.state.editorData.blocks.length > 0)
+            this.state.title.data && 
+            this.state.title.data.length > 3 &&
+            (this.state.editModeLoad || this.state.editorData.data && this.state.editorData.data.blocks.length > 0)
         ) {
             res = true;
         }
@@ -138,12 +185,12 @@ class AddPost extends Component {
         // In case not all data are filled, show ERR messages to user;
         if (!this.checkAllFilled()) {
             // Define messages to be shown;
-            if (!this.state.title) {
+            if (!this.state.title.data) {
                 errMessages.push('Give your post a nice title');
             }
             if (
-                this.state.editorData &&
-                (this.state.editMode || this.state.editorData.blocks.length <= 0)
+                this.state.editorData.data &&
+                (this.state.editModeLoad || this.state.editorData.data.blocks.length <= 0)
             ) {
                 errMessages.push('Give your post a great description');
             }
@@ -166,10 +213,16 @@ class AddPost extends Component {
         });
     }
     loadEditorData = (data) => {
-        let { authorId, roomId, text:editorData, title, isPinned:pinPost } = data;
+        let { authorId, text:editorData, title, isPinned:pinPost } = data;
+
         try {
             editorData = convertFromRaw(JSON.parse(editorData));
-            this.setState({ authorId, roomId, editorData, title, pinPost });
+            this.setState({ 
+                authorId, 
+                editorData: {data: editorData}, 
+                title: {data: title}, 
+                pinPost: {data: pinPost}
+             });
             
         } catch(err) {}
     }
@@ -178,7 +231,10 @@ class AddPost extends Component {
 
         // Fill editor with data;
         if (this.props.location.state && this.props.location.state.data) {
-            this.setState({editMode: true});
+            this.setState({
+                editModeLoad: true,
+                isEdit: true
+            });
             this.loadEditorData(this.props.location.state.data);
         }
     }
@@ -202,7 +258,7 @@ class AddPost extends Component {
                         <label className="add-post__title">To add new post, fill in fields below:</label>
                             <Stepper nonLinear orientation="vertical" className="add-post__stepper">
                                 <Step 
-                                    className={this.state.title && this.state.title.length > 3 ? 'add-post__step  add-post__step_filled' : 'add-post__step'} 
+                                    className={this.state.title.data && this.state.title.data.length > 3 ? 'add-post__step  add-post__step_filled' : 'add-post__step'} 
                                     key={0} 
                                     active={true}
                                 >
@@ -215,7 +271,7 @@ class AddPost extends Component {
                                                 name="title"
                                                 placeholder="Min 3 symbols, Max 100 symbols"
                                                 onChange={this.updateInputValue}
-                                                value={this.state.title}
+                                                value={this.state.title.data}
                                                 fullWidth
                                                 autoComplete="off"
                                                 inputProps={{ minLength: 3 }}
@@ -225,8 +281,8 @@ class AddPost extends Component {
                                 </Step>
                                 <Step 
                                     className={
-                                        this.state.editorData &&
-                                        (this.state.editMode || this.state.editorData.blocks.length > 0)
+                                        this.state.editorData.data &&
+                                        (this.state.editModeLoad || this.state.editorData.data.blocks.length > 0)
                                             ? 'add-post__step  add-post__step_filled' 
                                             : 'add-post__step'
                                     }
@@ -235,7 +291,7 @@ class AddPost extends Component {
                                     <StepLabel className="add-post__step-label">Add your post details</StepLabel>
                                     <StepContent>
                                         <WYSWYGeditor editorSettings={{
-                                            data: this.state.editorData ? this.state.editorData : null,
+                                            data: this.state.editorData.data ? this.state.editorData.data : null,
                                             dataUpdateCallback: this.setEditorData,
                                             toolbar: {
                                                 //@todo add 'embedded';
@@ -265,7 +321,7 @@ class AddPost extends Component {
                                     <StepContent>
                                         <FormGroup className="add-post__text-field">
                                             <FormControlLabel
-                                                label={this.state.pinPost
+                                                label={this.state.pinPost.data
                                                     ? 'Pinned post will be shown in both "Feed" and "Pinned posts" sections'
                                                     : 'Unpinned post will be shown in "Feed" section only'
                                                 }
@@ -273,7 +329,7 @@ class AddPost extends Component {
                                                     <Switch
                                                         name="pinPost"
                                                         onChange={this.setPostPinned}
-                                                        checked={this.state.pinPost}
+                                                        checked={this.state.pinPost.data}
                                                     />
                                                 }
                                             />
@@ -285,8 +341,8 @@ class AddPost extends Component {
                 </section>
                 <section className="add-post__slide  add-post__slide_data-preview">
                     {
-                        this.state.editorData &&
-                        !this.state.editMode &&
+                        this.state.editorData.data &&
+                        !this.state.editModeLoad &&
                         <div>
                             <Paper className="add-post__preview-info" >
                                 <div className="add-post__preview-info-wrapper">
@@ -319,7 +375,7 @@ class AddPost extends Component {
             </Swiper>
             {
                 this.checkAllFilled() &&
-                !this.state.editMode &&
+                !this.state.editModeLoad &&
                 <Fab
                     className="add-post__fab"
                     onClick={ this.togglePreview }
@@ -334,8 +390,7 @@ class AddPost extends Component {
             }
         </div>
         )
-    }        
-    
+    }
 }
 
 export default withSnackbar(AddPost);
