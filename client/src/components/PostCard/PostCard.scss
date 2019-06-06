@@ -54,6 +54,7 @@
 
 .postcard .postcard__avatar-wrapper {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
 
     &:hover,
@@ -168,6 +169,10 @@
     font-weight: 400;
     text-align: left;
     word-break: break-word;
+
+    & + br {
+        display: none;
+    }
 }
 
 .postcard__header-pin-wrapper {
@@ -192,12 +197,55 @@
     margin-left: 5px;
 }
 
+div#root .postcard .postcard__edit-ico {
+    position: absolute;
+    top: 0;
+    right: 29px;
+    display: none;
+    align-items: center;
+    text-decoration: none;
+    z-index: 1;
+
+    & span {
+        margin: 0;
+    }
+
+    & span::before {
+        display: none;
+    }
+
+    & svg {
+        transform: scale(0.7);
+        color: $primary;
+    }
+}
+
+div#root div.postcard .postcard__edit-ico-text {
+    margin-left: 5px;
+    font-size: 12px;
+    line-height: 16px;
+    text-transform: capitalize;
+    color: lighten($black, 40%);
+}
+
 // Related to modificators;
 .postcard.postcard_pinned
 .postcard__header-pin-wrapper {
     display: flex;
 }
 
+div#root .postcard.postcard_edit .postcard__edit-ico {
+    display: flex;
+    top: 20px;
+}
+
+div#root .postcard.postcard_edit.postcard_pinned .postcard__edit-ico {
+    display: flex;
+    top: 48px;
+}
+
+.postcard.postcard_edit
+.postcard__header span[class*=MuiTypography-headline],
 .postcard.postcard_pinned
 .postcard__header span[class*=MuiTypography-headline] {
     padding-right: 70px;

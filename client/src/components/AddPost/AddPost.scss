@@ -172,6 +172,14 @@
     margin: auto;
 }
 
+.add-post__editor .rdw-editor-main a {
+    color: darken($primary, 15%);
+}
+
+.add-post .add-post__editor [data-text=true] {
+    font-weight: 400;
+}
+
 .add-post .rdw-editor-main h1 {
     margin: 16px 0;
 }

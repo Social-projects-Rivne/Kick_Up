@@ -238,9 +238,10 @@ class AddPost extends Component {
                                             data: this.state.editorData ? this.state.editorData : null,
                                             dataUpdateCallback: this.setEditorData,
                                             toolbar: {
-                                                options: ['blockType', 'list', 'link', 'embedded', 'emoji', 'image'],
+                                                //@todo add 'embedded';
+                                                options: ['blockType', 'list', 'link', 'emoji', 'image'],
                                                 blockType: {
-                                                    options: ['Normal', 'H1', 'H2', 'H3', 'H4', 'Code'],
+                                                    options: ['Normal', 'H1', 'H2', 'H3', 'H4'],
                                                 },
                                                 fontFamily: {
                                                     options: ['Roboto', 'Helvetica', 'Arial', 'sans-serif'],

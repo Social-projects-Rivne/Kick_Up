@@ -18,7 +18,7 @@ import {
     Fab,
     Collapse
 } from '@material-ui/core';
-import { Group, Loyalty, ExpandMore, WhereToVote } from '@material-ui/icons';
+import { Group, Loyalty, ExpandMore, WhereToVote, Edit } from '@material-ui/icons';
 
 import AddPost from '../AddPost/AddPost';
 
@@ -75,11 +75,29 @@ class PostCard extends Component {
         const html = stateToHTML(convertFromRaw(JSON.parse(this.props.data.text)));
         return html.length >= _maxAllowedPostChars;
     }
+    definePostCanBeEdited = () => {
+        console.log(this.props.currentUser === this.props.data.authorId);
+        try {
+            return this.props.currentUser === this.props.data.authorId;
+        } catch(err) { return false } 
+    }
     render = () => (
         <Card className={
             this.definePostShouldBeCut() 
-                ? this.props.data.isPinned ? 'postcard  postcard_pinned' : 'postcard'
-                : this.props.data.isPinned ? 'postcard  postcard_pinned  postcard_no-margin-bottom' : 'postcard  postcard_no-margin-bottom'
+                ? this.props.data.isPinned ?
+                    this.definePostCanBeEdited() 
+                        ? 'postcard  postcard_pinned  postcard_edit'
+                        : 'postcard  postcard_pinned'
+                    : this.definePostCanBeEdited() 
+                        ? 'postcard  postcard_edit'
+                        : 'postcard'
+                : this.props.data.isPinned
+                    ? this.definePostCanBeEdited() 
+                        ? 'postcard  postcard_pinned  postcard_no-margin-bottom  postcard_edit'
+                        : 'postcard  postcard_pinned  postcard_no-margin-bottom'
+                    : this.definePostCanBeEdited() 
+                        ? 'postcard  postcard_no-margin-bottom  postcard_edit'
+                        : 'postcard  postcard_no-margin-bottom'
             }>
             <Link data-wrapper-link>
                 <CardHeader
@@ -119,6 +137,18 @@ class PostCard extends Component {
                 >
                 </CardHeader>
         </Link>
+        <RouterLink
+            className="postcard__edit-ico"
+            to={{
+                pathname: '/room/3/new-post',
+                state: {
+                    data: this.props.data
+                }
+            }}
+        >
+            <Edit />
+            <span className="postcard__edit-ico-text">Edit</span>
+        </RouterLink>
         {/* @temp We may need it to add covers done by Igor */}
         {/* <CardMedia
             className="postcard__img-wrapper"
@@ -129,17 +159,6 @@ class PostCard extends Component {
                 <b>{this.props.category}</b>
             </div>
         </CardMedia> */}
-        {/* @temp, move link */}
-        <RouterLink
-            to={{
-                pathname: '/room/3/new-post',
-                state: {
-                    data: this.props.data
-                }
-            }}
-        >
-            <span>Edit</span>
-        </RouterLink>
         <CardContent className=
             {
                 this.definePostShouldBeCut() 

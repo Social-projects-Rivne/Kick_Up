@@ -171,6 +171,14 @@ class RoomPage extends React.Component {
           .catch(err => {
            console.log(err);
           });
+    };
+    handleAddPostBtnClick = (clickEvt) => {
+        clickEvt.stopPropagation();
+        const { isAuthenticated } = this.props;
+
+        this.props.history.push(
+            { pathname: isAuthenticated ? `/room/${this.props.match.params.id}/new-post` : '/sign-in' }
+        );
     }
 
     render() {
@@ -246,10 +254,14 @@ class RoomPage extends React.Component {
 
                     { (value === 1 && <TabContainer>
                         <Grid container spacing={24} className="room-details-card">
+                            <Fab variant="extended" className="room__add-post-btn" onClick={this.handleAddPostBtnClick}>
+                                {isAuthenticated && <Add />}
+                                <span> {isAuthenticated ? 'Create post' : 'Login to create a new post' }</span>
+                            </Fab>
                             {
                                 roomPagePosts.map((post, itr) => 
                                     <Grid key={itr} item xs={12} className="room-details-card-grid">
-                                        <PostCard data={post} />
+                                        <PostCard data={post} currentUser={this.props.user.id} />
                                     </Grid>
                             )}
                         </Grid>
@@ -300,10 +312,14 @@ class RoomPage extends React.Component {
 
                     { (value === 4 && <TabContainer>
                         <Grid container spacing={24} className="room-details-card">
+                            <Fab variant="extended" className="room__add-post-btn" onClick={this.handleAddPostBtnClick}>
+                                {isAuthenticated && <Add />}
+                                <span> {isAuthenticated ? 'Create post' : 'Login to create a new post' }</span>
+                            </Fab>
                             {
                                 roomPagePosts.map((post, itr) => 
                                     <Grid key={itr} item xs={12} className="room-details-card-grid">
-                                        <PostCard data={post} />
+                                        <PostCard data={post} currentUser={this.props.user.id} />
                                     </Grid>
                             )}
                         </Grid>

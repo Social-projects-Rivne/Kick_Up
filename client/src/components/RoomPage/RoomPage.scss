@@ -308,3 +308,11 @@
     max-height: none;
   }
 }
+
+#root .room__add-post-btn {
+  box-shadow: none;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: $primary;
+  margin-bottom: 14px;
+}
