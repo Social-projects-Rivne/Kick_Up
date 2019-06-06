@@ -42,7 +42,8 @@ const handler = {
 
     const room = await new Room(newRoom).save();
     await new Member({user_id:creator_id,entity_type:constants.rating.entity_types.room,entity_id:room.id}).save();
-    ctx.body = room;
+    const resRoom = await Room.where({ id: room.id }).fetch({withRelated:['creator','category','members','event', 'media'],require:true});
+    ctx.body = resRoom;
   },
   async getRoomById(ctx) {
     const { id } = ctx.params;
