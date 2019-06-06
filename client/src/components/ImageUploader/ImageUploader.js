@@ -18,7 +18,6 @@ class ImageUploader extends Component {
     limitFiles: false,
     successfullUploaded: false,
     error: null,
-    imagesSRC: []
   };
 
   onFilesAdded = files => {
@@ -79,9 +78,8 @@ class ImageUploader extends Component {
             this.setState({ uploadProgress: copy, successfullUploaded: true });
             setTimeout(() => this.setState({ uploading: false }), 1000);
             const imageSRC = res.data;
-            const imagesSRC = [...this.state.imagesSRC].concat({src:imageSRC, thumbnail:imageSRC});
-            this.setState({imagesSRC});
-            this.props.getImagesSRC(this.state.imagesSRC);
+            const imagesSRC = {src:imageSRC, thumbnail:imageSRC};
+            this.props.getImagesSRC(imagesSRC);
         })
         .catch(error => {
            console.log(error);
@@ -103,6 +101,21 @@ class ImageUploader extends Component {
       return e.name !== file.name
     });
     this.setState({rejectedFiles});
+  }
+
+  clearState = () => {
+    this.setState({ 
+      files: [], 
+      rejectedFiles: [], 
+      imagesSRC: [],
+      successfullUploaded: false, 
+      limitFiles: false, 
+      error: null })
+  }
+
+  closeUpload = () => {
+    this.clearState();
+    this.props.closeUploadComponent();
   }
 
   renderProgress = file => {
@@ -140,15 +153,7 @@ class ImageUploader extends Component {
         <p className="actions-success">All files successful uploaded!</p>
         <Button
             variant="outlined"
-            onClick={() =>
-            this.setState({ 
-              files: [], 
-              rejectedFiles: [], 
-              imagesSRC: [],
-              successfullUploaded: false, 
-              limitFiles: false, 
-              error: null })
-          }
+            onClick={this.clearState}
         >
           Clear
         </Button>
@@ -184,7 +189,7 @@ class ImageUploader extends Component {
 
     const uploadCard = 
       <div className="upload-card" onClick={event => event.stopPropagation()} >
-        <Close className="upload-card-close" onClick={this.props.closeUploadComponent} />
+        <Close className="upload-card-close" onClick={this.closeUpload} />
         <div className="upload">
           <div className="Content">
             <div className="dropzone-wrapper">
@@ -226,7 +231,7 @@ class ImageUploader extends Component {
       <>
         {this.props.show ? 
         <div className="upload-wrapper" 
-          onClick={this.props.closeUploadComponent}
+          onClick={this.closeUpload}
           >
             {!this.props.isAuthenticated ? 
               renderSignIn : 
