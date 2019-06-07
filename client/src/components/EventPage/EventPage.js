@@ -212,7 +212,7 @@ class EventPage extends Component {
 
             this.setState({
                 title: res.title,
-                cover: res.cover,
+                cover: res.cover && res.cover.replace(/\\/g, '/'),
                 location: res.location,
                 date: new Date(res.start_date).toLocaleString('en-US', timeOptions),
                 description: res.description,

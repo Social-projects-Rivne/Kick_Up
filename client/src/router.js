@@ -29,7 +29,7 @@ const router = ({ childProps }) => {
             <AppliedRoute path="/room/add" exact component={AddRoom} props={childProps}/>
             <AppliedRoute path="/room/:id/add-event" component={AddEvent} props={childProps} />
             <AppliedRoute path="/room/:id" exact component={RoomPage} props={childProps} />
-            <Route path="/room/:id/edit" component={EditRoom} />
+            <AppliedRoute path="/room/:id/edit" exact component={EditRoom} props={childProps} />
             <AppliedRoute path="/profile/:id" exact component={UserProfile} props={childProps} />
             <Route path="/profile/:id/edit" component={EditProfile} />
             <Route path="/privacy-policy" component={PrivacyPolicy} />

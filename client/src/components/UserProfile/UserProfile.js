@@ -231,7 +231,7 @@ class UserProfile extends React.Component {
                                                     <CardActionArea>
                                                         <CardMedia
                                                             className="user-profile-room-card-media"
-                                                            image={room.cover}
+                                                            image={room.cover && room.cover.replace(/\\/g, '/')}
                                                             title="Contemplative Reptile"
                                                         />
                                                     </CardActionArea>

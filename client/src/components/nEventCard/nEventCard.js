@@ -46,7 +46,7 @@ const NeventCard = props => (
             </CardHeader>
             <CardMedia
                 className="event-card__img-wrapper"
-                image={`${props.cover}`}
+                image={`${props.cover}` && `${props.cover}`.replace(/\\/g, '/')}
                 title="Street drinkers in Rivne"
             >
                 <div className="event-card__date">
