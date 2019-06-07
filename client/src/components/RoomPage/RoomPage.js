@@ -141,14 +141,12 @@ class RoomPage extends React.Component {
             this.setState( {members: users})
         })
     }
-
     handleChange = (event, value) => {
         this.setState({ value });
-    };
-
+    }
     handleChangeIndex = index => {
         this.setState({ value: index });
-    };
+    }
     join = () => {
         const eventId = this.props.match.params.id;
         axios.post(`http://localhost:3001/api/member/room/join`, { entity_id:eventId })
@@ -159,7 +157,7 @@ class RoomPage extends React.Component {
           .catch(err => {
            console.log(err);
           });
-    };
+    }
     leave = () => {
         console.log(this.state.authUser)
         const eventId = this.props.match.params.id;
@@ -171,7 +169,7 @@ class RoomPage extends React.Component {
           .catch(err => {
            console.log(err);
           });
-    };
+    }
     handleAddPostBtnClick = (clickEvt) => {
         clickEvt.stopPropagation();
         const { isAuthenticated } = this.props;
@@ -179,6 +177,18 @@ class RoomPage extends React.Component {
         this.props.history.push(
             { pathname: isAuthenticated ? `/room/${this.props.match.params.id}/new-post` : '/sign-in' }
         );
+    }
+    checkUserBelongsToRoom = () => {
+        console.log('this.state.members', this.state.members);
+        let res = false;
+        const userId = this.props.user.id;
+        let foundUser;
+
+        // Check if we have match;
+        if (userId && this.state.members.length > 0) foundUser = this.state.members.find(user => user.id === userId);
+        if (foundUser) res = true;
+
+        return res;
     }
 
     render() {
@@ -256,7 +266,14 @@ class RoomPage extends React.Component {
                         <Grid container spacing={24} className="room-details-card">
                             <Fab variant="extended" className="room__add-post-btn" onClick={this.handleAddPostBtnClick}>
                                 {isAuthenticated && <Add />}
-                                <span> {isAuthenticated ? 'Create post' : 'Login to create a new post' }</span>
+                                <span> 
+                                    {
+                                        isAuthenticated
+                                        ? this.checkUserBelongsToRoom() 
+                                            ? 'Create post' : 'Join room to create a post'
+                                        : 'Login to create a new post'
+                                    }
+                                </span>
                             </Fab>
                             {
                                 roomPagePosts.map((post, itr) => 
@@ -314,7 +331,14 @@ class RoomPage extends React.Component {
                         <Grid container spacing={24} className="room-details-card">
                             <Fab variant="extended" className="room__add-post-btn" onClick={this.handleAddPostBtnClick}>
                                 {isAuthenticated && <Add />}
-                                <span> {isAuthenticated ? 'Create post' : 'Login to create a new post' }</span>
+                                <span>
+                                    {
+                                        isAuthenticated
+                                        ? this.checkUserBelongsToRoom() 
+                                            ? 'Create post' : 'Join room to create a post'
+                                        : 'Login to create a new post'
+                                    }
+                                </span>
                             </Fab>
                             {
                                 roomPagePosts.map((post, itr) => 

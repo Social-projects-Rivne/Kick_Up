@@ -272,7 +272,7 @@ const handler = {
       authorId: 'numeric|min:1',
       roomId: 'numeric|min:1',
       text: 'required',
-      title: 'min:1',
+      title: 'min:3',
       isPinned: 'boolean'
     });
 
@@ -376,7 +376,40 @@ const handler = {
     ctx.body = roomPosts ? roomPosts : []; 
   },
   async updatePost(ctx) {
-    console.log('YAY!');
+    const {title, text, isPinned, postId} = ctx.request.body;
+    const { id } = ctx.params;
+    let dataToValidate = {};
+
+    // Validate input;
+    if (title) dataToValidate.title = title;
+    if (text) dataToValidate.text = text;
+    if (typeof isPinned === 'boolean') dataToValidate.isPinned = isPinned;
+
+    await validate(dataToValidate, {
+      text: 'string',
+      title: 'string|min:3',
+      isPinned: 'boolean'
+    });
+    
+    // Perform DB data update;
+    try {
+      let res = await MongoDbRoom.findOneAndUpdate({'posts._id': postId}, 
+      {
+        '$set': (() => {
+          // Fill with data for update;
+          let res = {};
+  
+          if (title) res['posts.$.title'] =  title;
+          if (text) res['posts.$.text'] = text;
+          if (typeof isPinned === 'boolean') res['posts.$.isPinned'] = isPinned;
+  
+          return res;
+        })()
+      });
+    } catch(err) {
+      ctx.throwSingle('Could not save post, please reload your page', 400);
+    } 
+
     ctx.body = '';
   }
 };

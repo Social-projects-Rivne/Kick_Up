@@ -70,13 +70,14 @@ class PostCard extends Component {
     }
     handleExpandClick = () => {
         this.setState({ expanded: !this.state.expanded });
+
+        if (this.props.data.clickBtnCallBack) this.props.data.clickBtnCallBack();
     }
     definePostShouldBeCut = () => {
         const html = stateToHTML(convertFromRaw(JSON.parse(this.props.data.text)));
         return html.length >= _maxAllowedPostChars;
     }
     definePostCanBeEdited = () => {
-        console.log(this.props.currentUser === this.props.data.authorId);
         try {
             return this.props.currentUser === this.props.data.authorId;
         } catch(err) { return false } 

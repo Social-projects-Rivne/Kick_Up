@@ -48,6 +48,7 @@ const messageType = {
 
 class AddPost extends Component {
     state = {
+        postId: null,
         authorId: this.props.user ? this.props.user.id : null,
         roomId: this.props.match.params.id,
         activeSlide: 0,
@@ -93,16 +94,27 @@ class AddPost extends Component {
             wasChanged: true
         }});
     }
-    generatePostData = () => {
-        let {authorId, roomId, editorData: text, title, pinPost: isPinned} = this.state;
+    generatePostData = (preview) => {
+        let data = {};
+        preview = preview || false;
 
-        title = title.data;
-        isPinned = isPinned.data;
-        text = text.data;
-        authorId = authorId ? authorId : this.props.user.id;
-        text = JSON.stringify(text, undefined, 2);
+        if (this.state.isEdit && !preview) {
+            if (this.state.title.wasChanged) data.title = this.state.title.data;
+            if (this.state.pinPost.wasChanged) data.isPinned = this.state.pinPost.data;
+            if (this.state.editorData.wasChanged) data.text = JSON.stringify(this.state.editorData.data, undefined, 2);
+            data.postId = this.state.postId;
+        } else {
+            let {authorId, roomId, editorData: text, title, pinPost: isPinned} = this.state;
 
-        return {authorId, roomId, text, title, isPinned};
+            title = title.data;
+            isPinned = isPinned.data;
+            text = text.data;
+            authorId = authorId ? authorId : this.props.user.id;
+            text = JSON.stringify(text, undefined, 2);
+            data = {authorId, roomId, text, title, isPinned};
+        }
+
+        return data;
     }
     sendData = () => {
         const routes = {
@@ -117,20 +129,7 @@ class AddPost extends Component {
         // Prepare data;
         let method = this.state.isEdit ? 'put' : 'post';
         let route = this.state.isEdit ? routes.update : routes.new;
-        let data = {};
-
-        if (this.state.isEdit) {
-            if (this.state.title.wasChanged) 
-            data.title = this.state.title.data;
-
-            if (this.state.pinPost.wasChanged) 
-            data.isPinned = this.state.pinPost.data;
-
-            if (this.state.editorData.wasChanged) 
-            data.text = this.state.editorData.data;
-        } else {
-            data = this.generatePostData();
-        }
+        let data = this.generatePostData();
         
         axios[method](route, data)
         .then((res) => {
@@ -157,10 +156,17 @@ class AddPost extends Component {
             if (this.state.editModeLoad) this.setState({editModeLoad: false});
 
             // After data saved, we need update swiper;
-            swiperInstance.updateAutoHeight();
+            this.updateSwiper();
         } else {
             this.resetEditorData();
         }
+    }
+    updateSwiper = () => {
+        const _awaitTime = 1000;
+
+        window.setTimeout(() => {
+            swiperInstance.updateAutoHeight();
+        }, _awaitTime);
     }
     resetEditorData = () => {
         this.setState({editorData: { data: null }});
@@ -210,24 +216,27 @@ class AddPost extends Component {
     showToast = (message, variant) => {
         this.props.enqueueSnackbar(message, {
             variant: variant ? variant : 'default',
+            anchorOrigin: {
+                vertical: 'top',
+                horizontal: 'center',
+            }
         });
     }
     loadEditorData = (data) => {
-        let { authorId, text:editorData, title, isPinned:pinPost } = data;
+        let { authorId, _id:postId, text:editorData, title, isPinned:pinPost } = data;
 
         try {
             editorData = convertFromRaw(JSON.parse(editorData));
-            this.setState({ 
-                authorId, 
+            this.setState({
+                postId,
+                authorId,
                 editorData: {data: editorData}, 
                 title: {data: title}, 
                 pinPost: {data: pinPost}
              });
-            
         } catch(err) {}
     }
     componentWillMount = () => {
-        console.log('PROPS ADD POST', this.props);
 
         // Fill editor with data;
         if (this.props.location.state && this.props.location.state.data) {
@@ -250,7 +259,7 @@ class AddPost extends Component {
                 variant="outlined"
                 onClick={this.handleSubmitBtnClick}
             >
-                Add new post
+                { this.state.isEdit ? 'Save post' : 'Add new post' }
             </Button>
             <Swiper {...addPostSwiperParams} getSwiper={this.setSwiper} >
                 <section className="add-post__slide  add-post__slide_data-entry">
@@ -356,16 +365,18 @@ class AddPost extends Component {
                                         </Typography>
                                     </div>
                                 </div>
-                                
                             </Paper>
                             <PostCard data={(() => {
-                                let res = this.generatePostData();
+                                let isPreview = true;
+                                let res = this.generatePostData(isPreview);
 
                                 // Add user data;
                                 if (this.props.user) {
                                     let { avatar, first_name : firstName, last_name : lastName } = this.props.user;
                                     res.author_details = { avatar, firstName, lastName };
                                 }
+
+                                res.clickBtnCallBack = this.updateSwiper;
 
                                 return res;
                             })()} />
