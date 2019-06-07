@@ -1,14 +1,6 @@
 #root .user-profile-page {
   background-color: $white;
 
-  .user-profile-page-link-edit,
-  .user-profile-page-link-edit:active,
-  .user-profile-page-link-edit:hover,
-  .user-profile-page-link-edit:visited {
-    text-decoration: none;
-    color: $black;
-  }
-
   .user-profile-page-container {
     padding: 24px;
     min-height: calc(100vh - 86px - 51px);
@@ -18,6 +10,13 @@
     font-size: 1rem;
     line-height: 1.5rem;
     font-weight: 100;
+
+    .user-profile-page-lock {
+      background: transparent;
+      box-shadow: none;
+      color: $secondaryBlack;
+      padding: 0;
+    }
 
     @include media-breakpoint-down(lg) {
       padding: 24px 0 24px;
@@ -31,6 +30,36 @@
       .user-profile-page-avatar-grid {
         margin-right: 0;
       }
+    }
+
+    .user-profile-page-edit-profile-link {
+      text-decoration: none;
+      position: fixed;
+      bottom: 30px;
+      z-index: 100;
+      right: 15px;
+
+      @include media-breakpoint-down(lg) {
+        bottom: 65px;
+      }
+
+      .user-profile-page-edit-profile, .user-profile-page-edit-profile:hover {
+        background-color: $primary;
+        margin-bottom: 18px;
+        box-shadow: $secondaryBlack;
+        border-radius: 50px;
+        padding: 0;
+
+        @include media-breakpoint-down(lg) {
+          font-size: 11pt;
+          margin-top: 0;
+        }
+      }
+    }
+
+    .user-profile-page-info {
+      display: flex;
+      justify-content: center;
     }
 
     .user-profile-page-gallery {
@@ -77,6 +106,7 @@
         line-height: 1.5rem;
         font-weight: 100;
         border-radius: 15px;
+        height: fit-content;
 
         .user-profile-room-card-link,
         .user-profile-room-card-link:hover,
@@ -85,6 +115,12 @@
           text-decoration: none;
           background-color: transparent;
           color: $black;
+
+          .user-profile-room-card-title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+          }
         }
 
         .user-profile-room-card-header {

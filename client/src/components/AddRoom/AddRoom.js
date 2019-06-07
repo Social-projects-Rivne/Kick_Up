@@ -171,7 +171,7 @@ class AddRoom extends React.Component {
     }
 
     render() {
-        const { activeStep, addRoomDB, roomId } = this.state;
+        const { activeStep, addRoomDB } = this.state;
         const { isAuthenticated } = this.props;
 
         if (this.state.loading) {
