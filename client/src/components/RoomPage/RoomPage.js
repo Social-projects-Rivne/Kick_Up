@@ -278,7 +278,7 @@ class RoomPage extends React.Component {
                             {
                                 roomPagePosts.map((post, itr) => 
                                     <Grid key={itr} item xs={12} className="room-details-card-grid">
-                                        <PostCard data={post} currentUser={this.props.user.id} />
+                                        <PostCard data={post} currentUser={this.props.user.id} roomId={this.props.match.params.id} />
                                     </Grid>
                             )}
                         </Grid>
@@ -343,7 +343,7 @@ class RoomPage extends React.Component {
                             {
                                 roomPagePosts.map((post, itr) => 
                                     <Grid key={itr} item xs={12} className="room-details-card-grid">
-                                        <PostCard data={post} currentUser={this.props.user.id} />
+                                        <PostCard data={post} currentUser={this.props.user.id} roomId={this.props.match.params.id} />
                                     </Grid>
                             )}
                         </Grid>

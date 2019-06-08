@@ -316,3 +316,12 @@
   background-color: $primary;
   margin-bottom: 14px;
 }
+
+@include media-breakpoint-up(lg) {
+
+  // Need !important to overwrite SwipeableViews component JS;
+  .room__tabs-wrapper div[data-swipeable]:nth-last-of-type(2),
+  .room__tabs-wrapper div[data-swipeable]:nth-last-of-type(5) {
+    overflow: hidden !important;
+  }
+}

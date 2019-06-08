@@ -8,19 +8,14 @@ import { Markup } from 'interweave';
 import {
     Card, 
     CardHeader,
-    CardMedia,
     CardActions,
     CardContent, 
     Avatar,
-    Typography,
-    IconButton,
     Link,
     Fab,
     Collapse
 } from '@material-ui/core';
-import { Group, Loyalty, ExpandMore, WhereToVote, Edit } from '@material-ui/icons';
-
-import AddPost from '../AddPost/AddPost';
+import { ExpandMore, WhereToVote, Edit } from '@material-ui/icons';
 
 import defaultAvatar from '../../assets/images/face.png';
 
@@ -61,7 +56,7 @@ const convertTime = (str) => {
         }
     }
 };
-const _maxAllowedPostChars = 400; 
+const _maxAllowedPostChars = 500; 
 
 class PostCard extends Component {
     constructor(props) {
@@ -141,7 +136,7 @@ class PostCard extends Component {
         <RouterLink
             className="postcard__edit-ico"
             to={{
-                pathname: '/room/3/new-post',
+                pathname: `/room/${this.props.roomId}/new-post`,
                 state: {
                     data: this.props.data
                 }

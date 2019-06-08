@@ -50,6 +50,11 @@
     }
 }
 
+#root .add-post .add-post__swiper
+.add-post__submit-btn {
+    display: none;
+}
+
 .add-post .add-post__editor {
     & [title*="Indent"],
     & [title*="Outdent"],
@@ -91,7 +96,7 @@
     opacity: 0;
     animation-name: fade-in;
     animation-duration: 0.3s;
-    animation-delay: 0.5s;
+    animation-delay: 1s;
     animation-fill-mode: forwards;
     // Need exactly white;
     background-color: #fff;
@@ -158,6 +163,12 @@
    border-color: $primary;
 }
 
+.add-post__step-label span[class*=MuiStepLabel-label] {
+    font-size: 1.286rem;
+    line-height: 1.571rem;
+    font-weight: 100;
+}
+
 // Related to editor;
 .add-post .rdw-image-modal,
 .add-post .rdw-emoji-modal,
@@ -170,6 +181,14 @@
     left: 0;
     right: 0;
     margin: auto;
+}
+
+.add-post .rdw-image-imagewrapper img {
+    opacity: 0;
+    animation-name: fade-in;
+    animation-duration: 0.3s;
+    animation-delay: 0.3s;
+    animation-fill-mode: forwards;
 }
 
 .add-post__editor .rdw-editor-main a {
@@ -219,9 +238,132 @@
     margin-right: 16px;
 }
 
+.add-post__preview-wrapper:empty {
+    text-align: center;
+
+    &::before {
+        content: attr(data-add-post-msg);
+        font-size: 24px;
+        font-weight: 100;
+        color: lighten($secondaryBlack, 30%);
+    }
+}
+
 // Related to modificators;
 .add-post__step.add-post__step_filled svg {
     fill: $primary;
+}
+
+// Tablets;
+@include media-breakpoint-up(md) {
+    .add-post__title {
+        text-align: center;
+        padding-top: 16px;
+        margin-bottom: 48px;
+    }
+
+    .add-post .add-post__stepper {
+        margin-left: 36px;
+        margin-right: 36px;
+    }
+
+    .add-post .add-post__step div[class*=MuiStepContent-root] {
+        padding-bottom: 25px;
+    }
+
+    .add-post .rdw-editor-main {
+        min-height: 300px;
+    }
+
+    #root .add-post .add-post__fab {
+        right: 32px;
+        bottom: calc(#{$footer-height} + 32px);
+    }
+}
+
+@include media-breakpoint-up(lg) {
+    .add-post__form {
+        max-width: 1168px;
+        margin: 0 auto;
+    }
+
+    .add-post .add-post__slide {
+        box-sizing: border-box;
+        max-width: 50%;
+        max-height: calc(95vh - #{$header-height} - #{$footer-height});
+        padding-left: 16px;
+        padding-right: 16px;
+        overflow-y: auto;
+    }
+
+    .add-post .add-post__preview-info {
+        position: sticky;
+        top: 0;
+        margin-top: 36px;
+        margin-bottom: 48px;
+        margin-left: 0;
+        margin-right: 0;
+        z-index: 3;
+        opacity: 1;
+        box-shadow: 0 1px 4px 0 rgba(0,0,0,.14);
+    }
+
+    .add-post .rdw-editor-main {
+        min-height: 160px;
+    }
+
+    .add-post .rdw-image-imagewrapper img {
+        max-width: 100%;
+    }
+
+    #root .add-post .add-post__text-field {
+        & > div[class*=MuiInput]:hover::before,
+        & > div[class*=MuiInput]:hover::after {
+            border-bottom-color: lighten($secondaryBlack, 30%);
+        }
+
+        & [class*=MuiInput-focused]::after {
+            border-bottom-color: $primary !important;
+        }
+    }
+
+    // Need !important here to overwrite desktop logic for swiper;
+    .add-post__swiper .swiper-wrapper {
+        transform: none !important;
+    }
+
+    #root .add-post .add-post__submit-btn {
+        display: none;
+    }
+
+    #root .add-post .add-post__swiper
+    .add-post__submit-btn {
+        display: block;
+        position: relative;
+        width: auto;
+        margin-left: auto;
+        margin-right: auto;
+        border-radius: 24px;
+        background-color: $primary;
+        border-color: $primary;
+        color: $black;
+        overflow: hidden;
+    }
+
+    // Related to modififcators;
+    .add-post.add-post_no-desk-preview {
+        & .add-post__slide:nth-of-type(1) {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        & .add-post__slide:nth-of-type(2) {
+            max-width: 0px;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+    }
 }
 
 // Related to animations;

@@ -22,13 +22,17 @@ import { convertFromRaw } from 'draft-js';
 import PostCard from '../PostCard/PostCard';
 import axios from 'axios';
 
+const _desktopWidth = 1024;
 const addPostSwiperParams = {
-    containerClass: 'add-post__swiper',
+    containerClass: window.innerWidth >= _desktopWidth 
+        ? 'add-post__swiper swiper-no-swiping'
+        : 'add-post__swiper',
     slidesPerView: 1,
     simulateTouch: true,
     autoHeight: true,
     speed: 800,
-    noSwiping: true
+    noSwiping: true,
+    breakpointsInverse: true
 };
 const messageType = {
     SUCCESS: 'success',
@@ -36,15 +40,7 @@ const messageType = {
     ERR: 'error'
 };
 
-/**
- * post title;
- * post inner HTML;
- * post author;
- * post date;
- * option to mark post as pinned one;
- */
-
- let swiperInstance;
+ let swiperInstance, resizeTimer;
 
 class AddPost extends Component {
     state = {
@@ -52,6 +48,7 @@ class AddPost extends Component {
         authorId: this.props.user ? this.props.user.id : null,
         roomId: this.props.match.params.id,
         activeSlide: 0,
+        windowWidth: window.innerWidth || 0,
         title: {
             data: '',
             wasChanged: false
@@ -165,11 +162,57 @@ class AddPost extends Component {
         const _awaitTime = 1000;
 
         window.setTimeout(() => {
+            if (window.innerWidth < 1024)
             swiperInstance.updateAutoHeight();
         }, _awaitTime);
     }
+    handleWindowResize = () => {
+        const _awaitTime = 1000;
+        const _this = this;
+
+        let saveSize = () => {
+            this.setState({ windowWidth: window.innerWidth });
+
+            // This will show preview button opened on desktops;
+            if (window.innerWidth >= _desktopWidth) {
+                swiperInstance.slideTo(1);
+                this.setState({ activeSlide: 1 });
+            } else {
+                swiperInstance.slideTo(0);
+                this.setState({ activeSlide: 0 });
+            }
+        }
+        saveSize = saveSize.bind(this);
+
+        window.clearTimeout(resizeTimer);
+        resizeTimer = window.setTimeout(saveSize, _awaitTime);
+    }
     resetEditorData = () => {
         this.setState({editorData: { data: null }});
+    }
+    resetState = () => {
+        this.setState(
+            {
+                postId: null,
+                authorId: null,
+                activeSlide: 0,
+                windowWidth: window.innerWidth || 0,
+                title: {
+                    data: '',
+                    wasChanged: false
+                },
+                pinPost: {
+                    data: false,
+                    wasChanged: false
+                },
+                editorData: {
+                    data: null,
+                    wasChanged: false
+                },
+                editModeLoad: false,
+                isEdit: false
+            }
+        );
     }
     checkAllFilled = () => {
         let res = false;
@@ -237,7 +280,7 @@ class AddPost extends Component {
         } catch(err) {}
     }
     componentWillMount = () => {
-
+        console.log('componentWillMount');
         // Fill editor with data;
         if (this.props.location.state && this.props.location.state.data) {
             this.setState({
@@ -247,20 +290,20 @@ class AddPost extends Component {
             this.loadEditorData(this.props.location.state.data);
         }
     }
+    componentDidMount = () => {
+        this.handleWindowResize();
+
+        // Add Event listeners;
+        window.addEventListener('resize', this.handleWindowResize);
+    }
+    componentWillUnmount = () => {
+        window.removeEventListener('resize', this.handleWindowResize);
+    }
     render() {
         const { activeSlide, editorState } = this.state;
 
         return (
-            <div className="add-post">
-            <Button
-                className={!this.checkAllFilled() 
-                    ? 'add-post__submit-btn add-post__submit-btn_disabled' 
-                    : 'add-post__submit-btn'}
-                variant="outlined"
-                onClick={this.handleSubmitBtnClick}
-            >
-                { this.state.isEdit ? 'Save post' : 'Add new post' }
-            </Button>
+            <div className={!this.state.activeSlide ? 'add-post  add-post_no-desk-preview' : 'add-post' }>
             <Swiper {...addPostSwiperParams} getSwiper={this.setSwiper} >
                 <section className="add-post__slide  add-post__slide_data-entry">
                     <form className="add-post__form" noValidate autoComplete="off">
@@ -347,46 +390,63 @@ class AddPost extends Component {
                                 </Step>
                         </Stepper>
                     </form>
+                    <Button
+                        className={!this.checkAllFilled() 
+                            ? 'add-post__submit-btn add-post__submit-btn_disabled' 
+                            : 'add-post__submit-btn'}
+                        variant="outlined"
+                        onClick={this.handleSubmitBtnClick}
+                        >
+                        { this.state.isEdit ? 'Save post' : 'Add new post' }
+                    </Button>
                 </section>
                 <section className="add-post__slide  add-post__slide_data-preview">
-                    {
-                        this.state.editorData.data &&
-                        !this.state.editModeLoad &&
-                        <div>
-                            <Paper className="add-post__preview-info" >
-                                <div className="add-post__preview-info-wrapper">
-                                    <Home />
-                                    <div>
-                                        <Typography variant="h5" component="h3">
-                                            Post preview
-                                        </Typography>
-                                        <Typography component="p">
-                                            Your post will look exactly same as is shown below
-                                        </Typography>
-                                    </div>
+                    <div>
+                        <Paper className="add-post__preview-info" >
+                            <div className="add-post__preview-info-wrapper">
+                                <Home />
+                                <div>
+                                    <Typography variant="h5" component="h3">
+                                        Post preview
+                                    </Typography>
+                                    <Typography component="p">
+                                        Your post will look exactly same as is shown below
+                                    </Typography>
                                 </div>
-                            </Paper>
-                            <PostCard data={(() => {
-                                let isPreview = true;
-                                let res = this.generatePostData(isPreview);
-
-                                // Add user data;
-                                if (this.props.user) {
-                                    let { avatar, first_name : firstName, last_name : lastName } = this.props.user;
-                                    res.author_details = { avatar, firstName, lastName };
-                                }
-
-                                res.clickBtnCallBack = this.updateSwiper;
-
-                                return res;
-                            })()} />
+                            </div>
+                        </Paper>
+                        <div className="add-post__preview-wrapper" data-add-post-msg={
+                            this.state.editModeLoad 
+                                ? 'Edit post to see preview' 
+                                : 'Add title and some content to see preview'
+                            }>
+                        {
+                            this.state.editorData.data &&
+                            !this.state.editModeLoad &&
+                                <PostCard data={(() => {
+                                    let isPreview = true;
+                                    let res = this.generatePostData(isPreview);
+        
+                                    // Add user data;
+                                    if (this.props.user) {
+                                        let { avatar, first_name : firstName, last_name : lastName } = this.props.user;
+                                        res.author_details = { avatar, firstName, lastName };
+                                    }
+        
+                                    res.clickBtnCallBack = this.updateSwiper;
+        
+                                    return res;
+                                })()} 
+                            />
+                        }
                         </div>
-                    }
+                    </div>
                 </section>
             </Swiper>
             {
-                this.checkAllFilled() &&
-                !this.state.editModeLoad &&
+                (window.innerWidth >= _desktopWidth ||
+                this.checkAllFilled() &&   
+                !this.state.editModeLoad) &&
                 <Fab
                     className="add-post__fab"
                     onClick={ this.togglePreview }
@@ -396,9 +456,17 @@ class AddPost extends Component {
                         ? <Visibility /> 
                         : <Close />
                     }
-                    
                 </Fab>
             }
+            <Button
+                className={!this.checkAllFilled() 
+                    ? 'add-post__submit-btn add-post__submit-btn_disabled' 
+                    : 'add-post__submit-btn'}
+                variant="outlined"
+                onClick={this.handleSubmitBtnClick}
+            >
+                { this.state.isEdit ? 'Save post' : 'Add new post' }
+            </Button>
         </div>
         )
     }
