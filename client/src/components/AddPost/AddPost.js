@@ -106,7 +106,11 @@ class AddPost extends Component {
             title = title.data;
             isPinned = isPinned.data;
             text = text.data;
-            authorId = authorId ? authorId : this.props.user.id;
+            authorId = authorId 
+                ? authorId 
+                : this.props.user.id 
+                    ? this.props.user.id 
+                    : null;
             text = JSON.stringify(text, undefined, 2);
             data = {authorId, roomId, text, title, isPinned};
         }
@@ -127,18 +131,23 @@ class AddPost extends Component {
         let method = this.state.isEdit ? 'put' : 'post';
         let route = this.state.isEdit ? routes.update : routes.new;
         let data = this.generatePostData();
-        
-        axios[method](route, data)
-        .then((res) => {
-            // Redirect user to room page;
-            this.props.history.push({ pathname: `/room/${this.state.roomId}` });
 
-            // Show message;
-            this.showToast('Your new post was successfully created', messageType.SUCCESS);
-         })
-        .catch((err) => {
-            this.showToast('Something went wrong, please reload your page', messageType.ERR);
-        });
+        this.props.userHasAuthenticated(false);
+        window.setTimeout(() => {
+            axios[method](route, data)
+            .then((res) => {
+                // Redirect user to room page;
+                this.props.history.push({ pathname: `/room/${this.state.roomId}` });
+    
+                // Show message;
+                this.showToast('Your new post was successfully created', messageType.SUCCESS);
+             })
+            .catch((err) => {
+                this.showToast('Something went wrong, please reload your page', messageType.ERR);
+            });
+        }, 1000);
+        
+       
     }
     setEditorData = (data) => {
         if (
@@ -280,7 +289,14 @@ class AddPost extends Component {
         } catch(err) {}
     }
     componentWillMount = () => {
-        console.log('componentWillMount');
+        // Im case no auth, redirect;
+        if (!this.props.user) {
+            this.props.history.push({ pathname: `/sign-in` });
+            // Show message;
+            this.showToast('Sign in to proceed', messageType.INFO);
+        };
+
+
         // Fill editor with data;
         if (this.props.location.state && this.props.location.state.data) {
             this.setState({

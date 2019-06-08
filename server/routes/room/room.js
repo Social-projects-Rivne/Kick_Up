@@ -1,5 +1,6 @@
 const Router = require('koa-router');
 const constants = require('./../../config/constants');
+const { authenticated } = require('../../middlewares');
 const MongoDbRoom = require('../../mongoDB/models/modelRoom');
 const { Room, Category, Member, User } = require('../../models');
 const validate = require('../../services/Validator');
@@ -265,8 +266,9 @@ const handler = {
     };
   },
   async addPost(ctx) {
+    const type = 'member';
     const { authorId, roomId, text, title, isPinned } = ctx.request.body;
-    
+
     // Validate input;
     await validate(ctx.request.body, {
       authorId: 'numeric|min:1',
@@ -465,10 +467,10 @@ router.get('/', handler.roomList);
 router.post('/', handler.createRoom);
 router.get('/sort', handler.sort);
 router.get('/filter', handler.filter);
-router.post('/new-post', handler.addPost);
+router.post('/new-post', authenticated, handler.addPost);
 router.get('/:id', handler.getRoomById);
 router.put('/:id', handler.updateRoomById);
 router.get('/:id/posts', handler.getRoomPostsById);
-router.put('/:id/updatePost', handler.updatePost);
+router.put('/:id/updatePost', authenticated, handler.updatePost);
 
 module.exports = router.routes();

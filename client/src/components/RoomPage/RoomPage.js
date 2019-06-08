@@ -175,11 +175,18 @@ class RoomPage extends React.Component {
         const { isAuthenticated } = this.props;
 
         this.props.history.push(
-            { pathname: isAuthenticated ? `/room/${this.props.match.params.id}/new-post` : '/sign-in' }
+            { pathname: isAuthenticated 
+                ? this.checkUserBelongsToRoom()
+                    ? `/room/${this.props.match.params.id}/new-post` 
+                    : ''
+                : '/sign-in' }
         );
+
+        if (isAuthenticated && !this.checkUserBelongsToRoom()) {
+            this.setState({value: 0});
+        }
     }
     checkUserBelongsToRoom = () => {
-        console.log('this.state.members', this.state.members);
         let res = false;
         const userId = this.props.user.id;
         let foundUser;
@@ -278,7 +285,7 @@ class RoomPage extends React.Component {
                             {
                                 roomPagePosts.map((post, itr) => 
                                     <Grid key={itr} item xs={12} className="room-details-card-grid">
-                                        <PostCard data={post} currentUser={this.props.user.id} roomId={this.props.match.params.id} />
+                                        <PostCard data={post} currentUser={this.props.user ? this.props.user.id : null} roomId={this.props.match.params.id} />
                                     </Grid>
                             )}
                         </Grid>
@@ -343,7 +350,7 @@ class RoomPage extends React.Component {
                             {
                                 roomPagePosts.map((post, itr) => 
                                     <Grid key={itr} item xs={12} className="room-details-card-grid">
-                                        <PostCard data={post} currentUser={this.props.user.id} roomId={this.props.match.params.id} />
+                                        <PostCard data={post} currentUser={this.props.user ? this.props.user.id : null} roomId={this.props.match.params.id} />
                                     </Grid>
                             )}
                         </Grid>
