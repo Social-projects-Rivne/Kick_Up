@@ -88,40 +88,15 @@ let eventsSwipers = [];
 // Helper functions. 
 const convertTime = (str) => {
     // Define manually date;
-    const months = {
-        '01': 'January',
-        '02': 'February',
-        '03': 'March',
-        '04': 'April',
-        '05': 'May',
-        '06': 'June',
-        '07': 'July',
-        '08': 'August',
-        '09': 'September',
-        '10': 'October',
-        '11': 'November',
-        '12': 'December'
+    const months = ["January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    ];
+
+    const time = new Date(str);
+    return {
+        date: time.getDate() + " " + months[time.getMonth()],
+        time: ("0" + (time.getHours())).slice(-2) + ":" + ("0" + (time.getMinutes())).slice(-2)
     };
-
-    if (str && typeof str === 'string') {
-        try{
-            let [, month, date] = [...str.split('-')];
-            let [hour, min] = [...date.split('T').pop().split(':')];
-            
-            date = date.slice(0, 2);
-
-            return {
-                date: `${date[0] === '0' ? date.slice(1) : date} ${months[month]}`,
-                time: `${hour}:${min}` 
-            }
-        } catch(err) {
-            console.log('ERR', err);
-            return {
-                date: '',
-                time: ''
-            }
-        }
-    }
 };
 const setMainSwiper = instance => {
     mainSwiper = instance;

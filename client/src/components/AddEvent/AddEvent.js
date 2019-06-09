@@ -185,8 +185,10 @@ class AddEvent extends React.Component {
             case 1:
                 //ToDo upload cover
                 const updatedData = {
-                    cover: this.state.imageSRC
-                }
+                    cover: this.state.imageSRC,
+                    title: this.state.eventData.title,
+                    description: this.state.eventData.description
+                };
                 axios.put("/api/event/" + this.state.eventId, updatedData)
                     .then(res => {
                         this.props.history.push({ pathname: "/event/" + this.state.eventId });
