@@ -1,10 +1,11 @@
 import React from 'react';
+import { connect } from 'react-redux';
+
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-
 import logo from '../../assets/images/logo.png';
 import face from '../../assets/images/face.png';
-import setAuthToken from '../../setAuthToken';
+import { signOutUser } from './../../store/actions/authentication';
 
 import { AppBar, Toolbar, IconButton, InputBase, Link, BottomNavigation, BottomNavigationAction } from '@material-ui/core';
 //You can find icon names here: https://jxnblk.com/rmdi/
@@ -19,10 +20,11 @@ class AppHeader extends React.Component {
     };
     handleSignOut = () => {
         this.setState({ anchorEl: null });
-        this.props.userHasAuthenticated(false);
-        localStorage.removeItem("authorization");
-        setAuthToken(null);
-        this.props.history.push({ pathname: "/" });
+        this.props.signOutUser(this.props.history)
+        //this.props.userHasAuthenticated(false);
+        //localStorage.removeItem("authorization");
+        //setAuthToken(null);
+        //this.props.history.push({ pathname: "/" });
     }
     componentWillMount() {
         this.unlisten = this.props.history.listen(location => {
@@ -61,17 +63,17 @@ class AppHeader extends React.Component {
     render() {
         const { user, isAuthenticated } = this.props;
         const { mobileMenuOpened, activePage, anchorEl } = this.state;
-        const avatarURL = user && user.avatar ? 
-            <img src={user.avatar} alt={user.email}/> 
-            : <img src={face} alt ="" />;
+        const avatarURL = user && user.avatar ?
+            <img src={user.avatar} alt={user.email} />
+            : <img src={face} alt="" />;
         const avatar = [
-            <BottomNavigationAction 
-                className="icon-details" 
+            <BottomNavigationAction
+                className="icon-details"
                 label="Profile"
                 aria-owns={anchorEl ? 'simple-menu' : undefined}
                 aria-haspopup="true"
                 onClick={this.handleClick}
-                icon={avatarURL} 
+                icon={avatarURL}
                 key="1"
             />,
             <Menu
@@ -86,21 +88,21 @@ class AppHeader extends React.Component {
                 <MenuItem onClick={this.handleSignOut}>SignOut</MenuItem>
             </Menu>];
         const authField = isAuthenticated && user
-        ?   <BottomNavigation value={activePage} onChange={this.handleChangeActivePage} className="navigation-buttons">
+            ? <BottomNavigation value={activePage} onChange={this.handleChangeActivePage} className="navigation-buttons">
                 {avatar}
             </BottomNavigation>
-        :   <BottomNavigation value={activePage} onChange={this.handleChangeActivePage} className="navigation-buttons">
+            : <BottomNavigation value={activePage} onChange={this.handleChangeActivePage} className="navigation-buttons">
                 <BottomNavigationAction className="icon-details" label="Sign In" value="/sign-in" icon={<Person />} />
                 <BottomNavigationAction className="icon-details" label="Sign Up" value="/sign-up" icon={<PersonAdd />} />
             </BottomNavigation>;
 
         const authFieldForMobile = isAuthenticated && user
-    ?       <BottomNavigation value={activePage} onChange={this.handleChangeActivePage} className="navigation-buttons">
+            ? <BottomNavigation value={activePage} onChange={this.handleChangeActivePage} className="navigation-buttons">
                 <BottomNavigationAction className="icon-details" label="Events" value="/events" icon={<EventAvailable />} />
                 <BottomNavigationAction className="icon-details" label="Rooms" value="/rooms" icon={<SupervisorAccount />} />
                 {avatar}
             </BottomNavigation>
-        :   <BottomNavigation value={activePage} onChange={this.handleChangeActivePage} className="navigation-buttons">
+            : <BottomNavigation value={activePage} onChange={this.handleChangeActivePage} className="navigation-buttons">
                 <BottomNavigationAction className="icon-details" label="Events" value="/events" icon={<EventAvailable />} />
                 <BottomNavigationAction className="icon-details" label="Rooms" value="/rooms" icon={<SupervisorAccount />} />
                 <BottomNavigationAction className="icon-details" label="Sign In" value="/sign-in" icon={<Person />} />
@@ -154,6 +156,16 @@ class AppHeader extends React.Component {
             </header>
         );
     }
-}
+};
 
-export default withRouter(AppHeader);
+const mapStateToProps = state => ({
+    user: state.auth.user,
+    isAuthenticated: state.auth.isAuthenticated,
+    errors: state.auth.errors,
+});
+
+const mapDispatchToProps = dispatch => ({
+    signOutUser: history => dispatch(signOutUser(history)),
+});
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(AppHeader));

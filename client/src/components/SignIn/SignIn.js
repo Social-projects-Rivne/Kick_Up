@@ -1,12 +1,15 @@
 import React, { Component } from "react";
 import axios from "axios";
 import qs from 'query-string';
-import { Grid, TextField, Button, Typography } from "@material-ui/core";
-import { Person, Send, Email, Lock } from "@material-ui/icons";
 import is from "is_js";
 import { withSnackbar } from 'notistack';
+import { connect } from "react-redux";
+
+import { Grid, TextField, Button, Typography } from "@material-ui/core";
+import { Person, Send, Email, Lock } from "@material-ui/icons";
 import CustomizedSnackbars from "../Toast/Toast";
 import setAuthToken from '../../setAuthToken';
+import { userHasAuthenticated, storeUser } from './../../store/actions/authentication';
 
 const PASSWORD_LENGTH = 6;
 const messageType = {
@@ -60,6 +63,7 @@ class Login extends Component {
       email,
       password
     };
+    //this.props.signInUser(user);
     axios
       .post("/api/signin", user)
       .then(res => {
@@ -85,8 +89,8 @@ class Login extends Component {
           passwordInputValid: true,
           formInFocus: false
         }, () => setTimeout(() => {
-          console.log('sigin', this.props.setUser, {user})
-          this.props.setUser(user);
+          console.log('sigin', this.props.storeUser, {user})
+          this.props.storeUser(user);
           this.props.history.push({
             pathname: "/",
           });
@@ -375,6 +379,15 @@ class Login extends Component {
       </div>
     );
   }
-}
+};
 
-export default withSnackbar(Login);
+const mapStateToProps = state => ({
+  errors: state.auth.errors,
+});
+
+const mapDispatchToProps = dispatch => ({
+  userHasAuthenticated: isAuthenticated => dispatch(userHasAuthenticated(isAuthenticated)),
+  storeUser: user => dispatch(storeUser(user)),
+})
+
+export default withSnackbar(connect(mapStateToProps, mapDispatchToProps)(Login));
