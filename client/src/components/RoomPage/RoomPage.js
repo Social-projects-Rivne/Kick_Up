@@ -13,6 +13,7 @@ import SwipeableViews from 'react-swipeable-views';
 import Spinner from './../UI/Spinner/Spinner';
 import NeventCard from '../nEventCard/nEventCard';
 import defaultAvatar from "../../assets/images/face.png";
+import CommentForm from "../CommentForm/CommentForm";
 
 const convertTime = (str) => {
     // Define manually date;
@@ -321,9 +322,14 @@ class RoomPage extends React.Component {
                                             </CardContent>
                                         </CardActionArea>
                                         <CardActions>
-                                            <Button>
-                                                comment
-                                            </Button>
+                                            <Grid className="event-page__section" item xs={12}>
+                                                <CommentForm 
+                                                authUser
+                                                user = {this.props.user}
+                                                enqueueSnackbar = {this.props.enqueueSnackbar}
+                                                entity_type = { this.props.match.path.split('/')[1]}
+                                                entity_id = {this.props.match.params.id} />
+                                            </Grid>
                                         </CardActions>
                                     </Card>
                                 </Grid>

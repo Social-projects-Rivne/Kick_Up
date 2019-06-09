@@ -37,6 +37,7 @@ import "react-id-swiper/src/styles/scss/swiper.scss";
 import axios from 'axios';
 import { withSnackbar } from 'notistack';
 import ImageUploader from "../ImageUploader/ImageUploader";
+import CommentForm from "../CommentForm/CommentForm";
 
 // @temp, we need add get data from MongoDB;
 import mock from '../../mocks/eventPage';
@@ -121,7 +122,7 @@ class EventPage extends Component {
             gallery: [],
             authUser:  false,
             userCount: 0,
-            showUpload: false,
+            showUpload: false
         };
     }
     saveSwiper = (instance) => {
@@ -371,54 +372,12 @@ class EventPage extends Component {
                         </Paper>
                     </Grid>
                     <Grid className="event-page__section" item xs={12}>
-                        <Typography className="event-page__desktop-subtitle" variant="h5">
-                            Questions
-                        </Typography>
-                        <ExpansionPanel>
-                            <ExpansionPanelSummary className="event-page__faq-title" expandIcon={<ExpandMore />}>
-                                {/* @todo take data from db */}
-                                <Avatar alt="" src="https://material-ui.com/static/images/avatar/1.jpg" className="avatar  event-page__avatar" />
-                                <Typography>A time to gather stones! Who will join me from Lutsk?</Typography>
-                            </ExpansionPanelSummary>
-                            <ExpansionPanelDetails className="event-page__faq-answer">
-                                {/* @todo take data from db */}
-                                <Avatar alt="" src="https://material-ui.com/static/images/avatar/2.jpg" className="avatar  event-page__avatar" />
-                                <Typography className="event-page__faq-text">
-                                    Hello, glad to see you! I do suppose I will be able to join you. Call me morning and 
-                                    we agree all the details.
-                                </Typography>
-                            </ExpansionPanelDetails>
-                        </ExpansionPanel>
-                        <ExpansionPanel>
-                            <ExpansionPanelSummary className="event-page__faq-title" expandIcon={<ExpandMore />}>
-                                {/* @todo take data from db */}
-                                <Avatar alt="" src="https://material-ui.com/static/images/avatar/3.jpg" className="avatar  event-page__avatar" />
-                                <Typography>What is best time to see this meteor shower?</Typography>
-                            </ExpansionPanelSummary>
-                            <ExpansionPanelDetails className="event-page__faq-answer">
-                                {/* @todo take data from db */}
-                                <Avatar alt="" src="https://material-ui.com/static/images/avatar/4.jpg" className="avatar  event-page__avatar" />
-                                <Typography className="event-page__faq-text">
-                                This meteor shower is considered to be one of the best displays in the night sky, and this year will peak during 
-                                the early hours of Friday. Long, glowing arcs of white, yellow, blue, red and green will streak across the Rivne sky. 
-                                You should be able to catch as many as 120 shooting stars an hour over the next night or so.
-                                </Typography>
-                            </ExpansionPanelDetails>
-                        </ExpansionPanel>
-                        <ExpansionPanel>
-                            <ExpansionPanelSummary className="event-page__faq-title" expandIcon={<ExpandMore />}>
-                            {/* @todo take data from db */}
-                                <Avatar alt="" src="https://material-ui.com/static/images/avatar/5.jpg" className="avatar  event-page__avatar" />
-                                <Typography>Lorem ipsum dolor sit amet, will there be a comet?</Typography>
-                            </ExpansionPanelSummary>
-                            <ExpansionPanelDetails className="event-page__faq-answer">
-                                {/* @todo take data from db */}
-                                <Avatar alt="" src="https://material-ui.com/static/images/avatar/6.jpg" className="avatar  event-page__avatar" />
-                                <Typography className="event-page__faq-text">
-                                    Lorem ipsum bro, you mean to view C/Schmidt (1862 N1) too?
-                                </Typography>
-                            </ExpansionPanelDetails>
-                        </ExpansionPanel>
+                        <CommentForm 
+                        authUser
+                        user = {this.props.user}
+                        enqueueSnackbar = {this.props.enqueueSnackbar}
+                        entity_type = { this.props.match.path.split('/')[1]}
+                        entity_id = {this.props.match.params.id} />
                     </Grid>
                     <Grid className="event-page__section" item xs={12}>
                         <Typography className="event-page__desktop-subtitle" variant="h5">

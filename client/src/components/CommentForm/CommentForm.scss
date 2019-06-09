@@ -1,0 +1,54 @@
+.commentWrapper{
+    .commentForm{
+        margin: 5px;
+        border-radius: 0 0 10px 10px;
+        .avatar{
+            margin-right: 5px;
+        }
+        .commentField{
+            width: 74%;
+        }
+        .editCommentBtn{
+            position: absolute;
+            top: 10px;
+            right: 15%;
+            font-weight: 100;
+            color: $primary;
+            background: none;
+            padding: 10px;
+            margin:0;
+            &:hover{
+                background:rgba(0, 0, 0, 0.03);
+            }
+        }
+        .deleteCommentBtn{
+            position: absolute;
+            top: 10px;
+            right: 7%;
+            font-weight: 100;
+            color: $red;
+            background: none;
+            padding: 10px;
+            margin:0;
+            &:hover{
+                background:rgba(0, 0, 0, 0.03);
+            }
+        }
+        .saveCommentBtn{
+            color: $green;
+        }
+        .addAnswerBtn{
+            margin: 5px 0;
+            background-color: $primary;
+        }
+    }  
+    .footer_field{
+     padding: 10px;
+    
+    }
+    .addCommentBtn{
+        margin: 5px 0;
+        background-color: $primary;
+    }
+}
+ 
