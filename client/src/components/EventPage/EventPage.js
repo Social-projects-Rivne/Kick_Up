@@ -28,7 +28,8 @@ import {
     Add,
     DateRange,
     LocationOn,
-    ExpandMore
+    ExpandMore,
+    Edit
 } from '@material-ui/icons';
 import Swiper from 'react-id-swiper/lib/ReactIdSwiper.full';
 import { Pagination, Autoplay } from 'swiper/dist/js/swiper.esm';
@@ -158,7 +159,7 @@ class EventPage extends Component {
           })
     };
     leave = () => {
-        console.log(this.state.authUser)
+        console.log(this.state)
         const eventId = this.props.match.params.id;
         axios.delete(`http://localhost:3001/api/member/event/${eventId}`)
         .then((res) => {
@@ -213,7 +214,7 @@ class EventPage extends Component {
 
             this.setState({
                 title: res.title,
-                cover: res.cover,
+                cover: res.cover && res.cover.replace(/\\/g, '/'),
                 location: res.location,
                 date: new Date(res.start_date).toLocaleString('en-US', timeOptions),
                 description: res.description,
@@ -352,14 +353,14 @@ class EventPage extends Component {
                                     <DateRange />
                                 </ListItemIcon>
                                 {/* @todo, display via moment.js; */}
-                                <ListItemText className="event-page__list-item-text" primary="April 7th 2019, 4:30 pm" />
+                                <ListItemText className="event-page__list-item-text" primary={this.state.date} />
                             </ListItem>
                             <ListItem className="event-page__list-item">
                                 <ListItemIcon>
                                     <LocationOn />
                                 </ListItemIcon>
                                 {/* @todo, display from DB; */}
-                                <ListItemText className="event-page__list-item-text" primary="4-6 Slovatsʹkoho str., Rivne, 33017"/>
+                                <ListItemText className="event-page__list-item-text" primary={this.state.location}/>
                             </ListItem>
                         </List>
                         <Paper elevation={1} className="event-page__main-details-wrapper">
@@ -419,6 +420,11 @@ class EventPage extends Component {
                         }
                     </Grid>
                 </Swiper>
+                <Link to={this.props.location.pathname + "/edit"} className="event-page__edit-link">
+                    <Fab variant="extended" className="event-page__edit-event">
+                        <Edit />
+                    </Fab>
+                </Link>
             </div>
         );
     }

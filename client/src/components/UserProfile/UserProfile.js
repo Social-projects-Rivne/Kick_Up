@@ -1,9 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import {Tabs, Tab, AppBar, Typography, Avatar, Grid, Paper, List, ListItem, Card, InputLabel,
-    CardActionArea, CardContent, CardMedia } from '@material-ui/core';
-import { Group, AssignmentTurnedIn, PhotoLibrary, Edit } from '@material-ui/icons';
+import {
+    Tabs, Tab, AppBar, Typography, Avatar, Grid, Paper, List, ListItem, Card, InputLabel,
+    CardActionArea, CardContent, CardMedia, Fab
+} from '@material-ui/core';
+import { Group, AssignmentTurnedIn, PhotoLibrary, Edit, Lock } from '@material-ui/icons';
 import SwipeableViews from "react-swipeable-views";
 import axios from "axios";
 import Spinner from "../UI/Spinner/Spinner";
@@ -13,40 +15,15 @@ import Gallery from "react-grid-gallery";
 
 const convertTime = (str) => {
     // Define manually date;
-    const months = {
-        '01': 'January',
-        '02': 'February',
-        '03': 'March',
-        '04': 'April',
-        '05': 'May',
-        '06': 'June',
-        '07': 'July',
-        '08': 'August',
-        '09': 'September',
-        '10': 'October',
-        '11': 'November',
-        '12': 'December'
+    const months = ["January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    ];
+
+    const time = new Date(str);
+    return {
+        date: time.getDate() + " " + months[time.getMonth()],
+        time: ("0" + (time.getHours())).slice(-2) + ":" + ("0" + (time.getMinutes())).slice(-2)
     };
-
-    if (str && typeof str === 'string') {
-        try{
-            let [, month, date] = [...str.split('-')];
-            let [hour, min] = [...date.split('T').pop().split(':')];
-
-            date = date.slice(0, 2);
-
-            return {
-                date: `${date[0] === '0' ? date.slice(1) : date} ${months[month]}`,
-                time: `${hour}:${min}`
-            }
-        } catch(err) {
-            console.log('ERR', err);
-            return {
-                date: '',
-                time: ''
-            }
-        }
-    }
 };
 
 function TabContainer(props) {
@@ -63,7 +40,7 @@ class UserProfile extends React.Component {
         loading: true,
         userProfileData: null,
         roomPageDB: null,
-        selfProfile: false
+        selfProfile: false,
     };
 
     componentDidMount() {
@@ -98,17 +75,17 @@ class UserProfile extends React.Component {
                     userData.gender = "Other"
                 }
 
-                this.setState({
-                    userProfileData: userData,
-                    selfProfile: +id === this.props.user.id
+                userData.media = userData.media.map( e => {
+                    return {
+                        src: e.key.slice(6),
+                        thumbnail: e.key.slice(6)
+                    };
                 });
-                //TODO: get gallery
-                return axios.get("/api/room/1")
-            })
-            .then(res => {
+
                 this.setState({
                     loading: false,
-                    roomPageDB: res.data
+                    userProfileData: userData,
+                    selfProfile: +id === this.props.user.id,
                 });
             })
             .catch(err => {
@@ -125,7 +102,7 @@ class UserProfile extends React.Component {
     };
 
     render() {
-        const { value, userProfileData, roomPageDB, selfProfile } = this.state;
+        const { value, userProfileData, selfProfile } = this.state;
 
         if ( this.state.loading || !userProfileData ) {
             return (<Spinner className="user-profile-page"/>);
@@ -143,11 +120,13 @@ class UserProfile extends React.Component {
                                 <Paper elevation={1} className="user-profile-page-paper-user-info">
                                     <Typography variant="h5" component="h3">
                                         { selfProfile && (
-                                            <Link to={this.props.location.pathname + "/edit"} className="user-profile-page-link-edit">
-                                                <Edit />
+                                            <Link to={this.props.location.pathname + "/edit"} className="user-profile-page-edit-profile-link">
+                                                <Fab variant="extended" className="user-profile-page-edit-profile">
+                                                    <Edit />
+                                                </Fab>
                                             </Link>
                                         )}
-                                        &nbsp;User information
+                                        <div className="user-profile-page-info">User information</div>
                                     </Typography>
                                     <Typography>
                                         <List>
@@ -221,7 +200,12 @@ class UserProfile extends React.Component {
                                             <Card className="user-profile-room-card">
                                                 <Link to={'/room/' + room.id} className="user-profile-room-card-link">
                                                     <CardContent>
-                                                        <Typography gutterBottom variant="h5" component="h2">
+                                                        <Typography gutterBottom variant="h5" component="h2" className="user-profile-room-card-title">
+                                                            {(room.permission &&(
+                                                                <Fab variant="extended" className="user-profile-page-lock">
+                                                                    <Lock />
+                                                                </Fab>
+                                                            )) || ""}
                                                             {room.title}
                                                         </Typography>
                                                         <Typography component="p">
@@ -231,7 +215,7 @@ class UserProfile extends React.Component {
                                                     <CardActionArea>
                                                         <CardMedia
                                                             className="user-profile-room-card-media"
-                                                            image={room.cover}
+                                                            image={room.cover && room.cover.replace(/\\/g, '/')}
                                                             title="Contemplative Reptile"
                                                         />
                                                     </CardActionArea>
@@ -259,6 +243,7 @@ class UserProfile extends React.Component {
                                         <Grid item md={6} xs={12}>
                                             <NeventCard
                                                 id={event.id}
+                                                permission={event.permission}
                                                 room_id={event.room_id}
                                                 title={event.title}
                                                 rating={event.eventRating}
@@ -280,9 +265,8 @@ class UserProfile extends React.Component {
                             </TabContainer>) || <TabContainer></TabContainer> }
 
                             { (value === 2 && <TabContainer>
-                                {/*TODO*/}
                                 <div className="user-profile-page-gallery">
-                                    <Gallery images={roomPageDB.gallery} backdropClosesModal={true} />
+                                    <Gallery images={userProfileData.media} backdropClosesModal={true} />
                                 </div>
                             </TabContainer>) || <TabContainer></TabContainer> }
                         </SwipeableViews>

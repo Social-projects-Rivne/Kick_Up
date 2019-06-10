@@ -99,7 +99,7 @@ class NroomCard extends Component {
             </Link>
             <CardMedia
                 className="roomcard__img-wrapper"
-                image={this.props.cover}
+                image={this.props.cover && this.props.cover.replace(/\\/g, '/')}
             >
                 <div className="roomcard__label">
                     <Loyalty />

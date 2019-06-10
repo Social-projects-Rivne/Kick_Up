@@ -49,6 +49,31 @@
         background: linear-gradient(to right, #FFFFFF, #ECE9E6);
         z-index: 10;
     }
+
+    .event-page__edit-link {
+        text-decoration: none;
+        position: fixed;
+        bottom: 40px;
+        z-index: 100;
+        right: 15px;
+
+        @include media-breakpoint-down(md) {
+            bottom: 65px;
+        }
+
+        .event-page__edit-event, .event-page__edit-event:hover {
+            background-color: $primary;
+            margin-bottom: 18px;
+            box-shadow: $secondaryBlack;
+            border-radius: 50px;
+            padding: 0;
+
+            @include media-breakpoint-down(lg) {
+                font-size: 11pt;
+                margin-top: 0;
+            }
+        }
+    }
 }
 
 

@@ -111,11 +111,10 @@ const handler = {
     
 };
 
-router.use(authenticated)
 router.get('/', handler.getComments);
-router.post('/add', handler.addComment);
-router.post('/add/answer', handler.addAnswer);
-router.delete('/delete', handler.deleteComment);
-router.put('/update', handler.updateComment);
+router.post('/add',authenticated, handler.addComment);
+router.post('/add/answer',authenticated, handler.addAnswer);
+router.delete('/delete',authenticated, handler.deleteComment);
+router.put('/update',authenticated, handler.updateComment);
 
 module.exports = router.routes();

@@ -10,9 +10,10 @@ import {
     Avatar,
     Typography,
     IconButton,
-    Link
+    Link,
+    Fab
 } from '@material-ui/core';
-import { LocationOn } from '@material-ui/icons';
+import { LocationOn, Lock } from '@material-ui/icons';
 import { Group } from '@material-ui/icons';
 import StarRating from "../UI/StarRating/StarRating";
 
@@ -30,6 +31,12 @@ const NeventCard = props => (
                 title={props.title}
                 subheader={
                     <div className="event-card__header-info">
+                        {(props.permission && (
+                            <Fab variant="extended" className="user-profile-page-lock">
+                                <Lock />
+                            </Fab>
+                        )) || ""}
+
                         <Link component={RouterLink} to={`/profile/${props.authorId}`} className="event-card__creator-link">
                             <div className="event-card__avatar-wrapper">
                                 <Avatar
@@ -46,7 +53,7 @@ const NeventCard = props => (
             </CardHeader>
             <CardMedia
                 className="event-card__img-wrapper"
-                image={`${props.cover}`}
+                image={`${props.cover}` && `${props.cover}`.replace(/\\/g, '/')}
                 title="Street drinkers in Rivne"
             >
                 <div className="event-card__date">

@@ -54,6 +54,9 @@ const User = bookshelf.Model.extend({
                     permission: false
                 });
         });
+    },
+    media() {
+        return this.hasMany('Media', 'user_id');
     }
   });
 

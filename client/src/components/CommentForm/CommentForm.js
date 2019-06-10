@@ -41,7 +41,7 @@ class CommentForm extends Component {
             }
         })
         .then((res) => {
-            this.setState({comments:res.data, user:this.props.user})
+            this.setState({comments:res.data, user:this.props.user || {}})
         })
     }
     commentText (event) {
@@ -136,7 +136,9 @@ class CommentForm extends Component {
         const renderComments = (
         comments.map(comment => {
             return (
-            <ExpansionPanel key={comment._id ? comment._id : Math.floor(Math.random() * 60) + 1} className="commentForm">
+            <ExpansionPanel
+             key={comment._id ? comment._id : Math.floor(Math.random() * 60) + 1} 
+             className="commentForm">
                 {this.state.user.id == comment.author_id ? 
                 <div>
                 { this.state.updateCommentTextField === 0 ?
@@ -197,8 +199,9 @@ class CommentForm extends Component {
                     </ExpansionPanelDetails>    
                     )
                 })}
+                {this.props.user ? (
                 <div className="footer_field">
-                    <TextField
+                <TextField
                         className="add-event-text-field"
                         label="Add your answer"
                         name="comment"
@@ -208,7 +211,7 @@ class CommentForm extends Component {
                         fullWidth
                         value={this.state.commentAnswerText}
                         autoComplete="off"
-                        inputProps={{ maxLength: 100 }}
+                        inputProps={{ maxLength: 200 }}
                     />
                     <Button
                         variant="contained"
@@ -217,7 +220,8 @@ class CommentForm extends Component {
                         >
                         Add answer
                     </Button>
-                </div>
+                </div>) : null
+                }
             </ExpansionPanel>
             
             )
@@ -230,24 +234,30 @@ class CommentForm extends Component {
                 Comments({comments.length ? comments.length : 0})
             </Typography>
             {comments.length ? renderComments : null}
-            <TextField
-                className="add-event-text-field"
-                label="Add your comment"
-                name="comment"
-                placeholder="Min 3 symbols, Max 100 symbols"
-                onChange={event => this.commentText(event)}
-                fullWidth
-                value={this.state.commentText}
-                autoComplete="off"
-                inputProps={{ maxLength: 100 }}
-            />
-            <Button
-                variant="contained"
-                onClick={this.addComment}
-                className="add-event-button-create addCommentBtn"
-            >
-                Add comment
-            </Button>
+            
+            {this.props.user ? (
+            <div>
+                <TextField
+                    className="add-event-text-field"
+                    label="Add your comment"
+                    name="comment"
+                    placeholder="Min 3 symbols, Max 100 symbols"
+                    onChange={event => this.commentText(event)}
+                    fullWidth
+                    value={this.state.commentText}
+                    autoComplete="off"
+                    inputProps={{ maxLength: 200 }}
+                />
+                <Button
+                    variant="contained"
+                    onClick={this.addComment}
+                    className="add-event-button-create addCommentBtn"
+                >
+                    Add comment
+                </Button>
+            </div>
+            ) : null
+            }
         </div>
         )
 };

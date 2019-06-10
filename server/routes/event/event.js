@@ -113,7 +113,7 @@ const handler = {
         description:'required|string|min:6|max:300',
         location:'required|string|min:3',
         permission:'required|numeric|min:0',
-        members_limit:'numeric|min:1',
+        members_limit:'numeric|min:1'
     })
     const newEvent = {
         title,
@@ -135,10 +135,15 @@ const handler = {
     ctx.body = event;
   },
   async updateEventById(ctx) {
+    await validate(ctx.request.body, {
+      title:'required|string|min:3|max:100',
+      description:'required|string|min:6|max:300',
+      members_limit:'numeric|min:1',
+    });
     const { id } = ctx.params;
     const event =  await Event.where({id}).fetch({require:true});
-    const { title,description,cover,permission,members_limit,category_id, start_date } = ctx.request.body;
-    const obj = {title,description,cover,permission,members_limit,category_id, start_date};
+    const { title,description,cover,permission,members_limit,category_id, start_date, location } = ctx.request.body;
+    const obj = {title,description,cover,permission,members_limit,category_id, start_date, location};
     await event.save( obj, { patch:true });
     ctx.body = '';
   }
