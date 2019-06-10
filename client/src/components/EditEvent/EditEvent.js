@@ -330,7 +330,7 @@ class EditEvent extends React.Component {
                                     </div>
                                 </Grid>
                                 <Grid item lg={8} className="edit-event-page-current-cover-grid">
-                                    <img className="edit-event-page-current-cover" src={this.state.eventEditDB.cover} alt={"event-cover"}/>
+                                    <img className="edit-event-page-current-cover" src={this.state.imageSRC || this.state.eventEditDB.cover} alt={"event-cover"}/>
                                 </Grid>
                             </Grid>
                         </div>

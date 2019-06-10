@@ -8,6 +8,7 @@ import { CloudUpload, Link } from '@material-ui/icons';
 import Spinner from "../UI/Spinner/Spinner";
 import {withSnackbar} from "notistack";
 import ImageUploader from "./../ImageUploader/ImageUploader";
+import defaultCover from "../../assets/images/bg-1.jpg"
 
 const messageType = {
     SUCCESS: "success",
@@ -109,7 +110,7 @@ class AddRoom extends React.Component {
                     creator_id: this.state.userId,
                     category_id: this.state.roomData.category,
                     description: this.state.roomData.description,
-                    cover: "http://excitermag.net/wp-content/uploads/2012/12/24fae0cf4e190078d5b9896e00870cd9.jpg", //TODO
+                    cover: defaultCover,
                     permission: this.state.roomData.permission ? 1 : 0,
                     members_limit: this.state.roomData.members_limit_checked ? this.state.roomData.members_limit : null
                 };
@@ -135,7 +136,7 @@ class AddRoom extends React.Component {
             case 1:
                 //ToDo upload invite members
                 const updatedData = {
-                    cover: this.state.imageSRC
+                    cover: this.state.imageSRC  || defaultCover
                 }
                 axios.put("/api/room/" + this.state.roomId, updatedData)
                     .then(res => {

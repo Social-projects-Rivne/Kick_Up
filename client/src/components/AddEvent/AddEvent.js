@@ -12,6 +12,7 @@ import Geosuggest from 'react-geosuggest';
 import Spinner from "../UI/Spinner/Spinner";
 import {withSnackbar} from "notistack";
 import ImageUploader from "./../ImageUploader/ImageUploader";
+import defaultCover from "../../assets/images/bg-1.jpg"
 
 const messageType = {
     SUCCESS: "success",
@@ -153,7 +154,7 @@ class AddEvent extends React.Component {
                     category_id: this.state.eventData.category,
                     room_id:  this.state.roomId,
                     description: this.state.eventData.description,
-                    cover: "http://excitermag.net/wp-content/uploads/2012/12/24fae0cf4e190078d5b9896e00870cd9.jpg", //TODO
+                    cover: defaultCover,
                     location:  this.state.eventData.location,
                     permission: this.state.eventData.permission ? 1 : 0,
                     start_date: this.state.eventData.start_date.getFullYear() + "."
@@ -185,7 +186,7 @@ class AddEvent extends React.Component {
             case 1:
                 //ToDo upload cover
                 const updatedData = {
-                    cover: this.state.imageSRC,
+                    cover: this.state.imageSRC || defaultCover,
                     title: this.state.eventData.title,
                     description: this.state.eventData.description
                 };
