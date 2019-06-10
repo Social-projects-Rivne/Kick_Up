@@ -8,6 +8,7 @@ import { CloudUpload, Link } from '@material-ui/icons';
 import Spinner from "../UI/Spinner/Spinner";
 import {withSnackbar} from "notistack";
 import ImageUploader from "./../ImageUploader/ImageUploader";
+import defaultCover from "../../assets/images/bg-1.jpg"
 
 const messageType = {
     SUCCESS: "success",
@@ -109,7 +110,7 @@ class AddRoom extends React.Component {
                     description: this.state.roomData.description,
                     creator_id: this.state.userId,
                     category_id: this.state.roomData.category,
-                    cover: this.state.imageSRC || this.state.roomData.cover,
+                    cover: defaultCover,
                     permission: this.state.roomData.permission ? 1 : 0,
                     members_limit: this.state.roomData.members_limit_checked ? this.state.roomData.members_limit : null
                 };
@@ -134,7 +135,7 @@ class AddRoom extends React.Component {
                 break;
             case 1:
                 const updatedData = {
-                    cover: this.state.imageSRC,
+                    cover: this.state.imageSRC || defaultCover,
                     description: this.state.roomData.description,
                     title: this.state.roomData.title
                 };

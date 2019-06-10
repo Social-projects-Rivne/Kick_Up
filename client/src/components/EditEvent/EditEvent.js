@@ -6,6 +6,9 @@ import { Button, FormControl, FormControlLabel, FormGroup, Grid, Input, NativeSe
 import Spinner from "../UI/Spinner/Spinner";
 import ImageUploader from "./../ImageUploader/ImageUploader";
 import {withSnackbar} from "notistack";
+import {InlineDateTimePicker, MuiPickersUtilsProvider} from "material-ui-pickers";
+import DateFnsUtils from "@date-io/date-fns";
+import Geosuggest from "react-geosuggest";
 
 const messageType = {
     SUCCESS: "success",
@@ -13,9 +16,9 @@ const messageType = {
     ERR: "error"
 };
 
-class EditRoom extends React.Component {
+class EditEvent extends React.Component {
     state = {
-        roomEditDB: null,
+        eventEditDB: null,
         categories: [],
         loading: true,
         showUpload: false,
@@ -42,12 +45,12 @@ class EditRoom extends React.Component {
                     categories: res.data
                 });
 
-               return axios.get("/api/room/" + id)
+                return axios.get("/api/event/" + id)
             })
             .then(res => {
                 this.setState({
                     loading: false,
-                    roomEditDB: res.data
+                    eventEditDB: res.data
                 });
             })
             .catch(err => {
@@ -57,8 +60,8 @@ class EditRoom extends React.Component {
 
     handleUpdateData (event) {
         this.setState({
-            roomEditDB:{
-                ...this.state.roomEditDB,
+            eventEditDB:{
+                ...this.state.eventEditDB,
                 [event.target.name]: event.target.type === "checkbox" ? event.target.checked : event.target.value
             }
         });
@@ -67,23 +70,30 @@ class EditRoom extends React.Component {
     handleSave = () => {
         this.setState({ loading: true });
         const { id } = this.props.match.params;
+        const startDate = new Date(this.state.eventEditDB.start_date);
 
         const data = {
-            title: this.state.roomEditDB.title,
-            description: this.state.roomEditDB.description,
-            cover: this.state.imageSRC || this.state.roomEditDB.cover,
-            permission: this.state.roomEditDB.permission ? 1 : 0,
-            members_limit: this.state.roomEditDB.members_limit_checked ? this.state.roomEditDB.members_limit : null,
-            category_id: this.state.roomEditDB.category_id
+            title: this.state.eventEditDB.title,
+            description: this.state.eventEditDB.description,
+            cover: this.state.imageSRC || this.state.eventEditDB.cover,
+            permission: this.state.eventEditDB.permission ? 1 : 0,
+            members_limit: this.state.eventEditDB.members_limit_checked ? this.state.eventEditDB.members_limit : null,
+            category_id: this.state.eventEditDB.category_id,
+            location: this.state.eventEditDB.location,
+            start_date: startDate.getFullYear() + "."
+                + ("0" + (startDate.getMonth() + 1)).slice(-2) +
+                "." + ("0" + (startDate.getDate())).slice(-2)
+                + " " + ("0" + (startDate.getHours())).slice(-2) +
+                ":" + ("0" + (startDate.getMinutes())).slice(-2)
         };
 
-        axios.put("/api/room/" + id, data)
+        axios.put("/api/event/" + id, data)
             .then(res => {
                 this.setState({
                     loading: false,
                     id: res.data.id
                 });
-                this.props.history.push({ pathname: "/room/" + id});
+                this.props.history.push({ pathname: "/event/" + id});
                 this.showToast("Changes saved!", messageType.SUCCESS);
             })
             .catch(err => {
@@ -111,12 +121,33 @@ class EditRoom extends React.Component {
         this.setState({imageSRC});
     };
 
+    handleUpdateStartDate = date => {
+        this.setState({
+            eventEditDB:{
+                ...this.state.eventEditDB,
+                start_date: date
+            }
+        });
+    };
+
+    handleGeosuggestChange = location => {
+        if ( !location ) {
+            return;
+        }
+        this.setState({
+            eventEditDB:{
+                ...this.state.eventEditDB,
+                location: location.label
+            }
+        });
+    };
+
     render() {
-        const { roomEditDB, categories } = this.state;
+        const { eventEditDB, categories } = this.state;
         const { isAuthenticated } = this.props;
 
         if (this.state.loading) {
-            return (<Spinner className="rooms-page"/>);
+            return (<Spinner className="events-page"/>);
         }
 
         return (
@@ -130,15 +161,15 @@ class EditRoom extends React.Component {
                     isAuthenticated={isAuthenticated}
                     getImagesSRC={this.getImagesSRC}
                 />
-                <div className="edit-room-page">
-                    <form className="edit-room-page-content">
-                        <div className="edit-room-page-text-block">
-                            <Typography variant="h4" className="edit-room-page-typography">
-                                Edit room title:
+                <div className="edit-event-page">
+                    <form className="edit-event-page-content">
+                        <div className="edit-event-page-text-block">
+                            <Typography variant="h4" className="edit-event-page-typography">
+                                Edit event title:
                             </Typography>
-                            <div className="edit-room-page-text-field">
+                            <div className="edit-event-page-text-field">
                                 <TextField
-                                    className="edit-room-page-text-field"
+                                    className="edit-event-page-text-field"
                                     margin="normal"
                                     name="title"
                                     variant="filled"
@@ -147,20 +178,20 @@ class EditRoom extends React.Component {
                                     autoComplete="off"
                                     fullWidth
                                     multiline
-                                    value={roomEditDB.title}
+                                    value={eventEditDB.title}
                                     onChange={event => this.handleUpdateData(event)}
                                     error={this.state.errors.title}
                                 />
                             </div>
                         </div>
 
-                        <div className="edit-room-page-text-block">
-                            <Typography variant="h4" className="edit-room-page-typography">
-                                Edit room description:
+                        <div className="edit-event-page-text-block">
+                            <Typography variant="h4" className="edit-event-page-typography">
+                                Edit event description:
                             </Typography>
-                            <div className="edit-room-page-text-field">
+                            <div className="edit-event-page-text-field">
                                 <TextField
-                                    className="edit-room-page-text-field"
+                                    className="edit-event-page-text-field"
                                     margin="normal"
                                     variant="filled"
                                     name="description"
@@ -169,55 +200,93 @@ class EditRoom extends React.Component {
                                     autoComplete="off"
                                     fullWidth
                                     multiline
-                                    value={roomEditDB.description}
+                                    value={eventEditDB.description}
                                     onChange={event => this.handleUpdateData(event)}
                                     error={this.state.errors.description}
                                 />
                             </div>
                         </div>
 
-                        <div className="edit-room-page-text-block">
-                            <Typography variant="h4" className="edit-room-page-typography">
-                                Edit room permission:
+                        <div className="edit-event-page-text-block">
+                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                <Typography variant="h4" className="edit-event-page-typography">
+                                    Edit date and time:
+                                </Typography>
+                                <InlineDateTimePicker
+                                    ampm={false}
+                                    value={eventEditDB.start_date}
+                                    onChange={this.handleUpdateStartDate}
+                                    className="edit-event-picker"
+                                    format="yyyy.MM.dd HH:mm"
+                                    error={this.state.errors.start_date}
+                                />
+                            </MuiPickersUtilsProvider>
+                        </div>
+
+                        <div className="edit-event-page-text-block">
+                            <Typography variant="h4" className="edit-event-page-typography">
+                                Edit location:
                             </Typography>
-                            <FormGroup>
+                            <FormGroup className="edit-event-page-location">
                                 <FormControlLabel
-                                    className="new"
-                                    label="Private room"
+                                    labelPlacement="top"
                                     control={
-                                        <Switch
-                                            name="permission"
-                                            onChange={event => this.handleUpdateData(event)}
-                                            checked={this.state.roomEditDB.permission}
+                                        <Geosuggest
+                                            name="location"
+                                            onActivateFirstSuggest="true"
+                                            initialValue={eventEditDB.location}
+                                            onSuggestSelect={this.handleGeosuggestChange}
+                                            autoActivateFirstSuggest={true}
+                                            error={this.state.errors.location}
+                                            autoComplete="off"
                                         />
                                     }
                                 />
                             </FormGroup>
                         </div>
 
-                        <div className="edit-room-page-text-block">
-                            <Typography variant="h4" className="edit-room-page-typography">
+                        <div className="edit-event-page-text-block">
+                            <Typography variant="h4" className="edit-event-page-typography">
+                                Edit event permission:
+                            </Typography>
+                            <FormGroup>
+                                <FormControlLabel
+                                    className="new"
+                                    label="Private event"
+                                    control={
+                                        <Switch
+                                            name="permission"
+                                            onChange={event => this.handleUpdateData(event)}
+                                            checked={this.state.eventEditDB.permission}
+                                        />
+                                    }
+                                />
+                            </FormGroup>
+                        </div>
+
+                        <div className="edit-event-page-text-block">
+                            <Typography variant="h4" className="edit-event-page-typography">
                                 Edit member limit:
                             </Typography>
                             <FormGroup>
                                 <FormControlLabel
                                     control={
                                         <Switch
-                                            checked={this.state.roomEditDB.members_limit_checked}
+                                            checked={this.state.eventEditDB.members_limit_checked}
                                             name="members_limit_checked"
                                             onChange={event => this.handleUpdateData(event)}
                                         />
                                     }
                                 />
 
-                                {this.state.roomEditDB.members_limit_checked && <div>
+                                {this.state.eventEditDB.members_limit_checked && <div>
                                     <FormControl className="textField">
                                         <TextField
                                             type="number"
                                             min="1"
                                             name="members_limit"
                                             onChange={event => this.handleUpdateData(event)}
-                                            value={this.state.roomEditDB.members_limit || "1"}
+                                            value={this.state.eventEditDB.members_limit || "1"}
                                             fullWidth
                                             autoComplete="off"
                                             error={this.state.errors.members_limit}
@@ -227,51 +296,51 @@ class EditRoom extends React.Component {
                             </FormGroup>
                         </div>
 
-                        <div className="edit-room-page-text-block">
-                            <Typography variant="h4" className="edit-room-page-typography">
+                        <div className="edit-event-page-text-block">
+                            <Typography variant="h4" className="edit-event-page-typography">
                                 Edit category:
                             </Typography>
                             <FormControl className="formControl">
                                 <NativeSelect
-                                    value={this.state.roomEditDB.category_id}
+                                    value={this.state.eventEditDB.category_id}
                                     name="category_id"
                                     onChange={event => this.handleUpdateData(event)}
                                     input={<Input name="category_id" />}
-                                    className="edit-room-select"
+                                    className="edit-event-select"
                                 >
                                     {categories.map((category) =>
-                                        <option value={category.id} selected={category.id === roomEditDB.category_id}>{category.title}</option>
+                                        <option value={category.id} selected={category.id === eventEditDB.category_id}>{category.title}</option>
                                     )}
                                 </NativeSelect>
                             </FormControl>
                         </div>
 
-                        <div className="edit-room-page-text-block">
+                        <div className="edit-event-page-text-block">
                             <Grid container>
                                 <Grid item lg={4}>
-                                    <Typography variant="h4" className="edit-room-page-typography">
-                                        Edit room cover:
+                                    <Typography variant="h4" className="edit-event-page-typography">
+                                        Edit event cover:
                                     </Typography>
-                                    <div className="edit-room-page-text-field">
-                                        <Button variant="contained" className="edit-room-page-button-upload"
+                                    <div className="edit-event-page-text-field">
+                                        <Button variant="contained" className="edit-event-page-button-upload"
                                                 onClick={this.showUploadComponent}
                                         >
                                             <span>Choose</span>
                                         </Button>
                                     </div>
                                 </Grid>
-                                <Grid item lg={8} className="edit-room-page-current-cover-grid">
-                                    <img className="edit-room-page-current-cover" src={this.state.imageSRC || this.state.roomEditDB.cover} alt={"room-cover"}/>
+                                <Grid item lg={8} className="edit-event-page-current-cover-grid">
+                                    <img className="edit-event-page-current-cover" src={this.state.imageSRC || this.state.eventEditDB.cover} alt={"event-cover"}/>
                                 </Grid>
                             </Grid>
                         </div>
-                           <Button
-                                className="edit-room-page-save-btn"
-                                variant="outlined"
-                                onClick={this.handleSave}
-                           >
-                               Save changes
-                           </Button>
+                        <Button
+                            className="edit-event-page-save-btn"
+                            variant="outlined"
+                            onClick={this.handleSave}
+                        >
+                            Save changes
+                        </Button>
                     </form>
                 </div>
             </>
@@ -279,4 +348,4 @@ class EditRoom extends React.Component {
     }
 }
 
-export default withSnackbar(EditRoom);
+export default withSnackbar(EditEvent);

@@ -1,0 +1,251 @@
+#root .edit-event-page {
+  @include svg-settings-bg('#{$secondaryBlack}');
+  background-color: white;
+  min-height: calc(100vh - 86px - 51px);
+  padding: 24px;
+
+  .edit-event-page-content {
+    max-width: 900px;
+    margin-right: auto;
+    margin-left: auto;
+
+    .edit-event-page-save-btn {
+      color: $white;
+      margin-right: auto;
+      display: flex;
+      padding-top: 0;
+      padding-bottom: 0;
+      line-height: 36px;
+      border-radius: 50px;
+      background-color: $secondaryBlack;
+      border-color: $secondaryBlack;
+      overflow: hidden;
+
+      @include media-breakpoint-down(md) {
+        width: 100%;
+      }
+    }
+
+    .edit-event-page-text-block {
+      background-color: white;
+      padding: 12px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16);
+
+      .edit-event-picker {
+        padding: 12px 0;
+
+        @include media-breakpoint-down(sm) {
+          width: 100%;
+        }
+      }
+
+      .edit-event-page-location{
+        padding: 12px 0;
+
+        label {
+          margin: 0;
+          width: 100%;
+        }
+
+        span {
+          width: 133%;
+          transform: scale(0.75);
+        }
+      }
+
+      .formControl {
+        width: 210px;
+        display: flex;
+
+        @include media-breakpoint-down(sm) {
+          width: 100%;
+        }
+      }
+
+      .edit-event-select option {
+        font-size: 1rem;
+        line-height: 1.5rem;
+        font-weight: 100;
+      }
+
+      .edit-event-select select:focus {
+        background: none;
+      }
+
+      .edit-event-page-typography {
+        color: $secondaryBlack;
+        font-size: 1.5rem;
+        line-height: 1.5rem;
+        font-weight: 100;
+      }
+
+      .edit-event-page-button-upload, .edit-event-page-button-upload:hover,
+      .edit-event-page-button-upload, .edit-event-page-button-upload:hover{
+        background-color: white;
+        margin-top: 24px;
+        border: 2px dashed #62553a;
+        border-radius: 5px;
+        text-align: center;
+
+        input[type="file"] {
+          cursor: pointer;
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          right: 0;
+          left: 0;
+          width: 100%;
+          opacity: 0;
+        }
+      }
+
+      .edit-event-page-current-cover-grid {
+        display: flex;
+        margin-left: auto;
+        margin-right: auto;
+
+        .edit-event-page-current-cover {
+          max-height: 200px;
+
+          @include media-breakpoint-down(lg) {
+            margin-left: 24px;
+
+            @include media-breakpoint-down(sm) {
+              margin-left: 0;
+              margin-top: 24px;
+              max-height: 150px;
+            }
+          }
+        }
+      }
+
+      div[class*=MuiFilledInput-root] {
+        font-size: 1rem;
+        line-height: 1.5rem;
+        font-weight: 100;
+        background-color: white;
+        padding-top: 0;
+      }
+
+      input[class*=MuiFilledInput] {
+        padding-top: 0;
+      }
+    }
+
+    span[class*=MuiSwitch-bar] {
+      background-color: $primary;
+      opacity: 0.6;
+    }
+
+    span[class*=MuiSwitch-checked] {
+      color: $primary;
+    }
+
+    span[class*=MuiTypography-body1] {
+      font-size: 1rem;
+      line-height: 1.5rem;
+      font-weight: 100;
+    }
+  }
+
+  .geosuggest {
+    font-size: 1rem;
+    line-height: 1.5rem;
+    font-weight: 100;
+    position: relative;
+    width: 100%;
+    text-align: left;
+  }
+  .geosuggest__input {
+    font-size: 1rem;
+    line-height: 1.5rem;
+    font-weight: 100;
+    width: 100%;
+    border: 2px solid transparent;
+    box-shadow: 0 0 1px $black;
+    padding: .25em 0.5em;
+    transition: border 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+    outline: none;
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    background-color: transparent;
+  }
+  .geosuggest__input:focus {
+    border-color: $primary;
+    box-shadow: 0 0 0 transparent;
+  }
+
+  .geosuggest__input:hover:not(:focus){
+    border-color: $black;
+    box-shadow: 0 0 0 transparent;
+  }
+
+  .geosuggest__suggests {
+    font-size: 1rem;
+    line-height: 1.5rem;
+    font-weight: 100;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    max-height: 25em;
+    padding: 0;
+    margin-top: -1px;
+    background: #fff;
+    border: 2px solid $primary;
+    border-top-width: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    list-style: none;
+    z-index: 5;
+    transition: max-height 0.2s, border 0.2s;
+  }
+  .geosuggest__suggests--hidden {
+    max-height: 0;
+    overflow: hidden;
+    border-width: 0;
+  }
+
+  .geosuggest__item {
+    font-size: 1rem;
+    line-height: 1.5rem;
+    font-weight: 100;
+    padding: .5em .65em;
+    cursor: pointer;
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  }
+
+  .geosuggest__item:hover, .geosuggest__item:focus {
+    background: $white;
+  }
+
+  .geosuggest__item--active {
+    background: $primary;
+    color: $white;
+  }
+
+  .geosuggest__item--active:hover, .geosuggest__item--active:focus {
+    background: $primary;
+  }
+
+  .geosuggest__item__matched-text {
+    font-weight: bold;
+  }
+
+  div[class*=MuiInput-underline]:not([class*=-error-]):after {
+    border-bottom: 2px solid $primary;
+  }
+
+  div[class*=MuiFilledInput-underline]:not([class*=-error-]):after {
+    border-bottom: 2px solid $primary;
+  }
+
+  label[class*=MuiFormLabel], legend[class*=MuiFormLabel] {
+    color: $black;
+
+    &[class*=-error-] {
+      color: #f44336;
+    }
+  }
+}

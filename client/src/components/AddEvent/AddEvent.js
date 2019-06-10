@@ -12,6 +12,7 @@ import Geosuggest from 'react-geosuggest';
 import Spinner from "../UI/Spinner/Spinner";
 import {withSnackbar} from "notistack";
 import ImageUploader from "./../ImageUploader/ImageUploader";
+import defaultCover from "../../assets/images/bg-1.jpg"
 
 const messageType = {
     SUCCESS: "success",
@@ -153,7 +154,7 @@ class AddEvent extends React.Component {
                     category_id: this.state.eventData.category,
                     room_id:  this.state.roomId,
                     description: this.state.eventData.description,
-                    cover: this.state.imageSRC || this.state.eventData.cover,
+                    cover: defaultCover,
                     location:  this.state.eventData.location,
                     permission: this.state.eventData.permission ? 1 : 0,
                     start_date: this.state.eventData.start_date.getFullYear() + "."
@@ -184,7 +185,9 @@ class AddEvent extends React.Component {
                 break;
             case 1:
                 const updatedData = {
-                    cover: this.state.imageSRC
+                    cover: this.state.imageSRC || defaultCover,
+                    title: this.state.eventData.title,
+                    description: this.state.eventData.description
                 };
                 axios.put("/api/event/" + this.state.eventId, updatedData)
                     .then(res => {
