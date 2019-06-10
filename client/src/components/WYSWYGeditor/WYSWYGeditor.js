@@ -13,6 +13,7 @@ class WYSWYGeditor extends Component {
         : ''
     }
     onChange = (event, editor) => {
+      console.log(1111);
       const callback = this.props.editorSettings.dataUpdateCallback;
       
       this.setState({editorData: editor.getData()});
@@ -21,9 +22,6 @@ class WYSWYGeditor extends Component {
       if (typeof callback === 'function') {
         return callback(this.state.editorData);
       }
-    }
-    componentDidMount = () => {
-      console.log('this.props.editorSettings.data >>>>>>', this.props);
     }
     render = () => (
       <CKEditor

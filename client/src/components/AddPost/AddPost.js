@@ -258,7 +258,7 @@ class AddPost extends Component {
              });
         } catch(err) {}
     }
-    componentDidMount = () => {
+    componentWillMount = () => {
         // Im case no auth, redirect;
         if (!this.props.user) {
             this.props.history.push({ pathname: `/sign-in` });
@@ -274,7 +274,8 @@ class AddPost extends Component {
             });
             this.loadEditorData(this.props.location.state.data);
         }
-
+    }
+    componentDidMount = () => {
         this.handleWindowResize();
 
         // Add Event listeners;
