@@ -228,6 +228,43 @@ div#root div.postcard .postcard__edit-ico-text {
     color: lighten($black, 40%);
 }
 
+#root .postcard .postcard__description a {
+    display: inline-block;
+    vertical-align: middle;
+    color: darken($primary, 15%);
+
+    &:hover {
+        color: darken($primary, 20%);
+    } 
+
+    &:active {
+        color: $black;
+    }
+}
+
+#root .postcard .postcard__description ol,
+#root .postcard .postcard__description ul {
+    padding-left: 16px;
+}
+
+#root .postcard .postcard__description strong {
+    font-weight: 500;
+}
+
+.postcard .postcard__description blockquote {
+    margin: 0;
+    padding-left: 16px;
+    padding-top: 14px;
+    padding-bottom: 14px;
+    border-left: 5px solid $primary;
+}
+
+.postcard .postcard__description blockquote p {
+    margin: 0;
+    font-style: italic;
+    text-transform: capitalize;
+}
+
 // Related to modificators;
 .postcard.postcard_pinned
 .postcard__header-pin-wrapper {

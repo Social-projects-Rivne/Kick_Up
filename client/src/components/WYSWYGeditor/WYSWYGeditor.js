@@ -1,38 +1,48 @@
 import React, { Component } from 'react';
-import { Editor } from 'react-draft-wysiwyg';
-import { EditorState, convertToRaw } from 'draft-js'
+
+import CKEditor from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 import '../../styles/libs/react-draft-wysiwyg.css';
-
+const uploadUrl = 'https://40132.cke-cs.com/easyimage/upload/';
+const tokenUrl = 'https://40132.cke-cs.com/token/dev/51bEORgZKne2yb0yBRm8XtbuSePrpKBbHLPkcsKcA2z3pUYhCzks1PXkwvRg';
 class WYSWYGeditor extends Component {
     state = {
-        editorState: this.props.editorSettings.data 
-          ? EditorState.createWithContent(this.props.editorSettings.data) 
-          : EditorState.createEmpty()
+        editorData: this.props.editorSettings.data
+        ? this.props.editorSettings.data
+        : ''
     }
-    onChange = (editorState) => {
-        const callback = this.props.editorSettings.dataUpdateCallback;
+    onChange = (event, editor) => {
+      const callback = this.props.editorSettings.dataUpdateCallback;
+      
+      this.setState({editorData: editor.getData()});
 
-        this.setState({editorState});
-        if (JSON.stringify(convertToRaw(this.state.editorState.getCurrentContent())) !== JSON.stringify(convertToRaw(editorState.getCurrentContent()))) {
-          this.setState({editorState});
-
-          // Return updated row data via callback to parent;
-          if (typeof callback === 'function') {
-            callback(convertToRaw(editorState.getCurrentContent()));
-          }
-        }
+      // Return updated row data via callback to parent;
+      if (typeof callback === 'function') {
+        return callback(this.state.editorData);
+      }
     }
-    render() {
-      const { editorState } = this.state;
-      return (
-        <Editor
-            {...this.props.editorSettings}
-            editorState={editorState}
-            onEditorStateChange={this.onChange}
-        />
-      )
+    componentDidMount = () => {
+      console.log('this.props.editorSettings.data >>>>>>', this.props);
     }
+    render = () => (
+      <CKEditor
+        editor={ ClassicEditor }
+        // Fuck year, SAFE iframe support!;
+        config={{
+          mediaEmbed: {
+            previewsInData: true
+          },
+          cloudServices: {
+            uploadUrl,
+            tokenUrl,
+          },
+          removePlugins: ['Table', 'Italic']
+        }}
+        data={ this.state.editorData }
+        onChange= {this.onChange }
+      />
+    ) 
   }
 
   export default WYSWYGeditor;

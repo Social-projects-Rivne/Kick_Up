@@ -1,8 +1,5 @@
 import React, { Component } from "react";
 import { Link as RouterLink} from 'react-router-dom';
-
-import { convertFromRaw } from 'draft-js';
-import { stateToHTML } from 'draft-js-export-html';
 import { Markup } from 'interweave';
 
 import {
@@ -69,7 +66,7 @@ class PostCard extends Component {
         if (this.props.data.clickBtnCallBack) this.props.data.clickBtnCallBack();
     }
     definePostShouldBeCut = () => {
-        const html = stateToHTML(convertFromRaw(JSON.parse(this.props.data.text)));
+        const html = this.props.data.text;
         return html.length >= _maxAllowedPostChars;
     }
     definePostCanBeEdited = () => {
@@ -164,7 +161,11 @@ class PostCard extends Component {
                 : 'postcard__description'
             }
         >
-            <Markup content={stateToHTML(convertFromRaw(JSON.parse(this.props.data.text)))} />
+            <Markup 
+                allowList={['oembed']}
+                allowElements={true}
+                content={ this.props.data.text } 
+            />
         </CardContent>
         <CardActions 
             disableActionSpacing

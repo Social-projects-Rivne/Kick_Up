@@ -55,38 +55,6 @@
     display: none;
 }
 
-.add-post .add-post__editor {
-    & [title*="Indent"],
-    & [title*="Outdent"],
-    & .rdw-option-disabled {
-        display: none;
-    }
-}
-
-.add-post .add-post__editor .rdw-option-wrapper {
-    margin: 0;
-}
-
-.add-post .add-post__editor .rdw-option-wrapper {
-    border: 0;
-
-    &:hover,
-    &:active {
-        box-shadow: none;
-    }
-}
-
-.add-post .add-post__editor
-.rdw-block-dropdown {
-    max-width: 80px;
-    border: 0;
-}
-
-.add-post .add-post__toolbar {
-    padding: 0;
-    border: 0;
-}
-
 #root .add-post .add-post__fab {
     position: fixed;
     right: 10px;
@@ -169,83 +137,24 @@
     font-weight: 100;
 }
 
-// Related to editor;
-.add-post .rdw-image-modal,
-.add-post .rdw-emoji-modal,
-.add-post .rdw-embedded-modal,
-.add-post .rdw-link-modal {
-    position: fixed;
-    max-height: 200px;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    margin: auto;
-}
-
-.add-post .rdw-image-imagewrapper img {
-    opacity: 0;
-    animation-name: fade-in;
-    animation-duration: 0.3s;
-    animation-delay: 0.3s;
-    animation-fill-mode: forwards;
-}
-
-.add-post__editor .rdw-editor-main a {
-    color: darken($primary, 15%);
-}
-
-.add-post .add-post__editor [data-text=true] {
-    font-weight: 400;
-}
-
-.add-post .rdw-editor-main h1 {
-    margin: 16px 0;
-}
-
-.add-post .public-DraftStyleDefault-block {
-    margin-top: 10px;
-    margin-bottom: 10px;
-}
-
-.add-post figure[data-editor] {
-    pointer-events: none;
-}
-
-.add-post .rdw-image-imagewrapper img {
-    min-height: 100px;
-    max-width: 100vw;
-    max-height: 100vw;
-}
-
-.add-post__preview-info {
-    margin: 14px 10px 5px;
-    padding: 14px;
-    background-color: $white;
-    opacity: 0.35;
-}
-
 .add-post__preview-info-wrapper {
+    padding: 16px;
     display: flex;
     align-items: center;
-}
-
-.add-post__preview-info-wrapper h3 {
-    font-weight: 100;
 }
 
 .add-post__preview-info-wrapper svg {
     margin-right: 16px;
 }
 
-.add-post__preview-wrapper:empty {
-    text-align: center;
+#root .add-post .add-post__text-field {
+    & > div[class*=MuiInput]:hover::before,
+    & > div[class*=MuiInput]:hover::after {
+        border-bottom-color: lighten($secondaryBlack, 30%);
+    }
 
-    &::before {
-        content: attr(data-add-post-msg);
-        font-size: 24px;
-        font-weight: 100;
-        color: lighten($secondaryBlack, 30%);
+    & [class*=MuiInput-focused]::after {
+        border-bottom-color: $primary !important;
     }
 }
 
@@ -306,25 +215,6 @@
         z-index: 3;
         opacity: 1;
         box-shadow: 0 1px 4px 0 rgba(0,0,0,.14);
-    }
-
-    .add-post .rdw-editor-main {
-        min-height: 160px;
-    }
-
-    .add-post .rdw-image-imagewrapper img {
-        max-width: 100%;
-    }
-
-    #root .add-post .add-post__text-field {
-        & > div[class*=MuiInput]:hover::before,
-        & > div[class*=MuiInput]:hover::after {
-            border-bottom-color: lighten($secondaryBlack, 30%);
-        }
-
-        & [class*=MuiInput-focused]::after {
-            border-bottom-color: $primary !important;
-        }
     }
 
     // Need !important here to overwrite desktop logic for swiper;

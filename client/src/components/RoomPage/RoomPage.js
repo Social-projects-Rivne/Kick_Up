@@ -116,7 +116,7 @@ class RoomPage extends React.Component {
             this.setState({disabledBtn:false})
         }).catch(()=>{
             this.setState({disabledBtn:true})
-        })
+        });
     }
     invitedMembers = () => {
         const { id } = this.props.match.params;
@@ -347,8 +347,9 @@ class RoomPage extends React.Component {
                                     }
                                 </span>
                             </Fab>
-                            {
-                                roomPagePosts.map((post, itr) => 
+                            {   roomPagePosts
+                                .filter(el => el.isPinned)
+                                .map((post, itr) => 
                                     <Grid key={itr} item xs={12} className="room-details-card-grid">
                                         <PostCard data={post} currentUser={this.props.user ? this.props.user.id : null} roomId={this.props.match.params.id} />
                                     </Grid>

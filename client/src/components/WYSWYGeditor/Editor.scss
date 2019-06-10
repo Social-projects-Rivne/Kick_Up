@@ -1,0 +1,81 @@
+// Styles related to CK WYSIWYG editor;
+
+#root .ck.ck-toolbar {
+    border: 1px solid lighten($secondaryBlack, 94%);
+    background-color: transparent;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+#root .ck.ck-toolbar__separator {
+    display: none;
+}
+
+#root .ck.ck-content {
+    border: 1px solid lighten($secondaryBlack, 94%);
+
+     &.ck-focused {
+         box-shadow: none;
+     }
+
+     & * {
+         color: $black;
+     }
+}
+
+// @todo, find more flexible solution;
+#root button.ck.ck-button {
+    &:nth-of-type(6),
+    &:nth-of-type(7) {
+        display: none;
+    }
+}
+
+#root .ck.ck-content p,
+#root .ck.ck-content h2,
+#root .ck.ck-content h3,
+#root .ck.ck-content h4 {
+    font-weight: 100;
+}
+
+#root .ck.ck-content ol,
+#root .ck.ck-content ul {
+    padding-left: 16px;
+}
+
+#root .ck.ck-content a {
+    color: darken($primary, 15%);
+    text-decoration: none;
+}
+
+#root .ck-dropdown__panel-visible {
+    box-shadow: none;
+    border: 1px solid lighten($secondaryBlack, 94%);
+}
+
+// Yay, so dirty)
+#root .ck.ck-dropdown ~ .ck.ck-dropdown {
+    position: static;
+
+    & .ck-dropdown__panel-visible {
+        position: absolute;
+        right: 0;
+        left: unset;
+        top: 40px;
+        bottom: unset;
+        border-top: 0;
+        transform: none;
+    }
+}
+
+#root .ck.ck-list__item .ck-button__label {
+    font-weight: 100;
+}
+
+#root .ck-content blockquote {
+    border-left-color: $primary;
+}
+
+#root .ck-content blockquote p {
+    text-transform: capitalize;
+}
