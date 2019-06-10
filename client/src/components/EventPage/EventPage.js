@@ -38,9 +38,9 @@ import "react-id-swiper/src/styles/scss/swiper.scss";
 import axios from 'axios';
 import { withSnackbar } from 'notistack';
 import ImageUploader from "../ImageUploader/ImageUploader";
+import StarRating from "../UI/StarRating/StarRating";
 
 // @temp, we need add get data from MongoDB;
-import mock from '../../mocks/eventPage';
 import defaultAvatar from "../../assets/images/face.png";
 
 // Swipers params for event page;
@@ -115,6 +115,7 @@ class EventPage extends Component {
             cover: '',
             location: '',
             date: '',
+            eventRating: null,
             description: '',
             users: [],
             swiper: null,
@@ -218,6 +219,7 @@ class EventPage extends Component {
                 date: new Date(res.start_date).toLocaleString('en-US', timeOptions),
                 description: res.description,
                 gallery,
+                eventRating: res.eventRating,
             });
         })
         .catch((err) => {
@@ -304,12 +306,15 @@ class EventPage extends Component {
                         />
                     </Tabs>
                 </AppBar>
-
                 <div className="event-page__title-wrapper">
                     {this.state.title &&
                         <div className="event-page__title-desktop-wrapper">
                             <Typography variant="h5" className="event-page__title">
                                 {this.state.title}
+                                <StarRating 
+                                    rating={this.state.eventRating} 
+                                    entityURL={this.props.match.url}
+                                />
                             </Typography>
                             <List>
                                 <ListItem className="event-page__list-item">
