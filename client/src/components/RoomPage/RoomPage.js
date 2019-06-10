@@ -7,7 +7,7 @@ import 'react-responsive-carousel/lib/styles/carousel.min.css';
 
 import { AppBar, Tabs, Tab, Typography, Grid, Avatar, Card, CardActions, CardContent, CardMedia,
     CardActionArea, Button, ListItemText, ListItem, ListItemAvatar, Badge, Fab, Paper } from '@material-ui/core';
-import { Comment, Collections, Face, NewReleases, EventAvailable, Add, Info } from '@material-ui/icons';
+import { Comment, Collections, Face, NewReleases, EventAvailable, Add, Info, Edit } from '@material-ui/icons';
 import Gallery from 'react-grid-gallery';
 import SwipeableViews from 'react-swipeable-views';
 import Spinner from './../UI/Spinner/Spinner';
@@ -179,7 +179,7 @@ class RoomPage extends React.Component {
 
     render() {
         const { value, roomPageDB, gallery } = this.state;
-        const { isAuthenticated } = this.props;
+        const { isAuthenticated, user } = this.props;
 
         if (!roomPageDB) {
             return (<Spinner className="rooms-page"/>);
@@ -287,15 +287,6 @@ class RoomPage extends React.Component {
                     </TabContainer>) || <TabContainer></TabContainer> }
 
                     { (value === 2 && <TabContainer>
-                        <Grid container className="room-details-add-event-button">
-                            {isAuthenticated && (<Grid item>
-                                <Link to={this.props.location.pathname + "/add-event"} className="room-details-add-event-link">
-                                    <Fab variant="extended" className="room-details-add-event">
-                                        <Add />
-                                    </Fab>
-                                </Link>
-                            </Grid>)}
-                        </Grid>
                         <Grid container spacing={24}>
                             {roomPageDB.event.map((event) =>
                                 <Grid item lg={4} md={6} xs={12} className="room-details-card-grid">
@@ -379,6 +370,23 @@ class RoomPage extends React.Component {
                         </Grid>
                     </TabContainer>) || <TabContainer></TabContainer> }
                 </SwipeableViews>
+
+                {value === 0 && isAuthenticated && roomPageDB.creator_id === user.id &&(
+                    <Link to={this.props.location.pathname + "/edit"} className="room-details-add-event-link">
+                        <Fab variant="extended" className="room-details-add-event">
+                            <Edit />
+                        </Fab>
+                    </Link>
+                )}
+
+                {value === 2 && isAuthenticated && (
+                    <Link to={this.props.location.pathname + "/add-event"} className="room-details-add-event-link">
+                        <Fab variant="extended" className="room-details-add-event">
+                            <Add />
+                        </Fab>
+                    </Link>
+                )}
+
             </div>
         );
     }

@@ -1,0 +1,137 @@
+#root .edit-room-page {
+  @include svg-settings-bg('#{$secondaryBlack}');
+  background-color: white;
+  min-height: calc(100vh - 86px - 51px);
+  padding: 24px;
+
+  .edit-room-page-content {
+    max-width: 900px;
+    margin-right: auto;
+    margin-left: auto;
+
+    .edit-room-page-save-btn {
+      color: $white;
+      margin-right: auto;
+      display: flex;
+      padding-top: 0;
+      padding-bottom: 0;
+      line-height: 36px;
+      border-radius: 50px;
+      background-color: $secondaryBlack;
+      border-color: $secondaryBlack;
+      overflow: hidden;
+
+      @include media-breakpoint-down(md) {
+        width: 100%;
+      }
+    }
+
+    .edit-room-page-text-block {
+      background-color: white;
+      padding: 12px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16);
+
+      .formControl {
+        width: 210px;
+        display: flex;
+
+        @include media-breakpoint-down(sm) {
+          width: 100%;
+        }
+      }
+
+      .edit-room-select option {
+        font-size: 1rem;
+        line-height: 1.5rem;
+        font-weight: 100;
+      }
+
+      .edit-room-select select:focus {
+        background: none;
+      }
+
+      .edit-room-page-typography {
+        color: $secondaryBlack;
+        font-size: 1.5rem;
+        line-height: 1.5rem;
+        font-weight: 100;
+      }
+
+      .edit-room-page-button-upload, .edit-room-page-button-upload:hover,
+      .edit-room-page-button-upload, .edit-room-page-button-upload:hover{
+        background-color: white;
+        margin-top: 24px;
+        border: 2px dashed #62553a;
+        border-radius: 5px;
+        text-align: center;
+
+        input[type="file"] {
+          cursor: pointer;
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          right: 0;
+          left: 0;
+          width: 100%;
+          opacity: 0;
+        }
+      }
+
+      .edit-room-page-current-cover-grid {
+        display: flex;
+        margin-left: auto;
+        margin-right: auto;
+
+        .edit-room-page-current-cover {
+          max-height: 200px;
+
+          @include media-breakpoint-down(lg) {
+            margin-left: 24px;
+
+            @include media-breakpoint-down(sm) {
+              margin-left: 0;
+              margin-top: 24px;
+              max-height: 150px;
+            }
+          }
+        }
+      }
+
+      div[class*=MuiFilledInput-root] {
+        font-size: 1rem;
+        line-height: 1.5rem;
+        font-weight: 100;
+        background-color: white;
+        padding-top: 0;
+      }
+
+      input[class*=MuiFilledInput] {
+        padding-top: 0;
+      }
+
+      div[class*=MuiFilledInput-underline]:after {
+        border-bottom: 2px solid $primary;
+      }
+
+      div[class*=MuiInput-underline]:after {
+        border-bottom: 2px solid $primary;
+      }
+    }
+
+    span[class*=MuiSwitch-bar] {
+      background-color: $primary;
+      opacity: 0.6;
+    }
+
+    span[class*=MuiSwitch-checked] {
+      color: $primary;
+    }
+
+    span[class*=MuiTypography-body1] {
+      font-size: 1rem;
+      line-height: 1.5rem;
+      font-weight: 100;
+    }
+  }
+}

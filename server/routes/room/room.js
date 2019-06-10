@@ -201,12 +201,17 @@ const handler = {
     ctx.body = room;
   },
   async updateRoomById(ctx) {
-    const { id } = ctx.params;
-    const room = await Room.where({id}).fetch({require:true});
-    const { title,description,cover,permission,members_limit,category_id } = ctx.request.body;
-    const obj = {title,description,cover,permission,members_limit,category_id};
-    await room.save( obj, { patch:true });
-    ctx.body = '';
+      await validate(ctx.request.body, {
+          title:'required|string|min:3|max:100',
+          description:'required|string|min:6|max:300',
+          members_limit:'numeric|min:1',
+      });
+      const { id } = ctx.params;
+      const room = await Room.where({id}).fetch({require:true});
+      const { title,description,cover,permission,members_limit,category_id } = ctx.request.body;
+      const obj = {title,description,cover,permission,members_limit,category_id};
+      await room.save( obj, { patch:true });
+      ctx.body = '';
   },
 
   async sort(ctx) {

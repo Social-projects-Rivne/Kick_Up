@@ -50,6 +50,8 @@ const handler = {
 const multipartBodyParser = koaBody({ multipart: true });
 router.use(authenticated)
 router.post('/:entityType/add', multipartBodyParser, handler.uploadCover);
+router.post('/:entityType/:entity_id/edit', multipartBodyParser, handler.uploadCover);
+router.post('/:entityType/:entity_id/add-event', multipartBodyParser, handler.uploadCover);
 router.post('/:entityType/:entity_id', multipartBodyParser, handler.upload);
 
 module.exports = router.routes();

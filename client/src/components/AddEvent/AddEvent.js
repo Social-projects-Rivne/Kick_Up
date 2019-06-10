@@ -153,7 +153,7 @@ class AddEvent extends React.Component {
                     category_id: this.state.eventData.category,
                     room_id:  this.state.roomId,
                     description: this.state.eventData.description,
-                    cover: "http://excitermag.net/wp-content/uploads/2012/12/24fae0cf4e190078d5b9896e00870cd9.jpg", //TODO
+                    cover: this.state.imageSRC || this.state.eventData.cover,
                     location:  this.state.eventData.location,
                     permission: this.state.eventData.permission ? 1 : 0,
                     start_date: this.state.eventData.start_date.getFullYear() + "."
@@ -183,10 +183,9 @@ class AddEvent extends React.Component {
                     });
                 break;
             case 1:
-                //ToDo upload cover
                 const updatedData = {
                     cover: this.state.imageSRC
-                }
+                };
                 axios.put("/api/event/" + this.state.eventId, updatedData)
                     .then(res => {
                         this.props.history.push({ pathname: "/event/" + this.state.eventId });
@@ -199,7 +198,7 @@ class AddEvent extends React.Component {
                             errors[key] = true;
                         }
                         this.setState({ loading: false, errors: errors });
-                    })
+                    });
                 break;
             default:
                 console.log("Unknown step");
@@ -209,15 +208,15 @@ class AddEvent extends React.Component {
 
     showUploadComponent = () => {
         this.setState({showUpload: true})
-    }
+    };
 
     closeUploadComponent = () => {
         this.setState({showUpload: false})
-    }
+    };
 
     getImagesSRC = (imageSRC) => {
         this.setState({imageSRC});
-    }
+    };
 
     render() {
         const { activeStep, addEventDB } = this.state;
