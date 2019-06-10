@@ -70,7 +70,7 @@ class EditEvent extends React.Component {
     handleSave = () => {
         this.setState({ loading: true });
         const { id } = this.props.match.params;
-        this.state.eventEditDB.start_date = new Date(this.state.eventEditDB.start_date);
+        const startDate = new Date(this.state.eventEditDB.start_date);
 
         const data = {
             title: this.state.eventEditDB.title,
@@ -80,11 +80,11 @@ class EditEvent extends React.Component {
             members_limit: this.state.eventEditDB.members_limit_checked ? this.state.eventEditDB.members_limit : null,
             category_id: this.state.eventEditDB.category_id,
             location: this.state.eventEditDB.location,
-            start_date: this.state.eventEditDB.start_date.getFullYear() + "."
-                + ("0" + (this.state.eventEditDB.start_date.getMonth() + 1)).slice(-2) +
-                "." + ("0" + (this.state.eventEditDB.start_date.getDate())).slice(-2)
-                + " " + ("0" + (this.state.eventEditDB.start_date.getHours())).slice(-2) +
-                ":" + ("0" + (this.state.eventEditDB.start_date.getMinutes())).slice(-2)
+            start_date: startDate.getFullYear() + "."
+                + ("0" + (startDate.getMonth() + 1)).slice(-2) +
+                "." + ("0" + (startDate.getDate())).slice(-2)
+                + " " + ("0" + (startDate.getHours())).slice(-2) +
+                ":" + ("0" + (startDate.getMinutes())).slice(-2)
         };
 
         axios.put("/api/event/" + id, data)

@@ -261,7 +261,7 @@ class EditRoom extends React.Component {
                                     </div>
                                 </Grid>
                                 <Grid item lg={8} className="edit-room-page-current-cover-grid">
-                                    <img className="edit-room-page-current-cover" src={this.state.roomEditDB.cover} alt={"room-cover"}/>
+                                    <img className="edit-room-page-current-cover" src={this.state.imageSRC || this.state.roomEditDB.cover} alt={"room-cover"}/>
                                 </Grid>
                             </Grid>
                         </div>

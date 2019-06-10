@@ -135,7 +135,7 @@ class AddRoom extends React.Component {
                 break;
             case 1:
                 const updatedData = {
-                    cover: this.state.imageSRC  || defaultCover
+                    cover: this.state.imageSRC || defaultCover,
                     description: this.state.roomData.description,
                     title: this.state.roomData.title
                 };
