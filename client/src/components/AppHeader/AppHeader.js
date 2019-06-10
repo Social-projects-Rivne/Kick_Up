@@ -158,10 +158,10 @@ class AppHeader extends React.Component {
     }
 };
 
-const mapStateToProps = state => ({
-    user: state.auth.user,
-    isAuthenticated: state.auth.isAuthenticated,
-    errors: state.auth.errors,
+const mapStateToProps = store => ({
+    user: store.auth.user,
+    isAuthenticated: store.auth.isAuthenticated,
+    errors: store.auth.errors,
 });
 
 const mapDispatchToProps = dispatch => ({
