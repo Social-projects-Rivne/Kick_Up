@@ -10,8 +10,7 @@ const eventCard = props => {
     backgroundImage: `url(${props.background})`
   };
   if(!isToggle) setTimeout(() => ToggleHandler(!isToggle), 500);
-  const dateToArr = props.startDate.slice(0, 10).split("-");
-  const time = props.startDate.slice(11, 16);
+  const time = new Date(props.startDate);
   const menuContent = 
     <ul className={`menu-content ${isToggle}`}>
       <li>
@@ -27,8 +26,8 @@ const eventCard = props => {
       <div className="wrapper" style={backgroundImage}>
         <div className="wrapper-header">
           <div className="date">
-            <div className="day"><span>{dateToArr[2]}</span>.{dateToArr[1]}.{dateToArr[0]}</div>
-            <div className="time">{time}</div>
+            <div className="day"><span>{("0" + (time.getDate())).slice(-2)}</span>.{("0" + (time.getMonth() + 1)).slice(-2)}.{time.getFullYear()}</div>
+            <div className="time">{("0" + (time.getHours())).slice(-2) + ":" + ("0" + (time.getMinutes())).slice(-2)}</div>
           </div>
           <div className="location">
             <LocationOn />

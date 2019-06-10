@@ -11,6 +11,8 @@ import { MuiPickersUtilsProvider, InlineDateTimePicker } from 'material-ui-picke
 import Geosuggest from 'react-geosuggest';
 import Spinner from "../UI/Spinner/Spinner";
 import {withSnackbar} from "notistack";
+import ImageUploader from "./../ImageUploader/ImageUploader";
+import defaultCover from "../../assets/images/bg-1.jpg"
 
 const messageType = {
     SUCCESS: "success",
@@ -52,6 +54,9 @@ class AddEvent extends React.Component {
             members_limit: false,
             permission: false
         },
+        showUpload: false,
+        imageSRC: null,
+        authUser: false
     };
 
     showToast = (message, variant) => {
@@ -149,7 +154,7 @@ class AddEvent extends React.Component {
                     category_id: this.state.eventData.category,
                     room_id:  this.state.roomId,
                     description: this.state.eventData.description,
-                    cover: "http://excitermag.net/wp-content/uploads/2012/12/24fae0cf4e190078d5b9896e00870cd9.jpg", //TODO
+                    cover: defaultCover,
                     location:  this.state.eventData.location,
                     permission: this.state.eventData.permission ? 1 : 0,
                     start_date: this.state.eventData.start_date.getFullYear() + "."
@@ -165,6 +170,7 @@ class AddEvent extends React.Component {
                         this.setState({
                             loading: false,
                             eventId: res.data.id,
+                            authUser :!this.state.authUser,
                             activeStep: activeStep + 1
                         });
                     })
@@ -178,9 +184,24 @@ class AddEvent extends React.Component {
                     });
                 break;
             case 1:
-                //ToDo upload cover
-                this.props.history.push({ pathname: "/event/" + this.state.eventId });
-                this.showToast("Congratulations! Event created!",messageType.SUCCESS);
+                const updatedData = {
+                    cover: this.state.imageSRC || defaultCover,
+                    title: this.state.eventData.title,
+                    description: this.state.eventData.description
+                };
+                axios.put("/api/event/" + this.state.eventId, updatedData)
+                    .then(res => {
+                        this.props.history.push({ pathname: "/event/" + this.state.eventId });
+                        this.showToast("Congratulations! Event created!",messageType.SUCCESS);
+                    })
+                    .catch(err => {
+                        let errors = err.response.data.error.errors;
+                        for (const key  in errors) {
+                            this.showToast(errors[key][0], messageType.ERR);
+                            errors[key] = true;
+                        }
+                        this.setState({ loading: false, errors: errors });
+                    });
                 break;
             default:
                 console.log("Unknown step");
@@ -188,268 +209,284 @@ class AddEvent extends React.Component {
         }
     };
 
+    showUploadComponent = () => {
+        this.setState({showUpload: true})
+    };
+
+    closeUploadComponent = () => {
+        this.setState({showUpload: false})
+    };
+
+    getImagesSRC = (imageSRC) => {
+        this.setState({imageSRC});
+    };
+
     render() {
         const { activeStep, addEventDB } = this.state;
+        const { isAuthenticated } = this.props;
 
         if (this.state.loading) {
             return (<Spinner className="rooms-page"/>);
         }
 
         return (
-            <div className="add-event-page">
-                <form className="add-event-page-container">
-                    <label className="add-event-header">Please fill in all fields to create event</label>
-                    <Stepper activeStep={activeStep} orientation="vertical" className="add-event-stepper">
-                        <Step key={0}>
-                            <StepLabel>Event info</StepLabel>
-                            <StepContent>
-                                <div>
-                                    <TextField
-                                        required
-                                        className="add-event-text-field"
-                                        label="Title"
-                                        name="title"
-                                        placeholder="Min 3 symbols, Max 100 symbols"
-                                        onChange={event => this.handleUpdateData(event)}
-                                        value={this.state.eventData.title}
-                                        fullWidth
-                                        autoComplete="off"
-                                        inputProps={{ maxLength: 100 }}
-                                        error={this.state.errors.title}
-                                    />
-
-                                    <TextField
-                                        required
-                                        className="add-event-text-field"
-                                        label="Description"
-                                        name="description"
-                                        placeholder="Min 6 symbols, Max 300 symbols"
-                                        onChange={event => this.handleUpdateData(event)}
-                                        value={this.state.eventData.description}
-                                        fullWidth
-                                        multiline
-                                        autoComplete="off"
-                                        inputProps={{ maxLength: 300 }}
-                                        error={this.state.errors.description}
-                                    />
-
-                                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                        <InlineDateTimePicker
-                                            label="Choose date and time *"
-                                            ampm={false}
-                                            value={this.state.eventData.start_date}
-                                            onChange={this.handleUpdateStartDate}
-                                            className="add-event-picker"
-                                            format="yyyy.MM.dd HH:mm"
-                                            error={this.state.errors.start_date}
-                                        />
-                                    </MuiPickersUtilsProvider>
-
-                                    <FormGroup className="add-event-location">
-                                        <FormControlLabel
-                                            labelPlacement="top"
-                                            label="Location *"
-                                            control={
-                                                <Geosuggest
-                                                    name="location"
-                                                    onActivateFirstSuggest="true"
-                                                    initialValue={this.state.eventData.location}
-                                                    onSuggestSelect={this.handleGeosuggestChange}
-                                                    autoActivateFirstSuggest={true}
-                                                    error={this.state.errors.location}
-                                                    autoComplete="off"
-                                                />
-                                            }
-                                        />
-                                    </FormGroup>
-
-                                    <FormControl required className="formControl">
-                                        <InputLabel shrink htmlFor="uncontrolled-native">
-                                            Category
-                                        </InputLabel>
-                                        <NativeSelect
-                                            value={this.state.eventData.category}
-                                            name="category"
+            <>
+                <ImageUploader 
+                    show={this.state.showUpload}
+                    closeUploadComponent={this.closeUploadComponent}
+                    uploaderType="cover"
+                    entityURL={this.props.match.url}
+                    authUser={this.state.authUser}
+                    isAuthenticated={isAuthenticated}
+                    getImagesSRC={this.getImagesSRC}
+                />
+                <div className="add-event-page">
+                    <form className="add-event-page-container">
+                        <label className="add-event-header">Please fill in all fields to create event</label>
+                        <Stepper activeStep={activeStep} orientation="vertical" className="add-event-stepper">
+                            <Step key={0}>
+                                <StepLabel>Event info</StepLabel>
+                                <StepContent>
+                                    <div>
+                                        <TextField
+                                            required
+                                            className="add-event-text-field"
+                                            label="Title"
+                                            name="title"
+                                            placeholder="Min 3 symbols, Max 100 symbols"
                                             onChange={event => this.handleUpdateData(event)}
-                                            input={<Input name="category" />}
-                                            className="add-event-select"
-                                            error={this.state.errors.category}
+                                            value={this.state.eventData.title}
+                                            fullWidth
+                                            autoComplete="off"
+                                            inputProps={{ maxLength: 100 }}
+                                            error={this.state.errors.title}
+                                        />
+
+                                        <TextField
+                                            required
+                                            className="add-event-text-field"
+                                            label="Description"
+                                            name="description"
+                                            placeholder="Min 6 symbols, Max 300 symbols"
+                                            onChange={event => this.handleUpdateData(event)}
+                                            value={this.state.eventData.description}
+                                            fullWidth
+                                            multiline
+                                            autoComplete="off"
+                                            inputProps={{ maxLength: 300 }}
+                                            error={this.state.errors.description}
+                                        />
+
+                                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                            <InlineDateTimePicker
+                                                label="Choose date and time *"
+                                                ampm={false}
+                                                value={this.state.eventData.start_date}
+                                                onChange={this.handleUpdateStartDate}
+                                                className="add-event-picker"
+                                                format="yyyy.MM.dd HH:mm"
+                                                error={this.state.errors.start_date}
+                                            />
+                                        </MuiPickersUtilsProvider>
+
+                                        <FormGroup className="add-event-location">
+                                            <FormControlLabel
+                                                labelPlacement="top"
+                                                label="Location *"
+                                                control={
+                                                    <Geosuggest
+                                                        name="location"
+                                                        onActivateFirstSuggest="true"
+                                                        initialValue={this.state.eventData.location}
+                                                        onSuggestSelect={this.handleGeosuggestChange}
+                                                        autoActivateFirstSuggest={true}
+                                                        error={this.state.errors.location}
+                                                        autoComplete="off"
+                                                    />
+                                                }
+                                            />
+                                        </FormGroup>
+
+                                        <FormControl required className="formControl">
+                                            <InputLabel shrink htmlFor="uncontrolled-native">
+                                                Category
+                                            </InputLabel>
+                                            <NativeSelect
+                                                value={this.state.eventData.category}
+                                                name="category"
+                                                onChange={event => this.handleUpdateData(event)}
+                                                input={<Input name="category" />}
+                                                className="add-event-select"
+                                                error={this.state.errors.category}
+                                            >
+                                                {addEventDB.categories.map((category) =>
+                                                    <option value={category.id}>{category.title}</option>
+                                                )}
+                                            </NativeSelect>
+                                        </FormControl>
+
+                                        <FormControl className="formControl">
+                                            <InputLabel shrink htmlFor="age-native-label-placeholder">
+                                                Tags
+                                            </InputLabel>
+                                            <NativeSelect
+                                                value={this.state.eventData.tags}
+                                                name="tags"
+                                                onChange={event => this.handleUpdateData(event)}
+                                                input={<Input name="tags" />}
+                                                className="add-event-select"
+                                                error={this.state.errors.tags}
+                                            >
+                                                <option value="">none</option>
+                                                {addEventDB.tags.map((tag) =>
+                                                    <option value={tag.id}>{tag.title}</option>
+                                                )}
+                                            </NativeSelect>
+                                        </FormControl>
+
+                                        <FormGroup className="add-event-text-field">
+                                            <FormControlLabel
+                                                label="Private event"
+                                                control={
+                                                    <Switch
+                                                        name="permission"
+                                                        onChange={event => this.handleUpdateData(event)}
+                                                        checked={this.state.eventData.permission}
+                                                        error={this.state.errors.permission}
+                                                    />
+                                                }
+                                            />
+                                        </FormGroup>
+
+                                        <FormGroup className="add-event-invite-members">
+                                            <FormControlLabel
+                                                className="invite-members"
+                                                label="Members limits"
+                                                control={
+                                                    <Switch
+                                                        checked={this.state.eventData.members_limit_checked}
+                                                        name="members_limit_checked"
+                                                        onChange={event => this.handleUpdateData(event)}
+                                                    />
+                                                }
+                                            />
+
+                                            {this.state.eventData.members_limit_checked && <div className="invite-link">
+                                                <FormControl  className="textField">
+                                                    <TextField
+                                                        className="add-event-text-field"
+                                                        label="Members limit"
+                                                        type="number"
+                                                        min="1"
+                                                        name="members_limit"
+                                                        onChange={event => this.handleUpdateData(event)}
+                                                        value={this.state.eventData.members_limit}
+                                                        fullWidth
+                                                        autoComplete="off"
+                                                        error={this.state.errors.members_limit}
+                                                    />
+                                                </FormControl>
+                                            </div>}
+                                        </FormGroup>
+                                    </div>
+                                    <div>
+                                        <Button
+                                            variant="contained"
+                                            onClick={this.handleNext}
+                                            className="add-event-button-create"
                                         >
+                                            Save and upload cover
+                                        </Button>
+                                    </div>
+                                </StepContent>
+                            </Step>
+                            <Step key={1}>
+                                <StepLabel>Upload cover</StepLabel>
+                                <StepContent>
+                                    <Paper elevation={1} className="created-event-info">
+                                        <InputLabel className="created-event-info-label-info">Event information</InputLabel>
+                                        <InputLabel className="created-event-info-label">
+                                            Title:&nbsp;{this.state.eventData.title}
+                                        </InputLabel>
+                                        <InputLabel className="created-event-info-label">
+                                            Description:&nbsp;{this.state.eventData.description}
+                                        </InputLabel>
+                                        <InputLabel className="created-event-info-label">
+                                            Date and time:&nbsp;{this.state.eventData.start_date.getFullYear() + "."
+                                            + ("0" + (this.state.eventData.start_date.getMonth() + 1)).slice(-2) +
+                                            "." + ("0" + (this.state.eventData.start_date.getDate())).slice(-2)
+                                            + ", " + ("0" + (this.state.eventData.start_date.getHours())).slice(-2) +
+                                            ":" + ("0" + (this.state.eventData.start_date.getMinutes())).slice(-2)}
+                                        </InputLabel>
+                                        <InputLabel className="created-event-info-label">
+                                            Location:&nbsp;{this.state.eventData.location}
+                                        </InputLabel>
+                                        <InputLabel className="created-event-info-label">
+                                            Category:&nbsp;
                                             {addEventDB.categories.map((category) =>
-                                                <option value={category.id}>{category.title}</option>
+                                                (category.id === this.state.eventData.category) ? (category.title) : null
                                             )}
-                                        </NativeSelect>
-                                    </FormControl>
-
-                                    <FormControl className="formControl">
-                                        <InputLabel shrink htmlFor="age-native-label-placeholder">
-                                            Tags
                                         </InputLabel>
-                                        <NativeSelect
-                                            value={this.state.eventData.tags}
-                                            name="tags"
-                                            onChange={event => this.handleUpdateData(event)}
-                                            input={<Input name="tags" />}
-                                            className="add-event-select"
-                                            error={this.state.errors.tags}
-                                        >
-                                            <option value="">none</option>
+                                        <InputLabel className="created-event-info-label">
+                                            Tags:&nbsp;
                                             {addEventDB.tags.map((tag) =>
-                                                <option value={tag.id}>{tag.title}</option>
+                                                (tag.id === this.state.eventData.tags) ? (tag.title) : null
                                             )}
-                                        </NativeSelect>
-                                    </FormControl>
-
-                                    <FormGroup className="add-event-text-field">
-                                        <FormControlLabel
-                                            label="Private event"
-                                            control={
-                                                <Switch
-                                                    name="permission"
-                                                    onChange={event => this.handleUpdateData(event)}
-                                                    checked={this.state.eventData.permission}
-                                                    error={this.state.errors.permission}
-                                                />
-                                            }
-                                        />
-                                    </FormGroup>
-
+                                        </InputLabel>
+                                        <InputLabel className="created-event-info-label">
+                                            Permission:&nbsp;{this.state.eventData.permission ? "Private event" : "Open event"}
+                                        </InputLabel>
+                                        <InputLabel className="created-event-info-label">
+                                            Members limit:&nbsp;{this.state.eventData.members_limit_checked ? this.state.eventData.members_limit : "-"}
+                                        </InputLabel>
+                                    </Paper>
                                     <FormGroup className="add-event-invite-members">
                                         <FormControlLabel
                                             className="invite-members"
-                                            label="Members limits"
+                                            label="Invite members"
                                             control={
                                                 <Switch
-                                                    checked={this.state.eventData.members_limit_checked}
-                                                    name="members_limit_checked"
+                                                    checked={this.state.eventData.invite}
+                                                    name="invite"
                                                     onChange={event => this.handleUpdateData(event)}
+                                                    value="1"
                                                 />
                                             }
                                         />
-
-                                        {this.state.eventData.members_limit_checked && <div className="invite-link">
-                                            <FormControl  className="textField">
+                                        {this.state.eventData.invite && <div className="invite-link">
+                                            <FormControl className="textField">
                                                 <TextField
-                                                    className="add-event-text-field"
-                                                    label="Members limit"
-                                                    type="number"
-                                                    min="1"
-                                                    name="members_limit"
-                                                    onChange={event => this.handleUpdateData(event)}
-                                                    value={this.state.eventData.members_limit}
-                                                    fullWidth
-                                                    autoComplete="off"
-                                                    error={this.state.errors.members_limit}
+                                                    InputProps={{
+                                                        readOnly: true,
+                                                        startAdornment: (
+                                                            <InputAdornment position="start">
+                                                                <Link /> &nbsp;{window.location.origin + '/event/' + this.state.eventId}
+                                                            </InputAdornment>
+                                                        ),
+                                                    }}
                                                 />
                                             </FormControl>
                                         </div>}
                                     </FormGroup>
-                                </div>
-                                <div>
-                                    <Button
-                                        variant="contained"
-                                        onClick={this.handleNext}
-                                        className="add-event-button-create"
-                                    >
-                                        Save and upload cover
+                                    <Button variant="contained" className="add-event-button-upload" onClick={this.showUploadComponent}>
+                                        <CloudUpload />&nbsp;&nbsp;
+                                        <span>Upload cover</span>
                                     </Button>
-                                </div>
-                            </StepContent>
-                        </Step>
-                        <Step key={1}>
-                            <StepLabel>Upload cover</StepLabel>
-                            <StepContent>
-                                <Paper elevation={1} className="created-event-info">
-                                    <InputLabel className="created-event-info-label-info">Event information</InputLabel>
-                                    <InputLabel className="created-event-info-label">
-                                        Title:&nbsp;{this.state.eventData.title}
-                                    </InputLabel>
-                                    <InputLabel className="created-event-info-label">
-                                        Description:&nbsp;{this.state.eventData.description}
-                                    </InputLabel>
-                                    <InputLabel className="created-event-info-label">
-                                        Date and time:&nbsp;{this.state.eventData.start_date.getFullYear() + "."
-                                        + ("0" + (this.state.eventData.start_date.getMonth() + 1)).slice(-2) +
-                                        "." + ("0" + (this.state.eventData.start_date.getDate())).slice(-2)
-                                        + ", " + ("0" + (this.state.eventData.start_date.getHours())).slice(-2) +
-                                        ":" + ("0" + (this.state.eventData.start_date.getMinutes())).slice(-2)}
-                                    </InputLabel>
-                                    <InputLabel className="created-event-info-label">
-                                        Location:&nbsp;{this.state.eventData.location}
-                                    </InputLabel>
-                                    <InputLabel className="created-event-info-label">
-                                        Category:&nbsp;
-                                        {addEventDB.categories.map((category) =>
-                                            (category.id === this.state.eventData.category) ? (category.title) : null
-                                        )}
-                                    </InputLabel>
-                                    <InputLabel className="created-event-info-label">
-                                        Tags:&nbsp;
-                                        {addEventDB.tags.map((tag) =>
-                                            (tag.id === this.state.eventData.tags) ? (tag.title) : null
-                                        )}
-                                    </InputLabel>
-                                    <InputLabel className="created-event-info-label">
-                                        Permission:&nbsp;{this.state.eventData.permission ? "Private event" : "Open event"}
-                                    </InputLabel>
-                                    <InputLabel className="created-event-info-label">
-                                        Members limit:&nbsp;{this.state.eventData.members_limit_checked ? this.state.eventData.members_limit : "-"}
-                                    </InputLabel>
-                                </Paper>
-                                <FormGroup className="add-event-invite-members">
-                                    <FormControlLabel
-                                        className="invite-members"
-                                        label="Invite members"
-                                        control={
-                                            <Switch
-                                                checked={this.state.eventData.invite}
-                                                name="invite"
-                                                onChange={event => this.handleUpdateData(event)}
-                                                value="1"
-                                            />
-                                        }
-                                    />
-                                    {this.state.eventData.invite && <div className="invite-link">
-                                        <FormControl className="textField">
-                                            <TextField
-                                                InputProps={{
-                                                    readOnly: true,
-                                                    startAdornment: (
-                                                        <InputAdornment position="start">
-                                                            <Link /> &nbsp;{window.location.origin + '/event/' + this.state.eventId}
-                                                        </InputAdornment>
-                                                    ),
-                                                }}
-                                            />
-                                        </FormControl>
-                                    </div>}
-                                </FormGroup>
-                                <Button variant="contained" className="add-event-button-upload">
-                                    <CloudUpload />&nbsp;&nbsp;
-                                    <span>Upload cover</span>
-                                    <input id="upload" type="file"
-                                       onChange={(event)=> {
-                                           if (!event.target.files.length) {
-                                               return;
-                                           }
-                                           event.target.previousSibling.textContent = event.target.files[0].name;
-                                       }}
-                                    />
-                                </Button>
-                                <div>
-                                    <Button
-                                        variant="contained"
-                                        onClick={this.handleNext}
-                                        className="add-event-button-update-cover"
-                                    >
-                                        Create event
-                                    </Button>
-                                </div>
-                            </StepContent>
-                        </Step>
-                    </Stepper>
-                </form>
-            </div>
+                                    <div>
+                                        <Button
+                                            variant="contained"
+                                            onClick={this.handleNext}
+                                            className="add-event-button-update-cover"
+                                        >
+                                            Create event
+                                        </Button>
+                                    </div>
+                                </StepContent>
+                            </Step>
+                        </Stepper>
+                    </form>
+                </div>
+            </>
         );
     }
 }

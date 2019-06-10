@@ -10,7 +10,7 @@ const handler = {
 
     async getSelfProfile(ctx){
         const { user_id } = ctx.state; 
-        const user = await User.where({id:user_id}).fetch({withRelated:['rooms', 'events']});
+        const user = await User.where({id:user_id}).fetch({withRelated:['rooms', 'events', 'media']});
 
         ctx.body = user;
     },
@@ -18,10 +18,10 @@ const handler = {
         const { user_id } = ctx.state;
         const { id } = ctx.params;
         if ( +id === user_id ) {
-            const user = await User.where({id:user_id}).fetch({withRelated:['rooms', 'events']});
+            const user = await User.where({id:user_id}).fetch({withRelated:['rooms', 'events', 'media']});
             ctx.body = user;
         } else {
-            let user = (await User.where({id}).fetch({require: true, withRelated:['publicRooms', 'publicEvents']})).toJSON();
+            let user = (await User.where({id}).fetch({require: true, withRelated:['publicRooms', 'publicEvents', 'media']})).toJSON();
             user.rooms = user.publicRooms;
             delete user.publicRooms;
             user.events = user.publicEvents;

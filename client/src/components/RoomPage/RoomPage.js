@@ -7,49 +7,25 @@ import 'react-responsive-carousel/lib/styles/carousel.min.css';
 
 import { AppBar, Tabs, Tab, Typography, Grid, Avatar, Card, CardActions, CardContent, CardMedia,
     CardActionArea, Button, ListItemText, ListItem, ListItemAvatar, Badge, Fab, Paper } from '@material-ui/core';
-import { Comment, Collections, Face, NewReleases, EventAvailable, Add, Info } from '@material-ui/icons';
+import { Comment, Collections, Face, NewReleases, EventAvailable, Add, Info, Edit } from '@material-ui/icons';
 import Gallery from 'react-grid-gallery';
 import SwipeableViews from 'react-swipeable-views';
 import Spinner from './../UI/Spinner/Spinner';
 import NeventCard from '../nEventCard/nEventCard';
 import defaultAvatar from "../../assets/images/face.png";
+import ImageUploader from "./../ImageUploader/ImageUploader";
 
 const convertTime = (str) => {
     // Define manually date;
-    const months = {
-        '01': 'January',
-        '02': 'February',
-        '03': 'March',
-        '04': 'April',
-        '05': 'May',
-        '06': 'June',
-        '07': 'July',
-        '08': 'August',
-        '09': 'September',
-        '10': 'October',
-        '11': 'November',
-        '12': 'December'
+    const months = ["January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    ];
+
+    const time = new Date(str);
+    return {
+        date: time.getDate() + " " + months[time.getMonth()],
+        time: ("0" + (time.getHours())).slice(-2) + ":" + ("0" + (time.getMinutes())).slice(-2)
     };
-
-    if (str && typeof str === 'string') {
-        try{
-            let [, month, date] = [...str.split('-')];
-            let [hour, min] = [...date.split('T').pop().split(':')];
-
-            date = date.slice(0, 2);
-
-            return {
-                date: `${date[0] === '0' ? date.slice(1) : date} ${months[month]}`,
-                time: `${hour}:${min}`
-            }
-        } catch(err) {
-            console.log('ERR', err);
-            return {
-                date: '',
-                time: ''
-            }
-        }
-    }
 };
 
 function TabContainer(props) {
@@ -65,17 +41,24 @@ class RoomPage extends React.Component {
     state = {
         value: 0,
         roomPageDB: null,
+        gallery: null,
         authUser: false,
         userCount: 0,
         members: '',
-        disabledBtn: false
+        disabledBtn: false,
+        showUpload: false,
     };
 
     componentDidMount() {
         const { id } = this.props.match.params;
         axios.get("/api/room/" + id)
             .then(res => {
-                this.setState({ roomPageDB: res.data });
+                console.log('response', res.data);
+                let gallery = [];
+                [...res.data.media].map(e => {
+                    gallery.push({src:e.key.slice(6), thumbnail:e.key.slice(6)})
+                });
+                this.setState({ roomPageDB: res.data, gallery });
             })
             .catch(err => console.log(err));
         this.checkMembersLimit();
@@ -156,9 +139,22 @@ class RoomPage extends React.Component {
           });
     }
 
+    showUploadComponent = () => {
+        this.setState({showUpload: true})
+    }
+
+    closeUploadComponent = () => {
+        this.setState({showUpload: false})
+    }
+
+    getImagesSRC = (src) => {
+        const gallery = [...this.state.gallery].concat(src);
+        this.setState({gallery});
+    }
+
     render() {
-        const { value, roomPageDB } = this.state;
-        const { isAuthenticated } = this.props;
+        const { value, roomPageDB, gallery } = this.state;
+        const { isAuthenticated, user } = this.props;
 
         if (!roomPageDB) {
             return (<Spinner className="rooms-page"/>);
@@ -198,6 +194,14 @@ class RoomPage extends React.Component {
                         />
                     </Tabs>
                 </AppBar>
+                <ImageUploader 
+                    show={this.state.showUpload}
+                    closeUploadComponent={this.closeUploadComponent} 
+                    entityURL={this.props.match.url}
+                    authUser={this.state.authUser}
+                    isAuthenticated={isAuthenticated}
+                    getImagesSRC={this.getImagesSRC}
+                />
 
                 <SwipeableViews
                     index={value}
@@ -258,15 +262,6 @@ class RoomPage extends React.Component {
                     </TabContainer>) || <TabContainer></TabContainer> }
 
                     { (value === 2 && <TabContainer>
-                        <Grid container className="room-details-add-event-button">
-                            {isAuthenticated && (<Grid item>
-                                <Link to={this.props.location.pathname + "/add-event"} className="room-details-add-event-link">
-                                    <Fab variant="extended" className="room-details-add-event">
-                                        <Add />
-                                    </Fab>
-                                </Link>
-                            </Grid>)}
-                        </Grid>
                         <Grid container spacing={24}>
                             {roomPageDB.event.map((event) =>
                                 <Grid item lg={4} md={6} xs={12} className="room-details-card-grid">
@@ -295,9 +290,9 @@ class RoomPage extends React.Component {
                     { (value === 3 && <TabContainer>
                         <Fab variant="extended" className="room-details-page-photo-fab">
                             <Add />
-                            <span>upload photo</span>
+                            <span onClick={this.showUploadComponent}>upload photo</span>
                         </Fab>
-                        <Gallery images={roomPageDB.gallery} backdropClosesModal={true} />
+                        <Gallery images={gallery} backdropClosesModal={true} />
                     </TabContainer>) || <TabContainer></TabContainer> }
 
                     { (value === 4 && <TabContainer>
@@ -350,6 +345,23 @@ class RoomPage extends React.Component {
                         </Grid>
                     </TabContainer>) || <TabContainer></TabContainer> }
                 </SwipeableViews>
+
+                {value === 0 && isAuthenticated && roomPageDB.creator_id === user.id &&(
+                    <Link to={this.props.location.pathname + "/edit"} className="room-details-add-event-link">
+                        <Fab variant="extended" className="room-details-add-event">
+                            <Edit />
+                        </Fab>
+                    </Link>
+                )}
+
+                {value === 2 && isAuthenticated && (
+                    <Link to={this.props.location.pathname + "/add-event"} className="room-details-add-event-link">
+                        <Fab variant="extended" className="room-details-add-event">
+                            <Add />
+                        </Fab>
+                    </Link>
+                )}
+
             </div>
         );
     }
