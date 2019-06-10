@@ -1,4 +1,3 @@
-import axios from "axios";
 import setAuthToken from "./../../setAuthToken";
 
 import * as actionTypes from "./actions";

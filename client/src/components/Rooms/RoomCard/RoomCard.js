@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 
 import { Grid, Button } from "@material-ui/core";
 import StarRating from "./../../UI/StarRating/StarRating";
@@ -9,6 +9,7 @@ const roomCard = props => {
     backgroundImage: `url(${props.background})`
   };
   const [isHovered, toggle] = useState(false);
+
   return (
     <Grid item xs={12} sm={6} md={4} className={`col ${isHovered && 'hover'}`} onClick={() => toggle(!isHovered)}>
       <div className="room-card" onClick={props.clicked}>
@@ -32,6 +33,10 @@ const roomCard = props => {
             <p>{props.description}</p>
             <Grid container justify="space-evenly" className="back-btn-wrapper">
               <span>Members: {props.members} / {props.limit}</span>
+              {props.limit ? 
+                <span>Members: {props.members} / {props.limit}</span> :
+                <span>Members: {props.members}</span>
+              }
               <Button>view more</Button>
             </Grid>
           </div>

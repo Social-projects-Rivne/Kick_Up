@@ -7,7 +7,7 @@ import setAuthToken from '../setAuthToken';
 import PageContainer from "./PageContainer/PageContainer";
 import Router from "./../router";
 import store from "./../store/store";
-import { storeUser, signOutUser, userHasAuthenticated } from "./../store/actions/authentication";
+import { storeUser, userHasAuthenticated } from "./../store/actions/authentication";
 
 if (localStorage.authorization) {
   setAuthToken(localStorage.authorization);
@@ -30,12 +30,14 @@ class App extends Component {
       .then(user => {
         store.dispatch(userHasAuthenticated(true));
         store.dispatch(storeUser(user));
-        //this.userHasAuthenticated(true);
-        //this.setUser(user);
+
+        //this is works without redux & in future will removed
+        this.userHasAuthenticated(true);
+        this.setUser(user);
       })
       .catch(err => {
-        store.dispatch(signOutUser());
-        console.log('Authtorization failed');
+        setAuthToken(null);
+        console.log('Authtorization failed', err);
       });
   }
 
@@ -56,11 +58,7 @@ class App extends Component {
     return (
       <Provider store={store}>
         <BrowserRouter>
-          <PageContainer
-            isAuthenticated={this.state.isAuthenticated}
-            userHasAuthenticated={this.userHasAuthenticated}
-            user={this.state.user}
-          >
+          <PageContainer>
             <Router childProps={this.getChildProps()} />
           </PageContainer>
         </BrowserRouter>

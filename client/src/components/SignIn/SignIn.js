@@ -63,7 +63,6 @@ class Login extends Component {
       email,
       password
     };
-    //this.props.signInUser(user);
     axios
       .post("/api/signin", user)
       .then(res => {
@@ -74,7 +73,6 @@ class Login extends Component {
         return axios.get('api/profile')
       })
       .then((res) => {
-        //TODO decide with team if this action is necessary
         if (res.data && res.data.email) {
           return  res.data;
         }
@@ -89,7 +87,6 @@ class Login extends Component {
           passwordInputValid: true,
           formInFocus: false
         }, () => setTimeout(() => {
-          console.log('sigin', this.props.storeUser, {user})
           this.props.storeUser(user);
           this.props.history.push({
             pathname: "/",

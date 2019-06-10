@@ -200,5 +200,5 @@
 }
 
 .back .inner p {
-  @include multiLineEllipsis($lineHeight: 1.4em, $lineCount: 5, $bgColor: $white);
+  @include multiLineEllipsis($lineHeight: 1.4em, $lineCount: 5, $bgColor: inherit);
 }
