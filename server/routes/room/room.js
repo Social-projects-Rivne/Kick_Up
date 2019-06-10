@@ -43,7 +43,8 @@ const handler = {
 
     const room = await new Room(newRoom).save();
     await new Member({user_id:creator_id,entity_type:constants.rating.entity_types.room,entity_id:room.id}).save();
-    ctx.body = room;
+    const resRoom = await Room.where({ id: room.id }).fetch({withRelated:['creator','category','members','event', 'media'],require:true});
+    ctx.body = resRoom;
   },
   async getRoomById(ctx) {
     const { id } = ctx.params;
@@ -197,16 +198,21 @@ const handler = {
         }
     ];
     const room = await Room.where({ id }).fetch({withRelated:['creator','category','members','event', 'media'],require:true});
-    room.set({feeds,gallery,posts,members});
+    room.set({feeds,posts});
     ctx.body = room;
   },
   async updateRoomById(ctx) {
-    const { id } = ctx.params;
-    const room = await Room.where({id}).fetch({require:true});
-    const { title,description,cover,permission,members_limit,category_id } = ctx.request.body;
-    const obj = {title,description,cover,permission,members_limit,category_id};
-    await room.save( obj, { patch:true });
-    ctx.body = '';
+      await validate(ctx.request.body, {
+          title:'required|string|min:3|max:100',
+          description:'required|string|min:6|max:300',
+          members_limit:'numeric|min:1',
+      });
+      const { id } = ctx.params;
+      const room = await Room.where({id}).fetch({require:true});
+      const { title,description,cover,permission,members_limit,category_id } = ctx.request.body;
+      const obj = {title,description,cover,permission,members_limit,category_id};
+      await room.save( obj, { patch:true });
+      ctx.body = '';
   },
   async sort(ctx) {
     let { sort, page } = ctx.query;

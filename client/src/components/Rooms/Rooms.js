@@ -162,7 +162,7 @@ class Rooms extends Component {
                 limit={room.members_limit}
                 rating={room.roomRating}
                 members={room.members.length}
-                background={room.cover}
+                background={room.cover && room.cover.replace(/\\/g, '/')}
                 clicked={() => this.selectedRoomHandler(room.id)}
               />
             );

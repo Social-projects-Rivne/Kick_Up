@@ -16,9 +16,9 @@ class ImageUploader extends Component {
     uploading: false,
     uploadProgress: {},
     limitFiles: false,
+    limitFile: false,
     successfullUploaded: false,
     error: null,
-    imagesSRC: []
   };
 
   onFilesAdded = files => {
@@ -37,16 +37,28 @@ class ImageUploader extends Component {
         rejectedFiles.push(e)
       }
     })
-    const addedFiles = [...this.state.files].concat(validatedFiles);
-    const addedRejectedFiles = [...this.state.rejectedFiles].concat(rejectedFiles);
-    if (addedFiles.length <= maxFiles) {
-      this.setState({
-        files: addedFiles,
-        limitFiles: false
-      });
+    if (this.props.uploaderType !== "cover") {
+      const addedFiles = [...this.state.files].concat(validatedFiles);
+      if (addedFiles.length <= maxFiles) {
+        this.setState({
+          files: addedFiles,
+          limitFiles: false
+        });
+      } else {
+        this.setState({limitFiles: true})
+      }
     } else {
-      this.setState({limitFiles: true})
+      const addedFiles = [...this.state.files].concat(validatedFiles);
+      if (addedFiles.length === 1) {
+        this.setState({
+          files: addedFiles,
+          limitFile: false
+        });
+      } else {
+        this.setState({limitFile: true})
+      }
     }
+    const addedRejectedFiles = [...this.state.rejectedFiles].concat(rejectedFiles);
     if (addedRejectedFiles.length <= maxFiles) {
       this.setState({ rejectedFiles: addedRejectedFiles });
     }
@@ -64,30 +76,32 @@ class ImageUploader extends Component {
     const formData = new FormData();
     formData.append("file", file, file.name);
     axios.post('/api/upload' + this.props.entityURL, formData, {
-        onUploadProgress: progressEvent => {
-            const copy = { ...this.state.uploadProgress };
-            copy[file.name] = {
-                state: "pending",
-                percentage: (progressEvent.loaded / progressEvent.total) * 100
-            };
-            this.setState({ uploadProgress: copy });
-        }
+      onUploadProgress: progressEvent => {
+        const copy = { ...this.state.uploadProgress };
+        copy[file.name] = {
+            state: "pending",
+            percentage: (progressEvent.loaded / progressEvent.total) * 100
+        };
+        this.setState({ uploadProgress: copy });
+      }
     })
-        .then(res => {
-            const copy = { ...this.state.uploadProgress };
-            copy[file.name] = { state: "done", percentage: 100 };
-            this.setState({ uploadProgress: copy, successfullUploaded: true });
-            setTimeout(() => this.setState({ uploading: false }), 1000);
-            const imageSRC = res.data;
-            const imagesSRC = [...this.state.imagesSRC].concat({src:imageSRC, thumbnail:imageSRC});
-            this.setState({imagesSRC});
-            this.props.getImagesSRC(this.state.imagesSRC);
-        })
-        .catch(error => {
-           console.log(error);
-           this.setState({ error: "Ooops! Something were wrong!", successfullUploaded: true, uploading: false });
-        })
+      .then(res => {
+        const copy = { ...this.state.uploadProgress };
+        copy[file.name] = { state: "done", percentage: 100 };
+        this.setState({ uploadProgress: copy, successfullUploaded: true, error: null });
+        setTimeout(() => this.setState({ uploading: false }), 1000);
+        let imageSRC = res.data;
+        if (this.props.uploaderType !== "cover") {
+          imageSRC = {src:imageSRC, thumbnail:imageSRC};
+        }
+        this.props.getImagesSRC(imageSRC);
+      })
+      .catch(error => {
+          console.log(error);
+          this.setState({ error: "Ooops! Something were wrong!", successfullUploaded: false, uploading: false });
+      })
   }
+    
 
   deleteFile = file => () => {
     let CopyFiles = [ ...this.state.files ];
@@ -103,6 +117,21 @@ class ImageUploader extends Component {
       return e.name !== file.name
     });
     this.setState({rejectedFiles});
+  }
+
+  clearState = () => {
+    this.setState({ 
+      files: [], 
+      rejectedFiles: [], 
+      imagesSRC: [],
+      successfullUploaded: false, 
+      limitFiles: false, 
+      error: null })
+  }
+
+  closeUpload = () => {
+    this.clearState();
+    this.props.closeUploadComponent();
   }
 
   renderProgress = file => {
@@ -140,15 +169,7 @@ class ImageUploader extends Component {
         <p className="actions-success">All files successful uploaded!</p>
         <Button
             variant="outlined"
-            onClick={() =>
-            this.setState({ 
-              files: [], 
-              rejectedFiles: [], 
-              imagesSRC: [],
-              successfullUploaded: false, 
-              limitFiles: false, 
-              error: null })
-          }
+            onClick={this.clearState}
         >
           Clear
         </Button>
@@ -184,7 +205,7 @@ class ImageUploader extends Component {
 
     const uploadCard = 
       <div className="upload-card" onClick={event => event.stopPropagation()} >
-        <Close className="upload-card-close" onClick={this.props.closeUploadComponent} />
+        <Close className="upload-card-close" onClick={this.closeUpload} />
         <div className="upload">
           <div className="Content">
             <div className="dropzone-wrapper">
@@ -196,6 +217,7 @@ class ImageUploader extends Component {
             </div>
             <div className="Files">
               {this.state.limitFiles && <div className="row row-limit"><span className="limit-files">You can upload max 5 files at once!</span></div>}
+              {this.state.limitFile && <div className="row row-limit"><span className="limit-files">You can choose only one file!</span></div>}
               {this.state.files.map(file => {
                 return (
                   !file.deletedFile && 
@@ -226,7 +248,7 @@ class ImageUploader extends Component {
       <>
         {this.props.show ? 
         <div className="upload-wrapper" 
-          onClick={this.props.closeUploadComponent}
+          onClick={this.closeUpload}
           >
             {!this.props.isAuthenticated ? 
               renderSignIn : 
