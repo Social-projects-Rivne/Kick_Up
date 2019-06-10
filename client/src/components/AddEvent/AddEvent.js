@@ -184,7 +184,6 @@ class AddEvent extends React.Component {
                     });
                 break;
             case 1:
-                //ToDo upload cover
                 const updatedData = {
                     cover: this.state.imageSRC || defaultCover,
                     title: this.state.eventData.title,
@@ -202,7 +201,7 @@ class AddEvent extends React.Component {
                             errors[key] = true;
                         }
                         this.setState({ loading: false, errors: errors });
-                    })
+                    });
                 break;
             default:
                 console.log("Unknown step");
@@ -212,15 +211,15 @@ class AddEvent extends React.Component {
 
     showUploadComponent = () => {
         this.setState({showUpload: true})
-    }
+    };
 
     closeUploadComponent = () => {
         this.setState({showUpload: false})
-    }
+    };
 
     getImagesSRC = (imageSRC) => {
         this.setState({imageSRC});
-    }
+    };
 
     render() {
         const { activeStep, addEventDB } = this.state;

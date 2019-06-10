@@ -107,9 +107,9 @@ class AddRoom extends React.Component {
 
                 const data = {
                     title: this.state.roomData.title,
+                    description: this.state.roomData.description,
                     creator_id: this.state.userId,
                     category_id: this.state.roomData.category,
-                    description: this.state.roomData.description,
                     cover: defaultCover,
                     permission: this.state.roomData.permission ? 1 : 0,
                     members_limit: this.state.roomData.members_limit_checked ? this.state.roomData.members_limit : null
@@ -134,10 +134,11 @@ class AddRoom extends React.Component {
                     });
                 break;
             case 1:
-                //ToDo upload invite members
                 const updatedData = {
                     cover: this.state.imageSRC  || defaultCover
-                }
+                    description: this.state.roomData.description,
+                    title: this.state.roomData.title
+                };
                 axios.put("/api/room/" + this.state.roomId, updatedData)
                     .then(res => {
                         this.props.history.push({ pathname: "/room/" + this.state.roomId });
@@ -150,7 +151,7 @@ class AddRoom extends React.Component {
                             errors[key] = true;
                         }
                         this.setState({ loading: false, errors: errors });
-                    })
+                    });
                 break;
             default:
                 console.log("Unknown step");
@@ -171,7 +172,7 @@ class AddRoom extends React.Component {
     }
 
     render() {
-        const { activeStep, addRoomDB, roomId } = this.state;
+        const { activeStep, addRoomDB } = this.state;
         const { isAuthenticated } = this.props;
 
         if (this.state.loading) {

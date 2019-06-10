@@ -173,7 +173,7 @@ class Events extends Component {
                 description={event.description}
                 limit={event.members_limit}
                 members={membersCount}
-                background={event.cover}
+                background={event.cover && event.cover.replace(/\\/g, '/')}
                 clicked={() => this.selectedEventHandler(event.id)}
               />
             );
