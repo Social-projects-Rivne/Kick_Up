@@ -4,6 +4,7 @@ import axios from "axios";
 const starRating = props => {
   const [rating, ratingHandler] = useState(props.rating || null);
   const [stashedRating, stashedRatingHandler] = useState(null);
+  const [message, toggleMassage] = useState(null);
 
   const rate = i => {
     axios.post('/api' + props.entityURL + '/rating', { rating: i })
@@ -25,27 +26,52 @@ const starRating = props => {
     ratingHandler(stashedRating)
   }
 
+  const messageOn = () => {
+    toggleMassage('Only members can rating!')
+  }
+
+  const messageOff = () => {
+    toggleMassage(null)
+  }
+
   let stars = [];
   for (let i = 1; i <= 5; i++) {
-    let klass = "star-rating__star";
+    let classRating = "star-rating__star";
 
     if (rating >= i && rating != null) {
-      klass += " is-selected";
+      classRating += " is-selected";
     }
-
-    stars.push(
-      <label
-        key={i}
-        className={klass}
-        onClick={() => rate(i)}
-        onMouseOver={() => star_over(i)}
-        onMouseOut={star_out}
-      >
-        ★
-      </label>
-    );
+    if (props.authUser) {
+      stars.push(
+        <label
+          key={i}
+          className={classRating}
+          onClick={() => rate(i)}
+          onMouseOver={() => star_over(i)}
+          onMouseOut={star_out}
+        >
+          ★
+        </label>
+      );
+    } else {
+      stars.push(
+        <label
+          key={i}
+          className={classRating}
+          onMouseOver={messageOn}
+          onMouseOut={messageOff}
+        >
+          ★
+        </label>
+      );
+    }
   }
-  return <div className="star-rating">{stars}</div>;
+  return (
+    <div className="star-rating">
+      {stars}
+      <span className="star-rating-message">{message}</span>
+    </div>
+  )
 }
 
 export default starRating;
