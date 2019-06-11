@@ -124,6 +124,7 @@ class EventPage extends Component {
             authUser:  false,
             userCount: 0,
             showUpload: false,
+            creatorId: null
         };
     }
     saveSwiper = (instance) => {
@@ -220,6 +221,7 @@ class EventPage extends Component {
                 description: res.description,
                 gallery,
                 eventRating: res.eventRating,
+                creatorId: res.creator_id
             });
         })
         .catch((err) => {
@@ -256,6 +258,7 @@ class EventPage extends Component {
     }
 
     render() {
+        const { isAuthenticated, user } = this.props;
         // const stateUser = this.props.user;
         // const eventId = this.props.match.params.id;
         //
@@ -467,11 +470,13 @@ class EventPage extends Component {
                         }
                     </Grid>
                 </Swiper>
+                { isAuthenticated && this.state.creatorId === user.id && (
                 <Link to={this.props.location.pathname + "/edit"} className="event-page__edit-link">
                     <Fab variant="extended" className="event-page__edit-event">
                         <Edit />
                     </Fab>
                 </Link>
+                )}
             </div>
         );
     }
