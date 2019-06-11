@@ -18,7 +18,7 @@ class App extends Component {
     isAuthenticated: false,
     user: null,
   };
-  componentWillMount() {
+  componentDidMount() {
     axios.get('http://localhost:3000/api/profile')
       .then((res) => {
         //TODO decide with team if this action is necessary
@@ -37,10 +37,12 @@ class App extends Component {
       })
       .catch(err => {
         setAuthToken(null);
+        store.dispatch(authenticationError(err.response || err));
         console.log('Authtorization failed', err);
       });
   }
 
+  //this is works without redux & in future will removed
   userHasAuthenticated = authenticated => {
     this.setState({ isAuthenticated: authenticated });
   }
@@ -54,6 +56,7 @@ class App extends Component {
       user,
     }
   }
+
   render() {
     return (
       <Provider store={store}>

@@ -9,7 +9,7 @@ import { Grid, TextField, Button, Typography } from "@material-ui/core";
 import { Person, Send, Email, Lock } from "@material-ui/icons";
 import CustomizedSnackbars from "../Toast/Toast";
 import setAuthToken from '../../setAuthToken';
-import { userHasAuthenticated, storeUser } from './../../store/actions/authentication';
+import { userHasAuthenticated, storeUser, authenticationError } from './../../store/actions/authentication';
 
 const PASSWORD_LENGTH = 6;
 const messageType = {
@@ -63,6 +63,7 @@ class Login extends Component {
       email,
       password
     };
+    //TODO: deside with team, is it necessary create signIn actionCreator for redux
     axios
       .post("/api/signin", user)
       .then(res => {
@@ -86,13 +87,15 @@ class Login extends Component {
           emailInputValid: true,
           passwordInputValid: true,
           formInFocus: false
-        }, () => setTimeout(() => {
+        });
+        setTimeout(() => {
           this.props.storeUser(user);
           this.props.history.push({
             pathname: "/",
           });
-        }, 500))})
-      .catch(() => {
+        }, 1000)})
+      .catch((err) => {
+        this.props.authenticationError(err.response || err);
         this.showToast('Incorrect username or password!', messageType.ERR);
       });
   };
@@ -385,6 +388,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   userHasAuthenticated: isAuthenticated => dispatch(userHasAuthenticated(isAuthenticated)),
   storeUser: user => dispatch(storeUser(user)),
+  authenticationError: err => dispatch(authenticationError(err)),
 })
 
 export default withSnackbar(connect(mapStateToProps, mapDispatchToProps)(Login));

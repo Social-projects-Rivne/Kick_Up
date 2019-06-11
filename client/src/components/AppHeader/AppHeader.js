@@ -20,11 +20,7 @@ class AppHeader extends React.Component {
     };
     handleSignOut = () => {
         this.setState({ anchorEl: null });
-        this.props.signOutUser(this.props.history)
-        //this.props.userHasAuthenticated(false);
-        //localStorage.removeItem("authorization");
-        //setAuthToken(null);
-        //this.props.history.push({ pathname: "/" });
+        this.props.signOutUser(this.props.history);
     }
     componentWillMount() {
         this.unlisten = this.props.history.listen(location => {
