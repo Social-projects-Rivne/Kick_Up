@@ -7,7 +7,7 @@ import setAuthToken from '../setAuthToken';
 import PageContainer from "./PageContainer/PageContainer";
 import Router from "./../router";
 import store from "./../store/store";
-import { storeUser, userHasAuthenticated } from "./../store/actions/authentication";
+import { storeUser, userHasAuthenticated, authenticationError } from "./../store/actions/authentication";
 
 if (localStorage.authorization) {
   setAuthToken(localStorage.authorization);
