@@ -1,0 +1,352 @@
+/* Available modificators:
+* postcard__expand-btn_expanded;
+* postcard_no-padding-bottom
+*/
+
+#root .postcard {
+    position: relative;
+    margin: 0 0 16px;
+    box-sizing: border-box;
+    border-radius: 0;
+    border-bottom: 1px solid lighten($secondaryBlack, 90%);
+    box-shadow: none;
+    overflow: visible;
+
+    & * {
+        box-sizing: border-box;
+    }
+
+    &.postcard_no-margin-bottom {
+        margin-bottom: 0;
+    }
+}
+
+.postcard .postcard__header {
+    width: 100%;
+    padding: 10px 10px 0;
+}
+
+.postcard__header span:first-of-type {
+    padding-bottom: 3px;
+    font-size: 1.571rem;
+    line-height: 2rem;
+    letter-spacing: 1px;
+    color: $black;
+    font-weight: 100;
+    overflow: hidden;
+    word-break: break-word;
+    text-transform: capitalize;
+}
+
+#root .postcard .postcard__main-content {
+    font-size: 1.071rem;
+    line-height: 1.286rem;
+    font-weight: 100;
+}
+
+.postcard__header-info {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 5px;
+}
+
+.postcard .postcard__avatar-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+
+    &:hover,
+    &:active {
+        background-color: transparent;
+        text-decoration: none;
+    }
+}
+
+.postcard .postcard__avatar {
+    width: 28px;
+    height: 28px;
+}
+
+.postcard .postcard__avatar-wrapper span {
+    margin-left: 10px;
+    font-size: 15px;
+    line-height: 18px;
+    color: $black;
+
+    &::before {
+        content: 'by '; 
+        font-size: 13px;
+        font-weight: 100;
+        opacity: 0.8;
+    }
+}
+
+.postcard__header > div:first-child {
+    align-self: flex-start;
+    margin-top: 6px;
+}
+
+.postcard__header > div:first-child > div {
+    width: 50px;
+    height: 50px;
+}
+
+#root .postcard .postcard__expand-btn {
+    padding-right: 22px; 
+    background-color: $primary;
+    color: $black;
+    box-shadow: none;
+
+    &.postcard__expand-btn_expanded svg {
+        transform: rotate(180deg);
+    }
+
+    // For better look;
+    & [class*=MuiFab-label] {
+        padding-top: 2px;
+    }
+}
+
+.postcard .postcard__description {
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: visible;
+    // Need max-height to perform max-height animation;
+    max-height: 1800px;
+    padding: 0 10px;
+    transition: max-height 1.3s;
+
+    &::before {
+        display: none;
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(to bottom, transparent 75%, #fff);
+        z-index: 1;
+    }
+}
+
+.postcard .postcard__description p {
+    font-size: 0.9375rem;
+    line-height: 1.286rem;
+    font-weight: 100;
+    word-break: break-word;
+}
+
+.postcard .postcard__description figure {
+    margin-left: 0;
+    margin-right: 0;
+    text-align: center;
+}
+
+.postcard .postcard__description img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+#root .postcard .postcard__read-more {
+    display: none;
+    position: absolute;
+    min-width: 165px;
+    max-width: 165px;
+    left: 0;
+    right: 0;
+    bottom: -28px;
+    margin: auto;
+    z-index: 2;
+}
+
+.postcard .postcard__description h1,
+.postcard .postcard__description h2,
+.postcard .postcard__description h3, 
+.postcard .postcard__description h4 {
+    margin: 14px 0; 
+    font-weight: 400;
+    text-align: left;
+    word-break: break-word;
+
+    & + br {
+        display: none;
+    }
+}
+
+.postcard__header-pin-wrapper {
+    display: none;
+    position: absolute;
+    align-items: center;
+    top: 19px;
+    right: 8px;
+}
+
+.postcard__header-pin {
+    top: 16px;
+    right: 8px;
+    color: $primary;
+    z-index: 1;
+}
+.postcard .postcard__header-pin-wrapper span {
+    padding-top: 2px;
+    font-size: 12px;
+    line-height: 16px;
+    text-transform: capitalize;
+    margin-left: 5px;
+}
+
+div#root .postcard .postcard__edit-ico {
+    position: absolute;
+    top: 0;
+    right: 29px;
+    display: none;
+    align-items: center;
+    text-decoration: none;
+    z-index: 1;
+
+    & span {
+        margin: 0;
+    }
+
+    & span::before {
+        display: none;
+    }
+
+    & svg {
+        transform: scale(0.7);
+        color: $primary;
+    }
+}
+
+div#root div.postcard .postcard__edit-ico-text {
+    margin-left: 5px;
+    font-size: 12px;
+    line-height: 16px;
+    text-transform: capitalize;
+    color: lighten($black, 40%);
+}
+
+#root .postcard .postcard__description a {
+    display: inline-block;
+    vertical-align: middle;
+    color: darken($primary, 15%);
+
+    &:hover {
+        color: darken($primary, 20%);
+    } 
+
+    &:active {
+        color: $black;
+    }
+}
+
+#root .postcard .postcard__description ol,
+#root .postcard .postcard__description ul {
+    padding-left: 16px;
+}
+
+#root .postcard .postcard__description strong {
+    font-weight: 500;
+}
+
+.postcard .postcard__description blockquote {
+    margin: 0;
+    padding-left: 16px;
+    padding-top: 14px;
+    padding-bottom: 14px;
+    border-left: 5px solid $primary;
+}
+
+.postcard .postcard__description blockquote p {
+    margin: 0;
+    font-style: italic;
+    text-transform: capitalize;
+}
+
+// Related to modificators;
+.postcard.postcard_pinned
+.postcard__header-pin-wrapper {
+    display: flex;
+}
+
+div#root .postcard.postcard_edit .postcard__edit-ico {
+    display: flex;
+    top: 20px;
+}
+
+div#root .postcard.postcard_edit.postcard_pinned .postcard__edit-ico {
+    display: flex;
+    top: 48px;
+}
+
+.postcard.postcard_edit
+.postcard__header span[class*=MuiTypography-headline],
+.postcard.postcard_pinned
+.postcard__header span[class*=MuiTypography-headline] {
+    padding-right: 70px;
+}
+
+.postcard__description.postcard__description_cut {
+    max-height: 33vh;
+    padding-bottom: 14px;
+    overflow: hidden;
+}
+
+.postcard__description.postcard__description_cut::before {
+    display: block;
+}
+
+#root .postcard__description.postcard__description_cut 
++ .postcard__read-more {
+    display: flex;
+}
+
+#root .postcard__description.postcard__description_cut_expanded {
+    padding-bottom: 14px;
+}
+
+#root .postcard__description.postcard__description_cut_expanded
++ .postcard__read-more {
+    display: flex;
+}
+
+@include media-breakpoint-up(md) {
+    #root .postcard {
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 600px;
+    }
+}
+
+// Desktops;
+@include media-breakpoint-up(lg) {
+    #root .postcard {
+        max-width: 800px;
+        margin-bottom: 32px;
+        padding: 16px;
+        border-bottom-color: transparent;
+        box-shadow: 0 1px 4px 0 rgba(0,0,0,.14);
+    }
+
+    // Related to modificators;
+    #root .postcard__description.postcard__description_cut + 
+    .postcard__read-more {
+        display: none;
+    }
+
+    .postcard__description.postcard__description_cut {
+        max-height: unset;
+        overflow-y: visible;
+        padding-bottom: 0;
+
+        &::before {
+            display: none;
+        }
+    }
+
+    #root .postcard.postcard_no-margin-bottom {
+        margin-bottom: 32px;
+    }
+}

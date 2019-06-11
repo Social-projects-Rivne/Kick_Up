@@ -314,6 +314,7 @@ class EventPage extends Component {
                                 <StarRating 
                                     rating={this.state.eventRating} 
                                     entityURL={this.props.match.url}
+                                    authUser={this.state.authUser}
                                 />
                             </Typography>
                             <List>

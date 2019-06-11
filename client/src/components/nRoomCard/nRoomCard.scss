@@ -407,7 +407,7 @@
         display: flex;
         width: 100%;
         max-width: 100%;
-        justify-content: space-between;
+        justify-content: flex-start;
         padding-top: 10px;
         border: 0;
         overflow: visible;
@@ -424,7 +424,8 @@
     }
 
     #root .roomcard .roomcard__events-wrapper > a {
-        width: unset;
+        min-width: 33%;
+        max-width: 33%;
     }
 
     .roomcard .roomcard__collpse-content {

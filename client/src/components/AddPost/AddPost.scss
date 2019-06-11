@@ -1,0 +1,267 @@
+/* Available modificators;
+* add-post__submit-btn_disabled;
+* add-post__slide_data-entry;
+* add-post__slide_data-preview'
+* add-post__step_filled;
+*/
+
+.add-post__title {
+    display: block;
+    margin-top: 16px;
+    padding: 0 16px;
+    font-size: 2rem;
+    line-height: 2.571rem;
+    font-weight: 100;
+    color: $secondaryBlack;
+}
+
+.add-post__swiper {
+    position: relative;
+}
+
+#root .add-post .add-post__submit-btn {
+    position: fixed;
+    min-height: 44px;
+    max-height: 44px;
+    padding-top: 0;
+    padding-bottom: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    color: $white;
+    line-height: 44px;
+    background-color: $secondaryBlack;
+    border-radius: 0;
+    z-index: 999;
+    transition: all 1.5s;
+
+    &:hover,
+    &:active {
+        background-color: $secondaryBlack;
+    }
+
+    &.add-post__submit-btn_disabled {
+        // We will use it once only here;
+        background-color: #9e9e9e;
+        opacity: 1;
+        border-color: #9e9e9e;
+        pointer-events: all;
+    }
+}
+
+#root .add-post .add-post__swiper
+.add-post__submit-btn {
+    display: none;
+}
+
+#root .add-post .add-post__fab {
+    position: fixed;
+    right: 10px;
+    // 44px is height of fixed btn;
+    bottom: calc(44px + 10px);
+    z-index: 1;
+    opacity: 0;
+    animation-name: fade-in;
+    animation-duration: 0.3s;
+    animation-delay: 1s;
+    animation-fill-mode: forwards;
+    // Need exactly white;
+    background-color: #fff;
+}
+
+.add-post .add-post__stepper {
+    padding: 24px 16px 16px;
+}
+
+.add-post .add-post__step {
+    z-index: 1;
+
+    &:nth-of-type(3) {
+        z-index: 2;
+    }
+}
+
+.add-post .add-post__step svg {
+    fill: rgba(0, 0, 0, 0.38);
+}
+
+.add-post .add-post__stepper > div {
+    opacity: 0;
+    animation-name: fade-in;
+    animation-duration: 1s;
+    animation-timing-function: ease-in-out;
+    animation-fill-mode: forwards;
+}
+
+.add-post .add-post__stepper [class*=MuiStepContent],
+.add-post .add-post__stepper [class*=MuiStepConnector-line] {
+    border-color: transparent;
+    animation-name: set-border;
+    animation-duration: 0.3s;
+    animation-delay: 2.8s;
+    animation-fill-mode: forwards;
+}
+
+// We have 3 steps, and 3 separators, total will be 6;
+@for $i from 1 through 6 {
+    @if ($i % 2 != 0) {
+        .add-post .add-post__stepper > div:nth-of-type(#{$i}) {
+            animation-delay: 0.5s * $i;
+        }
+    }
+    
+}
+
+// Related to stepper;
+.add-post .add-post__stepper span[class*=MuiSwitch-bar] {
+    background-color: darken($white, 10%);
+    opacity: 0.6;
+  }
+
+.add-post .add-post__stepper span[class*=MuiSwitch-checked] {
+    color: $primary;
+  }
+
+#root .add-post [class*=MuiSwitch-checked] + span {
+    background-color: $primary;
+}
+
+.add-post .MuiInput-underline-189::after {
+   border-color: $primary;
+}
+
+.add-post__step-label span[class*=MuiStepLabel-label] {
+    font-size: 1.286rem;
+    line-height: 1.571rem;
+    font-weight: 100;
+}
+
+.add-post__preview-info-wrapper {
+    padding: 16px;
+    display: flex;
+    align-items: center;
+}
+
+.add-post__preview-info-wrapper svg {
+    margin-right: 16px;
+}
+
+#root .add-post .add-post__text-field {
+    & > div[class*=MuiInput]:hover::before,
+    & > div[class*=MuiInput]:hover::after {
+        border-bottom-color: lighten($secondaryBlack, 30%);
+    }
+
+    & [class*=MuiInput-focused]::after {
+        border-bottom-color: $primary !important;
+    }
+}
+
+// Related to modificators;
+.add-post__step.add-post__step_filled svg {
+    fill: $primary;
+}
+
+// Tablets;
+@include media-breakpoint-up(md) {
+    .add-post__title {
+        text-align: center;
+        padding-top: 16px;
+        margin-bottom: 48px;
+    }
+
+    .add-post .add-post__stepper {
+        margin-left: 36px;
+        margin-right: 36px;
+    }
+
+    .add-post .add-post__step div[class*=MuiStepContent-root] {
+        padding-bottom: 25px;
+    }
+
+    .add-post .rdw-editor-main {
+        min-height: 300px;
+    }
+
+    #root .add-post .add-post__fab {
+        right: 32px;
+        bottom: calc(#{$footer-height} + 32px);
+    }
+}
+
+@include media-breakpoint-up(lg) {
+    .add-post__form {
+        max-width: 1168px;
+        margin: 0 auto;
+    }
+
+    .add-post .add-post__slide {
+        box-sizing: border-box;
+        max-width: 50%;
+        max-height: calc(95vh - #{$header-height} - #{$footer-height});
+        padding-left: 16px;
+        padding-right: 16px;
+        overflow-y: auto;
+    }
+
+    .add-post .add-post__preview-info {
+        position: sticky;
+        top: 0;
+        margin-top: 36px;
+        margin-bottom: 48px;
+        margin-left: 0;
+        margin-right: 0;
+        z-index: 3;
+        opacity: 1;
+        box-shadow: 0 1px 4px 0 rgba(0,0,0,.14);
+    }
+
+    // Need !important here to overwrite desktop logic for swiper;
+    .add-post__swiper .swiper-wrapper {
+        transform: none !important;
+    }
+
+    #root .add-post .add-post__submit-btn {
+        display: none;
+    }
+
+    #root .add-post .add-post__swiper
+    .add-post__submit-btn {
+        display: block;
+        position: relative;
+        width: auto;
+        margin-left: auto;
+        margin-right: auto;
+        border-radius: 24px;
+        background-color: $primary;
+        border-color: $primary;
+        color: $black;
+        overflow: hidden;
+    }
+
+    // Related to modififcators;
+    .add-post.add-post_no-desk-preview {
+        & .add-post__slide:nth-of-type(1) {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        & .add-post__slide:nth-of-type(2) {
+            max-width: 0px;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+    }
+}
+
+// Related to animations;
+@keyframes set-border {
+    from {
+        border-color: transparent;
+    } 
+    to {
+        border-color: rgba(0, 0, 0, 0.1);
+    }
+}
