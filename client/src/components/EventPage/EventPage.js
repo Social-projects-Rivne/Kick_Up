@@ -42,6 +42,7 @@ import StarRating from "../UI/StarRating/StarRating";
 
 // @temp, we need add get data from MongoDB;
 import defaultAvatar from "../../assets/images/face.png";
+import Spinner from "../UI/Spinner/Spinner";
 
 // Swipers params for event page;
 const userParams = {
@@ -124,7 +125,8 @@ class EventPage extends Component {
             authUser:  false,
             userCount: 0,
             showUpload: false,
-            creatorId: null
+            creatorId: 0,
+            loading: true,
         };
     }
     saveSwiper = (instance) => {
@@ -214,6 +216,7 @@ class EventPage extends Component {
             });
 
             this.setState({
+                loading: false,
                 title: res.title,
                 cover: res.cover && res.cover.replace(/\\/g, '/'),
                 location: res.location,
@@ -277,6 +280,11 @@ class EventPage extends Component {
                         <span className="event-page__fab-text">Leave now</span>
            </Fab>
         );
+
+        if (this.state.loading) {
+            return (<Spinner className="rooms-page"/>);
+        }
+
         const renderBtn = this.state.authUser ? leaveBtn : joinBtn;
         return (
             <div className={!this.state.title ? 'event-page  event-page_loading' : 'event-page'}>
@@ -452,16 +460,16 @@ class EventPage extends Component {
                         {
                             this.state.users.length > 0 &&
                             <Swiper {...userParams}>
-                                {this.state.users.map((user, idx) =>
-                                    <Link to={'/profile/' + user.id} className="event-page__member_link">
-                                        <ListItem key={idx} className="event-page__users-list-item">
+                                {this.state.users.map((user) =>
+                                    <Link key={user.id} to={'/profile/' + user.id} className="event-page__member_link">
+                                        <ListItem className="event-page__users-list-item">
                                             <ListItemAvatar>
                                                 <Avatar>
                                                     <Avatar alt="" src={user.avatar ? user.avatar : defaultAvatar} />
                                                 </Avatar>
                                             </ListItemAvatar>
                                             <ListItemText
-                                                primary={`${user.first_name || ""} ${user.last_name || ""}`}
+                                                primary={`${user.first_name || "Shy"} ${user.last_name || "Unicorn"}`}
                                             />
                                         </ListItem>
                                     </Link>

@@ -88,7 +88,7 @@ class NroomCard extends Component {
                                         src={this.props.authorAvatar ? this.props.authorAvatar : defaultAvatar}
                                     >
                                     </Avatar>
-                                    <span>{`${this.props.authorName || ""} ${this.props.authorLastName || ""}`}</span>
+                                    <span>{`${this.props.authorName || "Shy"} ${this.props.authorLastName || "Unicorn"}`}</span>
                                 </div>
                             </Link>
                             <StarRating rating={this.props.eventRating} />
