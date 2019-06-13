@@ -363,7 +363,7 @@ class RoomPage extends React.Component {
                                                     <Avatar alt="" src={member.avatar ? member.avatar : defaultAvatar} />
                                                 </Avatar>
                                             </ListItemAvatar>
-                                            <ListItemText primary={(member.first_name || "") + " " + (member.last_name || "")} className="avatar-flex" />
+                                            <ListItemText primary={(member.first_name || "Shy") + " " + (member.last_name || "Unicorn")} className="avatar-flex" />
                                         </ListItem>
                                     </Link>
                                 </Grid>

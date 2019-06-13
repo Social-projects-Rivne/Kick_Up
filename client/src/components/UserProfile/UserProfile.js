@@ -116,7 +116,7 @@ class UserProfile extends React.Component {
                             <Grid item md={12} className="user-profile-page-avatar-grid">
                                 <Avatar className="user-profile-page-avatar" alt="Remy" src={userProfileData.avatar ? userProfileData.avatar : defaultAvatar} />
                             </Grid>
-                            <Grid item md={12}>
+                            <Grid item md={12} className="user-profile-page-info-grid" >
                                 <Paper elevation={1} className="user-profile-page-paper-user-info">
                                     <Typography variant="h5" component="h3">
                                         { selfProfile && (
@@ -138,7 +138,7 @@ class UserProfile extends React.Component {
 
                                             <ListItem >
                                                 <InputLabel>
-                                                    Name:&nbsp;{(userProfileData.first_name || "") + " " + (userProfileData.last_name || "")}
+                                                    Name:&nbsp;{(userProfileData.first_name || "Shy") + " " + (userProfileData.last_name || "Unicorn")}
                                                 </InputLabel>
                                             </ListItem>
 
@@ -227,7 +227,7 @@ class UserProfile extends React.Component {
                                                         >
                                                         </Avatar>
                                                         <span className="user-profile-room-card-header-creator">
-                                                            {`by ${room.first_name || ""} ${room.last_name || ""}`}
+                                                            {`by ${room.first_name || "Shy"} ${room.last_name || "Unicorn"}`}
                                                         </span>
                                                     </div>
                                                 </Link>
