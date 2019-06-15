@@ -7,6 +7,7 @@ import setAuthToken from '../setAuthToken';
 import PageContainer from "./PageContainer/PageContainer";
 import Router from "./../router";
 import store from "./../store/store";
+import { SnackbarProvider } from 'notistack';
 import { storeUser, userHasAuthenticated, authenticationError } from "./../store/actions/authentication";
 
 if (localStorage.authorization) {
@@ -18,6 +19,7 @@ class App extends Component {
     isAuthenticated: false,
     user: null,
   };
+
   componentDidMount() {
     axios.get('http://localhost:3000/api/profile')
       .then((res) => {
@@ -61,9 +63,11 @@ class App extends Component {
     return (
       <Provider store={store}>
         <BrowserRouter>
-          <PageContainer>
-            <Router childProps={this.getChildProps()} />
-          </PageContainer>
+          <SnackbarProvider maxSnack={3}>
+            <PageContainer>
+              <Router childProps={this.getChildProps()} />
+            </PageContainer>
+          </SnackbarProvider>
         </BrowserRouter>
       </Provider>
     );
