@@ -137,7 +137,7 @@ class CommentForm extends Component {
         comments.map(comment => {
             return (
             <ExpansionPanel
-             key={comment._id ? comment._id : Math.floor(Math.random() * 60) + 1} 
+             key={comment._id ? comment._id : Math.floor(Math.random() * 60) + 1}
              className="commentForm">
                 {this.state.user.id == comment.author_id ? 
                 <div>
@@ -175,7 +175,8 @@ class CommentForm extends Component {
                     </Button>
                 </div>
                     : null}
-                <ExpansionPanelSummary className="event-page__faq-title" expandIcon={<ExpandMore />}  >
+                <ExpansionPanelSummary 
+                    className="event-page__faq-title" expandIcon={<ExpandMore />}  >
                     <Avatar alt="avatar" src={comment.avatar} className="avatar  event-page__avatar" />
                     <div className="commentField">
                     <TextField 
@@ -185,6 +186,12 @@ class CommentForm extends Component {
                              ? this.state.updateCommentText: comment.text}
                         onChange={event => this.updateCommentText(event)}
                         fullWidth
+                        onClick={clickEvt => {
+                            if (this.state.updateCommentTextField) {
+                                clickEvt.preventDefault();
+                                clickEvt.stopPropagation();
+                            }
+                        }}
                     ></TextField>
                     </div>
                 </ExpansionPanelSummary>
