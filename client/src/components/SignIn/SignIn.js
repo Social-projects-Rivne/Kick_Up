@@ -8,7 +8,7 @@ import { Grid, TextField, Button, Typography } from "@material-ui/core";
 import { Person, Send, Email, Lock } from "@material-ui/icons";
 import CustomizedSnackbars from "../Toast/Toast";
 import { userHasAuthenticated, signInUser, storeUser, authenticationError } from './../../store/actions/authentication';
-import { createToast } from './../../store/actions/toast';
+import { enqueueSnackbar } from './../../store/actions/toast';
 
 const PASSWORD_LENGTH = 6;
 const messageType = {
@@ -50,7 +50,13 @@ class Login extends Component {
     // Validate data;
     const res = this.doValidation();
     if (!res) {
-      this.props.createToast(messageType.ERR, 'Please correct fields highlighted with red');
+      this.props.enqueueSnackbar({
+        message: 'Please correct fields highlighted with red',
+        options: {
+            key: new Date().getTime() + Math.random(),
+            variant: messageType.ERR,
+        },
+      });
       //this.showToast('Please correct fields highlighted with red', messageType.ERR);
       return;
     }
@@ -112,7 +118,13 @@ class Login extends Component {
       this.setState({ forgotPasswordForm: false, mailMessage: true });
       })
       .catch(() => {
-        this.props.createToast(messageType.ERR, 'Incorrect email!');
+        this.props.enqueueSnackbar({
+          message: 'Incorrect email!',
+          options: {
+              key: new Date().getTime() + Math.random(),
+              variant: messageType.ERR,
+          },
+        });
         //this.showToast('Incorrect email!', messageType.ERR);
       });
     }
@@ -141,7 +153,13 @@ class Login extends Component {
         });
       })
       .catch(() => {
-        this.props.createToast(messageType.ERR, 'Something went wrong!');
+        this.props.enqueueSnackbar({
+          message: 'Something went wrong!',
+          options: {
+              key: new Date().getTime() + Math.random(),
+              variant: messageType.ERR,
+          },
+        });
         //this.showToast('Something went wrong!', messageType.ERR);
       });
     }
@@ -392,7 +410,7 @@ const mapDispatchToProps = dispatch => ({
   signInUser: (user,history) => dispatch(signInUser(user,history)),
   storeUser: user => dispatch(storeUser(user)),
   authenticationError: err => dispatch(authenticationError(err)),
-  createToast: (type, message) => dispatch(createToast(type, message))
+  enqueueSnackbar: notifications => dispatch(enqueueSnackbar(notifications))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

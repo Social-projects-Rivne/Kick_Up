@@ -2,7 +2,8 @@ import setAuthToken from "./../../setAuthToken";
 import axios from "axios";
 
 import * as actionTypes from "./actionTypes";
-import { createToast, clearToast } from "./toast";
+// import { createToast, clearToast } from "./toast";
+import { enqueueSnackbar, closeSnackbar } from "./toast";
 
 const messageType = {
     SUCCESS: "success",
@@ -23,7 +24,13 @@ export const startAuthentication = () => ({
 
 export const signInUser = (user, history) => dispatch => {
     dispatch(startAuthentication());
-    dispatch(createToast(messageType.INFO, 'Working...'))
+    dispatch(enqueueSnackbar({
+        message: 'Working...',
+        options: {
+            key: new Date().getTime() + Math.random(),
+            variant: messageType.INFO,
+        },
+    }));
     axios
         .post("/api/signin", user)
         .then(res => {
@@ -32,7 +39,7 @@ export const signInUser = (user, history) => dispatch => {
             dispatch(storeUser(user));
             setAuthToken(token);
             localStorage.setItem("authorization", token);
-            dispatch(clearToast());
+            dispatch(closeSnackbar());
             return axios.get('api/profile')
         })
         .then((res) => {
@@ -42,7 +49,13 @@ export const signInUser = (user, history) => dispatch => {
             throw new Error('There is no user.');
         })
         .then(user => {
-            dispatch(createToast(messageType.SUCCESS, 'Welcome!'));
+            dispatch(enqueueSnackbar({
+                message: 'Welcome!',
+                options: {
+                    key: new Date().getTime() + Math.random(),
+                    variant: messageType.SUCCESS,
+                },
+            }));
             dispatch(storeUser(user));
             history.push({
                 pathname: "/",
@@ -50,7 +63,13 @@ export const signInUser = (user, history) => dispatch => {
         })
         .catch((err) => {
             dispatch(authenticationError(err.response || err.data));
-            dispatch(createToast(messageType.ERR, 'Incorrect username or password!'));
+            dispatch(enqueueSnackbar({
+                message: 'Incorrect username or password!',
+                options: {
+                    key: new Date().getTime() + Math.random(),
+                    variant: messageType.ERR,
+                },
+            }));
         });
 };
 
