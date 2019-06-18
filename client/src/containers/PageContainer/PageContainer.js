@@ -9,7 +9,7 @@ const pageContainer = props => {
     return (
         <>
             <Notifier />
-            <AppHeader />
+            <AppHeader signOutApp={props.signOutApp} />
             <main id="content">{props.children}</main>
             <Footer />
         </>

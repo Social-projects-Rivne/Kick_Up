@@ -59,12 +59,17 @@ class App extends Component {
     }
   }
 
+  signOutApp = () => {
+    this.userHasAuthenticated(false);
+    this.setUser(null);
+  }
+
   render() {
     return (
       <Provider store={store}>
         <BrowserRouter>
           <SnackbarProvider maxSnack={3}>
-            <PageContainer>
+            <PageContainer signOutApp={this.signOutApp} >
               <Router childProps={this.getChildProps()} />
             </PageContainer>
           </SnackbarProvider>

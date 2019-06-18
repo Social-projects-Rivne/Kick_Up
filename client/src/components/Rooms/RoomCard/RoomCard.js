@@ -32,7 +32,6 @@ const roomCard = props => {
           <div className="inner">
             <p>{props.description}</p>
             <Grid container justify="space-evenly" className="back-btn-wrapper">
-              <span>Members: {props.members} / {props.limit}</span>
               {props.limit ? 
                 <span>Members: {props.members} / {props.limit}</span> :
                 <span>Members: {props.members}</span>

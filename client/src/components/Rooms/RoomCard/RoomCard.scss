@@ -165,6 +165,12 @@
   color: rgba(255,255,255,0.7);
   font-weight: 300;
 }
+
+.back .inner {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
 .back .inner p{
   max-height: calc(2rem * 6 );
   overflow: hidden;
