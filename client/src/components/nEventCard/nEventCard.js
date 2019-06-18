@@ -43,7 +43,7 @@ const NeventCard = props => (
                                     className="event-card__avatar"
                                     src={props.authorAvatar ? props.authorAvatar : defaultAvatar}>
                                 </Avatar>
-                                <span>{`${props.authorName || ""} ${props.authorLastName || ""}`}</span>
+                                <span>{`${props.authorName || "Shy"} ${props.authorLastName || "Unicorn"}`}</span>
                             </div>
                         </Link>
                         <StarRating rating={props.eventRating} />
