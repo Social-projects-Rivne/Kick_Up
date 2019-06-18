@@ -1,12 +1,14 @@
 import React, { Component } from "react";
 import axios from "axios";
 import qs from 'query-string';
+import is from "is_js";
+import { connect } from "react-redux";
+
 import { Grid, TextField, Button, Typography } from "@material-ui/core";
 import { Person, Send, Email, Lock } from "@material-ui/icons";
-import is from "is_js";
-import { withSnackbar } from 'notistack';
 import CustomizedSnackbars from "../Toast/Toast";
-import setAuthToken from '../../setAuthToken';
+import { userHasAuthenticated, signInUser, storeUser, authenticationError } from './../../store/actions/authentication';
+import { enqueueSnackbar } from './../../store/actions/toast';
 
 const PASSWORD_LENGTH = 6;
 const messageType = {
@@ -48,11 +50,18 @@ class Login extends Component {
     // Validate data;
     const res = this.doValidation();
     if (!res) {
-      this.showToast('Please correct fields highlighted with red', messageType.ERR);
+      this.props.enqueueSnackbar({
+        message: 'Please correct fields highlighted with red',
+        options: {
+            key: new Date().getTime() + Math.random(),
+            variant: messageType.ERR,
+        },
+      });
+      //this.showToast('Please correct fields highlighted with red', messageType.ERR);
       return;
     }
     // Do changes in UI;
-    this.showToast('Working', messageType.INFO);
+    //this.showToast('Working', messageType.INFO);
 
     // Send data;
     const { email, password } = this.state;
@@ -60,7 +69,8 @@ class Login extends Component {
       email,
       password
     };
-    axios
+    this.props.signInUser(user, this.props.history);
+    /* axios
       .post("/api/signin", user)
       .then(res => {
         const { token } = res.data;
@@ -70,7 +80,6 @@ class Login extends Component {
         return axios.get('api/profile')
       })
       .then((res) => {
-        //TODO decide with team if this action is necessary
         if (res.data && res.data.email) {
           return  res.data;
         }
@@ -84,16 +93,17 @@ class Login extends Component {
           emailInputValid: true,
           passwordInputValid: true,
           formInFocus: false
-        }, () => setTimeout(() => {
-          console.log('sigin', this.props.setUser, {user})
-          this.props.setUser(user);
+        });
+        setTimeout(() => {
+          this.props.storeUser(user);
           this.props.history.push({
             pathname: "/",
           });
-        }, 500))})
-      .catch(() => {
+        }, 1000)})
+      .catch((err) => {
+        this.props.authenticationError(err.response || err);
         this.showToast('Incorrect username or password!', messageType.ERR);
-      });
+      }); */
   };
   forgotPassword = () => {
     this.setState({ forgotPasswordForm: true, mailMessage: true });
@@ -108,7 +118,14 @@ class Login extends Component {
       this.setState({ forgotPasswordForm: false, mailMessage: true });
       })
       .catch(() => {
-        this.showToast('Incorrect email!', messageType.ERR);
+        this.props.enqueueSnackbar({
+          message: 'Incorrect email!',
+          options: {
+              key: new Date().getTime() + Math.random(),
+              variant: messageType.ERR,
+          },
+        });
+        //this.showToast('Incorrect email!', messageType.ERR);
       });
     }
   };
@@ -136,18 +153,25 @@ class Login extends Component {
         });
       })
       .catch(() => {
-        this.showToast('Something went wrong!', messageType.ERR);
+        this.props.enqueueSnackbar({
+          message: 'Something went wrong!',
+          options: {
+              key: new Date().getTime() + Math.random(),
+              variant: messageType.ERR,
+          },
+        });
+        //this.showToast('Something went wrong!', messageType.ERR);
       });
     }
 
   }
-  showToast = (message, variant) => {
+  /* showToast = (message, variant) => {
     this.props.enqueueSnackbar(message, {
         variant: variant ? variant : 'default',
     });
-  }
+  } */
   
-  resetToast = () => {
+  /* resetToast = () => {
     this.setState({
       message: false,
       messageType: null,
@@ -155,7 +179,7 @@ class Login extends Component {
       emailInputValid: true,
       passwordInputValid: true
     });
-  };
+  }; */
 
   //validation
   doValidation = () => {
@@ -375,6 +399,18 @@ class Login extends Component {
       </div>
     );
   }
-}
+};
 
-export default withSnackbar(Login);
+const mapStateToProps = state => ({
+  errors: state.auth.errors,
+});
+
+const mapDispatchToProps = dispatch => ({
+  userHasAuthenticated: isAuthenticated => dispatch(userHasAuthenticated(isAuthenticated)),
+  signInUser: (user,history) => dispatch(signInUser(user,history)),
+  storeUser: user => dispatch(storeUser(user)),
+  authenticationError: err => dispatch(authenticationError(err)),
+  enqueueSnackbar: notifications => dispatch(enqueueSnackbar(notifications))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

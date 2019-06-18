@@ -26,11 +26,14 @@
     "react-geosuggest": "^2.12.0",
     "react-grid-gallery": "^0.5.4",
     "react-id-swiper": "^2.1.1",
+    "react-redux": "^7.1.0",
     "react-responsive-carousel": "^3.1.47",
     "react-router-dom": "^5.0.0",
     "react-scripts": "2.1.8",
     "react-scroll": "^1.7.11",
     "react-swipeable-views": "^0.13.1",
+    "redux": "^4.0.1",
+    "redux-thunk": "^2.3.0",
     "swiper": "^4.5.0"
   },
   "scripts": {
