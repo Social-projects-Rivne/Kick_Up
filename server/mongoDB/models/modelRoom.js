@@ -1,20 +1,43 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
+
 const Schema = mongoose.Schema;
 
 const roomsSchema = new Schema (
     {
         room_id: Number,
-        comments: [
+        posts: [
             {
-                author_id: Number,
-                text: String,
+                authorId: Number,
+                title: String,
+                text: Object,
                 created_at: {
                     type: Date,
                     default: Date.now,
                 },
-                updated_at: Date,
-                is_banned: Boolean,
-                child_comments: Array,
+                updated_at: {
+                    type: Date,
+                    default: Date.now,
+                },
+                isPinned: {
+                    type: Boolean,
+                    default: false
+                },
+                comments: [
+                    {
+                        author_id: Number,
+                        text: String,
+                        created_at: {
+                            type: Date,
+                            default: Date.now,
+                        },
+                        updated_at: {
+                            type: Date,
+                            default: Date.now,
+                        },
+                        is_banned: Boolean,
+                        child_comments: Array,
+                    }
+                ]
             }
         ],
         moderators_list: Array,
@@ -32,7 +55,6 @@ const roomsSchema = new Schema (
         ],
         tags: Array,
         members: Array,
-        room_information: String,
         ratings: [
             {
                 user_id: Number,
@@ -42,4 +64,4 @@ const roomsSchema = new Schema (
     }
 );
 
-module.exports = mongoose.model('Rooms', roomsSchema);
+module.exports = mongoose.model('MongoDbRoom', roomsSchema);

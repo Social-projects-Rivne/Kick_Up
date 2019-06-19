@@ -12,6 +12,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Snackbar from '@material-ui/core/Snackbar';
 import SnackbarContent from '@material-ui/core/SnackbarContent';
 import WarningIcon from '@material-ui/icons/Warning';
+import Slide from '@material-ui/core/Slide';
 import { withStyles } from '@material-ui/core/styles';
 
 const variantIcon = {
@@ -115,12 +116,13 @@ class CustomizedSnackbars extends React.Component {
         <div>
             <Snackbar
               anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'center',
+                  vertical: 'bottom',
+                  horizontal: 'left',
               }}
               open={this.state.open}
-              autoHideDuration={33000}
+              autoHideDuration={5000}
               onClose={this.handleClose}
+              TransitionComponent={(props) => <Slide {...props} direction="right" />}
             >
             <MySnackbarContentWrapper
                 onClose={this.handleClose}

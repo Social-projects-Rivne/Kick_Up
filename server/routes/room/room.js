@@ -1,7 +1,8 @@
 const Router = require('koa-router');
 const constants = require('./../../config/constants');
-// const Room = require("./../mongoDB/models/modelRoom");
-const { Room, Category, Member } =require('../../models');
+const { authenticated } = require('../../middlewares');
+const MongoDbRoom = require('../../mongoDB/models/modelRoom');
+const { Room, Category, Member, User } = require('../../models');
 const validate = require('../../services/Validator');
 const router = new Router({ prefix: '/api/room'});
 const faker = require('faker');
@@ -213,7 +214,6 @@ const handler = {
       await room.save( obj, { patch:true });
       ctx.body = '';
   },
-
   async sort(ctx) {
     let { sort, page } = ctx.query;
     await validate(ctx.query, {
@@ -241,7 +241,6 @@ const handler = {
       pageCount: rooms.pagination.pageCount
     };
   },
-
   async filter(ctx) {
     const filter = ctx.query;
     const { page } = ctx.query;
@@ -272,10 +271,158 @@ const handler = {
       pageCount: filterRooms.pagination.pageCount
     };
   },
+  async addPost(ctx) {
+    const type = 'member';
+    const { authorId, roomId, text, title, isPinned } = ctx.request.body;
 
+    // Validate input;
+    await validate(ctx.request.body, {
+      authorId: 'numeric|min:1',
+      roomId: 'numeric|min:1',
+      text: 'required',
+      title: 'min:3',
+      isPinned: 'boolean'
+    });
+
+    let room = await MongoDbRoom.findOne({room_id: roomId});
+    
+    if (room) {
+      room.posts.push({
+        authorId,
+        title,
+        text,    
+        comments: [],
+        isPinned
+      });
+    } else {
+      room = new MongoDbRoom(
+        {
+          room_id: roomId,
+          posts: [
+            {
+              authorId,
+              title,
+              text,
+              comments: [],
+              isPinned
+            }
+          ],
+          moderators_list: [],
+          gallery: [],
+          tags: [],
+          members: [],
+          ratings: []
+        }
+      );
+    }
+
+    const res = await room.save();
+    ctx.body = '';
+  },
+  async getRoomPostsById(ctx) {    
+    const getUserData = async function(ids) {
+      let res = null;
+      
+      // Get data;
+      if (Array.isArray(ids) && ids.length > 0) {
+        res = await User.where(qb => {
+          qb.whereIn('id', ids);
+        }).fetchAll({required:true});
+
+        if (res) {
+          res = res.serialize().map(el => {
+            return {
+              id: el.id,
+              firstName: el.first_name,
+              lastName: el.last_name,
+              avatar: el.avatar
+            }
+          });
+        }
+      }
+
+      return res;
+    };
+    
+    let { id:roomId } = ctx.params;
+    roomId = parseInt(roomId);
+
+    await validate({roomId}, {
+      roomId: 'numeric|min:1',
+    });
+
+    // Retrieve posts;
+    let roomPosts = await MongoDbRoom.findOne({room_id: roomId});
+    
+    // Get user data for each post;
+    if (roomPosts) {
+
+      // Convert mongoose array to array;
+      roomPosts = roomPosts.posts.map(post => post.toObject());
+
+      // Query MySQL for users details;
+      let ids = roomPosts.map(post => post.authorId);
+      let usersData = await getUserData(ids);
+
+      if (usersData) {
+        //Add received data to MongoDB data;
+        roomPosts.forEach((post)  => {
+          let filteredUserData = usersData.find(item => item.id === post.authorId);
+          
+          if (filteredUserData) {
+            post.author_details = {
+              firstName : filteredUserData.firstName,
+              lastName : filteredUserData.lastName,
+              avatar : filteredUserData.avatar
+            };
+          }
+        });
+      }
+    }
+
+    // Return posts;
+    ctx.body = roomPosts ? roomPosts : []; 
+  },
+  async updatePost(ctx) {
+    const {title, text, isPinned, postId} = ctx.request.body;
+    const { id } = ctx.params;
+    let dataToValidate = {};
+
+    // Validate input;
+    if (title) dataToValidate.title = title;
+    if (text) dataToValidate.text = text;
+    if (typeof isPinned === 'boolean') dataToValidate.isPinned = isPinned;
+
+    await validate(dataToValidate, {
+      text: 'string',
+      title: 'string|min:3',
+      isPinned: 'boolean'
+    });
+    
+    // Perform DB data update;
+    try {
+      let res = await MongoDbRoom.findOneAndUpdate({'posts._id': postId}, 
+      {
+        '$set': (() => {
+          // Fill with data for update;
+          let res = {};
+  
+          if (title) res['posts.$.title'] =  title;
+          if (text) res['posts.$.text'] = text;
+          if (typeof isPinned === 'boolean') res['posts.$.isPinned'] = isPinned;
+  
+          return res;
+        })()
+      });
+    } catch(err) {
+      ctx.throwSingle('Could not save post, please reload your page', 400);
+    } 
+
+    ctx.body = '';
+  }
 };
 
-// router.post("/save-room", (ctx) => {
+// router.post("/add-post", (ctx) => {
 //   const {
 //     room_id,
 //     moderators_list,
@@ -323,10 +470,13 @@ const handler = {
 
 
 router.get('/', handler.roomList);
+router.post('/', handler.createRoom);
 router.get('/sort', handler.sort);
 router.get('/filter', handler.filter);
+router.post('/new-post', authenticated, handler.addPost);
 router.get('/:id', handler.getRoomById);
-router.post('/', handler.createRoom);
 router.put('/:id', handler.updateRoomById);
+router.get('/:id/posts', handler.getRoomPostsById);
+router.put('/:id/updatePost', authenticated, handler.updatePost);
 
 module.exports = router.routes();

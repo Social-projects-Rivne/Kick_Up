@@ -8,7 +8,6 @@
     margin-left: auto;
     margin-right: auto;
     font-size: 1rem;
-    line-height: 1.5rem;
     font-weight: 100;
 
     .user-profile-page-lock {
@@ -35,7 +34,7 @@
     .user-profile-page-edit-profile-link {
       text-decoration: none;
       position: fixed;
-      bottom: 30px;
+      bottom: 35px;
       z-index: 100;
       right: 15px;
 
@@ -57,10 +56,6 @@
       }
     }
 
-    .user-profile-page-info {
-      display: flex;
-      justify-content: center;
-    }
 
     .user-profile-page-gallery {
       padding: 12px;
@@ -80,7 +75,7 @@
       background: white;
       padding-bottom: 12px;
       overflow-y: hidden;
-      border-radius: 15px;
+      border-radius: 4px;
 
       .event-card__description {
         padding: 16px;
@@ -105,7 +100,7 @@
         font-size: 1rem;
         line-height: 1.5rem;
         font-weight: 100;
-        border-radius: 15px;
+        border-radius: 4px;
         height: fit-content;
 
         .user-profile-room-card-link,
@@ -125,7 +120,7 @@
 
         .user-profile-room-card-header {
           display: flex;
-          padding: 12px;
+          padding: 16px;
 
           .user-profile-room-card-header-creator {
             max-height: 2rem;
@@ -137,6 +132,7 @@
 
         .user-profile-room-card-media {
           min-height: 200px;
+          margin: 0 16px;
         }
       }
     }
@@ -179,12 +175,28 @@
         justify-content: center;
       }
 
-      .user-profile-page-paper-user-info {
-        padding: 12px;
-        box-shadow: none;
+      .user-profile-page-info-grid {
+        @include media-breakpoint-down(md) {
+          width: 100%;
+        }
 
-        .user-profile-page-deliver {
-          min-height: 1.1px;
+        .user-profile-page-paper-user-info {
+          padding: 12px;
+          box-shadow: none;
+
+          .user-profile-page-deliver {
+            min-height: 1.1px;
+          }
+
+          @include media-breakpoint-down(md) {
+            width: 100%;
+            margin: 0 12px;
+          }
+        }
+
+        .user-profile-page-info {
+          display: flex;
+          justify-content: center;
         }
       }
 
@@ -212,6 +224,10 @@
         width: 500px;
         height: 450px;
       }
+    }
+
+    .event-card__img-wrapper {
+      margin: 0 10px;
     }
   }
 }

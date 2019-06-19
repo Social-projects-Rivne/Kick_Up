@@ -1,22 +1,17 @@
-import React from 'react';
-import { withRouter } from 'react-router-dom'
+import React, { useEffect } from 'react';
+import { withRouter } from 'react-router-dom';
 
 import AppHeader from './../../components/AppHeader/AppHeader';
 import Footer from './../../components/Footer/Footer';
-import { SnackbarProvider } from 'notistack';
+import Notifier from "../../components/UI/Snackbar/Notifier";
 
 const pageContainer = props => {
     return (
         <>
-            <SnackbarProvider maxSnack={3}>
-                <AppHeader 
-                    isAuthenticated={props.isAuthenticated} 
-                    userHasAuthenticated={props.userHasAuthenticated}
-                    user={props.user}
-                />
-                <main id="content">{props.children}</main>
-                <Footer />
-            </SnackbarProvider>
+            <Notifier />
+            <AppHeader signOutApp={props.signOutApp} />
+            <main id="content">{props.children}</main>
+            <Footer />
         </>
     );
 }
