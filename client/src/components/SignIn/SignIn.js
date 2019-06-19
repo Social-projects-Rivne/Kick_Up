@@ -7,7 +7,7 @@ import { connect } from "react-redux";
 import { Grid, TextField, Button, Typography } from "@material-ui/core";
 import { Person, Send, Email, Lock } from "@material-ui/icons";
 import CustomizedSnackbars from "../Toast/Toast";
-import { userHasAuthenticated, signInUser, storeUser, authenticationError } from './../../store/actions/authentication';
+import { signInUser } from './../../store/actions/authentication';
 import { enqueueSnackbar } from './../../store/actions/toast';
 
 const PASSWORD_LENGTH = 6;
@@ -33,10 +33,25 @@ class Login extends Component {
     mailMessage: false,
     reset_token: ""
   };
-   componentDidMount(){
-    const { reset_token } = qs.parse(this.props.location.search);  
-    this.setState({reset_token})
-   }
+
+  componentDidMount() {
+    if (this.props.isAuthenticated) {
+      this.props.history.push({
+        pathname: "/",
+      });
+    }
+    const { reset_token } = qs.parse(this.props.location.search);
+    this.setState({ reset_token })
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.isAuthenticated !== this.props.isAuthenticated) {
+        this.props.history.push({
+            pathname: "/",
+        });
+    }
+}
+
   handleInputChange = event => {
     const name = event.target.name;
     const value = event.target.value;
@@ -53,15 +68,12 @@ class Login extends Component {
       this.props.enqueueSnackbar({
         message: 'Please correct fields highlighted with red',
         options: {
-            key: new Date().getTime() + Math.random(),
-            variant: messageType.ERR,
+          key: new Date().getTime() + Math.random(),
+          variant: messageType.ERR,
         },
       });
-      //this.showToast('Please correct fields highlighted with red', messageType.ERR);
       return;
     }
-    // Do changes in UI;
-    //this.showToast('Working', messageType.INFO);
 
     // Send data;
     const { email, password } = this.state;
@@ -69,117 +81,66 @@ class Login extends Component {
       email,
       password
     };
-    this.props.signInUser(user, this.props.history);
-    /* axios
-      .post("/api/signin", user)
-      .then(res => {
-        const { token } = res.data;
-        this.props.userHasAuthenticated(true);
-        setAuthToken(token);
-        localStorage.setItem("authorization", token);
-        return axios.get('api/profile')
-      })
-      .then((res) => {
-        if (res.data && res.data.email) {
-          return  res.data;
-        }
-        throw new Error('There is no user.');
-      })
-      .then(user => {
-        this.showToast('Welcome!', messageType.SUCCESS);
-        this.setState({
-          email: "",
-          password: "",
-          emailInputValid: true,
-          passwordInputValid: true,
-          formInFocus: false
-        });
-        setTimeout(() => {
-          this.props.storeUser(user);
-          this.props.history.push({
-            pathname: "/",
-          });
-        }, 1000)})
-      .catch((err) => {
-        this.props.authenticationError(err.response || err);
-        this.showToast('Incorrect username or password!', messageType.ERR);
-      }); */
+    this.props.signInUser(user);
   };
+
   forgotPassword = () => {
     this.setState({ forgotPasswordForm: true, mailMessage: true });
   };
   showEmailMessage = () => {
     const { email } = this.state;
-    
-    if(email){
+
+    if (email) {
       axios
-      .post("/api/forgot-password", {email})
-      .then(res => {
-      this.setState({ forgotPasswordForm: false, mailMessage: true });
-      })
-      .catch(() => {
-        this.props.enqueueSnackbar({
-          message: 'Incorrect email!',
-          options: {
+        .post("/api/forgot-password", { email })
+        .then(res => {
+          this.setState({ forgotPasswordForm: false, mailMessage: true });
+        })
+        .catch(() => {
+          this.props.enqueueSnackbar({
+            message: 'Incorrect email!',
+            options: {
               key: new Date().getTime() + Math.random(),
               variant: messageType.ERR,
-          },
+            },
+          });
         });
-        //this.showToast('Incorrect email!', messageType.ERR);
-      });
     }
   };
-  resetForm = () =>{
-    this.setState({ 
+  resetForm = () => {
+    this.setState({
       forgotPasswordForm: false,
       recoveryPasswordForm: false,
-      mailMessage: false 
+      mailMessage: false
     });
   }
   recoveryPassword = () => {
-    const { password,reset_token } = this.state;
+    const { password, reset_token } = this.state;
     if (password && reset_token) {
       axios
-      .patch("/api/forgot-password", {password, reset_token})
-      .then(() => {
-        this.setState({
-          forgotPasswordForm: false,
-          recoveryPasswordForm: false,
-          mailMessage: false,
-          reset_token: ""
+        .patch("/api/forgot-password", { password, reset_token })
+        .then(() => {
+          this.setState({
+            forgotPasswordForm: false,
+            recoveryPasswordForm: false,
+            mailMessage: false,
+            reset_token: ""
+          })
+          this.props.history.push({
+            pathname: "/sign-in",
+          });
         })
-        this.props.history.push({
-          pathname: "/sign-in",
-        });
-      })
-      .catch(() => {
-        this.props.enqueueSnackbar({
-          message: 'Something went wrong!',
-          options: {
+        .catch(() => {
+          this.props.enqueueSnackbar({
+            message: 'Something went wrong!',
+            options: {
               key: new Date().getTime() + Math.random(),
               variant: messageType.ERR,
-          },
+            },
+          });
         });
-        //this.showToast('Something went wrong!', messageType.ERR);
-      });
     }
-
   }
-  /* showToast = (message, variant) => {
-    this.props.enqueueSnackbar(message, {
-        variant: variant ? variant : 'default',
-    });
-  } */
-  
-  /* resetToast = () => {
-    this.setState({
-      message: false,
-      messageType: null,
-      messageOpened: false,
-      emailInputValid: true,
-      passwordInputValid: true
-    });
-  }; */
 
   //validation
   doValidation = () => {
@@ -202,173 +163,173 @@ class Login extends Component {
   render() {
     const mailMessage = (
       <Grid item xs={10} sm={6} className="sign-in__form">
-      <Typography align="center" variant="h4">
-      <Person fontSize="large" />
-        Check your email
+        <Typography align="center" variant="h4">
+          <Person fontSize="large" />
+          Check your email
       </Typography>
-      <hr />
-      <div className="sign-in__field-wrapper">
-      <div className="sign-in__btn-wrapper">
-        <Typography 
-        align="center" 
-        variant="body1"
-        className="mailMessage"
-        >
-        We send you email to confirm your account or go to:
+        <hr />
+        <div className="sign-in__field-wrapper">
+          <div className="sign-in__btn-wrapper">
+            <Typography
+              align="center"
+              variant="body1"
+              className="mailMessage"
+            >
+              We send you email to confirm your account or go to:
         </Typography>
-        <Button
-        align="center" 
-        variant="outlined"
-        className="mailMessage sign-in__submit-btn"
-        onClick={this.resetForm}
-        >
-        sign In
+            <Button
+              align="center"
+              variant="outlined"
+              className="mailMessage sign-in__submit-btn"
+              onClick={this.resetForm}
+            >
+              sign In
         </Button>
-      </div>
-      </div>
+          </div>
+        </div>
       </Grid>
     );
     const signin = (
-          <Grid item xs={10} sm={6} className="sign-in__form">
-            <Typography align="center" variant="h4">
-              <Person fontSize="large" />
-              Sign in
+      <Grid item xs={10} sm={6} className="sign-in__form">
+        <Typography align="center" variant="h4">
+          <Person fontSize="large" />
+          Sign in
             </Typography>
-            <hr />
-            <div className="sign-in__field-wrapper">
-              <Email />
-              <TextField
-                required
-                className="input"
-                name="email"
-                label="Your email"
-                type="email"
-                margin="normal"
-                autoComplete="off"
-                value={this.state.email}
-                onChange={this.handleInputChange}
-                error={!this.state.emailInputValid}
-              />
-            </div>
-            <div className="sign-in__field-wrapper">
-              <Lock />
-              <TextField
-                required
-                className="input"
-                name="password"
-                label="Enter password, min. 6 chars"
-                type="password"
-                margin="normal"
-                autoComplete="off"
-                value={this.state.password}
-                onChange={this.handleInputChange}
-                error={!this.state.emailInputValid}
-              />
-            </div>
-            <div className="sign-in__btn-wrapper">
-              <Button
-                className="sign-in__submit-btn"
-                variant="outlined"
-                onClick={this.handleSubmit}
-                disabled={this.state.messageOpened}
-              >
-                Send
+        <hr />
+        <div className="sign-in__field-wrapper">
+          <Email />
+          <TextField
+            required
+            className="input"
+            name="email"
+            label="Your email"
+            type="email"
+            margin="normal"
+            autoComplete="off"
+            value={this.state.email}
+            onChange={this.handleInputChange}
+            error={!this.state.emailInputValid}
+          />
+        </div>
+        <div className="sign-in__field-wrapper">
+          <Lock />
+          <TextField
+            required
+            className="input"
+            name="password"
+            label="Enter password, min. 6 chars"
+            type="password"
+            margin="normal"
+            autoComplete="off"
+            value={this.state.password}
+            onChange={this.handleInputChange}
+            error={!this.state.emailInputValid}
+          />
+        </div>
+        <div className="sign-in__btn-wrapper">
+          <Button
+            className="sign-in__submit-btn"
+            variant="outlined"
+            onClick={this.handleSubmit}
+            disabled={this.state.messageOpened}
+          >
+            Send
                 <Send />
-              </Button>
-              <Typography 
-                variant="body1"
-                className="forgot_Password_link"
-                onClick={this.forgotPassword}
-               >
-              forgot Password
+          </Button>
+          <Typography
+            variant="body1"
+            className="forgot_Password_link"
+            onClick={this.forgotPassword}
+          >
+            forgot Password
             </Typography>
-            </div>
-          </Grid>
+        </div>
+      </Grid>
     );
     const forgotPass = (
       <Grid item xs={10} sm={6} className="sign-in__form">
-            <Typography align="center" variant="h4">
-              <Person fontSize="large" />
-              Forgot Password
+        <Typography align="center" variant="h4">
+          <Person fontSize="large" />
+          Forgot Password
             </Typography>
-            <hr />
-            <div className="sign-in__field-wrapper">
-              <Email />
-              <TextField
-                required
-                className="input"
-                name="email"
-                label="Write your email"
-                type="email"
-                margin="normal"
-                autoComplete="off"
-                value={this.state.email}
-                onChange={this.handleInputChange}
-                error={!this.state.emailInputValid}
-              />
-            </div>
-            <div className="sign-in__btn-wrapper">
-              <Button
-                className="sign-in__submit-btn"
-                variant="outlined"
-                onClick={this.showEmailMessage}
-                disabled={this.state.messageOpened}
-              >
-                Send
+        <hr />
+        <div className="sign-in__field-wrapper">
+          <Email />
+          <TextField
+            required
+            className="input"
+            name="email"
+            label="Write your email"
+            type="email"
+            margin="normal"
+            autoComplete="off"
+            value={this.state.email}
+            onChange={this.handleInputChange}
+            error={!this.state.emailInputValid}
+          />
+        </div>
+        <div className="sign-in__btn-wrapper">
+          <Button
+            className="sign-in__submit-btn"
+            variant="outlined"
+            onClick={this.showEmailMessage}
+            disabled={this.state.messageOpened}
+          >
+            Send
                 <Send />
-              </Button>
-              {renderMailMessage}
-              
-            </div>
-          </Grid>
+          </Button>
+          {renderMailMessage}
+
+        </div>
+      </Grid>
     );
     const recoveryPass = (
       <Grid item xs={10} sm={6} className="sign-in__form">
-            <Typography align="center" variant="h4">
-              <Person fontSize="large" />
-              Create new password
+        <Typography align="center" variant="h4">
+          <Person fontSize="large" />
+          Create new password
             </Typography>
-            <hr />
-            <div className="sign-in__field-wrapper">
-              <Lock />
-              <TextField
-                required
-                className="input"
-                name="password"
-                label="Enter new password, min. 6 chars"
-                type="password"
-                margin="normal"
-                autoComplete="off"
-                value={this.state.password}
-                onChange={this.handleInputChange}
-                error={!this.state.emailInputValid}
-              />
-            </div>
-            <div className="sign-in__btn-wrapper">
-              <Button
-                className="sign-in__submit-btn"
-                variant="outlined"
-                onClick={this.recoveryPassword}
-                disabled={this.state.messageOpened}
-              >
-                Send
+        <hr />
+        <div className="sign-in__field-wrapper">
+          <Lock />
+          <TextField
+            required
+            className="input"
+            name="password"
+            label="Enter new password, min. 6 chars"
+            type="password"
+            margin="normal"
+            autoComplete="off"
+            value={this.state.password}
+            onChange={this.handleInputChange}
+            error={!this.state.emailInputValid}
+          />
+        </div>
+        <div className="sign-in__btn-wrapper">
+          <Button
+            className="sign-in__submit-btn"
+            variant="outlined"
+            onClick={this.recoveryPassword}
+            disabled={this.state.messageOpened}
+          >
+            Send
                 <Send />
-              </Button>
-            </div>
-          </Grid>
+          </Button>
+        </div>
+      </Grid>
     )
     let renderForm;
     let renderMailMessage;
     if (this.state.forgotPasswordForm) {
       renderForm = forgotPass
-    } else if(this.state.mailMessage) {
+    } else if (this.state.mailMessage) {
       renderForm = mailMessage
-    } else if(this.state.reset_token){
+    } else if (this.state.reset_token) {
       renderForm = recoveryPass
     } else {
       renderForm = signin
     }
-    
+
     return (
       <div>
         <Grid
@@ -394,7 +355,7 @@ class Login extends Component {
             </Typography>
           </Grid>
           {renderForm}
-          
+
         </Grid>
       </div>
     );
@@ -402,14 +363,13 @@ class Login extends Component {
 };
 
 const mapStateToProps = state => ({
+  user: state.auth.user,
+  isAuthenticated: state.auth.isAuthenticated,
   errors: state.auth.errors,
 });
 
 const mapDispatchToProps = dispatch => ({
-  userHasAuthenticated: isAuthenticated => dispatch(userHasAuthenticated(isAuthenticated)),
-  signInUser: (user,history) => dispatch(signInUser(user,history)),
-  storeUser: user => dispatch(storeUser(user)),
-  authenticationError: err => dispatch(authenticationError(err)),
+  signInUser: user => dispatch(signInUser(user)),
   enqueueSnackbar: notifications => dispatch(enqueueSnackbar(notifications))
 })
 

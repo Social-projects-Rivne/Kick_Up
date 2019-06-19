@@ -11,8 +11,39 @@ const messageType = {
     ERR: "error"
 };
 
-export const registerUser = (user, history) => dispatch => {
+export const registerUser = user => dispatch => {
+    axios.post("api/signup", user)
+        .then(res => {
+            dispatch(signInUser(user));
+        })
+        .catch(err => {
+            if (!err.response) {
+                dispatch(enqueueSnackbar({
+                    message: 'Something went wrong :( Try reload your page',
+                    options: {
+                        key: new Date().getTime() + Math.random(),
+                        variant: messageType.ERR,
+                    },
+                }));
+                return;
+            }
 
+            const data = err.response.data.error.errors;
+            let resText = [];
+            Object.values(data).forEach((el) => {
+                resText.push(el[0]);
+            });
+            console.log('resText', resText)
+            resText.forEach(msg => {
+                dispatch(enqueueSnackbar({
+                    message: msg,
+                    options: {
+                        key: new Date().getTime() + Math.random(),
+                        variant: messageType.ERR,
+                    },
+                }));
+            });
+         });
 };
 
 export const startAuthentication = () => ({
@@ -22,7 +53,7 @@ export const startAuthentication = () => ({
     }
 });
 
-export const signInUser = (user, history) => dispatch => {
+export const signInUser = user => dispatch => {
     dispatch(startAuthentication());
     dispatch(enqueueSnackbar({
         message: 'Working...',
@@ -36,7 +67,6 @@ export const signInUser = (user, history) => dispatch => {
         .then(res => {
             const { token } = res.data;
             dispatch(userHasAuthenticated(true));
-            dispatch(storeUser(user));
             setAuthToken(token);
             localStorage.setItem("authorization", token);
             dispatch(closeSnackbar());
@@ -57,9 +87,6 @@ export const signInUser = (user, history) => dispatch => {
                 },
             }));
             dispatch(storeUser(user));
-            history.push({
-                pathname: "/",
-            });
         })
         .catch((err) => {
             dispatch(authenticationError(err.response || err.data));
