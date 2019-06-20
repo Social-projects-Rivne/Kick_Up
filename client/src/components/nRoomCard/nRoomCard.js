@@ -130,7 +130,7 @@ class NroomCard extends Component {
                     }}
                 >
                     <ExpandMore />
-                    {this.props.events.length}
+                    {this.props.events && this.props.events.length}
                     {` ${this.props.events.length > 1 ? 'events' : 'event'}`}
                 </Fab>
                 <IconButton className="roomcard__group-members">
