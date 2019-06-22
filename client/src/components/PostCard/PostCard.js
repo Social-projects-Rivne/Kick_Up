@@ -16,43 +16,6 @@ import { ExpandMore, WhereToVote, Edit } from '@material-ui/icons';
 
 import defaultAvatar from '../../assets/images/face.png';
 
-// Helper functions. 
-const convertTime = (str) => {
-    // Define manually date;
-    const months = {
-        '01': 'January',
-        '02': 'February',
-        '03': 'March',
-        '04': 'April',
-        '05': 'May',
-        '06': 'June',
-        '07': 'July',
-        '08': 'August',
-        '09': 'September',
-        '10': 'October',
-        '11': 'November',
-        '12': 'December'
-    };
-
-    if (str && typeof str === 'string') {
-        try{
-            let [, month, date] = [...str.split('-')];
-            let [hour, min] = [...date.split('T').pop().split(':')];
-            
-            date = date.slice(0, 2);
-
-            return {
-                date: `${date[0] === '0' ? date.slice(1) : date} ${months[month]}`,
-                time: `${hour}:${min}` 
-            }
-        } catch(err) {
-            return {
-                date: '',
-                time: ''
-            }
-        }
-    }
-};
 const _maxAllowedPostChars = 500; 
 
 class PostCard extends Component {

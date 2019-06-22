@@ -70,33 +70,35 @@ class NroomCard extends Component {
     };
     render = () => (
         <Card className="roomcard">
-            <Link 
-                component={RouterLink} 
-                to={`/room/${this.props.id}`}
-                title="Click to view room details"
-                data-wrapper-link
+            <CardHeader
+                className="roomcard__header"
+                title={
+                    <Link 
+                        component={RouterLink} 
+                        to={`/room/${this.props.id}`}
+                        title="Click to view room details"
+                        data-wrapper-link
+                    >
+                        {this.props.title}
+                    </Link>
+                }
+                subheader={
+                    <div className="roomcard__header-info">
+                        <Link component={RouterLink} to={`/profile/${this.props.id}`} className="roomcard__user-link" >
+                            <div className="roomcard__avatar-wrapper">
+                                <Avatar
+                                    className="roomcard__avatar"
+                                    src={this.props.authorAvatar ? this.props.authorAvatar : defaultAvatar}
+                                >
+                                </Avatar>
+                                <span>{`${this.props.authorName || "Shy"} ${this.props.authorLastName || "Unicorn"}`}</span>
+                            </div>
+                        </Link>
+                        <StarRating rating={this.props.eventRating} />
+                    </div>
+                }
             >
-                <CardHeader
-                    className="roomcard__header"
-                    title={this.props.title}
-                    subheader={
-                        <div className="roomcard__header-info">
-                            <Link component={RouterLink} to={`/profile/${this.props.id}`} className="roomcard__user-link" >
-                                <div className="roomcard__avatar-wrapper">
-                                    <Avatar
-                                        className="roomcard__avatar"
-                                        src={this.props.authorAvatar ? this.props.authorAvatar : defaultAvatar}
-                                    >
-                                    </Avatar>
-                                    <span>{`${this.props.authorName || "Shy"} ${this.props.authorLastName || "Unicorn"}`}</span>
-                                </div>
-                            </Link>
-                            <StarRating rating={this.props.eventRating} />
-                        </div>
-                    }
-                >
             </CardHeader>
-            </Link>
             <CardMedia
                 className="roomcard__img-wrapper"
                 image={this.props.cover && this.props.cover.replace(/\\/g, '/')}
@@ -148,6 +150,9 @@ class NroomCard extends Component {
             >
                 <CardContent className="roomcard__events-wrapper">
                     {
+
+                        this.props.events &&
+                        this.props.events.length > 0 &&
                         this.props.events.map(event => {
                             return <NeventCard 
                                 key={event.id}

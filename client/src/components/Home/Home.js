@@ -6,8 +6,6 @@ import { loadHomePagePosts } from '../../store/actions/home';
 
 import Swiper from 'react-id-swiper/lib/ReactIdSwiper.full';
 import { Pagination } from 'swiper/dist/js/swiper.esm';
-
-import { withSnackbar } from 'notistack';
 import { Typography, Button, Badge } from '@material-ui/core';
 import { EventAvailable, SupervisorAccount, ExpandMore } from "@material-ui/icons";
 
@@ -240,35 +238,9 @@ class Home extends Component {
         scrollInProgress: false,
         renderEventsSlider: false
     };
-    showToast = (message, variant) => {
-        this.props.enqueueSnackbar(message, {
-            variant: variant ? variant : 'default',
-            anchorOrigin: {
-                vertical: 'top',
-                horizontal: 'center',
-            }
-        });
-    }
     selectedRoomHandler = id => {
         this.props.history.push({ pathname: "/room/" + id });
     };
-    handleServerErrors = (err) => {
-        let res = [];
-
-        // Retrieve all errors;
-        Object.values(err).forEach((el) => {
-            res.push(el[0]);
-        });
-
-        // Show all messages;
-        try {
-            res.forEach(msg => {
-                this.showToast(msg, messageType.ERR);
-            });
-        } catch(err) {
-            this.showToast('Something went wrong :( Try reload your page', messageType.ERR);
-        }
-    }
     getScrollPos = () => {
         const currentOffset = document.documentElement.scrollTop || 
         document.body.scrollTop;
@@ -477,7 +449,18 @@ class Home extends Component {
         const _awaitTime = 100;
 
         // Retrieve items;
-        this.props.loadPosts();
+        if (!this.props.rooms || !this.props.events) {
+            this.props.loadPosts();        
+        } else {
+            // If we have them already, render;
+            
+            this.props.rooms.forEach(room => {
+                room.events = this.props.events;
+                if (room.events.length > 3) room.events.length = 3;
+            });
+
+            this.setState({renderEventsSlider: true});
+        }
 
         // Update swipers height;
         updateSwipersHeight();
