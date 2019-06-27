@@ -1,13 +1,17 @@
 import React from 'react';
+import { connect } from "react-redux";
+
 import axios from 'axios';
 
 import {Link as RouterLink, Link} from "react-router-dom";
+
+import { loadRoomDetails } from '../../store/actions/rooms';
 
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 
 import { AppBar, Tabs, Tab, Typography, Grid, Avatar, Card, CardActions, CardContent, CardMedia,
     CardActionArea, Button, ListItemText, ListItem, ListItemAvatar, Badge, Fab, Paper } from '@material-ui/core';
-import { Comment, Collections, Face, NewReleases, EventAvailable, Add, Info, Edit } from '@material-ui/icons';
+import { Comment, Collections, Face, NewReleases, EventAvailable, Add, Info, Edit, TagFaces, DeviceHubOutlined } from '@material-ui/icons';
 import Gallery from 'react-grid-gallery';
 import SwipeableViews from 'react-swipeable-views';
 import Spinner from './../UI/Spinner/Spinner';
@@ -42,7 +46,6 @@ class RoomPage extends React.Component {
 
     state = {
         value: 0,
-        roomPageDB: null,
         roomPagePosts: [],
         gallery: null,
         authUser: false,
@@ -52,20 +55,18 @@ class RoomPage extends React.Component {
         showUpload: false,
     };
 
+    getFilteredRoomData = () => {
+        const id = this.props.match.params.id;
+        const res = this.props.roomPageDB.filter(data => data.id === parseInt(id));
+        return res.length > 0 ? res : null;
+    };
     componentDidMount() {
         const { id } = this.props.match.params;
-
-        // Load MySQL DB room data;
-        axios.get("/api/room/" + id)
-            .then(res => {
-                console.log('response', res.data);
-                let gallery = [];
-                [...res.data.media].map(e => {
-                    gallery.push({src:e.key.slice(6), thumbnail:e.key.slice(6)})
-                });
-                this.setState({ roomPageDB: res.data, gallery });
-            })
-            .catch(err => console.log(err));
+    
+        // If no room data, load it;
+        if (id && !this.getFilteredRoomData()) {
+            this.props.loadRoomData(id);
+        }
         
         // Retrieve MondoDB posts with comments;
         axios
@@ -142,7 +143,6 @@ class RoomPage extends React.Component {
           });
     }
     leave = () => {
-        console.log(this.state.authUser)
         const eventId = this.props.match.params.id;
         axios.delete(`http://localhost:3001/api/member/room/${eventId}`)
         .then((res) => {
@@ -180,27 +180,28 @@ class RoomPage extends React.Component {
 
         return res;
     }
-
     showUploadComponent = () => {
         this.setState({showUpload: true})
     }
-
     closeUploadComponent = () => {
         this.setState({showUpload: false})
     }
-
     getImagesSRC = (src) => {
         const gallery = [...this.state.gallery].concat(src);
         this.setState({gallery});
     }
-
     render() {
-        const { value, roomPageDB, roomPagePosts, gallery } = this.state;
+        const { value, roomPagePosts, gallery } = this.state;
         const { isAuthenticated, user } = this.props;
+
+        let roomPageDB = this.getFilteredRoomData();
 
         if (!roomPageDB) {
             return (<Spinner className="rooms-page"/>);
+        } else if (roomPageDB.length > 0) {
+            roomPageDB = roomPageDB[0];
         }
+
         const joinBtn = (
         <Fab variant="extended" className="room-details-page-fab" onClick={this.join}>
             <span className="room-details-page-join">Join now</span>
@@ -305,9 +306,9 @@ class RoomPage extends React.Component {
                                         title={event.title}
                                         rating={event.eventRating}
                                         authorId={event.creator_id}
-                                        authorName={this.state.roomPageDB.creator.first_name}
-                                        authorLastName={this.state.roomPageDB.creator.last_name}
-                                        authorAvatar={this.state.roomPageDB.creator.avatar}
+                                        authorName={roomPageDB.creator.first_name}
+                                        authorLastName={roomPageDB.creator.last_name}
+                                        authorAvatar={roomPageDB.creator.avatar}
                                         cover={event.cover}
                                         description={event.description}
                                         eventLocation={event.location}
@@ -326,7 +327,10 @@ class RoomPage extends React.Component {
                             <Add />
                             <span onClick={this.showUploadComponent}>upload photo</span>
                         </Fab>
-                        <Gallery images={gallery} backdropClosesModal={true} />
+                        {
+                            this.state.gallery &&
+                            <Gallery images={gallery} backdropClosesModal={true} />
+                        }
                     </TabContainer>) || <TabContainer></TabContainer> }
 
                     { (value === 4 && <TabContainer>
@@ -372,7 +376,7 @@ class RoomPage extends React.Component {
                     </TabContainer>) || <TabContainer></TabContainer> }
                 </SwipeableViews>
 
-                {value === 0 && isAuthenticated && roomPageDB.creator_id === user.id &&(
+                {value === 0 && isAuthenticated && roomPageDB && roomPageDB.creator_id === user.id &&(
                     <Link to={this.props.location.pathname + "/edit"} className="room-details-add-event-link">
                         <Fab variant="extended" className="room-details-add-event">
                             <Edit />
@@ -387,10 +391,19 @@ class RoomPage extends React.Component {
                         </Fab>
                     </Link>
                 )}
-
             </div>
         );
     }
 }
 
-export default RoomPage;
+const mapStateToProps = state => ({
+    user: state.user,
+    isAuthenticated: state.isAuthenticated,
+    roomPageDB: state.rooms.rooms
+});
+  
+const mapDispatchToProps = dispatch => ({
+    loadRoomData: id => dispatch(loadRoomDetails(id))
+});
+  
+export default connect(mapStateToProps, mapDispatchToProps)(RoomPage);

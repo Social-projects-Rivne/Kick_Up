@@ -11,3 +11,8 @@ export const REMOVE_SNACKBAR = 'REMOVE_SNACKBAR';
 
 // Main page;
 export const LOAD_INDEX_POSTS = 'LOAD_INDEX_POSTS';
+
+// Rooms;
+export const STORE_ROOMS = 'STORE_ROOMS';
+export const SET_LOADING_ROOMS_STATUS = 'SET_LOADING_ROOMS_STATUS';
+export const STORE_ROOM_DETAILS = 'STORE_ROOM_DETAILS';
