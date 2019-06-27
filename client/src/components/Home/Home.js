@@ -1,14 +1,13 @@
 import React, {Component} from 'react';
+import { connect } from "react-redux";
 import { Link as DomLink } from 'react-router-dom';
+
+import { loadHomePagePosts } from '../../store/actions/home';
 
 import Swiper from 'react-id-swiper/lib/ReactIdSwiper.full';
 import { Pagination } from 'swiper/dist/js/swiper.esm';
-
-import { withSnackbar } from 'notistack';
 import { Typography, Button, Badge } from '@material-ui/core';
 import { EventAvailable, SupervisorAccount, ExpandMore } from "@material-ui/icons";
-
-import axios from "axios";
 
 // Scroll to plugin;
 import { Element, Events, Link, scroller } from 'react-scroll';
@@ -234,63 +233,14 @@ let prevTimer, prevResizeTimer;
 
 class Home extends Component {
     state = {
-        events: [],
-        rooms: [],
-        roomCount: 0,
-        eventCount: 0,
         offset: 0,
         currentSlide: 1,
         scrollInProgress: false,
         renderEventsSlider: false
     };
-    showToast = (message, variant) => {
-        this.props.enqueueSnackbar(message, {
-            variant: variant ? variant : 'default',
-            anchorOrigin: {
-                vertical: 'top',
-                horizontal: 'center',
-            }
-        });
-    }
     selectedRoomHandler = id => {
         this.props.history.push({ pathname: "/room/" + id });
     };
-    loadData = (callback) => {
-        // @todo add load data from new route;
-        async function getUser() {
-            try {
-                const res = await axios.get('/api');
-                
-                if (res && typeof callback === 'function') return callback(res.data);
-            } catch (err) {
-                this.handleServerErrors(err.response.data.error.errors);
-            }
-        };
-
-        getUser().then(res => {
-            if (typeof callback === 'function') return callback(res);
-        }).catch(() => {
-            this.showToast('Something went wrong, please reload your page.', messageType.ERR);
-            return callback(false);
-        });
-    }
-    handleServerErrors = (err) => {
-        let res = [];
-
-        // Retrieve all errors;
-        Object.values(err).forEach((el) => {
-            res.push(el[0]);
-        });
-
-        // Show all messages;
-        try {
-            res.forEach(msg => {
-                this.showToast(msg, messageType.ERR);
-            });
-        } catch(err) {
-            this.showToast('Something went wrong :( Try reload your page', messageType.ERR);
-        }
-    }
     getScrollPos = () => {
         const currentOffset = document.documentElement.scrollTop || 
         document.body.scrollTop;
@@ -328,7 +278,7 @@ class Home extends Component {
         for (let i = 0, length = Object.keys(Type).length; i < length; i++) {
             eventsSwipers.push((
                     <Swiper {...{...eventsSliderParams, ...defineUniqueParams(i)}} >
-                        {this.state.events.map((event, idx) => {
+                        {this.props.events.map((event, idx) => {
                             return <div key={idx} className="swiper-slide">
                                 <NeventCard 
                                     id={event.id}
@@ -482,27 +432,35 @@ class Home extends Component {
             });
         }, _awaitTime);
     }
+    componentDidUpdate = prevProps => {
+        if (
+            (prevProps.rooms !== this.props.rooms) ||
+            (prevProps.events !== this.props.events)
+        ) {
+            this.props.rooms.forEach(room => {
+                room.events = this.props.events;
+                if (room.events.length > 3) room.events.length = 3;
+            });
+
+            this.setState({renderEventsSlider: true});
+        }
+    }
     componentDidMount = () => {
         const _awaitTime = 100;
 
         // Retrieve items;
-        this.loadData(res => {
-            if (res) {
-                // @temp, remove after Alex will add room events;
-                res.rooms.forEach(room => {
-                    room.events = res.events;
-                    if (room.events.length > 3) room.events.length = 3;
-                });
+        if (!this.props.rooms || !this.props.events) {
+            this.props.loadPosts();        
+        } else {
+            // If we have them already, render;
+            
+            this.props.rooms.forEach(room => {
+                room.events = this.props.events;
+                if (room.events.length > 3) room.events.length = 3;
+            });
 
-                this.setState({
-                    renderEventsSlider: true,
-                    events: res.events,
-                    rooms: res.rooms,
-                    eventCount: res.eventCount,
-                    roomCount: res.roomCount
-                });
-            }
-        });
+            this.setState({renderEventsSlider: true});
+        }
 
         // Update swipers height;
         updateSwipersHeight();
@@ -609,8 +567,8 @@ class Home extends Component {
                     <DomLink to={'events'} className="home__cards-slide">
                         <EventAvailable fontSize="large" />
                         {
-                            this.state.eventCount > 0
-                            ? <Badge className="home__badge" badgeContent={this.state.eventCount}>
+                            this.props.eventCount > 0
+                            ? <Badge className="home__badge" badgeContent={this.props.eventCount}>
                                 <Typography title="Click to view all events" className="home__cards-slide-title" variant="h4">
                                     Events      
                                 </Typography>
@@ -627,8 +585,8 @@ class Home extends Component {
                     <DomLink to={'rooms'} className="home__cards-slide">
                         <SupervisorAccount fontSize="large" />
                         {
-                            this.state.roomCount > 0
-                            ? <Badge className="home__badge" badgeContent={this.state.roomCount}>
+                            this.props.roomCount > 0
+                            ? <Badge className="home__badge" badgeContent={this.props.roomCount}>
                                 <Typography title="Click to view all rooms" className="home__cards-slide-title" variant="h4">
                                     rooms      
                                 </Typography>
@@ -642,7 +600,7 @@ class Home extends Component {
                         this.state.renderEventsSlider &&
                         <Swiper {...roomsSliderParams} getSwiper={setRoomsSwiper}>
                             {
-                                this.state.rooms.map((room, idx) => {
+                                this.props.rooms.map((room, idx) => {
                                     return <div key={room.id} className="swiper-slide">
                                         <NroomCard
                                             id={room.id}
@@ -671,4 +629,13 @@ class Home extends Component {
     )
 };
 
-export default withSnackbar(Home);
+const mapStateToProps = state => ({
+    events: state.home.events,
+    rooms: state.home.rooms
+});
+
+const mapDispatchToProps = dispatch => ({
+    loadPosts: () => dispatch(loadHomePagePosts())
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

@@ -169,7 +169,6 @@ class AddPost extends Component {
     }
     handleWindowResize = () => {
         const _awaitTime = 1000;
-        const _this = this;
 
         let saveSize = () => {
             this.setState({ windowWidth: window.innerWidth });
@@ -200,7 +199,7 @@ class AddPost extends Component {
         if (
             this.state.title.data && 
             this.state.title.data.length > 3 &&
-            (this.state.editModeLoad || this.state.editorData.data && this.state.editorData.data.length > 0)
+            (this.state.editModeLoad || (this.state.editorData.data && this.state.editorData.data.length > 0))
         ) {
             res = true;
         }
@@ -285,8 +284,6 @@ class AddPost extends Component {
         window.removeEventListener('resize', this.handleWindowResize);
     }
     render() {
-        const { activeSlide } = this.state;
-
         return (
             <div className={!this.state.activeSlide ? 'add-post  add-post_no-desk-preview' : 'add-post' }>
             <Swiper {...addPostSwiperParams} getSwiper={this.setSwiper} >
@@ -365,7 +362,7 @@ class AddPost extends Component {
                                         </FormGroup>
                                     </StepContent>
                                 </Step>
-                        </Stepper>
+                        </Stepper> 
                     </form>
                     <Button
                         className={!this.checkAllFilled() 
