@@ -82,11 +82,11 @@ class UserProfile extends React.Component {
                         thumbnail: e.key.slice(6)
                     };
                 });
-
                 this.setState({
                     loading: false,
                     userProfileData: userData,
-                    selfProfile: +id === this.props.user.id,
+                    selfProfile: +id === userData.id,
+                    cool: 'cool'
                 });
             })
             .catch(err => {
