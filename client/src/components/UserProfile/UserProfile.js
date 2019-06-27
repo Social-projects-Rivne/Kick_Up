@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 import {
     Tabs, Tab, AppBar, Typography, Avatar, Grid, Paper, List, ListItem, Card, InputLabel,
@@ -277,4 +278,8 @@ class UserProfile extends React.Component {
     }
 }
 
-export default UserProfile;
+const mapStateToProps = state => ({
+    user: state.auth.user,
+})
+
+export default connect(mapStateToProps)(UserProfile);
