@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-
-const roomCommentSchema = new Schema (
+const CommentSchema = new Schema (
     {
-        _id: mongoose.Schema.Types.ObjectId,
+        entity_type: String,
+        entity_id: Number,
         author_id: Number,
         text: String,
         created_at: {
@@ -11,9 +11,12 @@ const roomCommentSchema = new Schema (
             default: Date.now,
         },
         updated_at: Date,
-        is_banned: Boolean,
+        is_banned: {
+            type: Boolean,
+            default: false
+        },
         child_comments: Array,
     }
 );
 
-module.exports = mongoose.model('Room_comment', roomCommentSchema);
+module.exports = mongoose.model('mongodbcomments', CommentSchema);

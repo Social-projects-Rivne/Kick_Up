@@ -25,6 +25,10 @@
     overflow: hidden;
 }
 
+.event-card__header span:first-of-type a {
+    color: $black;
+}
+
 #root .event-card .event-card__main-content {
     font-size: 1.071rem;
     line-height: 1.286rem;

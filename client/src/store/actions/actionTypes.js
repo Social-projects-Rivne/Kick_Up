@@ -9,6 +9,9 @@ export const ENQUEUE_SNACKBAR = 'ENQUEUE_SNACKBAR';
 export const CLOSE_SNACKBAR = 'CLOSE_SNACKBAR';
 export const REMOVE_SNACKBAR = 'REMOVE_SNACKBAR';
 
+// Main page;
+export const LOAD_INDEX_POSTS = 'LOAD_INDEX_POSTS';
+export const LOAD_INDEX_POSTS = 'LOAD_INDEX_POSTS';
 //userProfile
 export const USER_PROFILE_DATA = 'USER_PROFILE_DATA';
 

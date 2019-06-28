@@ -28,6 +28,10 @@
     overflow: hidden;
 }
 
+.roomcard__header span:first-of-type a {
+    color: $black;
+}
+
 #root .roomcard .roomcard__main-content {
     font-size: 1.071rem;
     line-height: 1.286rem;
@@ -463,7 +467,7 @@
 
     .roomcard__events-wrapper .event-card__header
     span:first-of-type {
-        max-height: 2rem;
+        max-height: 2.1rem;
     }
 
     .roomcard__events-wrapper .event-card__description p {
