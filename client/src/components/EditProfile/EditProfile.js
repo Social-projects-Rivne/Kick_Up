@@ -634,9 +634,6 @@ class EditProfile extends Component {
 const mapStateToProps = state => ({
     userProfileData: state.userProfile.userProfileData,
     user: state.auth.user,
-    isAuthenticated: state.auth.isAuthenticated,
-    editUserProfile: state.editProfile.editUserProfile,
-    updateInput: state.editProfile.updateInput,
 });
 
 const mapDispatchToProps = dispatch => ({

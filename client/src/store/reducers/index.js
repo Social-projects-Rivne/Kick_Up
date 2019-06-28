@@ -10,7 +10,7 @@ const rootReducer = combineReducers({
     errors: errorReducer,
     auth: authReducer,
     toast: toastReducer,
-    home: homeReducer
+    home: homeReducer,
     userProfile: userProfileReducer,
     editProfile: editProfileReducer,
 });
