@@ -244,6 +244,7 @@ class UserProfile extends React.Component {
 
 const mapStateToProps = state => ({
     userProfileData: state.userProfile.userProfileData,
+    user: state.auth.user,
 });
 
 const mapDispatchToProps = dispatch => ({

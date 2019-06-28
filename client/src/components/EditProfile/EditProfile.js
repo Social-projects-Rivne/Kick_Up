@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 
 import Swiper from 'react-id-swiper/lib/ReactIdSwiper.full';
 import { Pagination, Navigation } from 'swiper/dist/js/swiper.esm';
@@ -6,7 +7,6 @@ import kute from 'kute.js';
 import 'kute.js/kute-svg';
 import AvatarCropper from 'react-avatar-edit';
 import { withSnackbar } from 'notistack';
-import axios from 'axios';
 import is from 'is_js';
 
 import 'react-id-swiper/src/styles/scss/swiper.scss';
@@ -31,6 +31,8 @@ import {
     MailOutline,
     CheckCircleOutlineOutlined
 } from '@material-ui/icons';
+import {editUserProfileAction} from "../../store/actions/editProfileAction";
+import {userProfileAction} from "../../store/actions/userProfileAction";
 
 const _maxFileSize = 10000000;
 const _desktopWidth = 1168;
@@ -95,11 +97,12 @@ class EditProfile extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            initialized: false,
             croppedImage: '',
             avatar: {
                 data: '',
                 wasChanged: false
-            }, 
+            },
             first_name: {
                 data: '',
                 wasChanged: false
@@ -115,11 +118,11 @@ class EditProfile extends Component {
             emailReceived: '',
             birth_date: {
                 data: '',
-                wasChanged: false  
+                wasChanged: false
             },
             gender: {
                 data: '',
-                wasChanged: false    
+                wasChanged: false
             },
             activeAnimation: null,
             windowWidth: window.innerWidth,
@@ -210,7 +213,8 @@ class EditProfile extends Component {
                 }
             }, _delayTime);
         }
-    }
+    };
+
     updateInputValue = (evt) => {
         this.setState({
           [evt.target.name]: {
@@ -218,7 +222,49 @@ class EditProfile extends Component {
               wasChanged: true
           }
         });
+    };
+
+    componentWillReceiveProps(nextProps, nextContext) {
+        if (this.state.initialized) {
+            return;
+        }
+
+        const _this = this;
+        // Get user data;
+        this.getUserData((res) => {
+            if (res) {
+                _this.setState({
+                    initialized: true,
+                    avatar: {
+                        data: res.avatar ? res.avatar : '',
+                        wasChanged: false
+                    },
+                    first_name: {
+                        data: res.first_name ? res.first_name : '',
+                        wasChanged: false
+                    },
+                    last_name: {
+                        data: res.last_name ? res.last_name : '',
+                        wasChanged: false
+                    },
+                    email: {
+                        data: res.email,
+                        wasChanged: false
+                    },
+                    emailReceived: res.email,
+                    birth_date: {
+                        data: res.birth_date ? res.birth_date.toISOString().split('T')[0] : '',
+                        wasChanged: false
+                    },
+                    gender: {
+                        data: res.gender === "Male" ? 1 : (res.gender === "Female" ? 2 : 3),
+                        wasChanged: false
+                    },
+                });
+            }
+        });
     }
+
     handleAvatarDimensions = () => {
         if (window.innerWidth < _desktopWidth) {
             if (window.innerWidth > window.innerHeight) {
@@ -287,34 +333,12 @@ class EditProfile extends Component {
                 5000
             );
         }
-    }
+    };
+
     getUserData = (callback) => {
-        const fireCallback = (res) => {
-            if (typeof callback === 'function') callback(res);
-        };
+        callback(this.props.userProfileData);
+    };
 
-        axios.get('/api/profile')
-            .then((res) => {
-                res = res.data;
-                fireCallback(res);
-             })
-            .catch(() => {
-                fireCallback(false);
-            })
-    }
-    sendUserData = (data, callback) => {
-        debugger;
-        const fireCallback = (res) => {
-            if (typeof callback === 'function') callback(res);
-        };
-
-        axios.put('/api/profile/update', data)
-        .then(() => {
-            
-            fireCallback(true)
-        })
-        .catch(() => { fireCallback(false) });
-    }
     saveData = () => {
         const data = {};
 
@@ -330,7 +354,7 @@ class EditProfile extends Component {
 
         if (Object.keys(data).length) {
             // Send data;
-            this.sendUserData(data, (res) => {
+            this.props.editUserProfileAction(data, (res) => {
                 this.showToast(
                     res ? `All your changed were saved` : `We are sorry, we couldn't save your profile changes :(`,
                     res ? messageType.SUCCESS : messageType.ERR,
@@ -340,57 +364,26 @@ class EditProfile extends Component {
         }
     }
     componentDidMount = () => {
-        const _this = this;
 
-        // Get user data;
-        this.getUserData((res) => {
-            if (res) {
-                _this.setState({
-                    avatar: {
-                        data: res.avatar ? res.avatar : '',
-                        wasChanged: false
-                    },
-                    first_name: {
-                        data: res.first_name ? res.first_name : '',
-                        wasChanged: false
-                    },
-                    last_name: {
-                        data: res.last_name ? res.last_name : '',
-                        wasChanged: false
-                    },
-                    email: {
-                        data: res.email,
-                        wasChanged: false
-                    },
-                    emailReceived: res.email,
-                    birth_date: {
-                        data: res.birth_date ? res.birth_date.split('T')[0] : '',
-                        wasChanged: false
-                    },
-                    gender: {
-                        data: res.gender ? res.gender : 3,
-                        wasChanged: false
-                    },                    
-                });
-            }
-        });
+        const {id} = this.props.match.params;
+        this.props.userProfileAction(id);
 
         // Handle animations for desktop;
         this.handleSvg();
 
         // Handle swiper changes;
         window.addEventListener('resize', this.handleWindowResize);
-    }
+    };
     componentWillUnmount = () => {
         // Save data;
         this.saveData();
 
         // Remove EL;
         window.removeEventListener('resize', this.handleWindowResize);
-    }
+    };
     resetAvatar = () => {
         this.setState({avatar: ''});
-    }
+    };
     showToast = (message, variant, duration) => {
         this.props.enqueueSnackbar(message, {
             transitionDuration: { exit: 300, enter: 300 },
@@ -401,7 +394,7 @@ class EditProfile extends Component {
                 horizontal: 'center',
             }
         });
-    }
+    };
 
     render() {
         return (
@@ -521,7 +514,6 @@ class EditProfile extends Component {
                                         onChange={ (e) => {
                                             this.updateInputValue(e);
                                             this.handleSvg(inputType.gender);
-
                                         }}
                                         value={this.state.gender.data}
                                         className="input edit-profile__gender"
@@ -639,5 +631,17 @@ class EditProfile extends Component {
         )
     }
 };
+const mapStateToProps = state => ({
+    userProfileData: state.userProfile.userProfileData,
+    user: state.auth.user,
+    isAuthenticated: state.auth.isAuthenticated,
+    editUserProfile: state.editProfile.editUserProfile,
+    updateInput: state.editProfile.updateInput,
+});
 
-export default withSnackbar(EditProfile);
+const mapDispatchToProps = dispatch => ({
+    editUserProfileAction: (data, callback) => dispatch(editUserProfileAction(data, callback)),
+    userProfileAction: id => dispatch(userProfileAction(id))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)( withSnackbar(EditProfile));
