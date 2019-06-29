@@ -1,12 +1,16 @@
 import { 
     STORE_ROOMS, 
     SET_LOADING_ROOMS_STATUS, 
-    STORE_ROOM_DETAILS 
+    STORE_ROOM_DETAILS,
+    STORE_ROOM_CATEGORIES,
+    STORE_ROOM_TAGS
 } from "../actions/actionTypes";
 
 const initialStates = {
     roomsLoading: false,
     rooms: [],
+    categories: [],
+    tags: []
 };
 
 export default function (state = initialStates, action) {
@@ -40,19 +44,35 @@ export default function (state = initialStates, action) {
 
                     // Check and  update room
                     let rooms = state.rooms.map(room => {
-                        if (room.id === action.id) {
-                            room = action.updates;
+                        if (parseInt(room.id) === parseInt(action.id)) {
+                            room = {
+                                ...room,
+                                ...action.updates
+                            }
+                            
                             addNewRoom = false;
                         }
+
+                        return room;
                     });
 
                     // If no room to update, add it;
                     if (addNewRoom) {
                         rooms.push(action.updates);
                     }
-
+                    
                     return rooms;
                 })()
+            }
+        case STORE_ROOM_CATEGORIES:
+            return {
+                ...state,
+                categories: action.data
+            }
+        case STORE_ROOM_TAGS:
+            return {
+                ...state,
+                tags: action.data
             }
         default: 
             return state;

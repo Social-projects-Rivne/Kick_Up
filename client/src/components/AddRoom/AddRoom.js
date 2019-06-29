@@ -1,12 +1,18 @@
 import React from 'react';
+import { connect } from "react-redux";
 
-import axios from 'axios';
+import { 
+    addNewRoom, 
+    loadRoomCategories, 
+    loadRoomTags,
+    editRoom 
+} from '../../store/actions/rooms';
+import { enqueueSnackbar } from '../../store/actions/toast';
 
 import { TextField, Input, FormControlLabel, Switch, FormGroup, Button, NativeSelect, Paper,
     InputLabel, FormControl, InputAdornment, Grid, Stepper, Step, StepLabel, StepContent } from '@material-ui/core';
 import { CloudUpload, Link } from '@material-ui/icons';
 import Spinner from "../UI/Spinner/Spinner";
-import {withSnackbar} from "notistack";
 import ImageUploader from "./../ImageUploader/ImageUploader";
 import defaultCover from "../../assets/images/bg-1.jpg"
 
@@ -20,8 +26,6 @@ class AddRoom extends React.Component {
     state = {
         activeStep: 0,
         roomId: 0,
-        userId: 0,
-        loading: true,
         tagId: 0,
         roomData: {
             title: '',
@@ -33,10 +37,6 @@ class AddRoom extends React.Component {
             members_limit: 1,
             members_limit_checked: false,
         },
-        addRoomDB: {
-            categories: [],
-            tags: [],
-        },
         errors: {
             title: false,
             description: false,
@@ -45,48 +45,40 @@ class AddRoom extends React.Component {
             members_limit: false,
             permission: false
         },
+        lastRoomLoaded: this.props.roomsAmount,
         showUpload: false,
         imageSRC: null,
         authUser: false
     };
-
-    showToast = (message, variant) => {
-        this.props.enqueueSnackbar(message, {
-            variant: variant ? variant : 'default',
-        });
-    };
-
+    componentDidUpdate() {
+        // Check if new room was added OK, then change UI;
+        if (this.state.lastRoomLoaded !== this.props.roomsAmount) {
+            this.setState(prevState => ({
+                lastRoomLoaded: this.props.roomsAmount,
+                roomId: this.props.rooms[this.props.roomsAmount - 1].id,
+                activeStep: prevState.activeStep + 1,
+                authUser: this.props.rooms[this.props.roomsAmount - 1].creator.id === this.props.user.id
+            }));
+        // In case room was successfully updated, redirect to roon;
+        } else if (
+            this.state.lastRoomLoaded === this.props.roomsAmount &&
+            this.props.rooms.length > 0 &&
+            this.props.rooms[this.props.roomsAmount - 1].wasEdited
+        ) {
+            this.props.history.push({ pathname: "/room/" + this.state.roomId });
+            this.props.showToast("Congratulations! Room created!", messageType.SUCCESS);
+        }
+    }
     componentDidMount() {
-        axios.get("/api/category")
-            .then(res => {
-                this.setState({
-                    addRoomDB:{
-                        ...this.state.addRoomDB,
-                        categories: res.data
-                    }
-                });
+        // In case we have 0 categories, reload them;
+        if (this.props.categories.length <= 0) {
+            this.props.loadCatogories();
+        }
 
-                return axios.get("/api/tag");
-            })
-            .then(res => {
-                this.setState({
-                    addRoomDB: {
-                        ...this.state.addRoomDB,
-                        tags: res.data
-                    }
-                });
-
-                return axios.get('/api/profile');
-            })
-            .then(res => {
-                this.setState({
-                    loading: false,
-                    userId: res.data.id
-                });
-            })
-            .catch(err => {
-                this.setState({ loading: false });
-            });
+        // In case we have 0 tags, load them;
+        if (this.props.tags.length <= 0) {
+            this.props.loadTags();
+        }
     };
 
     handleUpdateData (event) {
@@ -103,35 +95,18 @@ class AddRoom extends React.Component {
 
         switch (activeStep) {
             case 0:
-                this.setState({ loading: true });
-
                 const data = {
                     title: this.state.roomData.title,
                     description: this.state.roomData.description,
-                    creator_id: this.state.userId,
+                    creator_id: this.props.user.id,
                     category_id: this.state.roomData.category,
                     cover: defaultCover,
                     permission: this.state.roomData.permission ? 1 : 0,
                     members_limit: this.state.roomData.members_limit_checked ? this.state.roomData.members_limit : null
                 };
 
-                axios.post("/api/room/", data)
-                    .then(res => {
-                        this.setState({
-                            loading: false,
-                            roomId: res.data.id,
-                            authUser :!this.state.authUser,
-                            activeStep: activeStep + 1
-                        });
-                    })
-                    .catch(err => {
-                        let errors = err.response.data.error.errors;
-                        for (const key  in errors) {
-                            this.showToast(errors[key][0], messageType.ERR);
-                            errors[key] = true;
-                        }
-                        this.setState({ loading: false, errors: errors });
-                    });
+                // Fire action to create new room;
+                this.props.addRoom(data);
                 break;
             case 1:
                 const updatedData = {
@@ -139,22 +114,11 @@ class AddRoom extends React.Component {
                     description: this.state.roomData.description,
                     title: this.state.roomData.title
                 };
-                axios.put("/api/room/" + this.state.roomId, updatedData)
-                    .then(res => {
-                        this.props.history.push({ pathname: "/room/" + this.state.roomId });
-                        this.showToast("Congratulations! Room created!", messageType.SUCCESS);
-                    })
-                    .catch(err => {
-                        let errors = err.response.data.error.errors;
-                        for (const key  in errors) {
-                            this.showToast(errors[key][0], messageType.ERR);
-                            errors[key] = true;
-                        }
-                        this.setState({ loading: false, errors: errors });
-                    });
+
+                // Fire action to update new room;
+                this.props.editRoom(this.state.roomId, updatedData);
                 break;
             default:
-                console.log("Unknown step");
                 break;
         }
     };
@@ -172,10 +136,10 @@ class AddRoom extends React.Component {
     }
 
     render() {
-        const { activeStep, addRoomDB } = this.state;
+        const { activeStep } = this.state;
         const { isAuthenticated } = this.props;
 
-        if (this.state.loading) {
+        if (this.props.loading) {
             return (<Spinner className="rooms-page"/>);
         }
 
@@ -239,7 +203,7 @@ class AddRoom extends React.Component {
                                                 className="add-room-select"
                                                 error={this.state.errors.category}
                                             >
-                                                {addRoomDB.categories.map((category) =>
+                                                {this.props.categories.map((category) =>
                                                     <option value={category.id}>{category.title}</option>
                                                 )}
                                             </NativeSelect>
@@ -258,7 +222,7 @@ class AddRoom extends React.Component {
                                                 error={this.state.errors.tags}
                                             >
                                                 <option value="">none</option>
-                                                {addRoomDB.tags.map((tag) =>
+                                                {this.props.tags.map((tag) =>
                                                     <option value={tag.id}>{tag.title}</option>
                                                 )}
                                             </NativeSelect>
@@ -334,14 +298,23 @@ class AddRoom extends React.Component {
                                             </InputLabel>
                                             <InputLabel className="created-room-info-label">
                                                 Category:&nbsp;
-                                                {addRoomDB.categories.map((category) =>
-                                                    (category.id === this.state.roomData.category) ? (category.title) : null
-                                                )}
+                                                {
+                                                    this.props.categories.map(
+                                                        (category) => (parseInt(category.id) === parseInt(this.state.roomData.category) 
+                                                            ? category.title 
+                                                            : null
+                                                        )
+                                                    )
+                                                
+                                                }
                                             </InputLabel>
                                             <InputLabel className="created-room-info-label">
                                                 Tags:&nbsp;
-                                                {addRoomDB.tags.map((tag) =>
-                                                    (tag.id === this.state.roomData.tags) ? (tag.title) : null
+                                                {this.props.tags.map((tag) =>
+                                                    (parseInt(tag.id) === parseInt(this.state.roomData.tags) 
+                                                        ? tag.title 
+                                                        : null
+                                                    )
                                                 )}
                                             </InputLabel>
                                             <InputLabel className="created-room-info-label">
@@ -409,4 +382,25 @@ class AddRoom extends React.Component {
     }
 }
 
-export default withSnackbar(AddRoom);
+const mapStateToProps = state => ({
+    user: state.auth.user,
+    isAuthenticated: state.auth.isAuthenticated,
+    roomsAmount: state.rooms.rooms.length,
+    rooms: state.rooms.rooms,
+    categories: state.rooms.categories,
+    tags: state.rooms.tags,
+    loading: state.rooms.roomsLoading
+});
+  
+const mapDispatchToProps = dispatch => ({
+    addRoom : data => dispatch(addNewRoom(data)),
+    editRoom: (id, data) => dispatch(editRoom(id, data)),
+    loadCatogories: () => dispatch(loadRoomCategories()),
+    loadTags: () => dispatch(loadRoomTags()),
+    showToast: (message, variant) => dispatch(enqueueSnackbar({
+        message,
+        options: { variant }
+    }))
+});
+  
+export default connect(mapStateToProps, mapDispatchToProps)(AddRoom);

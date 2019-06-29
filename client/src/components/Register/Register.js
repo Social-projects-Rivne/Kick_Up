@@ -1,14 +1,13 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 
-import axios from 'axios';
 import is from 'is_js';
 
-import { withSnackbar } from 'notistack';
 import { Grid, TextField, Button, Typography } from '@material-ui/core';
 import { Person, Send, Email, Lock } from '@material-ui/icons';
-import setAuthToken from "../../setAuthToken";
+import { registerUser } from "./../../store/actions/authentication";
+import { enqueueSnackbar } from "./../../store/actions/toast";
 
-const USER_ROUTE = 'http://localhost:3001/api/signup';
 const PASSWORD_LENGTH = 6;
 const messageType = {
     SUCCESS: 'success',
@@ -33,60 +32,8 @@ class Register extends Component {
         this.submitHandler = this.submitHandler.bind(this);
         this.updateInputValue = this.updateInputValue.bind(this);
         this.doValidation = this.doValidation.bind(this);
-        this.sendFormData = this.sendFormData.bind(this);
-        this.showToast = this.showToast.bind(this);
     }
-    showToast = (message, variant) => {
-        this.props.enqueueSnackbar(message, {
-            variant: variant ? variant : 'default',
-        });
-    }
-    resetFormUi = () => {
-        this.setState({
-            email: '',
-            password: '',
-            emailInputValid: true,
-            passwordInputValid: true,
-            formInFocus: false
-        });
-    }
-    sendFormData(callback) {
-        
-        const fireCallback = (res) => {
-            if (typeof callback === 'function') callback(res);
-        }
-
-        axios.post(USER_ROUTE, {
-            email: this.state.email,
-            password: this.state.password
-        })
-            .then((res) => {
-                fireCallback({
-                    status: true,
-                    details: []
-                })
-             })
-            .catch((err) => {
-                if (!err.response)
-                    return;
-
-                const data = err.response.data.error.errors;
-                let res = [];
-
-                //@temp for test;
-                data.test = [];
-                data.test.push('Manually added error for test');
-                
-                Object.values(data).forEach((el) => {
-                    res.push(el[0]);
-                });                
-                
-                fireCallback({
-                    status: false,
-                    details: res
-                })
-             });
-    }
+    
     doValidation() {
         let result = true;
 
@@ -113,65 +60,48 @@ class Register extends Component {
     submitHandler(submitEvt) {
         submitEvt.preventDefault();
 
-        const _this = this;
-
         // Validate data;
         const res = this.doValidation();
 
         if (!res) {
-            this.showToast('Please correct fields highlighted with red', messageType.ERR);
+            this.props.enqueueSnackbar({
+                message: 'Please correct fields highlighted with red',
+                options: {
+                    key: new Date().getTime() + Math.random(),
+                    variant: messageType.ERR,
+                },
+            });
             return;
         }
+        const { email, password } = this.state;
+        const user = {
+            email,
+            password
+        }
 
-        // Do changes in UI;
-        this.showToast('Working', messageType.INFO);
+        this.props.registerUser(user);
 
-        // Send data;
-        this.sendFormData(function (res) {
-            // Show message based on response;
-            if (res && res.status) {
-                const { email, password } = _this.state;
-                const user = {
-                    email,
-                    password
-                };
-                axios.post("/api/signin", user)
-                    .then(res => {
-                        const { token } = res.data;
-                        _this.props.userHasAuthenticated(true);
-                        setAuthToken(token);
-                        localStorage.setItem("authorization", token);
-                        return axios.get('api/profile')
-                    })
-                    .then((res) => {
-                        //TODO decide with team if this action is necessary
-                        if (res.data && res.data.email) {
-                            return  res.data;
-                        }
-                        throw new Error('There is no user.');
-                    })
-                    .then(user => {
-                        _this.showToast('Welcome to RoomKa', messageType.SUCCESS);
-                        _this.props.setUser(user);
-                        _this.props.history.push({
-                            pathname: "/profile/" + user.id +"/edit",
-                        });
-                    })
-                    .catch(() => {
-                        _this.showToast('Incorrect username or password!', messageType.ERR);
-                    });
-            } else {
-                try {
-                    res.details.forEach(msg => {
-                        _this.showToast(msg, messageType.ERR);
-                    });
-                } catch(err) {
-                    _this.showToast('Something went wrong :( Try reload your page', messageType.ERR);
-                }
-            }
-            _this.resetFormUi();
-        });
+        // must delete in future if we don't need App state
+        this.props.userHasAuthenticated(true);
+        this.props.setUser(user);
     }
+
+    componentDidMount() {
+        if (this.props.isAuthenticated) {
+            this.props.history.push({
+                pathname: "/profile/" + this.props.user.id +"/edit",
+            });
+        }
+    }
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.user !== this.props.user) {
+            this.props.history.push({
+                pathname: "/profile/" + this.props.user.id +"/edit",
+            });
+        }
+    }
+    
     render() {
         return (
             <Grid
@@ -242,4 +172,13 @@ class Register extends Component {
     }
 }
 
-export default withSnackbar(Register);
+const mapStateToProps = state => ({
+    user: state.auth.user,
+    isAuthenticated: state.auth.isAuthenticated,
+})
+const mapDispatchToProps = dispatch => ({
+    registerUser: user  => dispatch(registerUser(user)),
+    enqueueSnackbar: notifications => dispatch(enqueueSnackbar(notifications)),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Register);

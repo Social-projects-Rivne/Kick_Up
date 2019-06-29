@@ -1,11 +1,18 @@
 import React from 'react';
-import axios from "axios";
+import { connect } from "react-redux";
+import { 
+    loadRoomDetails,
+    editRoom,
+    loadRoomCategories, 
+    loadRoomTags, 
+} from '../../store/actions/rooms';
+import { enqueueSnackbar } from '../../store/actions/toast';
 
+import axios from "axios";
 import { Button, FormControl, FormControlLabel, FormGroup, Grid, Input, NativeSelect, Switch,
     TextField, Typography } from "@material-ui/core";
 import Spinner from "../UI/Spinner/Spinner";
 import ImageUploader from "./../ImageUploader/ImageUploader";
-import {withSnackbar} from "notistack";
 
 const messageType = {
     SUCCESS: "success",
@@ -16,8 +23,7 @@ const messageType = {
 class EditRoom extends React.Component {
     state = {
         roomEditDB: null,
-        categories: [],
-        loading: true,
+        showEditOkMsg: false,
         showUpload: false,
         imageSRC: null,
         errors: {
@@ -27,34 +33,48 @@ class EditRoom extends React.Component {
         }
     };
 
-    showToast = (message, variant) => {
-        this.props.enqueueSnackbar(message, {
-            variant: variant ? variant : 'default',
-        });
+    getFilteredRoomData = () => {
+        const id = this.props.match.params.id;
+        const res = this.props.rooms.filter(data => data.id === parseInt(id));
+        return res.length > 0 ? res : null;
     };
-
+    componentDidUpdate() {
+        if (this.getFilteredRoomData() && !this.state.roomEditDB) {
+            this.setState({
+                roomEditDB: this.getFilteredRoomData()[0]
+            });
+        } else if (
+            this.getFilteredRoomData() &&
+            this.getFilteredRoomData()[0].wasEdited &&
+            this.state.showEditOkMsg
+        ) {
+            this.props.history.push({ pathname: "/room/" + this.props.match.params.id });
+            this.props.showToast('Changes saved!', messageType.SUCCESS);
+        }
+    }
     componentDidMount() {
         const { id } = this.props.match.params;
 
-        axios.get("/api/category")
-            .then(res => {
-                this.setState({
-                    categories: res.data
-                });
-
-               return axios.get("/api/room/" + id)
-            })
-            .then(res => {
-                this.setState({
-                    loading: false,
-                    roomEditDB: res.data
-                });
-            })
-            .catch(err => {
-                this.setState({ loading: false });
+        // If no room data, load it;
+        if (id && !this.getFilteredRoomData()) {
+            this.props.loadRoomData(id);
+        } else if (this.getFilteredRoomData() && !this.state.roomEditDB) {
+            this.setState({
+                roomEditDB: this.getFilteredRoomData()[0]
             });
-    };
+        }
 
+        // In case we have 0 categories, reload them;
+        if (this.props.categories.length <= 0) {
+            this.props.loadCatogories();
+        }
+
+        // In case we have 0 tags, load them;
+        // @todo display in UI tags;
+        if (this.props.tags.length <= 0) {
+            this.props.loadTags();
+        }
+    };
     handleUpdateData (event) {
         this.setState({
             roomEditDB:{
@@ -63,9 +83,10 @@ class EditRoom extends React.Component {
             }
         });
     }
-
     handleSave = () => {
-        this.setState({ loading: true });
+        // Allow show all ok message;
+        this.setState({ showEditOkMsg: true });
+
         const { id } = this.props.match.params;
 
         const data = {
@@ -77,45 +98,24 @@ class EditRoom extends React.Component {
             category_id: this.state.roomEditDB.category_id
         };
 
-        axios.put("/api/room/" + id, data)
-            .then(res => {
-                this.setState({
-                    loading: false,
-                    id: res.data.id
-                });
-                this.props.history.push({ pathname: "/room/" + id});
-                this.showToast("Changes saved!", messageType.SUCCESS);
-            })
-            .catch(err => {
-                let errors = err.response.data.error ? err.response.data.error.errors : [];
-                for (const key in errors) {
-                    this.showToast(errors[key][0], messageType.ERR);
-                    errors[key] = true;
-                }
-                this.setState({
-                    loading: false,
-                    errors: errors
-                });
-            });
+        this.props.editRoom(id, data);
     };
 
     showUploadComponent = () => {
         this.setState({showUpload: true})
     };
-
     closeUploadComponent = () => {
         this.setState({showUpload: false})
     };
-
     getImagesSRC = (imageSRC) => {
         this.setState({imageSRC});
     };
-
     render() {
-        const { roomEditDB, categories } = this.state;
+        const { roomEditDB } = this.state;
+
         const { isAuthenticated } = this.props;
 
-        if (this.state.loading) {
+        if (!this.state.roomEditDB) {
             return (<Spinner className="rooms-page"/>);
         }
 
@@ -239,8 +239,8 @@ class EditRoom extends React.Component {
                                     input={<Input name="category_id" />}
                                     className="edit-room-select"
                                 >
-                                    {categories.map((category) =>
-                                        <option value={category.id} selected={category.id === roomEditDB.category_id}>{category.title}</option>
+                                    {this.props.categories.map((category) =>
+                                        <option key={category.id} value={category.id} selected={parseInt(category.id) === parseInt(roomEditDB.category_id)}>{category.title}</option>
                                     )}
                                 </NativeSelect>
                             </FormControl>
@@ -279,4 +279,23 @@ class EditRoom extends React.Component {
     }
 }
 
-export default withSnackbar(EditRoom);
+const mapStateToProps = state => ({
+    rooms: state.rooms.rooms,
+    categories: state.rooms.categories,
+    tags: state.rooms.tags,
+    loading: state.rooms.roomsLoading,
+    isAuthenticated: state.auth.isAuthenticated
+});
+  
+const mapDispatchToProps = dispatch => ({
+    editRoom: (id, data) => dispatch(editRoom(id, data)),
+    loadRoomData: id => dispatch(loadRoomDetails(id)),
+    loadCatogories: () => dispatch(loadRoomCategories()),
+    loadTags: () => dispatch(loadRoomTags()),
+    showToast: (message, variant) => dispatch(enqueueSnackbar({
+        message,
+        options: { variant }
+    }))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(EditRoom);

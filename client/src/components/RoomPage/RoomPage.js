@@ -11,7 +11,7 @@ import 'react-responsive-carousel/lib/styles/carousel.min.css';
 
 import { AppBar, Tabs, Tab, Typography, Grid, Avatar, Card, CardActions, CardContent, CardMedia,
     CardActionArea, Button, ListItemText, ListItem, ListItemAvatar, Badge, Fab, Paper } from '@material-ui/core';
-import { Comment, Collections, Face, NewReleases, EventAvailable, Add, Info, Edit, TagFaces, DeviceHubOutlined } from '@material-ui/icons';
+import { Comment, Collections, Face, NewReleases, EventAvailable, Add, Info, Edit } from '@material-ui/icons';
 import Gallery from 'react-grid-gallery';
 import SwipeableViews from 'react-swipeable-views';
 import Spinner from './../UI/Spinner/Spinner';
@@ -47,12 +47,13 @@ class RoomPage extends React.Component {
     state = {
         value: 0,
         roomPagePosts: [],
-        gallery: null,
         authUser: false,
         userCount: 0,
         members: '',
         disabledBtn: false,
         showUpload: false,
+        roomPageDB: null,
+        gallery: []
     };
 
     getFilteredRoomData = () => {
@@ -60,11 +61,30 @@ class RoomPage extends React.Component {
         const res = this.props.roomPageDB.filter(data => data.id === parseInt(id));
         return res.length > 0 ? res : null;
     };
+    componentDidUpdate() {
+        if (this.getFilteredRoomData() &&  !this.state.roomPageDB) {   
+            const res = this.getFilteredRoomData()[0];
+            let gallery = res.media ? res.media : [];
+            
+            gallery = gallery.map(el => ({ 
+                src: el.key.slice(6), 
+                thumbnail: el.key.slice(6)
+            }));
+
+            this.setState({
+                roomPageDB: res,
+                gallery
+            });
+        }        
+    };
     componentDidMount() {
         const { id } = this.props.match.params;
-    
-        // If no room data, load it;
-        if (id && !this.getFilteredRoomData()) {
+        
+        // If no room data or gallery, force room update;
+        if (
+            id && !this.getFilteredRoomData() ||
+            this.getFilteredRoomData() && !this.getFilteredRoomData()[0].media
+        ) {
             this.props.loadRoomData(id);
         }
         
@@ -186,20 +206,24 @@ class RoomPage extends React.Component {
     closeUploadComponent = () => {
         this.setState({showUpload: false})
     }
-    getImagesSRC = (src) => {
-        const gallery = [...this.state.gallery].concat(src);
-        this.setState({gallery});
+    getImagesSRC = (data) => {
+        const {src, thumbnail} = data;
+
+        this.setState(prevState => {
+            return {
+                gallery: prevState.gallery.concat({
+                    src,
+                    thumbnail
+                })
+            }
+        });
     }
     render() {
-        const { value, roomPagePosts, gallery } = this.state;
+        const { value, roomPagePosts, gallery, roomPageDB } = this.state;
         const { isAuthenticated, user } = this.props;
-
-        let roomPageDB = this.getFilteredRoomData();
 
         if (!roomPageDB) {
             return (<Spinner className="rooms-page"/>);
-        } else if (roomPageDB.length > 0) {
-            roomPageDB = roomPageDB[0];
         }
 
         const joinBtn = (
@@ -299,7 +323,7 @@ class RoomPage extends React.Component {
                     { (value === 2 && <TabContainer>
                         <Grid container spacing={24}>
                             {roomPageDB.event.map((event) =>
-                                <Grid item lg={4} md={6} xs={12} className="room-details-card-grid">
+                                <Grid key={event.id} item lg={4} md={6} xs={12} className="room-details-card-grid">
                                     <NeventCard
                                         id={event.id}
                                         room_id={event.room_id}
@@ -328,7 +352,8 @@ class RoomPage extends React.Component {
                             <span onClick={this.showUploadComponent}>upload photo</span>
                         </Fab>
                         {
-                            this.state.gallery &&
+                            gallery && 
+                            gallery.length > 0 &&
                             <Gallery images={gallery} backdropClosesModal={true} />
                         }
                     </TabContainer>) || <TabContainer></TabContainer> }
@@ -359,8 +384,8 @@ class RoomPage extends React.Component {
                     { (value === 5 && <TabContainer>
                         <Grid container spacing={24}>
                             {this.state.members.map((member) =>
-                                <Grid item lg={3} md={4} sm={6} xs={12}>
-                                    <Link component={RouterLink} to={`/profile/` + member.id} className="room-page-member-link">
+                                <Grid key={member.id} item lg={3} md={4} sm={6} xs={12}>
+                                    <Link to={`/profile/` + member.id} className="room-page-member-link">
                                         <ListItem className="avatar-center">
                                             <ListItemAvatar>
                                                 <Avatar>
@@ -376,7 +401,7 @@ class RoomPage extends React.Component {
                     </TabContainer>) || <TabContainer></TabContainer> }
                 </SwipeableViews>
 
-                {value === 0 && isAuthenticated && roomPageDB && roomPageDB.creator_id === user.id &&(
+                {value === 0 && isAuthenticated && roomPageDB && (user && roomPageDB.creator_id === user.id) &&(
                     <Link to={this.props.location.pathname + "/edit"} className="room-details-add-event-link">
                         <Fab variant="extended" className="room-details-add-event">
                             <Edit />
@@ -397,9 +422,9 @@ class RoomPage extends React.Component {
 }
 
 const mapStateToProps = state => ({
-    user: state.user,
-    isAuthenticated: state.isAuthenticated,
-    roomPageDB: state.rooms.rooms
+    roomPageDB: state.rooms.rooms,
+    user: state.auth.user,
+    isAuthenticated: state.auth.isAuthenticated
 });
   
 const mapDispatchToProps = dispatch => ({

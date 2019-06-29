@@ -1,7 +1,10 @@
 import { 
-    STORE_ROOMS, 
+    STORE_ROOMS,
+    STORE_ROOM_DETAILS,
     SET_LOADING_ROOMS_STATUS,
-    STORE_ROOM_DETAILS
+    STORE_ROOM_CATEGORIES,
+    STORE_ROOM_TAGS
+    
 } from "./actionTypes";
 import { enqueueSnackbar } from "./toast";
 import axios from 'axios';
@@ -13,7 +16,10 @@ const messageType = {
 };
 
 const roomDetailsApi = '/api/room/';
+const roomCategoriesApi = '/api/category/';
+const roomTagsApi = '/api/tag';
 
+// Action creators;
 export const storeRooms = data => ({
     type: STORE_ROOMS,
     payload: data
@@ -32,6 +38,46 @@ export const saveRoomDetails = (id, updates) => {
             updates
         }
     }
+};
+
+export const saveRoomCatogories = data => {
+    return {
+        type: STORE_ROOM_CATEGORIES,
+        data
+    }
+};
+
+export const saveRoomTags = data => {
+    return {
+        type: STORE_ROOM_TAGS,
+        data
+    }
+};
+
+// Helpers;
+export const addNewRoom = data => dispatch => {
+    // Change UI for load start;
+    setRoomsLoadState(true);
+
+    // Save new room;
+    axios
+        .post(roomDetailsApi, data)
+        .then(res => {
+            dispatch(storeRooms(res.data));
+            setRoomsLoadState(false);
+        })
+        .catch(err => {
+            let errors = err.response.data.error.errors;
+            for (const key in errors) {
+                dispatch(enqueueSnackbar({
+                    message: errors[key][0],
+                        options: {
+                            variant: messageType.ERR,
+                        },
+                 }));
+            }
+            setRoomsLoadState(false);
+        });
 };
 
 export const loadRooms = (uri, filter) => dispatch => {
@@ -81,3 +127,60 @@ export const loadRoomDetails = id => dispatch => {
         }));
     });  
 };
+
+export const loadRoomCategories = () => dispatch => {
+    // Change UI for load start;
+    setRoomsLoadState(true);
+
+    // Load categories;
+    axios
+        .get(roomCategoriesApi)
+        .then(res => {
+            dispatch(saveRoomCatogories(res.data));
+            setRoomsLoadState(false);
+        })
+        .catch(err => {
+            setRoomsLoadState(false);
+        });
+};
+
+export const loadRoomTags = () => dispatch => {
+    // Change UI for load start;
+    setRoomsLoadState(true);
+
+    // Load Tags;
+    axios
+        .get(roomTagsApi)
+        .then(res => {
+            dispatch(saveRoomTags(res.data));
+            setRoomsLoadState(false);
+        })
+        .catch(err => {
+            setRoomsLoadState(false);
+        });
+};
+
+export const editRoom = (id, updates) => dispatch => {
+    // Change UI for load start;
+    setRoomsLoadState(true);
+
+    // Pass to server updates;
+    axios
+        .put(roomDetailsApi + id, updates)
+        .then(() => {
+            updates.wasEdited = true;
+            dispatch(saveRoomDetails(id, updates));
+        })
+        .catch(err => {
+            let errors = err.response.data.error.errors;
+            for (const key in errors) {
+                dispatch(enqueueSnackbar({
+                    message: errors[key][0],
+                        options: {
+                            variant: messageType.ERR,
+                        },
+                 }));
+            }
+        });
+};
+
