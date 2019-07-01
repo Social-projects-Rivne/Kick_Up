@@ -122,14 +122,14 @@ class AppHeader extends React.Component {
                                 <img className="logo-img" src={logo} alt="Logo" />
                             </Link>
                         </IconButton>
-                        <form className="search-form">
+                        {/* <form className="search-form">
                             <div className="search">
                                 <div className="search-icon">
                                     <Search />
                                 </div>
                                 <InputBase className="search-root" name="query" />
                             </div>
-                        </form>
+                        </form> */}
                         <div className="section-desktop">
                             <BottomNavigation value={activePage} onChange={this.handleChangeActivePage} className="navigation-buttons">
                                 <BottomNavigationAction className="icon-details" label="Events" value="/events" icon={<EventAvailable />} />

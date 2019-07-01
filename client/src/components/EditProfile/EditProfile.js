@@ -303,7 +303,6 @@ class EditProfile extends Component {
             })
     }
     sendUserData = (data, callback) => {
-        debugger;
         const fireCallback = (res) => {
             if (typeof callback === 'function') callback(res);
         };

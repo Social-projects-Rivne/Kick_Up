@@ -34,12 +34,13 @@ const handler = {
             nick:'string|min:3',
             first_name:'string|min:3',
             last_name:'string|min:3',
-            gender:'numeric|min:1'
+            gender:'numeric|min:1',
+            email: 'email',
         });
         const { user_id } = ctx.state; 
-        const { nick, first_name, last_name, gender, birth_date, avatar } = ctx.request.body;
+        const { email, nick, first_name, last_name, gender, birth_date, avatar } = ctx.request.body;
         const updateUser = {
-            nick, first_name, last_name, gender, birth_date
+            email, nick, first_name, last_name, gender, birth_date
         }
         if(avatar){
             const avatarPath = await uploader.uploadAvatar(avatar);
