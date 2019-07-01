@@ -6,6 +6,21 @@ export const storeUserProfileData = data => ({
     payload: data
 });
 
+export const storeClearUserData = () => ({
+    type: actionTypes.CLEAR_USER_DATA
+});
+
+export const editUserProfileAction = data => dispatch => {
+
+    axios.put('/api/profile/update', data)
+        .then(() => {
+            dispatch(storeUserProfileData(data));
+        })
+        .catch(err => {
+            console.log(err);
+        });
+};
+
 export const userProfileAction = id => dispatch => {
 
     axios.get("/api/profile/" + (id || ""))

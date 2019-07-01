@@ -4,7 +4,6 @@ import authReducer from './authReducer';
 import toastReducer from './toastReducer';
 import homeReducer from './homeReducer';
 import userProfileReducer from "./userProfileReducer";
-import editProfileReducer from "./editProfileReducer";
 
 const rootReducer = combineReducers({
     errors: errorReducer,
@@ -12,7 +11,6 @@ const rootReducer = combineReducers({
     toast: toastReducer,
     home: homeReducer,
     userProfile: userProfileReducer,
-    editProfile: editProfileReducer,
 });
 
 export default rootReducer;

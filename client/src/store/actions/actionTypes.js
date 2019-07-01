@@ -14,7 +14,5 @@ export const LOAD_INDEX_POSTS = 'LOAD_INDEX_POSTS';
 
 //userProfile
 export const USER_PROFILE_DATA = 'USER_PROFILE_DATA';
-
-//editUserProfile
-export const UPDATE_EDIT_USER_PROFILE = 'UPDATE_EDIT_USER_PROFILE';
+export const CLEAR_USER_DATA = 'CLEAR_USER_DATA';
 

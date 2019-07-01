@@ -31,8 +31,7 @@ import {
     MailOutline,
     CheckCircleOutlineOutlined
 } from '@material-ui/icons';
-import {editUserProfileAction} from "../../store/actions/editProfileAction";
-import {userProfileAction} from "../../store/actions/userProfileAction";
+import {userProfileAction, editUserProfileAction} from "../../store/actions/userProfileAction";
 
 const _maxFileSize = 10000000;
 const _desktopWidth = 1168;
@@ -631,13 +630,13 @@ class EditProfile extends Component {
         )
     }
 };
+
 const mapStateToProps = state => ({
-    userProfileData: state.userProfile.userProfileData,
-    user: state.auth.user,
+    userProfileData: state.userProfile
 });
 
 const mapDispatchToProps = dispatch => ({
-    editUserProfileAction: (data, callback) => dispatch(editUserProfileAction(data, callback)),
+    editUserProfileAction: data => dispatch(editUserProfileAction(data)),
     userProfileAction: id => dispatch(userProfileAction(id))
 });
 
