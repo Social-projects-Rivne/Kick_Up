@@ -15,10 +15,7 @@ import {
   ListItem,
   ListItemText,
   ListItemAvatar,
-  ListItemIcon,
-  ExpansionPanel,
-  ExpansionPanelDetails,
-  ExpansionPanelSummary
+  ListItemIcon
 } from '@material-ui/core';
 import {
   Face,
@@ -28,7 +25,6 @@ import {
   Add,
   DateRange,
   LocationOn,
-  ExpandMore,
   Edit
 } from '@material-ui/icons';
 import Swiper from 'react-id-swiper/lib/ReactIdSwiper.full';

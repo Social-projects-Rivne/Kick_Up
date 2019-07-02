@@ -1,0 +1,47 @@
+#root .admin-panel-conteiner {
+  padding-top: 24px;
+
+  @include media-breakpoint-down(jg) {
+    padding: 12px;
+  }
+
+  @include svg-settings-bg('#{$secondaryBlack}');
+  background-color: white;
+  min-height: calc(95vh - 80px - 44px);
+
+  .admin-panel {
+    max-width: 1000px;
+    margin-right: auto;
+    margin-left: auto;
+
+    .admin-panel-paper {
+      margin-top: 10px;
+      width: 100%;
+      overflow-x: auto;
+      margin-bottom: 7px;
+    }
+
+    div[class*=MuiPaper] {
+      box-shadow: none;
+    }
+
+    .admin-panel-table {
+      min-width: 650px;
+    }
+
+    .admin-panel-cell-text {
+      font-size: 1rem;
+      line-height: 1.5rem;
+      font-weight: 100;
+
+      .admin-panel-cell-text-link,
+      .admin-panel-cell-text-link:hover,
+      .admin-panel-cell-text-link:active,
+      .admin-panel-cell-text-link:visited {
+        text-decoration: none;
+        background-color: transparent;
+        color: $black;
+      }
+    }
+  }
+}

@@ -8,7 +8,6 @@ import {
 } from '../../store/actions/rooms';
 import { enqueueSnackbar } from '../../store/actions/toast';
 
-import axios from "axios";
 import { Button, FormControl, FormControlLabel, FormGroup, Grid, Input, NativeSelect, Switch,
     TextField, Typography } from "@material-ui/core";
 import Spinner from "../UI/Spinner/Spinner";
