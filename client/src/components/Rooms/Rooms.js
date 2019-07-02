@@ -1,5 +1,7 @@
 import React, { Component } from "react";
-import axios from "axios";
+import { connect } from "react-redux";
+
+import { loadRooms } from '../../store/actions/rooms';
 
 import Toolbar from "./../Toollbar/Toolbar";
 
@@ -16,44 +18,22 @@ const API = {
 
 class Rooms extends Component {
   state = {
-    roomsDB: null,
-    FilteredRooms: null,
-    isLoading: true,
     category: "",
     date: null,
     showDate: true
   };
   componentDidMount() {
-    this.getSortDataFromDB(API.getRooms);
+    // @todo add logic for pagination;
+    if (this.props.roomsDB.length <= 1) {
+      this.props.getSortDataFromDB(API.getRooms);
+    }
   }
-
   componentDidUpdate(prevProps, prevState, snapshot) {
     const { category, date } = this.state;
     if (prevState.category !== category || prevState.date !== date) {
       this.filterHandle();
     }
   }
-
-  getSortDataFromDB = (api, type) => {
-    this.setState({ isLoading: true });
-    axios
-      .get(api, type)
-      .then(res => {
-        this.setState({ roomsDB: res.data.rooms, isLoading: false });
-      })
-      .catch(err => console.log(err));
-  };
-
-  getFilteredDataFromDB = (api, filter) => {
-    this.setState({ isLoading: true });
-    axios
-      .get(api, filter)
-      .then(res => {
-        this.setState({ roomsDB: res.data.rooms, isLoading: false });
-      })
-      .catch(err => console.log(err));
-  };
-
   filterHandle = () => {
     const filters = {
       params: {
@@ -61,16 +41,15 @@ class Rooms extends Component {
         date: this.state.date,
       },
     };
-    this.getFilteredDataFromDB(API.filter, filters);
+    this.props.getSortDataFromDB(API.filter, filters);
   };
-
   sortRateHandle = () => {
     const type = {
       params: {
         sort: "rate"
       }
     };
-    this.getSortDataFromDB(API.sort, type);
+    this.props.getSortDataFromDB(API.sort, type);
   };
   sortMembersHandle = () => {
     const type = {
@@ -78,7 +57,7 @@ class Rooms extends Component {
         sort: "members"
       }
     };
-    this.getSortDataFromDB(API.sort, type);
+    this.props.getSortDataFromDB(API.sort, type);
   };
   sortCreatedHandle = () => {
     const type = {
@@ -86,31 +65,26 @@ class Rooms extends Component {
         sort: "create"
       }
     };
-    this.getSortDataFromDB(API.sort, type);
+    this.props.getSortDataFromDB(API.sort, type);
   };
-
   resetFiltersHandle = () => {
-    this.getSortDataFromDB(API.getRooms);
+    this.props.getSortDataFromDB(API.getRooms);
     this.setState({
       category: "",
       date: null
     });
   };
-
   changeHandle = event => {
     this.setState({ [event.target.name]: event.target.value });
   };
-
   changeDate = date => {
     this.setState({ date });
   };
-
   selectedRoomHandler = id => {
     this.props.history.push({ pathname: "/room/" + id });
   };
-
   render() {
-    const { roomsDB, isLoading } = this.state;
+    const { roomsDB, isLoading } = this.props;
     const toolbarButtons = [
       { name: "Top Rate", method: this.sortRateHandle },
       { name: "Top Members", method: this.sortMembersHandle },
@@ -118,7 +92,7 @@ class Rooms extends Component {
       { name: "Reset filter", method: this.resetFiltersHandle }
     ];
     let categories = null;
-    if (roomsDB) {
+    if (roomsDB.length > 0) {
       categories = roomsDB
         .map(e => {
           return e.category.title;
@@ -137,21 +111,24 @@ class Rooms extends Component {
       <Spinner className="rooms-page" />
     ) : (
       <div className="rooms-page">
-        <Toolbar
-          isAuthenticated={this.props.isAuthenticated}
-          datafromBase={this.state.roomsDB}
-          buttons={toolbarButtons}
-          filters={toolbarFilters}
-          sortHandle={this.sortHandle}
-          changeHandle={this.changeHandle}
-          category={this.state.category}
-          showDate={true}
-          date={this.state.date}
-          changeDate={this.changeDate}
-          addLink="/room/add"
-        />
+        {
+          this.props.roomsDB.length > 0 &&
+            <Toolbar
+            isAuthenticated={this.props.isAuthenticated}
+            datafromBase={this.props.roomsDB}
+            buttons={toolbarButtons}
+            filters={toolbarFilters}
+            sortHandle={this.sortHandle}
+            changeHandle={this.changeHandle}
+            category={this.state.category}
+            showDate={true}
+            date={this.state.date}
+            changeDate={this.changeDate}
+            addLink="/room/add"
+          />
+        }
         <Grid container spacing={8} justify="center" className="rooms-page-cards">
-          {roomsDB.map(room => {
+          {roomsDB.length > 0 && roomsDB.map(room => {
             return (
               <RoomCard
                 key={room.id}
@@ -174,4 +151,13 @@ class Rooms extends Component {
   }
 }
 
-export default Rooms;
+const mapStateToProps = state => ({
+  roomsDB: state.rooms.rooms,
+  isLoading: state.rooms.roomsLoading
+});
+
+const mapDispatchToProps = dispatch => ({
+  getSortDataFromDB: (uri, filter) => dispatch(loadRooms(uri, filter))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Rooms);

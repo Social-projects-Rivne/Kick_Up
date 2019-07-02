@@ -3,6 +3,7 @@ import errorReducer from './errorReducer';
 import authReducer from './authReducer';
 import toastReducer from './toastReducer';
 import homeReducer from './homeReducer';
+import roomsReducer from './roomsReducer';
 import userProfileReducer from "./userProfileReducer";
 
 const rootReducer = combineReducers({
@@ -11,6 +12,7 @@ const rootReducer = combineReducers({
     toast: toastReducer,
     home: homeReducer,
     userProfile: userProfileReducer,
+    rooms: roomsReducer
 });
 
 export default rootReducer;
