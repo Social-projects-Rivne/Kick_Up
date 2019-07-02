@@ -95,9 +95,9 @@ class Toolbar extends Component {
                 }
               >
                 <MenuItem value="">
-                  <em>None</em>
+                  <em>All</em>
                 </MenuItem>
-                {e.itemsArray.map(e => {
+                {e.itemsArray !== null && e.itemsArray.map(e => {
                   return (
                     <MenuItem key={e} value={e}>
                       {e}

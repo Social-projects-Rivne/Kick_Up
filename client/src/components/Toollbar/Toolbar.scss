@@ -91,6 +91,11 @@
   background-color: $black;
 }
 
+#menu-category [class*=MuiPaper-root] {
+  background-color: $primary;
+  top: 145px !important;
+}
+
 @media (max-width: 768px) {
   #root .toolbar-desktop {
     display: none;

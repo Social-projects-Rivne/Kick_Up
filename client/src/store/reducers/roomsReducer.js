@@ -3,12 +3,15 @@ import {
     SET_LOADING_ROOMS_STATUS, 
     STORE_ROOM_DETAILS,
     STORE_ROOM_CATEGORIES,
-    STORE_ROOM_TAGS
+    STORE_ROOM_TAGS,
+    ADD_ROOMS
 } from "../actions/actionTypes";
 
 const initialStates = {
     roomsLoading: false,
     rooms: [],
+    pageCount: 1,
+    roomCount: null,
     categories: [],
     tags: []
 };
@@ -16,20 +19,26 @@ const initialStates = {
 export default function (state = initialStates, action) {
     switch(action.type) {
         case STORE_ROOMS:
-            let uniqueIds = [];
-
             return {
                 ...state,
-                // Filter data to have ONLY uniques rooms;
-                rooms: state.rooms
-                    .concat(action.payload)
-                    .filter(el => {
-                        if (!uniqueIds.some(item => item === el.id)) {
-                            uniqueIds.push(el.id);
-                            return el;
-                        }
-                    }),
+                ...action.payload
             };
+        case ADD_ROOMS:
+        let uniqueIds = [];
+        return {
+            ...state,
+            // Filter data to have ONLY uniques rooms;
+            rooms: state.rooms
+                .concat(action.payload.rooms)
+                .filter(el => {
+                    if (!uniqueIds.some(item => item === el.id)) {
+                        uniqueIds.push(el.id);
+                        return el;
+                    }
+                }),
+            pageCount: action.payload.pageCount,
+            roomCount: action.payload.roomCount,
+        };
         case SET_LOADING_ROOMS_STATUS:
             return {
                 ...state,

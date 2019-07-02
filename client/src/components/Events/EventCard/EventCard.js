@@ -22,7 +22,7 @@ const eventCard = props => {
       </li>
     </ul>;
   return (
-    <Grid item xs={12} sm={6} md={4} className="events-card">
+    <Grid item xs={12} sm={6} md={4} className="events-card" onClick={props.clicked}>
       <div className="wrapper" style={backgroundImage}>
         <div className="wrapper-header">
           <div className="date">
@@ -34,7 +34,7 @@ const eventCard = props => {
             <span>{(props.location).split(',')[0]}</span>
           </div>
         </div>
-        <div className="data" onClick={props.clicked}>
+        <div className="data">
           <div className="content">
             <span className="category">{props.category}</span>
             <h1 className="title">{props.title}</h1>

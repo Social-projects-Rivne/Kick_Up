@@ -124,6 +124,11 @@ code {
   width: 100%;
 }
 
+::-webkit-scrollbar {
+  width: 0px;
+  background: transparent; /* make scrollbar transparent */
+}
+
 @import '../containers/PageContainer/PageContainer.scss';
 @import '../components/AppHeader/AppHeader.scss';
 @import '../components/Footer/Footer.scss';
