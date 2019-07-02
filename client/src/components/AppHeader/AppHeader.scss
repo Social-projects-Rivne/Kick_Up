@@ -23,6 +23,21 @@ header.root {
         background-color: transparent;
     }
 
+    .icon-details-avatar {
+        padding: 0;
+        color: $icon-color;
+        outline: none;
+
+        &:hover {
+            background-color: transparent;
+
+        }
+
+        span[class*=MuiBottomNavigationAction-wrapper] {
+            padding-top: 10px;
+        }
+    }
+
     .icon-details{
         color: $icon-color;
         outline: none;
@@ -108,9 +123,7 @@ header.root {
     .navigation-buttons {
         height: auto;
         background-color: transparent;
-        button[class*=iconOnly] {
-            padding-top: 24px;
-        }
+
         img {
             width: 50px;
             height: 50px;
@@ -153,5 +166,5 @@ header.root {
 
 #simple-menu [class*=MuiPaper-root] {
     background-color: $primary;
-    top: 85px !important;
+    top: 66px !important;
 }
