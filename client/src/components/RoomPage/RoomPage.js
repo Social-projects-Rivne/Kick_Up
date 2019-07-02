@@ -296,6 +296,19 @@ class RoomPage extends React.Component {
                                 <img src={roomPageDB.cover} alt={roomPageDB.title} className="room-details-page-cover"/>
                             </Grid>
                         </Grid>
+                        <div class="room__complaint">
+                            <Link 
+                                to={{
+                                    pathname: '/complaint',
+                                    state: {
+                                        entityType: 1,
+                                        entityId: this.props.match.params.id,
+                                        entityTitle: this.getFilteredRoomData()[0].title,
+                                        redirectUrl: window.location.href
+                                    }
+                                }}
+                        >Complaint</Link>
+                        </div>
                     </TabContainer>) || <TabContainer></TabContainer> }
 
                     { (value === 1 && <TabContainer>

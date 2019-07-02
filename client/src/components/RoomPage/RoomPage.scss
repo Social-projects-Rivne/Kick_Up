@@ -16,6 +16,24 @@
   padding-bottom: 0;
 }
 
+.room__complaint {
+  margin-top: 120px;
+  margin-bottom: 12px;
+  text-align: center;
+
+  @include media-breakpoint-down(lg) {
+    margin-top: 24px;
+  }
+}
+
+.room__complaint a {
+  padding: 7px;
+  text-decoration: none;
+  color: darken($primary, 15%);
+  border: 1px solid darken($primary, 15%);
+  border-radius: 3px;
+}
+
 #root .room-page-details {
   .room-page-member-link,
   .room-page-member-link:active,

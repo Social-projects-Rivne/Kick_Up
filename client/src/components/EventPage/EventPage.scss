@@ -394,6 +394,24 @@ div[class*=MuiExpansionPanel]::before {
     width: 100%;
 }
 
+.event-page__complaint {
+    margin-top: 120px;
+    margin-bottom: 12px;
+    text-align: center;
+  
+    @include media-breakpoint-down(lg) {
+      margin-top: 44px;
+    }
+  }
+  
+  .event-page__complaint a {
+    padding: 7px;
+    text-decoration: none;
+    color: darken($primary, 15%);
+    border: 1px solid darken($primary, 15%);
+    border-radius: 3px;
+  }
+
 // Mobile landscape;
 @media only screen and (max-width: 768px) and (orientation: landscape) {
     .event-page__users-list {

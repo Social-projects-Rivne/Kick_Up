@@ -396,6 +396,19 @@ class EventPage extends Component {
                 </Typography>
               }
             </Paper>
+            <div class="event-page__complaint">
+              <Link 
+                to={{
+                  pathname: '/complaint',
+                  state: {
+                    entityType: 2,
+                    entityId: this.props.match.params.id,
+                    entityTitle: this.state.title,
+                    redirectUrl: window.location.href
+                  }
+                }}
+              >Complaint</Link>
+            </div>
           </Grid>
           <Grid className="event-page__section" item xs={12}>
             <CommentForm

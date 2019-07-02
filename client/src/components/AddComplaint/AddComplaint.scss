@@ -1,0 +1,172 @@
+.add-complaint__title {
+    display: block;
+    margin-top: 16px;
+    padding: 0 16px;
+    font-size: 2rem;
+    line-height: 2.571rem;
+    font-weight: 100;
+    color: $secondaryBlack;
+}
+
+#root .add-complaint .add-complaint__submit-btn {
+    position: fixed;
+    min-height: 44px;
+    max-height: 44px;
+    padding-top: 0;
+    padding-bottom: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    color: $white;
+    line-height: 44px;
+    background-color: $secondaryBlack;
+    border-radius: 0;
+    z-index: 999;
+    transition: all 1.5s;
+
+    &:hover,
+    &:active {
+        background-color: $secondaryBlack;
+    }
+
+    &.add-complaint__submit-btn_disabled {
+        // We will use it once only here;
+        background-color: transparent;
+        opacity: 0.4;
+        border-color: #9e9e9e;
+        pointer-events: none;
+    }
+}
+
+.add-complaint__stepper {
+    padding: 24px 16px 16px;
+}
+
+.add-complaint .add-complaint__stepper > div {
+    opacity: 0;
+    animation-name: fade-in;
+    animation-duration: 1s;
+    animation-timing-function: ease-in-out;
+    animation-fill-mode: forwards;
+}
+
+.add-complaint .add-complaint__stepper [class*=MuiStepContent],
+.add-complaint .add-complaint__stepper [class*=MuiStepConnector-line] {
+    border-color: transparent;
+    animation-name: set-border;
+    animation-duration: 0.3s;
+    animation-delay: 2.8s;
+    animation-fill-mode: forwards;
+}
+
+// We have 3 steps, and 3 separators, total will be 6;
+@for $i from 1 through 3 {
+    @if ($i % 2 != 0) {
+        .add-complaint  .add-complaint__stepper > div:nth-of-type(#{$i}) {
+            animation-delay: 0.5s * $i;
+        }
+    }
+}
+
+// Related to stepper;
+.add-complaint .add-complaint__stepper span[class*=MuiSwitch-bar] {
+    background-color: darken($white, 10%);
+    opacity: 0.6;
+  }
+
+.add-complaint .add-complaint__stepper span[class*=MuiSwitch-checked] {
+    color: $primary;
+}
+
+#root .add-complaint [class*=MuiSwitch-checked] + span {
+    background-color: $primary;
+}
+
+.add-complaint [class*=MuiInput-underline]::after {
+   border-color: $primary;
+}
+
+.add-complaint__step-label span[class*=MuiStepLabel-label] {
+    font-size: 1.286rem;
+    line-height: 1.571rem;
+    font-weight: 100;
+}
+
+#root .add-complaint .add-complaint__text-field {
+    & > div[class*=MuiInput]:hover::before,
+    & > div[class*=MuiInput]:hover::after {
+        border-bottom-color: lighten($secondaryBlack, 30%);
+    }
+
+    & [class*=MuiInput-focused]::after {
+        border-bottom-color: $primary !important;
+    }
+}
+
+.add-complaint .add-complaint__step svg {
+    fill: rgba(0, 0, 0, 0.38);
+}
+
+.add-complaint__step:first-of-type {
+    pointer-events: none;
+    user-select: none;
+
+    & [class*=MuiInput-underline]::before,
+    & [class*=MuiInput-underline]::after {
+        display: none !important;
+    }
+}
+
+// Related to modificators;
+.add-complaint__step.add-complaint__step_filled svg {
+    fill: $primary;
+}
+
+// Tablets;
+@include media-breakpoint-up(md) {
+    .add-complaint__title {
+        text-align: center;
+        padding-top: 16px;
+        margin-bottom: 48px;
+        padding-left: 94px;
+        padding-right: 94px;
+    }
+
+    .add-complaint .add-complaint__stepper {
+        margin-left: 36px;
+        margin-right: 36px;
+    }
+
+    .add-complaint .add-complaint__step div[class*=MuiStepContent-root] {
+        padding-bottom: 25px;
+    }
+}
+
+@include media-breakpoint-up(lg) {
+    .add-complaint__form {
+        max-width: 800px;
+        margin: 0 auto;
+    }    
+    
+    #root .add-post .add-post__submit-btn {
+        display: none;
+    }
+
+    #root .add-complaint .add-complaint__submit-btn {
+        display: block;
+        position: relative;
+        width: auto;
+        margin-left: auto;
+        margin-right: auto;
+        border-radius: 24px;
+        background-color: $primary;
+        border-color: $primary;
+        color: $black;
+        overflow: hidden;
+
+        &:hover {
+            background-color: $primary;
+        }
+    }
+}
