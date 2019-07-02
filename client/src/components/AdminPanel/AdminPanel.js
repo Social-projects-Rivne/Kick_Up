@@ -19,14 +19,12 @@ class AdminPanel extends React.Component {
         events: [],
         rooms: [],
         complaints: [],
-        loading: true,
-        resolved: false
+        loading: true
     };
 
     componentDidMount() {
         axios.get("/api/admin/list")
             .then(res => {
-                console.log("res", res);
                 this.setState({
                     events: res.data.events,
                     rooms: res.data.rooms
@@ -34,9 +32,19 @@ class AdminPanel extends React.Component {
                 return axios.get("/api/admin/complaints");
             })
             .then(res => {
-                console.log("complaints", res);
+                const r = ((this.state.rooms).concat(this.state.events)).map(entityLists => {
+                    let compl = null;
+                    res.data.complaints.forEach(complaint => {
+                        if (complaint.entity_id === entityLists.id && complaint.entity_type === entityLists.type) {
+                            compl = complaint;
+                        }
+                    });
+                    entityLists.complaint = compl;
+                    return entityLists;
+                });
+
                 this.setState({
-                    complaints: res.data.complaints,
+                    complaints: r,
                     loading: false
                 });
             })
@@ -47,15 +55,24 @@ class AdminPanel extends React.Component {
     };
 
     handleUpdateData (event) {
-
-        const data = {
-            resolved: this.state.resolved ? 1 : 0,
-        };
-        axios.put(`/api/admin/${this.state.complaints.entity_type}/${this.state.complaints.entity_id}/complaint/resolved`, data)
-            .then( res => {
-                this.setState({
-                    [event.target.name]: event.target.type === "checkbox" ? event.target.checked : event.target.value
-                });
+        let userId = 0;
+        const info = event.target.name.split("-");
+        let compls = this.state.complaints.map(elem => {
+            if(elem.complaint && elem.complaint.entity_id == info[1] && elem.complaint.entity_type == info[2] ) {
+                elem.complaint.resolved = event.target.checked ? 1 : 0;
+                userId = elem.complaint.creator.id;
+            }
+            return elem;
+        });
+        this.setState({
+            complaints: compls
+        });
+        axios.put(`/api/admin/${info[2]}/${info[1]}/complaint/resolved`, {
+            resolved: event.target.checked ? 1 : 0,
+            user_id: userId
+        })
+            .then( () => {
+                console.log("ok");
             })
             .catch(err => {
                 console.log(err);
@@ -81,7 +98,7 @@ class AdminPanel extends React.Component {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {((this.state.rooms).concat(this.state.events)).map(entityLists => (
+                                {this.state.complaints.map(entityLists => (
                                     <TableRow key={entityLists.id}>
                                         <TableCell className="admin-panel-cell-text" component="th" scope="row">
                                             <Link to={`/${entityLists.type}/` + entityLists.id} className="admin-panel-cell-text-link">
@@ -90,25 +107,35 @@ class AdminPanel extends React.Component {
                                         </TableCell>
                                         <TableCell className="admin-panel-cell-text" align="center">{entityLists.id}</TableCell>
                                         <TableCell className="admin-panel-cell-text" align="center">{entityLists.is_banned}</TableCell>
-                                        {this.state.complaints.map  ( complaint => (
+
+                                        {((entityLists.complaint !== null) ?
                                             <TableCell className="admin-panel-cell-text" align="center">
-                                                {complaint.text}
+                                                {entityLists.complaint.text}
                                             </TableCell>
-                                            ))}
-                                        <TableCell className="admin-panel-cell-text" align="center">
-                                            <FormGroup className="add-event-text-field">
-                                                <FormControlLabel
-                                                    label="resolved"
-                                                    control={
-                                                        <Switch
-                                                            name="resolved"
-                                                            onChange={event => this.handleUpdateData(event)}
-                                                            checked={this.state.resolved}
-                                                        />
-                                                    }
-                                                />
-                                            </FormGroup>
-                                        </TableCell>
+                                                :
+                                            <TableCell className="admin-panel-cell-text" align="center">
+                                            </TableCell>
+                                        )}
+
+                                        {((entityLists.complaint !== null) ?
+                                            <TableCell className="admin-panel-cell-text" align="center">
+                                                <FormGroup className="add-event-text-field">
+                                                    <FormControlLabel
+                                                        label="resolved"
+                                                        control={
+                                                            <Switch
+                                                                name={`resolved-${entityLists.id}-${entityLists.complaint.entity_type}`}
+                                                                onChange={event => this.handleUpdateData(event)}
+                                                                checked={entityLists.complaint.resolved}
+                                                            />
+                                                        }
+                                                    />
+                                                </FormGroup>
+                                            </TableCell>
+                                            :
+                                            <TableCell className="admin-panel-cell-text" align="center">
+                                            </TableCell>
+                                        )}
                                     </TableRow>
                                 ))}
                             </TableBody>
