@@ -146,7 +146,7 @@
     color: black;
     font-size: 1rem;
     line-height: 1.5rem;
-    max-height: calc(1.5rem * 7);
+    max-height: calc(1.5rem * 9);
     font-weight: 100;
     overflow-y: auto;
 }
@@ -699,6 +699,10 @@ div[class*=MuiExpansionPanel]::before {
       display: block;
       margin-top: 32px;
       padding-bottom: 32px;
+    }
+
+    .event-page .event-page__users-swiper .swiper-pagination {
+        display: none;
     }
 }
 

@@ -5,7 +5,8 @@ import {
     addNewRoom, 
     loadRoomCategories, 
     loadRoomTags,
-    editRoom 
+    editRoom,
+    saveRoomDetails
 } from '../../store/actions/rooms';
 import { enqueueSnackbar } from '../../store/actions/toast';
 
@@ -59,14 +60,14 @@ class AddRoom extends React.Component {
                 activeStep: prevState.activeStep + 1,
                 authUser: this.props.rooms[this.props.roomsAmount - 1].creator.id === this.props.user.id
             }));
-        // In case room was successfully updated, redirect to roon;
+        // In case room was successfully updated, redirect to room;
         } else if (
             this.state.lastRoomLoaded === this.props.roomsAmount &&
             this.props.rooms.length > 0 &&
             this.props.rooms[this.props.roomsAmount - 1].wasEdited
         ) {
             this.props.history.push({ pathname: "/room/" + this.state.roomId });
-            this.props.showToast("Congratulations! Room created!", messageType.SUCCESS);
+            this.props.showToast("Congratulations! Room created!", messageType.SUCCESS);      
         }
     }
     componentDidMount() {
@@ -395,6 +396,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     addRoom : data => dispatch(addNewRoom(data)),
     editRoom: (id, data) => dispatch(editRoom(id, data)),
+    saveRoomDetails: (id, data) => dispatch(saveRoomDetails(id, data)),
     loadCatogories: () => dispatch(loadRoomCategories()),
     loadTags: () => dispatch(loadRoomTags()),
     showToast: (message, variant) => dispatch(enqueueSnackbar({
