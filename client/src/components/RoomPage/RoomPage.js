@@ -5,12 +5,12 @@ import axios from 'axios';
 
 import {Link} from "react-router-dom";
 
-import { loadRoomDetails } from '../../store/actions/rooms';
+import { loadRoomDetails, saveRoomDetails } from '../../store/actions/rooms';
 
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 
 import { AppBar, Tabs, Tab, Typography, Grid, Avatar, ListItemText, ListItem, ListItemAvatar, Badge, Fab, Paper } from '@material-ui/core';
-import { Comment, Collections, Face, NewReleases, EventAvailable, Add, Info, Edit } from '@material-ui/icons';
+import { Comment, Collections, Face, NewReleases, EventAvailable, Add, Info, Edit, LocationDisabled, LocationSearching } from '@material-ui/icons';
 import Gallery from 'react-grid-gallery';
 import SwipeableViews from 'react-swipeable-views';
 import Spinner from './../UI/Spinner/Spinner';
@@ -217,7 +217,25 @@ class RoomPage extends React.Component {
             }
         });
     }
+    handleBan = () => {
+        const uri = '/api/admin/room/banned';
+        
+        axios
+        .put(uri, {
+            entity_id: this.props.match.params.id,
+            is_banned: !this.props.roomPageDB[0].is_banned
+        })
+        .then(() => {
+            this.props.editRoom(parseInt(this.props.match.params.id), { is_banned: !this.props.roomPageDB[0].is_banned });
+        })
+        .catch(err => {
+            console.log(err);
+            alert('Could not perform operation, reload your page');
+        });
+    }
     render() {
+        console.log('PROPS', this.props);
+
         const { value, roomPagePosts, gallery, roomPageDB } = this.state;
         const { isAuthenticated, user } = this.props;
 
@@ -295,7 +313,7 @@ class RoomPage extends React.Component {
                                 <img src={roomPageDB.cover} alt={roomPageDB.title} className="room-details-page-cover"/>
                             </Grid>
                         </Grid>
-                        <div class="room__complaint">
+                        <div className="room__complaint">
                             <Link 
                                 to={{
                                     pathname: '/complaint',
@@ -303,7 +321,7 @@ class RoomPage extends React.Component {
                                         entityType: 1,
                                         entityId: this.props.match.params.id,
                                         entityTitle: this.getFilteredRoomData()[0].title,
-                                        redirectUrl: window.location.href
+                                        redirectUrl: `/room/${this.props.match.params.id}`
                                     }
                                 }}
                         >Complaint</Link>
@@ -428,6 +446,18 @@ class RoomPage extends React.Component {
                         </Fab>
                     </Link>
                 )}
+
+                {   
+                    this.props.user && this.props.user.role === 1 &&
+                    <Fab onClick={this.handleBan} variant="extended" className="room-page__ban">
+                        {
+                            this.props.roomPageDB[0].is_banned ? <LocationSearching /> : <LocationDisabled />
+                        }
+                        {
+                            <span>{ this.props.roomPageDB[0].is_banned ? 'Unban' : 'Ban' }</span>
+                        }
+                    </Fab>
+                }
             </div>
         );
     }
@@ -440,7 +470,8 @@ const mapStateToProps = state => ({
 });
   
 const mapDispatchToProps = dispatch => ({
-    loadRoomData: id => dispatch(loadRoomDetails(id))
+    loadRoomData: id => dispatch(loadRoomDetails(id)),
+    editRoom: (id, updates) => dispatch(saveRoomDetails(id, updates))
 });
   
 export default connect(mapStateToProps, mapDispatchToProps)(RoomPage);

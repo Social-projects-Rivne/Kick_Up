@@ -30,7 +30,7 @@ class Addcomplaint extends Component {
         entityType: null,
         entityId: null,
         entityTitle: '',
-        redirectURL: '/',
+        redirectUrl: '/',
         message: ''
     }
     handleUpdateData (event) {
@@ -38,12 +38,11 @@ class Addcomplaint extends Component {
     }
     handleSubmitBtnClick = () => {
         let uriParam = null;
-        let { entityId, entityTitle, message, entityType, redirectURL } = this.state;
-        debugger;
+        let { entityId, entityTitle, message, entityType, redirectUrl } = this.state;
 
         // Validate data, if not ok, redirect user back or to main page;
         if (!entityId || !message || !entityType) {
-            this.props.history.push(redirectURL);
+            this.props.history.push(redirectUrl);
             this.props.showToast(`Please enter room or event to complain, and click "Complain" icon`, messageType.ERR);
         } else {
             // Send data;
@@ -54,35 +53,39 @@ class Addcomplaint extends Component {
             }
 
             axios
-            .post(`/api/${uriParam}/complaint/create`, {
+            .post(`/api/admin/${uriParam}/complaint/create`, {
                 text: message,
-                entity_id: 3
+                entity_id: entityId
             })
-            .then(res => {
-                console.log('res', res);
-                alert('yay!');
+            .then(() => {
+                this.props.history.push(redirectUrl);
+                this.props.showToast('Thank you for reporting, we will review your complaint', messageType.SUCCESS);
             })
             .catch(err => {
-                console.log('ERR', err);
+                let errors = err.response.data.error.errors;
+                for (const key in errors) {
+                    this.props.showToast(errors[key][0], messageType.ERR);
+                }
             })
         }
         
     }
     componentWillMount = () => {
         if (this.props.location.state) {
-            let { entityType, entityId, entityTitle, redirectURL } = this.props.location.state;
-            redirectURL = redirectURL || '/';
+            let { entityType, entityId, entityTitle, redirectUrl } = this.props.location.state;
+            redirectUrl = redirectUrl || '/';
 
             // In case we don't have required data, quit;
             if (
                 !entityType ||
                 !entityId ||
-                !entityTitle
+                !entityTitle ||
+                !this.props.user
             ) {
-                this.props.history.push(redirectURL);
-                this.props.showToast(`Please enter room or event to complain, and click "Complain" icon`, messageType.ERR);
+                this.props.history.push(redirectUrl);
+                this.props.showToast(`Please login, enter room or event to complain on, click 'Complain' button`, messageType.ERR);
             } else {
-                this.setState({ entityType, entityId, entityTitle, redirectURL });
+                this.setState({ entityType, entityId, entityTitle, redirectUrl });
             }
         } else {
             this.props.history.push('/');

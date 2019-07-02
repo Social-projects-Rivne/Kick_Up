@@ -29,7 +29,9 @@ import {
   DateRange,
   LocationOn,
   ExpandMore,
-  Edit
+  Edit,
+  LocationDisabled, 
+  LocationSearching
 } from '@material-ui/icons';
 import Swiper from 'react-id-swiper/lib/ReactIdSwiper.full';
 import { Pagination, Autoplay } from 'swiper/dist/js/swiper.esm';
@@ -127,7 +129,8 @@ class EventPage extends Component {
       userCount: 0,
       creatorId: 0,
       loading: true,
-      showUpload: false
+      showUpload: false,
+      isBanned: false
     };
   }
 
@@ -225,7 +228,8 @@ class EventPage extends Component {
           description: res.description,
           gallery,
           eventRating: res.eventRating,
-          creatorId: res.creator_id
+          creatorId: res.creator_id,
+          isBanned: res.is_banned ? true : false
         });
       })
       .catch((err) => {
@@ -260,6 +264,24 @@ class EventPage extends Component {
     const gallery = [...this.state.gallery].concat(src);
     this.setState({ gallery });
   };
+
+  handleBan = () => {
+    const uri = '/api/admin/event/banned';
+    
+    axios
+    .put(uri, {
+        entity_id: this.props.match.params.id,
+        is_banned: !this.state.isBanned
+    })
+    .then(() => {
+        this.setState((prevState) => { 
+          return { isBanned: !prevState.isBanned };
+         });
+    })
+    .catch(err => {
+        alert('Could not perform operation, reload your page');
+    });
+  }
 
   render() {
     const { isAuthenticated, user } = this.props;
@@ -396,7 +418,7 @@ class EventPage extends Component {
                 </Typography>
               }
             </Paper>
-            <div class="event-page__complaint">
+            <div className="event-page__complaint">
               <Link 
                 to={{
                   pathname: '/complaint',
@@ -404,7 +426,7 @@ class EventPage extends Component {
                     entityType: 2,
                     entityId: this.props.match.params.id,
                     entityTitle: this.state.title,
-                    redirectUrl: window.location.href
+                    redirectUrl: `/event/${this.props.match.params.id}` 
                   }
                 }}
               >Complaint</Link>
@@ -458,6 +480,19 @@ class EventPage extends Component {
             }
           </Grid>
         </Swiper>
+        <div className="event-page__complaint">
+              <Link 
+                to={{
+                  pathname: '/complaint',
+                  state: {
+                    entityType: 2,
+                    entityId: this.props.match.params.id,
+                    entityTitle: this.state.title,
+                    redirectUrl: `/event/${this.props.match.params.id}` 
+                  }
+                }}
+              >Complaint</Link>
+            </div>
         {isAuthenticated && this.state.creatorId === user.id && (
           <Link to={this.props.location.pathname + '/edit'} className="event-page__edit-link">
             <Fab variant="extended" className="event-page__edit-event">
@@ -465,6 +500,17 @@ class EventPage extends Component {
             </Fab>
           </Link>
         )}
+        {   
+          this.props.user && this.props.user.role === 1 &&
+          <Fab onClick={this.handleBan} variant="extended" className="event-page__ban">
+            {
+              this.state.isBanned ? <LocationSearching /> : <LocationDisabled />
+            }
+            {
+              <span>{ this.state.isBanned ? 'Unban' : 'Ban' }</span>
+            }
+          </Fab>
+        }
       </div>
     );
   }

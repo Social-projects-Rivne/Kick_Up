@@ -416,6 +416,11 @@ div[class*=MuiExpansionPanel]::before {
       margin-top: 44px;
     }
   }
+
+  .event-page .event-page__tabs-swiper + 
+  .event-page__complaint {
+      display: none;
+  }
   
   .event-page__complaint a {
     padding: 7px;
@@ -423,6 +428,26 @@ div[class*=MuiExpansionPanel]::before {
     color: darken($primary, 15%);
     border: 1px solid darken($primary, 15%);
     border-radius: 3px;
+  }
+
+  .event-page .event-page__ban {
+    position: fixed;
+    bottom: 85px;
+    left: 14px;
+    background-color: $primary;
+    z-index: 100;
+  
+    &:hover {
+      background-color: $primary;
+    }
+  
+    & span span {
+      margin-left: 8px;
+    }
+  
+    @include media-breakpoint-up(lg) {
+      bottom: 48px;
+    }
   }
 
 // Mobile landscape;
@@ -668,7 +693,13 @@ div[class*=MuiExpansionPanel]::before {
     .event-page .event-page__fab {
         margin-left: 16px;
     }
-    
+
+    .event-page .event-page__tabs-swiper + 
+    .event-page__complaint {
+      display: block;
+      margin-top: 32px;
+      padding-bottom: 32px;
+    }
 }
 
 // Animation;
