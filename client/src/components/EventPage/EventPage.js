@@ -273,12 +273,12 @@ class EventPage extends Component {
 
     const joinBtn = (
       <Fab className="event-page__fab" variant="extended" color="primary" onClick={this.join}>
-        <span className="event-page__fab-text">Join now</span>
+        <span className="event-page__fab-text-join">Join now</span>
       </Fab>
     );
     const leaveBtn = (
-      <Fab className="event-page__fab" variant="extended" color="primary" onClick={this.leave}>
-        <span className="event-page__fab-text">Leave now</span>
+      <Fab className="event-page__fab event-page__fab-leave" variant="extended" color="primary" onClick={this.leave}>
+        <span className="event-page__fab-text-leave">Leave now</span>
       </Fab>
     );
 

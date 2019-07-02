@@ -226,7 +226,20 @@
     align-items: center;
 }
 
-.event-page .event-page__fab .event-page__fab-text {
+.event-page .event-page__fab-text-leave {
+    color: $white;
+}
+
+.event-page .event-page__fab-leave {
+    background-color: $secondaryBlack;
+}
+
+.event-page button[class*=event-page__fab-leave]:hover {
+    background-color: $secondaryBlack;
+}
+
+.event-page .event-page__fab .event-page__fab-text-join,
+.event-page .event-page__fab .event-page__fab-text-leave {
     padding-left: 10px;
     padding-right: 5px;
 }

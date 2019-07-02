@@ -176,10 +176,17 @@
       }
     }
 
+    .room-details-page-fab-leave {
+      background-color: $secondaryBlack;
+    }
+
     .room-details-page-fab {
+      background-color: $primary;
+    }
+
+    .room-details-page-fab, .room-details-page-fab-leave {
       margin-top: 18px;
       box-shadow: none;
-      background-color: $primary;
       margin-bottom: 10px;
 
       @include media-breakpoint-down(lg) {
@@ -187,10 +194,17 @@
         margin-top: 0;
       }
 
+      .room-details-page-leave {
+        color: $white;
+      }
+
       .room-details-page-join {
+        color: $black;
+      }
+
+      .room-details-page-join, .room-details-page-leave {
         padding-left: 10px;
         padding-right: 5px;
-        color: $black;
       }
     }
   }
@@ -246,7 +260,7 @@
       display: flex;
       flex-direction: column;
 
-      .MuiSvgIcon-root-91 {
+      svg[class*=MuiSvgIcon-root] {
         padding-left: 42px;
         padding-bottom: 5px;
 
