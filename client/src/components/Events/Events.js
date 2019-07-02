@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import axios from "axios";
 import { connect } from "react-redux";
 
 import Toolbar from "./../Toollbar/Toolbar";
@@ -12,27 +11,28 @@ import { loadEvents, addEvents } from "./../../store/actions/events";
 const API = {
   getEvents: "/api/event",
   sort: "/api/event/sort",
-  filter: "/api/event/filter",
-  resetFilters: "/api/event/reset-filters"
+  filter: "/api/event/filter"
 };
 
 class Events extends Component {
   state = {
     eventsDB: null,
     FilteredEvents: null,
-    isLoading: true,
     category: "",
     location: "",
     date: null,
     showDate: true,
-    params: null
+    params: null,
+    url: API.getEvents
   };
 
   onScroll = () => {
     if (this.refs.iScroll.scrollTop + this.refs.iScroll.clientHeight >= this.refs.iScroll.scrollHeight - 150
-      && this.props.eventsDB.length < this.props.eventCount ){
+      && this.props.eventsDB.length < this.props.eventCount) {
+      let url = API.getEvents;
+      if (this.state.url !== url) url = this.state.url;
       this.props.addEventsFromDB(
-        API.getEvents, 
+        url,
         {
           params: {
             ...this.state.params,
@@ -46,7 +46,7 @@ class Events extends Component {
   componentDidMount() {
     if (this.props.eventsDB.length < 1) {
       this.props.getSortDataFromDB(
-        API.getEvents, 
+        API.getEvents,
         {
           params: {
             page: this.props.page
@@ -66,9 +66,9 @@ class Events extends Component {
     if (prevState.category !== category || prevState.date !== date || prevState.date !== date || prevState.location !== location) {
       this.filterHandle();
     }
-    if (prevProps.eventsDB.length !== this.props.eventsDB.length && 
+    if (prevProps.eventsDB.length !== this.props.eventsDB.length &&
       this.props.eventsDB.length === this.props.eventCount) {
-        this.refs.iScroll.removeEventListener("scroll", this.onScroll);
+      this.refs.iScroll.removeEventListener("scroll", this.onScroll);
     } else {
       this.refs.iScroll.addEventListener("scroll", this.onScroll);
     }
@@ -83,7 +83,7 @@ class Events extends Component {
       },
     };
 
-    this.setState({params: {category: this.state.category, date: this.state.date, location: this.state.location}});
+    this.setState({ params: { category: this.state.category, date: this.state.date, location: this.state.location }, url: API.filter });
     this.props.getSortDataFromDB(API.filter, filters);
   };
 
@@ -94,6 +94,7 @@ class Events extends Component {
         page: 1
       }
     };
+    this.setState({ params: { sort: "members" }, url: API.sort });
     this.props.getSortDataFromDB(API.sort, type);
   };
   sortStartSoonHandle = () => {
@@ -103,12 +104,13 @@ class Events extends Component {
         page: 1
       }
     };
+    this.setState({ params: { sort: "start" }, url: API.sort });
     this.props.getSortDataFromDB(API.sort, type);
   };
 
   resetFiltersHandle = () => {
     this.props.getSortDataFromDB(
-      API.getEvents, 
+      API.getEvents,
       {
         params: {
           page: 1
@@ -118,6 +120,7 @@ class Events extends Component {
     this.setState({
       category: "",
       location: "",
+      url: API.getEvents
     });
   };
 
@@ -173,44 +176,44 @@ class Events extends Component {
     const eventsPage = isLoading ? (
       <Spinner className="events-page" />
     ) : (
-      <div className="events-page" ref="iScroll">
-        <Toolbar
-          isAuthenticated={this.props.isAuthenticated}
-          datafromBase={this.state.eventsDB}
-          buttons={toolbarButtons}
-          filters={toolbarFilters}
-          sortHandle={this.sortHandle}
-          changeHandle={this.changeHandle}
-          category={this.state.category}
-          date={this.state.date}
-          showDate={true}
-          changeDate={this.changeDate}
-          addLink="/event/add"
-        />
-        <Grid container spacing={16} justify="center" className="events-page-cards">
-          {eventsDB.length > 0 ? eventsDB.map(event => {
-            const membersCount = event.members.length;
-            return (
-              <EventCard
-                key={event.id}
-                title={event.title}
-                category={event.category.title}
-                location={event.location}
-                startDate={event.start_date}
-                avatar={event.creator.avatar}
-                description={event.description}
-                limit={event.members_limit}
-                members={membersCount}
-                background={event.cover && event.cover.replace(/\\/g, '/')}
-                clicked={() => this.selectedEventHandler(event.id)}
-              />
-            );
-          }):
-          <h3>Not found!</h3>} 
-        </Grid>
-        {this.props.eventsDB.length < this.props.eventCount && <Spinner className="events-page"  />}
-      </div>
-    );
+        <div className="events-page" ref="iScroll">
+          <Toolbar
+            isAuthenticated={this.props.isAuthenticated}
+            datafromBase={this.props.eventsDB}
+            buttons={toolbarButtons}
+            filters={toolbarFilters}
+            sortHandle={this.sortHandle}
+            changeHandle={this.changeHandle}
+            category={this.state.category}
+            date={this.state.date}
+            showDate={true}
+            changeDate={this.changeDate}
+            addLink="/event/add"
+          />
+          <Grid container spacing={16} justify="center" className="events-page-cards">
+            {eventsDB.length > 0 ? eventsDB.map(event => {
+              const membersCount = event.members.length;
+              return (
+                <EventCard
+                  key={event.id}
+                  title={event.title}
+                  category={event.category.title}
+                  location={event.location}
+                  startDate={event.start_date}
+                  avatar={event.creator.avatar}
+                  description={event.description}
+                  limit={event.members_limit}
+                  members={membersCount}
+                  background={event.cover && event.cover.replace(/\\/g, '/')}
+                  clicked={() => this.selectedEventHandler(event.id)}
+                />
+              );
+            }) :
+              <h3>Not found!</h3>}
+          </Grid>
+          {this.props.eventsDB.length < this.props.eventCount && <Spinner className="events-page" />}
+        </div>
+      );
     return eventsPage;
   }
 }
