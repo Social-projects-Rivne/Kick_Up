@@ -11,8 +11,8 @@ const rootReducer = combineReducers({
     auth: authReducer,
     toast: toastReducer,
     home: homeReducer,
-    rooms: roomsReducer,
     userProfile: userProfileReducer,
+    rooms: roomsReducer
 });
 
 export default rootReducer;
