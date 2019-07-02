@@ -111,8 +111,7 @@ const updateSwipersHeight = () => {
         window.setTimeout(() => {
             mainSwiper.updateAutoHeight(300);
         }, 300);
-        console.log('UPDATED');
-    } catch(err) {console.log('ERR');}
+    } catch(err) {}
 };
 // Need this as swiper here, cannot bind it, as swiper is initialized aync; 
 const applySVGImage = function() {    

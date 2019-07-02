@@ -234,8 +234,6 @@ class RoomPage extends React.Component {
         });
     }
     render() {
-        console.log('PROPS', this.props);
-
         const { value, roomPagePosts, gallery, roomPageDB } = this.state;
         const { isAuthenticated, user } = this.props;
 

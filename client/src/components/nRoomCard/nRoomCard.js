@@ -51,7 +51,6 @@ const convertTime = (str) => {
                 time: `${hour}:${min}` 
             }
         } catch(err) {
-            console.log('ERR', err);
             return {
                 date: '',
                 time: ''
