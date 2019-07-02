@@ -1,6 +1,6 @@
 const Router = require('koa-router');
 const constants = require('./../../config/constants');
-const { authenticated } = require('../../middlewares');
+const { authenticated, saveRole } = require('../../middlewares');
 const MongoDbRoom = require('../../mongoDB/models/modelRoom');
 const { Room, Category, Member, User } = require('../../models');
 const validate = require('../../services/Validator');
@@ -13,7 +13,13 @@ const handler = {
       page: 'numeric|min:1'
     });
     const { page } = ctx.query;
-    const rooms = await Room.where({permission: false}).fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating','event','members']});
+    const rooms = await Room
+    .where(qb => {
+      if(ctx.state.role !== 1){
+        qb.where({is_banned: false, permission: false})
+      }
+    })
+    .fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating','event','members']});
 
     ctx.body = {
       rooms,

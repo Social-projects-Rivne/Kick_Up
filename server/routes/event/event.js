@@ -3,7 +3,7 @@ const constants = require('./../../config/constants');
 const router = new Router({prefix: '/api/event'});
 const { Event, Category, Member } = require('../../models');
 const validate = require('../../services/Validator');
-const { authenticated } = require('./../../middlewares');
+const { authenticated, saveRole } = require('./../../middlewares');
 const handler = {
 
   async eventList(ctx) {
@@ -12,10 +12,13 @@ const handler = {
     });
   const { page } = ctx.query;
 
-  const events = await Event.query(db =>
-      db.leftJoin('rooms', 'rooms.id', 'events.room_id')
-      .where( perm => perm.where({ 'room_id': null, 'events.permission': false }))
-      .orWhere( perm => perm.where({ 'rooms.permission': false, 'events.permission': false}))
+  const events = await Event.query(db => {
+      if(ctx.state.role !== 1){
+        db.leftJoin('rooms', 'rooms.id', 'events.room_id')
+        .where( perm => perm.where({ 'room_id': null, 'events.permission': false }))
+        .orWhere( perm => perm.where({ 'rooms.permission': false, 'events.permission': false}))
+        }
+      }
       ).fetchPage({page, pageSize: constants.pageSize, withRelated: ['creator','category','rating','members']});
   ctx.body = {
     events,

@@ -67,7 +67,7 @@ class AppHeader extends React.Component {
             : <img src={face} alt="" />;
         const avatar = [
             <BottomNavigationAction
-                className="icon-details"
+                className="icon-details-avatar"
                 label="Profile"
                 aria-owns={anchorEl ? 'simple-menu' : undefined}
                 aria-haspopup="true"

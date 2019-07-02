@@ -3,14 +3,13 @@ import { connect } from "react-redux";
 
 import axios from 'axios';
 
-import {Link as RouterLink, Link} from "react-router-dom";
+import {Link} from "react-router-dom";
 
 import { loadRoomDetails } from '../../store/actions/rooms';
 
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 
-import { AppBar, Tabs, Tab, Typography, Grid, Avatar, Card, CardActions, CardContent, CardMedia,
-    CardActionArea, Button, ListItemText, ListItem, ListItemAvatar, Badge, Fab, Paper } from '@material-ui/core';
+import { AppBar, Tabs, Tab, Typography, Grid, Avatar, ListItemText, ListItem, ListItemAvatar, Badge, Fab, Paper } from '@material-ui/core';
 import { Comment, Collections, Face, NewReleases, EventAvailable, Add, Info, Edit } from '@material-ui/icons';
 import Gallery from 'react-grid-gallery';
 import SwipeableViews from 'react-swipeable-views';
@@ -232,15 +231,15 @@ class RoomPage extends React.Component {
         </Fab>
         )
         const leaveBtn = (
-        <Fab variant="extended" className="room-details-page-fab" onClick={this.leave}>
-            <span className="room-details-page-join">Leave now</span>
+        <Fab variant="extended" className="room-details-page-fab-leave" onClick={this.leave}>
+            <span className="room-details-page-leave">Leave now</span>
         </Fab>
         )
         const renderBtn = this.state.authUser ? leaveBtn : joinBtn;
         const renderMemberTab = (
             <Badge className="badge-room-margin" badgeContent={this.state.userCount}>
-                                <Face /> <p className="badge-members">Members</p>
-                            </Badge>
+                <Face /> <p className="badge-members">Members</p>
+             </Badge>
         )
         return (
             <div className="room-page-details">
