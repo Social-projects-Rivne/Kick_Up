@@ -1,18 +1,21 @@
 import React from 'react';
+import { connect } from "react-redux";
 
 import axios from 'axios';
 
-import { TextField, Input, FormControlLabel, FormGroup, Button, NativeSelect, Paper,
-    InputLabel, FormControl, Stepper, Step, StepLabel, StepContent, Switch, InputAdornment } from '@material-ui/core';
+import {
+    TextField, Input, FormControlLabel, FormGroup, Button, NativeSelect, Paper,
+    InputLabel, FormControl, Stepper, Step, StepLabel, StepContent, Switch, InputAdornment
+} from '@material-ui/core';
 import { CloudUpload, Link } from '@material-ui/icons';
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, InlineDateTimePicker } from 'material-ui-pickers';
 import Geosuggest from 'react-geosuggest';
 import Spinner from "../UI/Spinner/Spinner";
-import {withSnackbar} from "notistack";
 import ImageUploader from "./../ImageUploader/ImageUploader";
-import defaultCover from "../../assets/images/bg-1.jpg"
+import defaultCover from "../../assets/images/bg-1.jpg";
+import { enqueueSnackbar } from './../../store/actions/toast';
 
 const messageType = {
     SUCCESS: "success",
@@ -59,22 +62,16 @@ class AddEvent extends React.Component {
         authUser: false
     };
 
-    showToast = (message, variant) => {
-        this.props.enqueueSnackbar(message, {
-            variant: variant ? variant : 'default',
-        });
-    };
-
     componentDidMount() {
         const { id } = this.props.match.params;
         if (id) {
-            this.setState({roomId: id});
+            this.setState({ roomId: id });
         }
 
         axios.get("/api/category")
             .then(res => {
                 this.setState({
-                    addEventDB:{
+                    addEventDB: {
                         ...this.state.addEventDB,
                         categories: res.data
                     }
@@ -113,7 +110,7 @@ class AddEvent extends React.Component {
 
     handleUpdateStartDate = date => {
         this.setState({
-            eventData:{
+            eventData: {
                 ...this.state.eventData,
                 start_date: date
             }
@@ -121,20 +118,20 @@ class AddEvent extends React.Component {
     };
 
     handleGeosuggestChange = location => {
-        if ( !location ) {
+        if (!location) {
             return;
         }
         this.setState({
-            eventData:{
+            eventData: {
                 ...this.state.eventData,
                 location: location.label
             }
         });
     };
 
-    handleUpdateData (event) {
+    handleUpdateData(event) {
         this.setState({
-            eventData:{
+            eventData: {
                 ...this.state.eventData,
                 [event.target.name]: event.target.type === "checkbox" ? event.target.checked : event.target.value
             }
@@ -152,10 +149,10 @@ class AddEvent extends React.Component {
                     title: this.state.eventData.title,
                     creator_id: this.state.userId,
                     category_id: this.state.eventData.category,
-                    room_id:  this.state.roomId,
+                    room_id: this.state.roomId,
                     description: this.state.eventData.description,
                     cover: defaultCover,
-                    location:  this.state.eventData.location,
+                    location: this.state.eventData.location,
                     permission: this.state.eventData.permission ? 1 : 0,
                     start_date: this.state.eventData.start_date.getFullYear() + "."
                         + ("0" + (this.state.eventData.start_date.getMonth() + 1)).slice(-2) +
@@ -170,14 +167,20 @@ class AddEvent extends React.Component {
                         this.setState({
                             loading: false,
                             eventId: res.data.id,
-                            authUser :!this.state.authUser,
+                            authUser: !this.state.authUser,
                             activeStep: activeStep + 1
                         });
                     })
                     .catch(err => {
                         let errors = err.response.data.error ? err.response.data.error.errors : [];
                         for (const key in errors) {
-                            this.showToast(errors[key][0], messageType.ERR);
+                            this.props.enqueueSnackbar({
+                                message: errors[key][0],
+                                options: {
+                                  key: new Date().getTime() + Math.random(),
+                                  variant: messageType.ERR,
+                                },
+                            });
                             errors[key] = true;
                         }
                         this.setState({ loading: false, errors: errors });
@@ -192,12 +195,24 @@ class AddEvent extends React.Component {
                 axios.put("/api/event/" + this.state.eventId, updatedData)
                     .then(res => {
                         this.props.history.push({ pathname: "/event/" + this.state.eventId });
-                        this.showToast("Congratulations! Event created!",messageType.SUCCESS);
+                        this.props.enqueueSnackbar({
+                            message: "Congratulations! Event created!",
+                            options: {
+                              key: new Date().getTime() + Math.random(),
+                              variant: messageType.SUCCESS,
+                            },
+                        });
                     })
                     .catch(err => {
                         let errors = err.response.data.error.errors;
-                        for (const key  in errors) {
-                            this.showToast(errors[key][0], messageType.ERR);
+                        for (const key in errors) {
+                            this.props.enqueueSnackbar({
+                                message: errors[key][0],
+                                options: {
+                                  key: new Date().getTime() + Math.random(),
+                                  variant: messageType.ERR,
+                                },
+                            });
                             errors[key] = true;
                         }
                         this.setState({ loading: false, errors: errors });
@@ -210,15 +225,15 @@ class AddEvent extends React.Component {
     };
 
     showUploadComponent = () => {
-        this.setState({showUpload: true})
+        this.setState({ showUpload: true })
     };
 
     closeUploadComponent = () => {
-        this.setState({showUpload: false})
+        this.setState({ showUpload: false })
     };
 
     getImagesSRC = (imageSRC) => {
-        this.setState({imageSRC});
+        this.setState({ imageSRC });
     };
 
     render() {
@@ -226,12 +241,12 @@ class AddEvent extends React.Component {
         const { isAuthenticated } = this.props;
 
         if (this.state.loading) {
-            return (<Spinner className="rooms-page"/>);
+            return (<Spinner className="rooms-page" />);
         }
 
         return (
             <>
-                <ImageUploader 
+                <ImageUploader
                     show={this.state.showUpload}
                     closeUploadComponent={this.closeUploadComponent}
                     uploaderType="cover"
@@ -372,7 +387,7 @@ class AddEvent extends React.Component {
                                             />
 
                                             {this.state.eventData.members_limit_checked && <div className="invite-link">
-                                                <FormControl  className="textField">
+                                                <FormControl className="textField">
                                                     <TextField
                                                         className="add-event-text-field"
                                                         label="Members limit"
@@ -413,10 +428,10 @@ class AddEvent extends React.Component {
                                         </InputLabel>
                                         <InputLabel className="created-event-info-label">
                                             Date and time:&nbsp;{this.state.eventData.start_date.getFullYear() + "."
-                                            + ("0" + (this.state.eventData.start_date.getMonth() + 1)).slice(-2) +
-                                            "." + ("0" + (this.state.eventData.start_date.getDate())).slice(-2)
-                                            + ", " + ("0" + (this.state.eventData.start_date.getHours())).slice(-2) +
-                                            ":" + ("0" + (this.state.eventData.start_date.getMinutes())).slice(-2)}
+                                                + ("0" + (this.state.eventData.start_date.getMonth() + 1)).slice(-2) +
+                                                "." + ("0" + (this.state.eventData.start_date.getDate())).slice(-2)
+                                                + ", " + ("0" + (this.state.eventData.start_date.getHours())).slice(-2) +
+                                                ":" + ("0" + (this.state.eventData.start_date.getMinutes())).slice(-2)}
                                         </InputLabel>
                                         <InputLabel className="created-event-info-label">
                                             Location:&nbsp;{this.state.eventData.location}
@@ -491,4 +506,12 @@ class AddEvent extends React.Component {
     }
 }
 
-export default withSnackbar(AddEvent);
+const mapStateToProps = state => ({
+    isAuthenticated: state.auth.isAuthenticated,
+});
+
+const mapDispatchToProps = dispatch => ({
+    enqueueSnackbar: notifications => dispatch(enqueueSnackbar(notifications))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddEvent);

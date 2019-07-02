@@ -45,23 +45,22 @@ class AddRoom extends React.Component {
             members_limit: false,
             permission: false
         },
-        lastRoomLoaded: this.props.roomsAmount,
         showUpload: false,
         imageSRC: null,
         authUser: false
     };
-    componentDidUpdate() {
+    componentDidUpdate(prevProps) {
         // Check if new room was added OK, then change UI;
-        if (this.state.lastRoomLoaded !== this.props.roomsAmount) {
+        console.log(prevProps.roomsAmount, this.props.roomsAmount)
+        if (prevProps.roomsAmount !== this.props.roomsAmount) {
             this.setState(prevState => ({
-                lastRoomLoaded: this.props.roomsAmount,
                 roomId: this.props.rooms[this.props.roomsAmount - 1].id,
                 activeStep: prevState.activeStep + 1,
                 authUser: this.props.rooms[this.props.roomsAmount - 1].creator.id === this.props.user.id
             }));
         // In case room was successfully updated, redirect to roon;
         } else if (
-            this.state.lastRoomLoaded === this.props.roomsAmount &&
+            prevProps.roomsAmount === this.props.roomsAmount &&
             this.props.rooms.length > 0 &&
             this.props.rooms[this.props.roomsAmount - 1].wasEdited
         ) {

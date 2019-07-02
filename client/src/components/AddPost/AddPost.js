@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 import {
     Button,
@@ -16,10 +17,10 @@ import {
 } from '@material-ui/core';
 import { Visibility, Close, Home } from '@material-ui/icons';
 import Swiper from 'react-id-swiper/lib/ReactIdSwiper.full';
-import { withSnackbar } from 'notistack';
 import WYSWYGeditor from '../WYSWYGeditor/WYSWYGeditor';
 import PostCard from '../PostCard/PostCard';
 import axios from 'axios';
+import { enqueueSnackbar } from './../../store/actions/toast';
 
 const _desktopWidth = 1024;
 const addPostSwiperParams = {
@@ -137,10 +138,22 @@ class AddPost extends Component {
                 this.props.history.push({ pathname: `/room/${this.state.roomId}` });
     
                 // Show message;
-                this.showToast('Your new post was successfully created', messageType.SUCCESS);
+                this.props.enqueueSnackbar({
+                    message: 'Your new post was successfully created',
+                    options: {
+                      key: new Date().getTime() + Math.random(),
+                      variant: messageType.SUCCESS,
+                    },
+                });
              })
             .catch((err) => {
-                this.showToast('Something went wrong, please reload your page', messageType.ERR);
+                this.props.enqueueSnackbar({
+                    message: 'Something went wrong, please reload your page',
+                    options: {
+                      key: new Date().getTime() + Math.random(),
+                      variant: messageType.ERR,
+                    },
+                });
             });
         }, 1000);   
     }
@@ -198,7 +211,7 @@ class AddPost extends Component {
 
         if (
             this.state.title.data && 
-            this.state.title.data.length > 3 &&
+            this.state.title.data.length >= 3 &&
             (this.state.editModeLoad || (this.state.editorData.data && this.state.editorData.data.length > 0))
         ) {
             res = true;
@@ -213,7 +226,7 @@ class AddPost extends Component {
         // In case not all data are filled, show ERR messages to user;
         if (!this.checkAllFilled()) {
             // Define messages to be shown;
-            if (!this.state.title.data) {
+            if (!this.state.title.data || this.state.title.data.length < 3) {
                 errMessages.push('Give your post a nice title');
             }
             if (
@@ -223,26 +236,30 @@ class AddPost extends Component {
             ) {
                 errMessages.push('Give your post a great description');
             }
+            console.log('errMessages',errMessages)
 
             // Enque all err messages;
             errMessages.forEach((msg, itr) => {
                 window.setTimeout(() => {
-                    this.showToast(msg, messageType.ERR);
+                    this.props.enqueueSnackbar({
+                        message: msg,
+                        options: {
+                          key: new Date().getTime() + Math.random(),
+                          variant: messageType.ERR,
+                        },
+                    });
                 }, _delayTime * itr);
             });
         } else {
-            this.showToast('Working', messageType.INFO);
+            this.props.enqueueSnackbar({
+                message: 'Working',
+                options: {
+                  key: new Date().getTime() + Math.random(),
+                  variant: messageType.INFO,
+                },
+            });
             this.sendData();
         }
-    }
-    showToast = (message, variant) => {
-        this.props.enqueueSnackbar(message, {
-            variant: variant ? variant : 'default',
-            anchorOrigin: {
-                vertical: 'top',
-                horizontal: 'center',
-            }
-        });
     }
     loadEditorData = (data) => {
         let { authorId, _id:postId, text:editorData, title, isPinned:pinPost } = data;
@@ -262,7 +279,13 @@ class AddPost extends Component {
         if (!this.props.user) {
             this.props.history.push({ pathname: `/sign-in` });
             // Show message;
-            this.showToast('Sign in to proceed', messageType.INFO);
+            this.props.enqueueSnackbar({
+                message: 'Sign in to proceed',
+                options: {
+                  key: new Date().getTime() + Math.random(),
+                  variant: messageType.INFO,
+                },
+            });
         };
 
         // Fill editor with data;
@@ -447,4 +470,12 @@ class AddPost extends Component {
     }
 }
 
-export default withSnackbar(AddPost);
+const mapStateToProps = state => ({
+    user: state.auth.user,
+})
+
+const mapDispatchToProps = dispatch => ({
+    enqueueSnackbar: notifications => dispatch(enqueueSnackbar(notifications))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddPost);

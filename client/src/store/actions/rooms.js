@@ -26,6 +26,11 @@ export const storeRooms = data => ({
     payload: data
 });
 
+export const storeNewRoom = data => ({
+    type: ADD_ROOMS,
+    payload: data
+});
+
 export const setRoomsLoadState = status => ({
     type: SET_LOADING_ROOMS_STATUS,
     status
@@ -64,7 +69,8 @@ export const addNewRoom = data => dispatch => {
     axios
         .post(roomDetailsApi, data)
         .then(res => {
-            dispatch(storeRooms(res.data));
+            console.log('res.data', res.data)
+            dispatch(storeNewRoom(res.data));
             setRoomsLoadState(false);
         })
         .catch(err => {
@@ -84,7 +90,6 @@ export const addNewRoom = data => dispatch => {
 export const loadRooms = (uri, filter) => dispatch => {
     // Change UI for load start;
     setRoomsLoadState(true);
-    console.log('loadRooms', filter)
     // Load posts;
     axios
     .get(uri, filter)
@@ -113,10 +118,7 @@ export const addRooms = (uri, filter) => dispatch => {
     .get(uri, filter)
     .then(res => {
         if (res && res.data && res.data.rooms) {
-            dispatch({
-                type: ADD_ROOMS,
-                payload: res.data
-            });
+            dispatch(storeNewRoom(res.data.rooms));
             setRoomsLoadState(false);
         }
     })

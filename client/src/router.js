@@ -22,18 +22,18 @@ const router = ({ childProps }) => {
     return (
         <Switch>
             <Route path="/" exact component={Home} />
-            <AppliedRoute path="/sign-up" component={Register} props={childProps} />
+            <Route path="/sign-up" component={Register} />
             <Route path="/sign-in" exact component={SignIn} />
-            <AppliedRoute path="/events" exact component={Events} props={childProps} />
-            <AppliedRoute path="/event/add" exact component={AddEvent} props={childProps} />
-            <AppliedRoute path="/event/:id" exact component={EventPage} props={childProps}/>
-            <AppliedRoute path="/event/:id/edit" exact component={EditEvent} props={childProps} />
-            <AppliedRoute path="/rooms" exact component={Rooms} props={childProps}/>
-            <AppliedRoute path="/room/add" exact component={AddRoom} props={childProps}/>
-            <AppliedRoute path="/room/:id/add-event" component={AddEvent} props={childProps} />
-            <AppliedRoute path="/room/:id" exact component={RoomPage} props={childProps} />
-            <AppliedRoute path="/room/:id/edit" exact component={EditRoom} props={childProps} />
-            <AppliedRoute path="/room/:id/new-post" component={AddPost} props={childProps} />
+            <Route path="/events" exact component={Events} />
+            <Route path="/event/add" exact component={AddEvent} />
+            <Route path="/event/:id" exact component={EventPage}/>
+            <Route path="/event/:id/edit" exact component={EditEvent} />
+            <Route path="/rooms" exact component={Rooms}/>
+            <Route path="/room/add" exact component={AddRoom}/>
+            <Route path="/room/:id/add-event" component={AddEvent} />
+            <Route path="/room/:id" exact component={RoomPage} />
+            <Route path="/room/:id/edit" exact component={EditRoom} />
+            <Route path="/room/:id/new-post" component={AddPost} />
             <AppliedRoute path="/profile/:id" exact component={UserProfile} props={childProps} />
             <Route path="/profile/:id/edit" component={EditProfile} />
             <Route path="/privacy-policy" component={PrivacyPolicy} />

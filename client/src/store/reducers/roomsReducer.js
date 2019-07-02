@@ -29,7 +29,7 @@ export default function (state = initialStates, action) {
             ...state,
             // Filter data to have ONLY uniques rooms;
             rooms: state.rooms
-                .concat(action.payload.rooms)
+                .concat(action.payload)
                 .filter(el => {
                     if (!uniqueIds.some(item => item === el.id)) {
                         uniqueIds.push(el.id);

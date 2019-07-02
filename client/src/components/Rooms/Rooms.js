@@ -159,7 +159,6 @@ class Rooms extends Component {
         })
         .filter((v, i, a) => a.indexOf(v) === i);
     }
-    console.log('categories', categories)
     const toolbarFilters = [
       {
         type: "category",

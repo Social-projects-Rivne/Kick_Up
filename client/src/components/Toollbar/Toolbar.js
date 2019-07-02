@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
 
 import {
   Grid,
@@ -181,4 +182,8 @@ class Toolbar extends Component {
   }
 }
 
-export default Toolbar;
+const mapStateToProps = state => ({
+  isAuthenticated: state.auth.isAuthenticated,
+})
+
+export default connect(mapStateToProps)(Toolbar);

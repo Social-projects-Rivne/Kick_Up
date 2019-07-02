@@ -43,14 +43,6 @@
       }
     }
 
-    .upload-card-close {
-        position: absolute;
-        right: 5px;
-        top: 5px;
-        cursor: pointer;
-        color: $black;
-    }
-
     .upload {
       display: flex;
       flex-direction: column;
@@ -59,12 +51,6 @@
       text-align: left;
       overflow: hidden;
 
-      &-error {
-        margin: 0;
-        text-align: center;
-        color: red;
-        width: 100%;
-      }
       .dropzone-wrapper {
         display: flex;
         align-items: center;
@@ -88,19 +74,8 @@
         display: flex;
         flex: 1;
         width: 100%;
-        align-items: flex-end;
-        flex-direction: column;
-        margin-top: 32px;
-
-        &-success {
-          position: absolute;
-          top: -80px;
-          background-color: #fff;
-          width: 80%;
-          box-shadow: 0 0 3px #eee;
-          align-self: center;
-          padding: 5px;
-        }
+        justify-content: space-between;
+        margin-top: 22px;
       }
 
       .Filename {

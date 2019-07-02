@@ -127,9 +127,13 @@ class CommentForm extends Component {
             }
     }
     showToast = (message, variant) => {
-        this.props.enqueueSnackbar(message, {
-            variant: variant ? variant : 'default',
-        });
+        this.props.enqueueSnackbar({
+            message,
+            options: {
+              key: new Date().getTime() + Math.random(),
+              variant: variant ? variant : 'default',
+            },
+          });
     };
     render() {
         const {comments} = this.state;

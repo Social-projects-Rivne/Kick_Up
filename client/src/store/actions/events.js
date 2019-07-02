@@ -36,12 +36,10 @@ export const saveEventCatogories = data => {
 export const loadEvents = (uri, filter) => dispatch => {
     // Change UI for load start;
     setEventsLoadState(true);
-    console.log('loadEvents', filter)
     // Load posts;
     axios
     .get(uri, filter)
     .then(res => {
-        console.log('res.data', res.data)
         if (res && res.data && res.data.events) {
             dispatch(storeEvents(res.data));
             setEventsLoadState(false);
@@ -61,8 +59,6 @@ export const loadEvents = (uri, filter) => dispatch => {
 export const addEvents = (uri, filter) => dispatch => {
     // Change UI for load start;
     setEventsLoadState(true);
-    console.log('addEvents', filter)
-    // Load posts;
     axios
     .get(uri, filter)
     .then(res => {

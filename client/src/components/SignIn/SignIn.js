@@ -371,6 +371,6 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   signInUser: user => dispatch(signInUser(user)),
   enqueueSnackbar: notifications => dispatch(enqueueSnackbar(notifications))
-})
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);
