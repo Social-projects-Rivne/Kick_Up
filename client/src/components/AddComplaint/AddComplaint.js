@@ -9,12 +9,7 @@ import {
     Step,
     StepLabel,
     StepContent,
-    TextField,
-    FormControlLabel,
-    FormGroup,
-    Switch,
-    Paper,
-    Typography
+    TextField
 } from '@material-ui/core';
 import axios from 'axios';
 
@@ -23,6 +18,11 @@ const messageType = {
     SUCCESS: "success",
     INFO: "info",
     ERR: "error"
+};
+
+const URI = {
+    ROOM: 'room',
+    EVENT: 'event'
 };
 
 class Addcomplaint extends Component {
@@ -37,7 +37,36 @@ class Addcomplaint extends Component {
         this.setState({ message: event.target.value });
     }
     handleSubmitBtnClick = () => {
-        alert('handleSubmitBtnClick');
+        let uriParam = null;
+        let { entityId, entityTitle, message, entityType, redirectURL } = this.state;
+        debugger;
+
+        // Validate data, if not ok, redirect user back or to main page;
+        if (!entityId || !message || !entityType) {
+            this.props.history.push(redirectURL);
+            this.props.showToast(`Please enter room or event to complain, and click "Complain" icon`, messageType.ERR);
+        } else {
+            // Send data;
+            if (this.state.entityType === 1) {
+                uriParam = URI.ROOM;
+            } else if (this.state.entityType === 2) {
+                uriParam = URI.EVENT;
+            }
+
+            axios
+            .post(`/api/${uriParam}/complaint/create`, {
+                text: message,
+                entity_id: 3
+            })
+            .then(res => {
+                console.log('res', res);
+                alert('yay!');
+            })
+            .catch(err => {
+                console.log('ERR', err);
+            })
+        }
+        
     }
     componentWillMount = () => {
         if (this.props.location.state) {
