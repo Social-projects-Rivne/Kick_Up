@@ -4,6 +4,7 @@ import axios from "axios";
 import * as actionTypes from "./actionTypes";
 // import { createToast, clearToast } from "./toast";
 import { enqueueSnackbar, closeSnackbar } from "./toast";
+import { storeClearUserData } from "./userProfileAction"
 
 const messageType = {
     SUCCESS: "success",
@@ -129,5 +130,6 @@ export const signOutUser = history => dispatch => {
     localStorage.removeItem("authorization");
     setAuthToken(null);
     dispatch(storeUser(null));
+    dispatch(storeClearUserData());
     history.push({ pathname: "/" });
 };

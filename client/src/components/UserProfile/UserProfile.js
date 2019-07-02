@@ -1,18 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
 
-import {
-    Tabs, Tab, AppBar, Typography, Avatar, Grid, Paper, List, ListItem, Card, InputLabel,
-    CardActionArea, CardContent, CardMedia, Fab
-} from '@material-ui/core';
+import { Tabs, Tab, AppBar, Typography, Avatar, Grid, Paper, List, ListItem, Card, InputLabel,
+    CardActionArea, CardContent, CardMedia, Fab } from '@material-ui/core';
 import { Group, AssignmentTurnedIn, PhotoLibrary, Edit, Lock } from '@material-ui/icons';
 import SwipeableViews from "react-swipeable-views";
-import axios from "axios";
 import Spinner from "../UI/Spinner/Spinner";
 import defaultAvatar from "../../assets/images/face.png";
 import NeventCard from '../nEventCard/nEventCard';
 import Gallery from "react-grid-gallery";
+import { userProfileAction } from "../../store/actions/userProfileAction";
 
 const convertTime = (str) => {
     // Define manually date;
@@ -39,60 +37,25 @@ class UserProfile extends React.Component {
     state = {
         value: 0,
         loading: true,
-        userProfileData: null,
-        roomPageDB: null,
-        selfProfile: false,
+        selfProfile: false
     };
 
     componentDidMount() {
         const {id} = this.props.match.params;
-        this.updateProfileData(id);
+        this.props.userProfileAction(id);
     }
 
     componentWillReceiveProps(nextProps, nextContext) {
         const {id} = nextProps.match.params;
-        if (this.props.match.params.id !== id) {
-            this.updateProfileData(id);
+        this.setState({
+            loading: !this.props.userProfileData || +id !== this.props.userProfileData.id,
+            selfProfile: this.props.user && +id === this.props.user.id,
+        });
+
+        if (!this.props.userProfileData || +id !== this.props.userProfileData.id) {
+            this.props.userProfileAction(id);
         }
     }
-
-    updateProfileData (id) {
-        if ( this.state.userProfileData && this.state.userProfileData.id === +id ) {
-            this.setState({
-                loading: false
-            });
-            return;
-        }
-        axios.get("/api/profile/" + (id || ""))
-            .then(res => {
-                let userData = res.data;
-                userData.birth_date = new Date(userData.birth_date);
-
-                if ( userData.gender === 1 ) {
-                    userData.gender = "Male"
-                } else if ( userData.gender === 2 ) {
-                    userData.gender = "Female"
-                } else {
-                    userData.gender = "Other"
-                }
-
-                userData.media = userData.media.map( e => {
-                    return {
-                        src: e.key.slice(6),
-                        thumbnail: e.key.slice(6)
-                    };
-                });
-                this.setState({
-                    loading: false,
-                    userProfileData: userData,
-                    selfProfile: +id === userData.id,
-                    cool: 'cool'
-                });
-            })
-            .catch(err => {
-                this.setState({ loading: false });
-            });
-    };
 
     handleChange = (event, value) => {
         this.setState({ value });
@@ -103,9 +66,10 @@ class UserProfile extends React.Component {
     };
 
     render() {
-        const { value, userProfileData, selfProfile } = this.state;
+        const { value, selfProfile  } = this.state;
+        const { userProfileData  } = this.props;
 
-        if ( this.state.loading || !userProfileData ) {
+        if (this.state.loading) {
             return (<Spinner className="user-profile-page"/>);
         }
 
@@ -133,7 +97,7 @@ class UserProfile extends React.Component {
                                         <List>
                                             <ListItem >
                                                 <InputLabel>
-                                                  Nick:&nbsp;{(userProfileData.email).split('@')[0]}
+                                                  Nick:&nbsp;{userProfileData.first_name || "ShyUnicorn"}
                                                 </InputLabel>
                                             </ListItem>
 
@@ -279,7 +243,12 @@ class UserProfile extends React.Component {
 }
 
 const mapStateToProps = state => ({
+    userProfileData: state.userProfile,
     user: state.auth.user,
-})
+});
 
-export default connect(mapStateToProps)(UserProfile);
+const mapDispatchToProps = dispatch => ({
+    userProfileAction: id => dispatch(userProfileAction(id)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(UserProfile);
