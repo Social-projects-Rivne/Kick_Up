@@ -6,7 +6,7 @@ import { Pagination, Navigation } from 'swiper/dist/js/swiper.esm';
 import kute from 'kute.js';
 import 'kute.js/kute-svg';
 import AvatarCropper from 'react-avatar-edit';
-import { withSnackbar } from 'notistack';
+import { enqueueSnackbar } from '../../store/actions/toast';
 import is from 'is_js';
 
 import 'react-id-swiper/src/styles/scss/swiper.scss';
@@ -326,11 +326,13 @@ class EditProfile extends Component {
     validateEmail = () => {
         // Validate email;
         if (this.state.email.data && !is.email(this.state.email.data)) {
-            this.showToast(
-                `Your new email address is invalid, and won't be saved. Please correct it`,
-                messageType.ERR,
-                5000
-            );
+            this.props.enqueueSnackbar({
+                message: `Your new email address is invalid, and won't be saved. Please correct it`,
+                options: {
+                    key: new Date().getTime() + Math.random(),
+                    variant: messageType.ERR,
+                },
+            });
         }
     };
 
@@ -353,15 +355,10 @@ class EditProfile extends Component {
 
         if (Object.keys(data).length) {
             // Send data;
-            this.props.editUserProfileAction(data, (res) => {
-                this.showToast(
-                    res ? `All your changed were saved` : `We are sorry, we couldn't save your profile changes :(`,
-                    res ? messageType.SUCCESS : messageType.ERR,
-                    5000
-                );
-            });
+            this.props.editUserProfileAction(data);
         }
-    }
+    };
+
     componentDidMount = () => {
 
         const {id} = this.props.match.params;
@@ -629,7 +626,7 @@ class EditProfile extends Component {
             </div>
         )
     }
-};
+}
 
 const mapStateToProps = state => ({
     userProfileData: state.userProfile
@@ -637,7 +634,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     editUserProfileAction: data => dispatch(editUserProfileAction(data)),
-    userProfileAction: id => dispatch(userProfileAction(id))
+    userProfileAction: id => dispatch(userProfileAction(id)),
+    enqueueSnackbar: notifications => dispatch(enqueueSnackbar(notifications))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)( withSnackbar(EditProfile));
+export default connect(mapStateToProps, mapDispatchToProps)(EditProfile);

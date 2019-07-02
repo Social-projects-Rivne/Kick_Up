@@ -1,5 +1,12 @@
 import axios from "axios";
 import * as actionTypes from "./actionTypes";
+import { enqueueSnackbar } from "./toast";
+
+const messageType = {
+    SUCCESS: "success",
+    INFO: "info",
+    ERR: "error"
+};
 
 export const storeUserProfileData = data => ({
     type: actionTypes.USER_PROFILE_DATA,
@@ -15,9 +22,23 @@ export const editUserProfileAction = data => dispatch => {
     axios.put('/api/profile/update', data)
         .then(() => {
             dispatch(storeUserProfileData(data));
+            dispatch(enqueueSnackbar({
+                message: "All your changed were saved",
+                options: {
+                    variant: messageType.SUCCESS,
+                },
+            }));
         })
         .catch(err => {
-            console.log(err);
+            let errors = err.response.data.error.errors;
+            for (const key in errors) {
+                dispatch(enqueueSnackbar({
+                    message: errors[key][0],
+                    options: {
+                        variant: messageType.ERR,
+                    },
+                }));
+            }
         });
 };
 
@@ -46,6 +67,14 @@ export const userProfileAction = id => dispatch => {
             dispatch(storeUserProfileData(userData));
         })
         .catch(err => {
-            console.log(err);
+            let errors = err.response.data.error.errors;
+            for (const key in errors) {
+                dispatch(enqueueSnackbar({
+                    message: errors[key][0],
+                    options: {
+                        variant: messageType.ERR,
+                    },
+                }));
+            }
         });
 };
