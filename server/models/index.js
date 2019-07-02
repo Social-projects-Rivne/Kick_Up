@@ -6,6 +6,7 @@ const Tag = require('./Tag');
 const Media = require('./Media');
 const Rating = require('./Rating');
 const Member = require('./Member');
+const Complaint = require('./Complaint');
 module.exports = {
     User,
     Room,
@@ -14,5 +15,6 @@ module.exports = {
     Tag,
     Media,
     Rating,
-    Member
+    Member,
+    Complaint
   };
