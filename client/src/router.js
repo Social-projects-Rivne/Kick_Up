@@ -17,6 +17,7 @@ import AddEvent from "./components/AddEvent/AddEvent";
 import PrivacyPolicy from "./components/PrivacyPolicy/PrivacyPolicy";
 import UserProfile from './components/UserProfile/UserProfile';
 import AddPost from './components/AddPost/AddPost';
+import AddComplaint from './components/AddComplaint/AddComplaint';
 import AdminPanel from './components/AdminPanel/AdminPanel'
 
 const router = ({ childProps }) => {
@@ -38,6 +39,7 @@ const router = ({ childProps }) => {
             <AppliedRoute path="/profile/:id" exact component={UserProfile} props={childProps} />
             <Route path="/profile/:id/edit" component={EditProfile} />
             <Route path="/privacy-policy" component={PrivacyPolicy} />
+            <Route path="/complaint" component={AddComplaint} />
             <Route path="/admin-panel" component={AdminPanel} />
             <Route render={() => (<div style={{color: "red", textAlign: "center", fontSize: "2rem"}}>Page not found </div>)} />
         </Switch>
