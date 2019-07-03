@@ -16,6 +16,24 @@
   padding-bottom: 0;
 }
 
+.room__complaint {
+  margin-top: 120px;
+  margin-bottom: 12px;
+  text-align: center;
+
+  @include media-breakpoint-down(lg) {
+    margin-top: 24px;
+  }
+}
+
+.room__complaint a {
+  padding: 7px;
+  text-decoration: none;
+  color: darken($primary, 15%);
+  border: 1px solid darken($primary, 15%);
+  border-radius: 3px;
+}
+
 #root .room-page-details {
   .room-page-member-link,
   .room-page-member-link:active,
@@ -196,6 +214,10 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
+    max-width: 100vw;
+    margin-left: 0;
+    margin-right: 0;
+    overflow: hidden;
 
     .room-details-page-paper {
       margin: 10px;
@@ -205,6 +227,8 @@
     .room-details-page-cover-grid {
       display: flex;
       justify-content: center;
+      padding-left: 0;
+      padding-right: 0;
 
       .room-details-page-cover {
         height: 400px;
@@ -293,9 +317,13 @@
     max-width: 100vw;
     margin: 0;
   }
+  div[class*=MuiGrid-container] {
+    justify-content: center;
+  }
 
   .room-details-card-grid {
     padding: 0;
+    margin: 12px;
 
     &:last-of-type > div:first-child {
       border-bottom: 0;
@@ -345,5 +373,24 @@
   .room__tabs-wrapper div[data-swipeable]:nth-last-of-type(2),
   .room__tabs-wrapper div[data-swipeable]:nth-last-of-type(5) {
     overflow: hidden !important;
+  }
+}
+
+.room-page-details .room-page__ban {
+  position: fixed;
+  bottom: 85px;
+  left: 14px;
+  background-color: $primary;
+
+  &:hover {
+    background-color: $primary;
+  }
+
+  & span span {
+    margin-left: 8px;
+  }
+
+  @include media-breakpoint-up(lg) {
+    bottom: 48px;
   }
 }
