@@ -223,46 +223,88 @@ class EditProfile extends Component {
         });
     };
 
-    componentWillReceiveProps(nextProps, nextContext) {
-        if (this.state.initialized) {
-            return;
+    componentDidUpdate(nextProps) {
+        if (this.props.userProfileData !== nextProps.userProfileData) {
+            this.getUserData((res) => {
+                if (res) {
+                    this.setState({
+                        initialized: true,
+                        avatar: {
+                            data: res.avatar ? res.avatar : '',
+                            wasChanged: false
+                        },
+                        first_name: {
+                            data: res.first_name ? res.first_name : '',
+                            wasChanged: false
+                        },
+                        last_name: {
+                            data: res.last_name ? res.last_name : '',
+                            wasChanged: false
+                        },
+                        email: {
+                            data: res.email,
+                            wasChanged: false
+                        },
+                        emailReceived: res.email,
+                        birth_date: {
+                            data: res.birth_date ? res.birth_date.toISOString().split('T')[0] : '',
+                            wasChanged: false
+                        },
+                        gender: {
+                            data: res.gender === "Male" ? 1 : (res.gender === "Female" ? 2 : 3),
+                            wasChanged: false
+                        },
+                    });
+                }
+            });
         }
-
-        const _this = this;
-        // Get user data;
-        this.getUserData((res) => {
-            if (res) {
-                _this.setState({
-                    initialized: true,
-                    avatar: {
-                        data: res.avatar ? res.avatar : '',
-                        wasChanged: false
-                    },
-                    first_name: {
-                        data: res.first_name ? res.first_name : '',
-                        wasChanged: false
-                    },
-                    last_name: {
-                        data: res.last_name ? res.last_name : '',
-                        wasChanged: false
-                    },
-                    email: {
-                        data: res.email,
-                        wasChanged: false
-                    },
-                    emailReceived: res.email,
-                    birth_date: {
-                        data: res.birth_date ? res.birth_date.toISOString().split('T')[0] : '',
-                        wasChanged: false
-                    },
-                    gender: {
-                        data: res.gender === "Male" ? 1 : (res.gender === "Female" ? 2 : 3),
-                        wasChanged: false
-                    },
-                });
-            }
-        });
     }
+
+    // componentWillReceiveProps(nextProps, nextContext) {
+    //     if (this.state.initialized) {
+    //         return;
+    //     }
+    //     console.log('hello',this.props.userProfileData, nextProps.userProfileData)
+
+    //     const _this = this;
+    //     // Get user data;
+    //     if (this.props.userProfileData !== nextProps.userProfileData) {
+
+        
+    //     this.getUserData((res) => {
+    //         if (res) {
+    //             _this.setState({
+    //                 initialized: true,
+    //                 avatar: {
+    //                     data: res.avatar ? res.avatar : '',
+    //                     wasChanged: false
+    //                 },
+    //                 first_name: {
+    //                     data: res.first_name ? res.first_name : '',
+    //                     wasChanged: false
+    //                 },
+    //                 last_name: {
+    //                     data: res.last_name ? res.last_name : '',
+    //                     wasChanged: false
+    //                 },
+    //                 email: {
+    //                     data: res.email,
+    //                     wasChanged: false
+    //                 },
+    //                 emailReceived: res.email,
+    //                 birth_date: {
+    //                     data: res.birth_date ? res.birth_date.toISOString().split('T')[0] : '',
+    //                     wasChanged: false
+    //                 },
+    //                 gender: {
+    //                     data: res.gender === "Male" ? 1 : (res.gender === "Female" ? 2 : 3),
+    //                     wasChanged: false
+    //                 },
+    //             });
+    //         }
+    //     });
+    // } 
+    // }
 
     handleAvatarDimensions = () => {
         if (window.innerWidth < _desktopWidth) {
