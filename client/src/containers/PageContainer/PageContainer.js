@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { withRouter } from 'react-router-dom';
 
 import AppHeader from './../../components/AppHeader/AppHeader';
@@ -9,7 +9,7 @@ const pageContainer = props => {
     return (
         <>
             <Notifier />
-            <AppHeader signOutApp={props.signOutApp} />
+            <AppHeader />
             <main id="content">{props.children}</main>
             <Footer />
         </>

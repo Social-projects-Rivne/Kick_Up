@@ -17,6 +17,12 @@ const handler = {
   async list(ctx) {
     const rooms = await Room.where({is_banned:1}).fetchAll();
     const events = await Event.where({is_banned:1}).fetchAll();
+    rooms.forEach(element => {
+      element.set({type:'room'})
+    });
+    events.forEach(element => {
+      element.set({type:'event'})
+    });
     ctx.body = {
       rooms,
       events
