@@ -225,19 +225,23 @@ const handler = {
     await validate(ctx.query, {
       page: 'numeric|min:1'
     });
+    console.log('page', page, sort)
     let rooms = [];
 
     switch(sort) {
       case 'rate':
         rooms = await Room.query(qb => qb.orderBy('roomRating','DESC'))
+        .where({permission: false})
         .fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating','members']});
         break;
       case 'members':
         rooms = await Room.query(qb => qb.orderBy('members','DESC'))
+        .where({permission: false})
         .fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating','members']});
         break;
       case 'create':
         rooms = await Room.query(qb => qb.orderBy('created_at','DESC'))
+        .where({permission: false})
         .fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating','members']});
         break;
     }
@@ -258,18 +262,25 @@ const handler = {
       const subquery = await Category.where({title: filter.category}).fetch();
       const initialDate = filter.date.slice(0, 10) + 'T00:00:00.000Z';
       const finalDate = filter.date.slice(0, 10) + 'T23:59:59.000Z';
-      filterRooms = await Room.query(qb => qb.whereBetween('created_at', [initialDate, finalDate])).where({ category_id: subquery.id })
-                            .fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating','members']});
+      filterRooms = await Room.query(qb => qb.whereBetween('created_at', [initialDate, finalDate]))
+        .where({ category_id: subquery.id })
+        .where({permission: false})
+        .fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating','members']});
     } else if (!filter.date && filter.category) {
         const subquery = await Category.where({title: filter.category}).fetch();
-        filterRooms = await Room.where({ category_id: subquery.id }).fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating','members']});
+        filterRooms = await Room.where({ category_id: subquery.id })
+        .where({permission: false})
+        .fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating','members']});
       } else if (filter.date && !filter.category){
           const initialDate = filter.date.slice(0, 10) + 'T00:00:00.000Z';
           const finalDate = filter.date.slice(0, 10) + 'T23:59:59.000Z';
           filterRooms = await Room.query(qb => qb.whereBetween('created_at', [initialDate, finalDate]))
+            .where({permission: false})
             .fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating','members']});
         } else {
-            filterRooms = await Room.fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating','members']});
+            filterRooms = await Room
+            .where({permission: false})
+            .fetchPage({page, pageSize:constants.pageSize, withRelated: ['creator','category','rating','members']});
           }
     ctx.body = {
       rooms: filterRooms,
@@ -428,53 +439,6 @@ const handler = {
   }
 };
 
-// router.post("/add-post", (ctx) => {
-//   const {
-//     room_id,
-//     moderators_list,
-//     gallery,
-//     tags,
-//     room_information
-//   } = ctx.request.body;
-//   let newRoom = new Room();
-//   if (
-//     !room_id ||
-//     !moderators_list ||
-//     !gallery ||
-//     !tags ||
-//     !weight ||
-//     !room_information
-//   ) {
-//     return res.json({
-//       success: false,
-//       error: "INVALID INPUTS"
-//     });
-//   }
-//   newRoom.room_id = room_id;
-//   newRoom.comments = [];
-//   newRoom.moderators_list = moderators;
-//   newRoom.gallery = photos;
-//   newRoom.tags = tags;
-//   newRoom.members = [];
-//   newRoom.room_information = information;
-//   newRoom.ratings = [];
-//   newRoom.save(err => {
-//     if (err) return res.json({ success: false, error: err });
-//     return res.json({ success: true });
-//   });
-//   const { hello } = ctx.request.body;
-//   ctx.body = hello;
-// });
-
-// router.get("/", (ctx) => {
-//   Room.find((err, data) => {
-//     if (err) return res.json({ success: false, error: err });
-//     return res.json({ success: true, roomData: data });
-//   });
-//   ctx.body = "hello world";
-// });
-
-router.use(saveRole);
 router.get('/', handler.roomList);
 router.post('/', handler.createRoom);
 router.get('/sort', handler.sort);

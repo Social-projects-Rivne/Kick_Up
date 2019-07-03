@@ -1,9 +1,10 @@
 import { 
     STORE_ROOMS,
+    ADD_ROOMS,
     STORE_ROOM_DETAILS,
     SET_LOADING_ROOMS_STATUS,
     STORE_ROOM_CATEGORIES,
-    STORE_ROOM_TAGS
+    STORE_ROOM_TAGS,
     
 } from "./actionTypes";
 import { enqueueSnackbar } from "./toast";
@@ -22,6 +23,11 @@ const roomTagsApi = '/api/tag';
 // Action creators;
 export const storeRooms = data => ({
     type: STORE_ROOMS,
+    payload: data
+});
+
+export const storeNewRoom = data => ({
+    type: ADD_ROOMS,
     payload: data
 });
 
@@ -63,7 +69,8 @@ export const addNewRoom = data => dispatch => {
     axios
         .post(roomDetailsApi, data)
         .then(res => {
-            dispatch(storeRooms(res.data));
+            console.log('res.data', res.data)
+            dispatch(storeNewRoom(res.data));
             setRoomsLoadState(false);
         })
         .catch(err => {
@@ -83,13 +90,35 @@ export const addNewRoom = data => dispatch => {
 export const loadRooms = (uri, filter) => dispatch => {
     // Change UI for load start;
     setRoomsLoadState(true);
-
     // Load posts;
     axios
     .get(uri, filter)
     .then(res => {
         if (res && res.data && res.data.rooms) {
-            dispatch(storeRooms(res.data.rooms));
+            dispatch(storeRooms(res.data));
+            setRoomsLoadState(false);
+        }
+    })
+    .catch(err => {
+        setRoomsLoadState(false);
+        dispatch(enqueueSnackbar({
+            message: 'Could not load rooms, please reload your page',
+            options: {
+                variant: messageType.ERR,
+            },
+        }));
+    });
+};
+
+export const addRooms = (uri, filter) => dispatch => {
+    // Change UI for load start;
+    setRoomsLoadState(true);
+    // Load posts;
+    axios
+    .get(uri, filter)
+    .then(res => {
+        if (res && res.data && res.data.rooms) {
+            dispatch(storeNewRoom(res.data.rooms));
             setRoomsLoadState(false);
         }
     })

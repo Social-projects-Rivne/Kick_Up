@@ -1,14 +1,18 @@
 import React from 'react';
 import axios from "axios";
+import { connect } from "react-redux";
 
-import { Button, FormControl, FormControlLabel, FormGroup, Grid, Input, NativeSelect, Switch,
-    TextField, Typography } from "@material-ui/core";
+import {
+    Button, FormControl, FormControlLabel, FormGroup, Grid, Input, NativeSelect, Switch,
+    TextField, Typography
+} from "@material-ui/core";
 import Spinner from "../UI/Spinner/Spinner";
 import ImageUploader from "./../ImageUploader/ImageUploader";
-import {withSnackbar} from "notistack";
-import {InlineDateTimePicker, MuiPickersUtilsProvider} from "material-ui-pickers";
+import { withSnackbar } from "notistack";
+import { InlineDateTimePicker, MuiPickersUtilsProvider } from "material-ui-pickers";
 import DateFnsUtils from "@date-io/date-fns";
 import Geosuggest from "react-geosuggest";
+import { enqueueSnackbar } from './../../store/actions/toast';
 
 const messageType = {
     SUCCESS: "success",
@@ -31,8 +35,12 @@ class EditEvent extends React.Component {
     };
 
     showToast = (message, variant) => {
-        this.props.enqueueSnackbar(message, {
-            variant: variant ? variant : 'default',
+        this.props.enqueueSnackbar({
+            message,
+            options: {
+                key: new Date().getTime() + Math.random(),
+                variant: variant ? variant : 'default',
+            },
         });
     };
 
@@ -58,9 +66,9 @@ class EditEvent extends React.Component {
             });
     };
 
-    handleUpdateData (event) {
+    handleUpdateData(event) {
         this.setState({
-            eventEditDB:{
+            eventEditDB: {
                 ...this.state.eventEditDB,
                 [event.target.name]: event.target.type === "checkbox" ? event.target.checked : event.target.value
             }
@@ -93,7 +101,7 @@ class EditEvent extends React.Component {
                     loading: false,
                     id: res.data.id
                 });
-                this.props.history.push({ pathname: "/event/" + id});
+                this.props.history.push({ pathname: "/event/" + id });
                 this.showToast("Changes saved!", messageType.SUCCESS);
             })
             .catch(err => {
@@ -110,20 +118,20 @@ class EditEvent extends React.Component {
     };
 
     showUploadComponent = () => {
-        this.setState({showUpload: true})
+        this.setState({ showUpload: true })
     };
 
     closeUploadComponent = () => {
-        this.setState({showUpload: false})
+        this.setState({ showUpload: false })
     };
 
     getImagesSRC = (imageSRC) => {
-        this.setState({imageSRC});
+        this.setState({ imageSRC });
     };
 
     handleUpdateStartDate = date => {
         this.setState({
-            eventEditDB:{
+            eventEditDB: {
                 ...this.state.eventEditDB,
                 start_date: date
             }
@@ -131,11 +139,11 @@ class EditEvent extends React.Component {
     };
 
     handleGeosuggestChange = location => {
-        if ( !location ) {
+        if (!location) {
             return;
         }
         this.setState({
-            eventEditDB:{
+            eventEditDB: {
                 ...this.state.eventEditDB,
                 location: location.label
             }
@@ -147,7 +155,7 @@ class EditEvent extends React.Component {
         const { isAuthenticated } = this.props;
 
         if (this.state.loading) {
-            return (<Spinner className="events-page"/>);
+            return (<Spinner className="events-page" />);
         }
 
         return (
@@ -323,14 +331,14 @@ class EditEvent extends React.Component {
                                     </Typography>
                                     <div className="edit-event-page-text-field">
                                         <Button variant="contained" className="edit-event-page-button-upload"
-                                                onClick={this.showUploadComponent}
+                                            onClick={this.showUploadComponent}
                                         >
                                             <span>Choose</span>
                                         </Button>
                                     </div>
                                 </Grid>
                                 <Grid item lg={8} className="edit-event-page-current-cover-grid">
-                                    <img className="edit-event-page-current-cover" src={this.state.imageSRC || this.state.eventEditDB.cover} alt={"event-cover"}/>
+                                    <img className="edit-event-page-current-cover" src={this.state.imageSRC || this.state.eventEditDB.cover} alt={"event-cover"} />
                                 </Grid>
                             </Grid>
                         </div>
@@ -348,4 +356,12 @@ class EditEvent extends React.Component {
     }
 }
 
-export default withSnackbar(EditEvent);
+const mapStateToProps = state => ({
+    isAuthenticated: state.auth.isAuthenticated,
+});
+
+const mapDispatchToProps = dispatch => ({
+    enqueueSnackbar: notifications => dispatch(enqueueSnackbar(notifications))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(EditEvent);

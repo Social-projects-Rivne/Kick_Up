@@ -32,10 +32,6 @@ class App extends Component {
       .then(user => {
         store.dispatch(userHasAuthenticated(true));
         store.dispatch(storeUser(user));
-
-        //this is works without redux & in future will removed
-        this.userHasAuthenticated(true);
-        this.setUser(user);
       })
       .catch(err => {
         setAuthToken(null);
@@ -44,33 +40,13 @@ class App extends Component {
       });
   }
 
-  //this is works without redux & in future will removed
-  userHasAuthenticated = authenticated => {
-    this.setState({ isAuthenticated: authenticated });
-  }
-  setUser = (user) => this.setState({ user });
-  getChildProps() {
-    const { isAuthenticated, user } = this.state;
-    return {
-      isAuthenticated,
-      userHasAuthenticated: this.userHasAuthenticated,
-      setUser: this.setUser,
-      user,
-    }
-  }
-
-  signOutApp = () => {
-    this.userHasAuthenticated(false);
-    this.setUser(null);
-  }
-
   render() {
     return (
       <Provider store={store}>
         <BrowserRouter>
           <SnackbarProvider maxSnack={3}>
-            <PageContainer signOutApp={this.signOutApp} >
-              <Router childProps={this.getChildProps()} />
+            <PageContainer >
+              <Router />
             </PageContainer>
           </SnackbarProvider>
         </BrowserRouter>

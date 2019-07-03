@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
 
 import {
   Grid,
@@ -95,9 +96,9 @@ class Toolbar extends Component {
                 }
               >
                 <MenuItem value="">
-                  <em>None</em>
+                  <em>All</em>
                 </MenuItem>
-                {e.itemsArray.map(e => {
+                {e.itemsArray !== null && e.itemsArray.map(e => {
                   return (
                     <MenuItem key={e} value={e}>
                       {e}
@@ -181,4 +182,8 @@ class Toolbar extends Component {
   }
 }
 
-export default Toolbar;
+const mapStateToProps = state => ({
+  isAuthenticated: state.auth.isAuthenticated,
+})
+
+export default connect(mapStateToProps)(Toolbar);

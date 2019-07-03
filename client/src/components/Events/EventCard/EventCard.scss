@@ -5,6 +5,9 @@
   }
 }
 .events-card {
+  &:hover {
+    cursor: pointer;
+  }
   .menu-content {
     display: flex;
     justify-content: space-around;
@@ -109,9 +112,6 @@
       padding: 1em;
       position: relative;
       z-index: 1;
-    }
-    &:hover {
-      cursor: pointer;
     }
   }
   .category {

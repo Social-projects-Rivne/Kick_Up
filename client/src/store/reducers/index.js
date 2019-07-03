@@ -4,6 +4,7 @@ import authReducer from './authReducer';
 import toastReducer from './toastReducer';
 import homeReducer from './homeReducer';
 import roomsReducer from './roomsReducer';
+import eventsReducer from './eventsReducer';
 import userProfileReducer from "./userProfileReducer";
 
 const rootReducer = combineReducers({
@@ -11,6 +12,7 @@ const rootReducer = combineReducers({
     auth: authReducer,
     toast: toastReducer,
     home: homeReducer,
+    events: eventsReducer,
     userProfile: userProfileReducer,
     rooms: roomsReducer
 });

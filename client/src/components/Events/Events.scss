@@ -1,6 +1,12 @@
 .events-page {
     background-color: $white;
+    height: 300px;
     min-height: calc(100vh - #{$footer-height} - #{$header-height});
+    overflow: auto;
+    &::-webkit-scrollbar {
+        width: 0px;
+        background: transparent; /* make scrollbar transparent */
+    }
 
     &-cards {
         width: 90% !important;

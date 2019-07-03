@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from "react-redux";
 
 import {
   AppBar,
@@ -39,6 +40,7 @@ import { withSnackbar } from 'notistack';
 import ImageUploader from '../ImageUploader/ImageUploader';
 import StarRating from '../UI/StarRating/StarRating';
 import CommentForm from '../CommentForm/CommentForm';
+import { enqueueSnackbar } from './../../store/actions/toast';
 
 // @temp, we need add get data from MongoDB;
 import defaultAvatar from '../../assets/images/face.png';
@@ -147,12 +149,12 @@ class EventPage extends Component {
     }
   };
   showToast = (message, variant) => {
-    this.props.enqueueSnackbar(message, {
-      variant: variant ? variant : 'default',
-      anchorOrigin: {
-        vertical: 'top',
-        horizontal: 'center'
-      }
+    this.props.enqueueSnackbar({
+      message,
+      options: {
+        key: new Date().getTime() + Math.random(),
+        variant: variant ? variant : 'default',
+      },
     });
   };
   join = () => {
@@ -282,13 +284,6 @@ class EventPage extends Component {
 
   render() {
     const { isAuthenticated, user } = this.props;
-    // const stateUser = this.props.user;
-    // const eventId = this.props.match.params.id;
-    //
-    // if(stateUser){
-    //     const checkInvite = stateUser.invited.find(event => event.entity_type === 'event' && event.entity_id === +eventId);
-    //     //TO DO
-    // }
 
     const joinBtn = (
       <Fab className="event-page__fab" variant="extended" color="primary" onClick={this.join}>
@@ -513,4 +508,13 @@ class EventPage extends Component {
   }
 }
 
-export default withSnackbar(EventPage);
+const mapStateToProps = state => ({
+  user: state.auth.user,
+  isAuthenticated: state.auth.isAuthenticated,
+});
+
+const mapDispatchToProps = dispatch => ({
+  enqueueSnackbar: notifications => dispatch(enqueueSnackbar(notifications))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(EventPage);

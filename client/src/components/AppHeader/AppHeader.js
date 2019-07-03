@@ -20,7 +20,6 @@ class AppHeader extends React.Component {
     };
     handleSignOut = () => {
         this.setState({ anchorEl: null });
-        this.props.signOutApp();
         this.props.signOutUser(this.props.history);
     }
     componentWillMount() {

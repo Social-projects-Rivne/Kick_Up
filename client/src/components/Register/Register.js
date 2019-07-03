@@ -80,10 +80,6 @@ class Register extends Component {
         }
 
         this.props.registerUser(user);
-
-        // must delete in future if we don't need App state
-        this.props.userHasAuthenticated(true);
-        this.props.setUser(user);
     }
 
     componentDidMount() {
