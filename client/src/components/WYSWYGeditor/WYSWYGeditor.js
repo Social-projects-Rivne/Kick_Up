@@ -13,7 +13,6 @@ class WYSWYGeditor extends Component {
         : ''
     }
     onChange = (event, editor) => {
-      console.log(1111);
       const callback = this.props.editorSettings.dataUpdateCallback;
       
       this.setState({editorData: editor.getData()});

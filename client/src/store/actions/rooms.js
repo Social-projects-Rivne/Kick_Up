@@ -170,6 +170,9 @@ export const editRoom = (id, updates) => dispatch => {
         .then(() => {
             updates.wasEdited = true;
             dispatch(saveRoomDetails(id, updates));
+            
+            // Reset was updated;
+            dispatch(saveRoomDetails(id, { wasEdited: false }));
         })
         .catch(err => {
             let errors = err.response.data.error.errors;
