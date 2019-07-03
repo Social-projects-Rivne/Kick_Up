@@ -15,10 +15,7 @@ import {
   ListItem,
   ListItemText,
   ListItemAvatar,
-  ListItemIcon,
-  ExpansionPanel,
-  ExpansionPanelDetails,
-  ExpansionPanelSummary
+  ListItemIcon
 } from '@material-ui/core';
 import {
   Face,
