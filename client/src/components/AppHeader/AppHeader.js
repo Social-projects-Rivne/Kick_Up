@@ -7,11 +7,10 @@ import logo from '../../assets/images/logo.png';
 import face from '../../assets/images/face.png';
 import { signOutUser } from './../../store/actions/authentication';
 
-import { AppBar, Toolbar, IconButton, InputBase, Link, BottomNavigation, BottomNavigationAction } from '@material-ui/core';
+import { AppBar, Toolbar, IconButton, Link, BottomNavigation, BottomNavigationAction } from '@material-ui/core';
 //You can find icon names here: https://jxnblk.com/rmdi/
-import { EventAvailable, SupervisorAccount, PersonAdd, Person, MoreVert, Search } from '@material-ui/icons';
+import { EventAvailable, SupervisorAccount, PersonAdd, Person, MoreVert, ReportProblem } from '@material-ui/icons';
 import { Link as RouterLink, withRouter } from 'react-router-dom';
-import { de } from 'date-fns/esm/locale';
 
 class AppHeader extends React.Component {
     state = {
@@ -60,7 +59,6 @@ class AppHeader extends React.Component {
 
     render() {
         const { user, isAuthenticated } = this.props;
-
         const { mobileMenuOpened, activePage, anchorEl } = this.state;
         const avatarURL = user && user.avatar ?
             <img src={user.avatar} alt={user.email} />
@@ -99,6 +97,9 @@ class AppHeader extends React.Component {
             ? <BottomNavigation value={activePage} onChange={this.handleChangeActivePage} className="navigation-buttons">
                 <BottomNavigationAction className="icon-details" label="Events" value="/events" icon={<EventAvailable />} />
                 <BottomNavigationAction className="icon-details" label="Rooms" value="/rooms" icon={<SupervisorAccount />} />
+                {isAuthenticated && user && user.role === 1 &&
+                <BottomNavigationAction className="icon-details" label="Report" value="/admin-panel" icon={<ReportProblem />} />
+                }
                 {avatar}
             </BottomNavigation>
             : <BottomNavigation value={activePage} onChange={this.handleChangeActivePage} className="navigation-buttons">
@@ -122,18 +123,13 @@ class AppHeader extends React.Component {
                                 <img className="logo-img" src={logo} alt="Logo" />
                             </Link>
                         </IconButton>
-                        {/* <form className="search-form">
-                            <div className="search">
-                                <div className="search-icon">
-                                    <Search />
-                                </div>
-                                <InputBase className="search-root" name="query" />
-                            </div>
-                        </form> */}
                         <div className="section-desktop">
                             <BottomNavigation value={activePage} onChange={this.handleChangeActivePage} className="navigation-buttons">
                                 <BottomNavigationAction className="icon-details" label="Events" value="/events" icon={<EventAvailable />} />
                                 <BottomNavigationAction className="icon-details" label="Rooms" value="/rooms" icon={<SupervisorAccount />} />
+                                {isAuthenticated && user && user.role === 1 &&
+                                    <BottomNavigationAction className="icon-details" label="Report" value="/admin-panel" icon={<ReportProblem />} />
+                                }
                             </BottomNavigation>
                         </div>
                         <div className="grow" />
