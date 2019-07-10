@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 
-import Swiper from 'react-id-swiper/lib/ReactIdSwiper.full';
+import Swiper from 'react-id-swiper';
 import { Pagination, Navigation } from 'swiper/dist/js/swiper.esm';
 import kute from 'kute.js';
 import 'kute.js/kute-svg';
@@ -9,7 +9,7 @@ import AvatarCropper from 'react-avatar-edit';
 import { enqueueSnackbar } from '../../store/actions/toast';
 import is from 'is_js';
 
-import 'react-id-swiper/src/styles/scss/swiper.scss';
+import 'react-id-swiper/lib/styles/scss/swiper.scss';
 
 import {
     Grid,
