@@ -4,7 +4,7 @@ import { Link as DomLink } from 'react-router-dom';
 
 import { loadHomePagePosts } from '../../store/actions/home';
 
-import Swiper from 'react-id-swiper/lib/ReactIdSwiper.full';
+import Swiper from 'react-id-swiper';
 import { Pagination } from 'swiper/dist/js/swiper.esm';
 import { Typography, Button, Badge } from '@material-ui/core';
 import { EventAvailable, SupervisorAccount, ExpandMore } from "@material-ui/icons";

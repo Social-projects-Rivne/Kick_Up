@@ -16,7 +16,7 @@ import {
     Typography
 } from '@material-ui/core';
 import { Visibility, Close, Home } from '@material-ui/icons';
-import Swiper from 'react-id-swiper/lib/ReactIdSwiper.full';
+import Swiper from 'react-id-swiper';
 import WYSWYGeditor from '../WYSWYGeditor/WYSWYGeditor';
 import PostCard from '../PostCard/PostCard';
 import axios from 'axios';

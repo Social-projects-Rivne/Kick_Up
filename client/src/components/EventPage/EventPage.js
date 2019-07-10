@@ -31,10 +31,10 @@ import {
   LocationDisabled, 
   LocationSearching
 } from '@material-ui/icons';
-import Swiper from 'react-id-swiper/lib/ReactIdSwiper.full';
+import Swiper from 'react-id-swiper';
 import { Pagination, Autoplay } from 'swiper/dist/js/swiper.esm';
 import Gallery from 'react-grid-gallery';
-import 'react-id-swiper/src/styles/scss/swiper.scss';
+import 'react-id-swiper/lib/styles/scss/swiper.scss';
 import axios from 'axios';
 import { withSnackbar } from 'notistack';
 import ImageUploader from '../ImageUploader/ImageUploader';
